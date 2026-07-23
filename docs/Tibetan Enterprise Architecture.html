@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Software Requirements Specification - Tibetan Writing Assistant</title>
+  <style>
+    :root {
+      --bg: #f7f9fc;
+      --paper: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --primary: #0f4c81;
+      --primary-2: #2563eb;
+      --border: #dbe3ee;
+      --accent: #e8f1ff;
+      --warn: #fff7ed;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.65;
+    }
+
+    .page {
+      max-width: 980px;
+      margin: 32px auto;
+      padding: 40px;
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+    }
+
+    h1, h2, h3 {
+      line-height: 1.25;
+      color: var(--primary);
+      margin-top: 1.4em;
+      margin-bottom: 0.55em;
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 2.1rem;
+      border-bottom: 3px solid var(--primary-2);
+      padding-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 1.35rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 6px;
+    }
+
+    h3 { font-size: 1.08rem; }
+
+    p { margin: 0.45em 0 0.9em; }
+
+    ul, ol { margin: 0.5em 0 1em 1.4em; }
+
+    li { margin: 0.28em 0; }
+
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin: 18px 0 24px;
+      padding: 18px;
+      background: var(--accent);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .meta div { padding: 6px 0; }
+
+    .label {
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-bottom: 4px;
+    }
+
+    .value { font-weight: 700; }
+
+    .callout {
+      padding: 14px 16px;
+      border-left: 5px solid var(--primary-2);
+      background: #f8fbff;
+      border-radius: 10px;
+      margin: 18px 0;
+    }
+
+    .warning {
+      border-left-color: #d97706;
+      background: var(--warn);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0 20px;
+      font-size: 0.98rem;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th {
+      background: #eff6ff;
+      color: #0f172a;
+    }
+
+    .small { font-size: 0.95rem; color: var(--muted); }
+
+    .footer {
+      margin-top: 32px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    @media print {
+      body { background: #fff; }
+      .page {
+        box-shadow: none;
+        border: none;
+        margin: 0;
+        padding: 24mm 18mm;
+        max-width: none;
+      }
+      h1, h2, h3 { page-break-after: avoid; }
+      table, .callout { page-break-inside: avoid; }
+      a { color: inherit; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <h1>Software Requirements Specification (SRS)</h1>
+    <p><strong>Project:</strong> Tibetan Editor Enterprise Architecture (TEEA)</p>
+    <p><strong>Version:</strong> 5.1 (Production-Ready Spec)</p>
+    <p><strong>Purpose:</strong> Comprehensive specification for a professional, offline-first Tibetan writing assistant</p>
+
+    <div class="meta">
+      <div>
+        <div class="label">System Host Architecture</div>
+        <div class="value">Office.js Webview (UI) + Native Desktop Daemon (Compute)</div>
+      </div>
+      <div>
+        <div class="label">Execution Engine</div>
+        <div class="value">Offline-First Local IPC (gRPC/Named Pipes)</div>
+      </div>
+      <div>
+        <div class="label">Frontend Interface</div>
+        <div class="value">Office.js Task Pane & Fluent UI Ribbon Components</div>
+      </div>
+      <div>
+        <div class="label">Core Backend Subsystems</div>
+        <div class="value">TEEA Core + Quantized Local LLMs + SQLite/LMDB Storage Core</div>
+      </div>
+    </div>
+
+    <h2>1. Introduction</h2>
+
+    <h3>1.1 Purpose</h3>
+    <p>
+      The purpose of this document is to establish the explicit functional, performance, and structural specifications 
+      for the Tibetan Editor Enterprise Architecture (TEEA). This modular writing ecosystem runs locally to provide 
+      Tibetan scholars, researchers, and students with high-performance real-time spelling correction, grammar evaluation, 
+      coherence checking, citation management, plagiarism matching, text summarization, and contextual translation features.
+    </p>
+
+    <h3>1.2 Scope</h3>
+    <p>
+      The TEEA system isolates client interaction inside a lightweight Microsoft Word Add-in while managing heavy language computations 
+      through an independent local desktop daemon process. The core capabilities comprise:
+    </p>
+    <ul>
+      <li>High-speed deterministic Tibetan tokenization and spell checking utilizing local rule dictionaries.</li>
+      <li>Advanced structural grammar and semantic coherence evaluation via quantized offline language models.</li>
+      <li>Local document indexing to compute winnowed k-gram fingerprints for independent plagiarism verification.</li>
+      <li>Asynchronous streaming suggestion fusion to prevent high-latency processing tasks from creating UI lag.</li>
+      <li>Contextual translation from Tibetan to English using model capabilities managed by a local AI Runtime registry.</li>
+    </ul>
+
+    <h3>1.3 Product Goal</h3>
+    <p>
+      To deliver an ultra-responsive (sub-50ms typing interactivity) academic tool specialized for the unique linguistic rules of the Tibetan 
+      language, fully achieving production-grade runtime stability independent of constant cloud service availability.
+    </p>
+
+    <div class="callout">
+      <strong>Core Structural Strategy:</strong> This system implements clean architectural boundaries. The frontend Office.js framework is 
+      strictly prohibited from performing tokenization parsing, text calculations, or direct execution of AI weights.
+    </div>
+
+    <h2>2. Overall Description</h2>
+
+    <h3>2.1 Product Perspective</h3>
+    <p>
+      The application operates as a microkernel-based plugin engine split across a local network loopback boundary. The Word WebView 
+      intercepts debounced context payloads and pushes them over secure loopback IPC protocols to the desktop daemon, processing 
+      responses concurrently via a dedicated priority task scheduler.
+    </p>
+
+    <h3>2.2 User Classes</h3>
+    <ul>
+      <li><strong>Primary Users:</strong> Academic researchers, professional translators, monastics, and students working inside Tibetan literary contexts.</li>
+      <li><strong>Secondary Users:</strong> Publishing house editors, peer reviewers, and administrative compliance auditors.</li>
+    </ul>
+
+    <h3>2.3 Assumptions and Dependencies</h3>
+    <ul>
+      <li>The host platform supports the Microsoft Office.js API interface.</li>
+      <li>The local runtime machine allocates standard working memory limits to sustain embedded background execution trees.</li>
+      <li>Data models, dictionary nodes, and rule sets remain hot-swappable and independently patchable without complete binary modifications.</li>
+    </ul>
+
+    <h2>3. System Features / Core Requirements</h2>
+
+    <h3>3.1 Incremental Language Processing Server</h3>
+    <ul>
+      <li>The system shall utilize a centralized paragraph-hashing framework (e.g., xxHash checks) to ensure only modified sentences trigger full pipeline re-parsing.</li>
+      <li>The NLP analysis stack shall rigidly parse through: Normalization → Word Tokenization → Morphological Parsing → Part-of-Speech Tagging → Structural Dependency Mapping.</li>
+    </ul>
+
+    <h3>3.2 Streaming Suggestion Fusion Engine</h3>
+    <ul>
+      <li>The engine shall gather parallel suggestions from active feature modules and resolve coordinate overlap collisions asynchronously.</li>
+      <li>Deterministic feedback actions (like spell checking) must paint onto the Word UI immediately, processing slower contextual targets (like LLM rewrites) in background pipelines.</li>
+    </ul>
+
+    <h3>3.3 AI Runtime & Capability Registry</h3>
+    <ul>
+      <li>The application shall encapsulate target models behind clear abstract API adapters, enabling immediate hot-swapping between local configurations (e.g., ONNX runtimes) and network APIs.</li>
+    </ul>
+
+    <h3>3.4 Plagiarism Profile Subsystem</h3>
+    <ul>
+      <li>The system shall execute isolated, asynchronous winnowed k-gram hash extractions against a local resource fingerprint index without intercepting regular editor typing cycles.</li>
+    </ul>
+
+    <h2>4. Functional Requirements</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>System Requirement Specification</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>FR-1</td><td>The client shall capture text document changes based on debounced typing intervals.</td></tr>
+        <tr><td>FR-2</td><td>The client shall parse out minimal text patch layers to reduce serialization overhead over loopback IPC connections.</td></tr>
+        <tr><td>FR-3</td><td>The desktop daemon shall track state integrity through an independent, shared document context tree.</td></tr>
+        <tr><td>FR-4</td><td>The Language Server shall run paragraph-level hash checks to enforce incremental processing execution rules.</td></tr>
+        <tr><td>FR-5</td><td>The runtime shall isolate individual feature plugins into separate memory supervisors.</td></tr>
+        <tr><td>FR-6</td><td>The AI Runtime shall map inference requests using a flexible capability registry to switch underlying weights easily.</td></tr>
+        <tr><td>FR-7</td><td>The Suggestion Fusion Engine shall resolve conflicting overlapping range coordinates before updating the canvas.</td></tr>
+        <tr><td>FR-8</td><td>The system shall expose non-blocking, asynchronous command and query buses to prevent thread deadlocks.</td></tr>
+        <tr><td>FR-9</td><td>The Plagiarism Subsystem shall use localized rolling hash mechanisms to identify match points.</td></tr>
+        <tr><td>FR-10</td><td>The Data Platform shall keep user configurations, cached prompts, and dictionaries isolated in specialized storage profiles.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>5. Non-Functional Requirements</h2>
+
+    <h3>5.1 Performance & Responsiveness</h3>
+    <ul>
+      <li>The interactive user interface thread must execute editing operations with sub-50ms latency.</li>
+      <li>The background engine shall leverage a tiered priority scheduler to handle background indexing tasks without causing word composition delays.</li>
+    </ul>
+
+    <h3>5.2 Usability & Workflow Integration</h3>
+    <ul>
+      <li>The UI shall feature an accessible Fluent UI Task Pane dashboard providing intuitive single-click operations to apply suggestion matrices.</li>
+    </ul>
+
+    <h3>5.3 Fault Isolation & Reliability</h3>
+    <ul>
+      <li>A system fault or unhandled error inside a particular feature plugin must be captured by its manager without causing the host Word interface or other running tools to crash.</li>
+    </ul>
+
+    <h2>6. Constraints</h2>
+    <ul>
+      <li>Office.js runtime sandboxing forbids direct local disk reads; all persistent dictionary interactions must go through loopback IPC interfaces.</li>
+      <li>Local model performance targets remain dependent on the host machine’s basic execution capacities, requiring highly compressed and quantized model weights.</li>
+    </ul>
+
+    <h2>7. MVP Implementation Scope</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Priority Ring</th>
+          <th>Target Architectural Features</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Highest</td><td>Secure local IPC loopback, Paragraph Hashing Engine, SymSpell processing, Fusion Stream</td></tr>
+        <tr><td>Medium</td><td>Local AI Runtime capability handling, localized SQLite caching layouts</td></tr>
+        <tr><td>Lowest</td><td>Background plagiarism winnowing checks, structural multi-document comparison tools</td></tr>
+      </tbody>
+    </table>
+
+    <h2>8. Conclusion</h2>
+    <p>
+      The TEEA architecture creates a powerful, highly maintainable, and deeply isolated foundation. By implementing clear separation of concerns 
+      across the physical loopback boundary, it provides the exact technical framework required to win competitive, high-stakes system implementation challenges.
+    </p>
+  </main>
+</body>
+</html>
+

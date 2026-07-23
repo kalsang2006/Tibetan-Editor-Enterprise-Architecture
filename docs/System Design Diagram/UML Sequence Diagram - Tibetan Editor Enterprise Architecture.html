@@ -1,0 +1,292 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UML Sequence Diagram - Tibetan Editor Enterprise Architecture</title>
+    <style>
+        :root {
+            --primary-blue: #0F4C81;
+            --accent-blue: #2563EB;
+            --border-color: #CBD5E1;
+            --bg-color: #F8FAFC;
+            --text-color: #1F2937;
+            --white: #FFFFFF;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--white);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: var(--primary-blue);
+            font-size: 2.2rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .description {
+            font-size: 1.1rem;
+            color: #4B5563;
+            text-align: center;
+            max-width: 800px;
+            margin-bottom: 2rem;
+        }
+
+        .diagram-container {
+            width: 100%;
+            max-width: 1850px;
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        svg {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .caption {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-color);
+            max-width: 1200px;
+            text-align: justify;
+            margin-top: 1rem;
+            border-top: 2px solid var(--border-color);
+            padding-top: 1rem;
+        }
+
+        /* SVG Text Styles */
+        .participant-text {
+            fill: var(--white);
+            font-size: 14px;
+            font-weight: 600;
+            text-anchor: middle;
+            dominant-baseline: middle;
+        }
+
+        .message-text {
+            fill: var(--text-color);
+            font-size: 13px;
+            text-anchor: middle;
+        }
+
+        .message-text-left {
+            fill: var(--text-color);
+            font-size: 13px;
+            text-anchor: start;
+        }
+
+        @media print {
+            body {
+                padding: 0;
+                background-color: var(--white);
+            }
+            .diagram-container {
+                box-shadow: none;
+                border: none;
+                padding: 0;
+                margin-bottom: 1rem;
+            }
+            @page {
+                size: A4 landscape;
+                margin: 1cm;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Intelligent Suggestion Generation Lifecycle</h1>
+    <p class="description">
+        A comprehensive sequence illustrating the end-to-end interactions across the presentation layer, local daemons, AI processing runtimes, and storage platforms.
+    </p>
+
+    <div class="diagram-container">
+        <svg viewBox="0 0 1850 1150" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <!-- Filter for Soft Shadows -->
+                <filter id="drop-shadow" x="-10%" y="-10%" width="120%" height="120%">
+                    <feDropShadow dx="2" dy="4" stdDeviation="4" flood-opacity="0.15" />
+                </filter>
+                
+                <!-- Solid Arrowhead for Synchronous Calls -->
+                <marker id="arrow-solid" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                    <path d="M 0 0 L 10 5 L 0 10 Z" fill="#1F2937" />
+                </marker>
+
+                <!-- Open Arrowhead for Return Messages -->
+                <marker id="arrow-open" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                    <path d="M 0 1 L 9 5 L 0 9" fill="none" stroke="#1F2937" stroke-width="1.5" />
+                </marker>
+            </defs>
+
+            <!-- ========================================== -->
+            <!-- LIFELINES                                  -->
+            <!-- ========================================== -->
+            <g stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="6,6">
+                <line x1="100" y1="80" x2="100" y2="1100" />
+                <line x1="280" y1="80" x2="280" y2="1100" />
+                <line x1="460" y1="80" x2="460" y2="1100" />
+                <line x1="640" y1="80" x2="640" y2="1100" />
+                <line x1="820" y1="80" x2="820" y2="1100" />
+                <line x1="1000" y1="80" x2="1000" y2="1100" />
+                <line x1="1180" y1="80" x2="1180" y2="1100" />
+                <line x1="1360" y1="80" x2="1360" y2="1100" />
+                <line x1="1540" y1="80" x2="1540" y2="1100" />
+                <line x1="1720" y1="80" x2="1720" y2="1100" />
+            </g>
+
+            <!-- ========================================== -->
+            <!-- ACTIVATION BARS                            -->
+            <!-- ========================================== -->
+            <g fill="#F8FAFC" stroke="#2563EB" stroke-width="1.5">
+                <rect x="94" y="140" width="12" height="890" rx="2" /> <!-- User -->
+                <rect x="274" y="140" width="12" height="890" rx="2" /> <!-- Word -->
+                <rect x="454" y="190" width="12" height="770" rx="2" /> <!-- Office.js -->
+                <rect x="634" y="240" width="12" height="50" rx="2" />  <!-- Local IPC -->
+                <rect x="814" y="290" width="12" height="50" rx="2" />  <!-- Daemon -->
+                <rect x="994" y="340" width="12" height="150" rx="2" /> <!-- Language Server -->
+                <rect x="1714" y="390" width="12" height="50" rx="2" /> <!-- Storage (Dict) -->
+                <rect x="1174" y="490" width="12" height="250" rx="2" /> <!-- Plugin Runtime -->
+                <rect x="1534" y="540" width="12" height="150" rx="2" /> <!-- AI Runtime -->
+                <rect x="1714" y="590" width="12" height="50" rx="2" /> <!-- Storage (AI) -->
+                <rect x="1354" y="740" width="12" height="150" rx="2" /> <!-- Fusion Engine -->
+            </g>
+
+            <!-- ========================================== -->
+            <!-- PARTICIPANT HEADERS                        -->
+            <!-- ========================================== -->
+            <g fill="#0F4C81" filter="url(#drop-shadow)">
+                <rect x="35" y="40" width="130" height="40" rx="6" />
+                <rect x="215" y="40" width="130" height="40" rx="6" />
+                <rect x="395" y="40" width="130" height="40" rx="6" />
+                <rect x="575" y="40" width="130" height="40" rx="6" />
+                <rect x="755" y="40" width="130" height="40" rx="6" />
+                <rect x="935" y="40" width="130" height="40" rx="6" />
+                <rect x="1115" y="40" width="130" height="40" rx="6" />
+                <rect x="1285" y="40" width="150" height="40" rx="6" />
+                <rect x="1475" y="40" width="130" height="40" rx="6" />
+                <rect x="1655" y="40" width="130" height="40" rx="6" />
+            </g>
+
+            <g class="participant-text">
+                <text x="100" y="61">User</text>
+                <text x="280" y="61">Microsoft Word</text>
+                <text x="460" y="61">Office.js Add-in</text>
+                <text x="640" y="61">Local IPC Layer</text>
+                <text x="820" y="61">Desktop Daemon</text>
+                <text x="1000" y="61">Language Server</text>
+                <text x="1180" y="61">Plugin Runtime</text>
+                <text x="1360" y="61">Suggestion Fusion Engine</text>
+                <text x="1540" y="61">AI Runtime</text>
+                <text x="1720" y="61">Storage Platform</text>
+            </g>
+
+            <!-- ========================================== -->
+            <!-- MESSAGES & ARROWS                          -->
+            <!-- ========================================== -->
+            <g stroke="#1F2937" stroke-width="1.5">
+                <!-- 1. User -> Word -->
+                <line x1="106" y1="140" x2="270" y2="140" marker-end="url(#arrow-solid)" />
+                <text x="190" y="132" class="message-text">1. Edit Tibetan Document</text>
+
+                <!-- 2. Word -> Office.js -->
+                <line x1="286" y1="190" x2="450" y2="190" marker-end="url(#arrow-solid)" />
+                <text x="370" y="182" class="message-text">2. Document Changed Event</text>
+
+                <!-- 3. Office.js -> Local IPC -->
+                <line x1="466" y1="240" x2="630" y2="240" marker-end="url(#arrow-solid)" />
+                <text x="550" y="232" class="message-text">3. Send Current Document Context</text>
+
+                <!-- 4. Local IPC -> Desktop Daemon -->
+                <line x1="646" y1="290" x2="810" y2="290" marker-end="url(#arrow-solid)" />
+                <text x="730" y="282" class="message-text">4. Forward Analysis Request</text>
+
+                <!-- 5. Desktop Daemon -> Language Server -->
+                <line x1="826" y1="340" x2="990" y2="340" marker-end="url(#arrow-solid)" />
+                <text x="910" y="332" class="message-text">5. Analyze Document</text>
+
+                <!-- 6. Language Server -> Storage Platform -->
+                <line x1="1006" y1="390" x2="1710" y2="390" marker-end="url(#arrow-solid)" />
+                <text x="1360" y="372" class="message-text">6. Dictionary Lookup, Grammar Rules Lookup, Terminology Lookup</text>
+
+                <!-- 7. Storage Platform -> Language Server (Return) -->
+                <line x1="1710" y1="440" x2="1006" y2="440" stroke-dasharray="5,5" marker-end="url(#arrow-open)" />
+                <text x="1360" y="432" class="message-text">7. Dictionary Results</text>
+
+                <!-- 8. Language Server -> Plugin Runtime -->
+                <line x1="1006" y1="490" x2="1170" y2="490" marker-end="url(#arrow-solid)" />
+                <text x="1090" y="482" class="message-text">8. Provide Parsed Document</text>
+
+                <!-- 9. Plugin Runtime -> AI Runtime -->
+                <line x1="1186" y1="540" x2="1530" y2="540" marker-end="url(#arrow-solid)" />
+                <text x="1360" y="532" class="message-text">9. Request AI Analysis</text>
+
+                <!-- 10. AI Runtime -> Storage Platform -->
+                <line x1="1546" y1="590" x2="1710" y2="590" marker-end="url(#arrow-solid)" />
+                <text x="1630" y="582" class="message-text">10. Load Models &amp; Cached Results</text>
+
+                <!-- 11. Storage Platform -> AI Runtime (Return) -->
+                <line x1="1710" y1="640" x2="1546" y2="640" stroke-dasharray="5,5" marker-end="url(#arrow-open)" />
+                <text x="1630" y="632" class="message-text">11. Models Loaded</text>
+
+                <!-- 12. AI Runtime -> Plugin Runtime (Return) -->
+                <line x1="1530" y1="690" x2="1186" y2="690" stroke-dasharray="5,5" marker-end="url(#arrow-open)" />
+                <text x="1360" y="682" class="message-text">12. AI Suggestions</text>
+
+                <!-- 13. Plugin Runtime -> Suggestion Fusion Engine -->
+                <line x1="1186" y1="740" x2="1350" y2="740" marker-end="url(#arrow-solid)" />
+                <text x="1268" y="718" class="message-text">13. Combine: Spell Suggestions,</text>
+                <text x="1268" y="734" class="message-text">Grammar, Translation, Citation...</text>
+
+                <!-- 14. Suggestion Fusion Engine (Self Call) -->
+                <polyline points="1366,780 1406,780 1406,830 1366,830" fill="none" marker-end="url(#arrow-solid)" />
+                <text x="1415" y="792" class="message-text-left">14. Merge Suggestions,</text>
+                <text x="1415" y="808" class="message-text-left">Remove Duplicates,</text>
+                <text x="1415" y="824" class="message-text-left">Resolve Conflicts &amp; Rank,</text>
+                <text x="1415" y="840" class="message-text-left">Generate Final Patch</text>
+
+                <!-- 15. Suggestion Fusion Engine -> Office.js (Return) -->
+                <line x1="1350" y1="890" x2="466" y2="890" stroke-dasharray="5,5" marker-end="url(#arrow-open)" />
+                <text x="908" y="882" class="message-text">15. Final Suggestions</text>
+
+                <!-- 16. Office.js -> Word -->
+                <line x1="450" y1="960" x2="286" y2="960" marker-end="url(#arrow-solid)" />
+                <text x="368" y="942" class="message-text">16. Render Suggestions, Underline</text>
+                <text x="368" y="958" class="message-text">Errors, Display Task Pane</text>
+
+                <!-- 17. Word -> User (Return) -->
+                <line x1="270" y1="1030" x2="106" y2="1030" stroke-dasharray="5,5" marker-end="url(#arrow-open)" />
+                <text x="188" y="1022" class="message-text">17. Updated Intelligent Suggestions</text>
+            </g>
+        </svg>
+    </div>
+
+    <div class="caption">
+        <strong>Figure 4.</strong> UML Sequence Diagram illustrating the end-to-end interaction between Microsoft Word, the Office.js Add-in, the Desktop Daemon Runtime, language processing services, AI runtime, and storage components during intelligent suggestion generation in the Tibetan Editor Enterprise Architecture (TEEA).
+    </div>
+
+</body>
+</html>

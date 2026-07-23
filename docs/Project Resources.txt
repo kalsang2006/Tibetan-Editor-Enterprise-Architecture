@@ -1,0 +1,17 @@
+Project Resources
+
+GitHub Repository (datasets and project resources):
+https://github.com/kalsang2006/Data
+
+Hugging Face Model:
+https://huggingface.co/CMLI-NLP/TiBERT
+
+Instructions:
+
+- Always inspect the GitHub repository before implementing any feature.
+- Use the datasets from the GitHub repository as the authoritative data source.
+- Use the TiBERT model from the Hugging Face repository whenever Tibetan NLP functionality is required.
+- Never substitute another language model unless explicitly instructed.
+- Preserve the existing architecture.
+- Build one complete module at a time.
+- Verify each module before moving to the next.

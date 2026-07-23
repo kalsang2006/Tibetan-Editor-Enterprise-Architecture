@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Processing Pipeline - Tibetan Editor Enterprise Architecture</title>
+    <style>
+        :root {
+            --primary-blue: #0F4C81;
+            --accent-blue: #2563EB;
+            --bg-color: #F8FAFC;
+            --border-color: #CBD5E1;
+            --text-color: #1F2937;
+            --white: #FFFFFF;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--white);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1600px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: var(--primary-blue);
+            text-align: center;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .description {
+            font-size: 1.1rem;
+            color: #475569;
+            text-align: center;
+            max-width: 900px;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .diagram-container {
+            width: 100%;
+            background-color: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        svg {
+            width: 100%;
+            height: auto;
+            max-height: 82vh;
+        }
+
+        .caption {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: var(--text-color);
+            max-width: 1400px;
+            border-top: 2px solid var(--bg-color);
+            padding-top: 20px;
+            text-align: left;
+        }
+
+        .caption strong {
+            color: var(--primary-blue);
+        }
+
+        @media print {
+            body {
+                padding: 0;
+            }
+            .diagram-container {
+                border: none;
+                box-shadow: none;
+                padding: 0;
+            }
+            @page {
+                size: A4 landscape;
+                margin: 1cm;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tibetan Editor Enterprise Architecture</h1>
+        <p class="description">End-to-end linguistic transformation pipeline converting raw Tibetan text into structured semantic representations for feature plugins and local AI inference.</p>
+
+        <div class="diagram-container">
+            <svg viewBox="0 0 1500 1350" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <!-- Soft Drop Shadow -->
+                    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+                        <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#000000" flood-opacity="0.08"/>
+                    </filter>
+
+                    <!-- Downward Flow Arrow Marker -->
+                    <marker id="arrow-down" viewBox="0 0 10 10" refX="5" refY="9" markerWidth="6" markerHeight="6" orient="auto">
+                        <path d="M 0 0 L 10 0 L 5 10 Z" fill="#0F4C81"/>
+                    </marker>
+
+                    <!-- Side Connection Arrow Marker -->
+                    <marker id="arrow-side" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                        <path d="M 0 0 L 10 5 L 0 10 Z" fill="#2563EB"/>
+                    </marker>
+                </defs>
+
+                <!-- ========================================== -->
+                <!-- PIPELINE STAGES (VERTICAL FLOW LEFT SIDE)  -->
+                <!-- ========================================== -->
+
+                <!-- Stage 1: Raw Tibetan Document (Input Stage - Light Blue) -->
+                <g transform="translate(100, 30)">
+                    <rect width="450" height="75" rx="10" fill="#E0F2FE" stroke="#0284C7" stroke-width="2" filter="url(#shadow)"/>
+                    <circle cx="35" cy="37" r="16" fill="#0284C7" opacity="0.15"/>
+                    <text x="35" y="43" font-size="14" font-weight="bold" fill="#0369A1" text-anchor="middle">01</text>
+                    <text x="75" y="32" font-size="15" font-weight="bold" fill="#0F4C81">Raw Tibetan Document</text>
+                    <text x="75" y="53" font-size="13" fill="#475569">Original Microsoft Word document input stream</text>
+                </g>
+
+                <!-- Arrow 1-2 -->
+                <line x1="325" y1="105" x2="325" y2="125" stroke="#0F4C81" stroke-width="3" marker-end="url(#arrow-down)"/>
+
+                <!-- Stage 2: Unicode Normalization (Text Processing - Blue) -->
+                <g transform="translate(100, 130)">
+                    <rect width="450" height="75" rx="10" fill="#FFFFFF" stroke="#0F4C81" stroke-width="2" filter="url(#shadow)"/>
+                    <circle cx="35" cy="37" r="16" fill="#0F4C81" opacity="0.1"/>
+                    <text x="35" y="43" font-size="14" font-weight="bold" fill="#0F4C81" text-anchor="middle">02</text>
+                    <text x="75" y="32" font-size="15" font-weight="bold" fill="#0F4C81">Unicode Normalization</text>
+                    <text x="75" y="53" font-size="13" fill="#475569">• Normalize Unicode • Remove invalid characters • Canonical form</text>
+                </g>
+
+                <!-- Arrow 2-3 -->
+                <line x1="325" y1="205" x2="325" y2="225" stroke="#0F4C81" stroke-width="3" marker-end="url(#arrow-down)"/>
+
+                <!-- Stage 3: Document Cleaning (Text Processing - Blue) -->
+                <g transform="translate(100, 230)">
+                    <rect width="450" height="75" rx="10" fill="#FFFFFF" stroke="#0F4C81" stroke-width="2" filter="url(#shadow)"/>
+                    <circle cx="35" cy="37" r="16" fill="#0F4C81" opacity="0.1"/>
+                    <text x="35" y="43" font-size="14" font-weight="bold" fill="#0F4C81" text-anchor="middle">03</text>
+                    <text x="75" y="32" font-size="15" font-weight="bold" fill="#0F4C81">Document Cleaning</text>
+                    <text x="75" y="53" font-size="13" fill="#475569">• Remove hidden formatting • Normalize whitespace • Standardize punctuation</text>
+                </g>
+
+                <!-- Arrow 3-4 -->
+                <line x1="325" y1="305" x2="325" y2="325" stroke="#0F4C81" stroke-width="3" marker-end="url(#arrow-down)"/>
+
+                <!-- Stage 4: Sentence Segmentation (Text Processing - Blue) -->
+                <g transform="translate(100, 330)">
+                    <rect width="450" height="75" rx="10" fill="#FFFFFF" stroke="#0F4C81" stroke-width="2" filter="url(#shadow)"/>
+                    <circle cx="35" cy="37" r="16" fill="#0F4C81" opacity="0.1"/>
+                    <text x="35" y="43" font-size="14" font-weight="bold" fill="#0F4C81" text-anchor="middle">04</text>
+                    <text x="75" y="32" font-size="15" font-weight="bold" fill="#0F4C81">Sentence Segmentation</text>
+                    <text x="75" y="53" font-size="13" fill="#475569">• Detect sentence boundaries • Split document into sentences</text>
+                </g>
+
+                <!-- Arrow 4-5 -->
+                <line x1="325" y1="405" x2="325" y2="425" stroke="#0F4C81" stroke-width="3" marker-end="url(#arrow-down)"/>
+
+                <!-- Stage 5: Word Tokenization (Text Processing - Blue) -->
+                <g transform="translate(100, 430)">
+                    <rect width="450" height="75" rx="10" fill="#FFFFFF" stroke="#0F4C81" stroke-width="2" filter="url(#shadow)"/>
+                    <circle cx="35" cy="37" r="16" fill="#0F4C81" opacity="0.1"/>
+                    <text x="35" y="43" font-size="14" font-weight="bold" fill="#0F4C81" text-anchor="middle">05</text>
+                    <text x="75" y="32" font-size="15" font-weight="bold" fill="#0F4C81">Word Tokenization</text>
+                    <text x="75" y="53" font-size="13" fill="#475569">• Token extraction • Tibetan syllable handling • Special symbols</text>
+                </g>
+
+                <!-- Arrow 5-6 -->
+                <line x1="325" y1="505" x2="325" y2="525" stroke="#0F4C81" stroke-width="3" marker-end="url(#arrow-down)"/>
+
+                <!-- Stage 6: Morphological Analysis (Linguistic Analysis - Dark Blue) -->
+                <g transform="translate(100, 530)">
+                    <rect width="450" height="75" rx="10" fill="#0F4C81" stroke="#0A365F" stroke-width="2" filter="url(#shadow)"/>
+                    <circle cx="35" cy="37" r="16" fill="#FFFFFF" opacity="0.2"/>
+                    <text x="35" y="43" font-size="14" font-weight="bold" fill="#FFFFFF" text-anchor="middle">06</text>
+                    <text x="75" y="32" font-size="15" font-weight="bold" fill="#FFFFFF">Morphological Analysis</text>
+                    <text x="75" y="53" font-size="13" fill="#E2E8F0">• Root extraction • Affix recognition • Inflection analysis</text>
+                </g>
+
+                <!-- Arrow 6-7 -->
+                <line x1="325" y1="605" x2="325" y2="625" stroke="#0F4C81" stroke-width="3" marker-end="url(#arrow-down)"/>
+
+                <!-- Stage 7: Part-of-Speech Tagging (Linguistic Analysis - Dark Blue) -->
+                <g transform="translate(100, 630)">
+                    <rect width="450" height="75" rx="10" fill="#0F4C81" stroke="#0A365F" stroke-width="2" filter="url(#shadow)"/>
+                    <circle cx="35" cy="37" r="16" fill="#FFFFFF" opacity="0.2"/>
+                    <text x="35" y="43" font-size="14" font-weight="bold" fill="#FFFFFF" text-anchor="middle">07</text>
+                    <text x="75" y="32" font-size="15" font-weight="bold" fill="#FFFFFF">Part-of-Speech Tagging</text>
+                    <text x="75" y="53" font-size="13" fill="#E2E8F0">• Noun, Verb, Adjective • Particle &amp; grammatical classes</text>
+                </g>
+
+                <!-- Arrow 7-8 -->
+                <line x1="325" y1="705" x2="325" y2="725" stroke="#0F4C81" stroke-width="3" marker-end="url(#arrow-down)"/>
+
+                <!-- Stage 8: Dependency Parsing (Linguistic Analysis - Dark Blue) -->
+                <g transform="translate(100, 730)">
+                    <rect width="450" height="75" rx="10" fill="#0F4C81" stroke="#0A365F" stroke-width="2" filter="url(#shadow)"/>
+                    <circle cx="35" cy="37" r="16" fill="#FFFFFF" opacity="0.2"/>
+                    <text x="35" y="43" font-size="14" font-weight="bold" fill="#FFFFFF" text-anchor="middle">08</text>
+                    <text x="75" y="32" font-size="15" font-weight="bold" fill="#FFFFFF">Dependency Parsing</text>
+                    <text x="75" y="53" font-size="13" fill="#E2E8F0">• Subject &amp; object detection • Dependency tree construction</text>
+                </g>
+
+                <!-- Arrow 8-9 -->
+                <line x1="325" y1="805" x2="325" y2="825" stroke="#0F4C81" stroke-width="3" marker-end="url(#arrow-down)"/>
+
+                <!-- Stage 9: Named Entity Recognition (Semantic Processing - Purple Accent) -->
+                <g transform="translate(100, 830)">
+                    <rect width="450" height="75" rx="10" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2" filter="url(#shadow)"/>
+                    <circle cx="35" cy="37" r="16" fill="#7C3AED" opacity="0.15"/>
+                    <text x="35" y="43" font-size="14" font-weight="bold" fill="#6D28D9" text-anchor="middle">09</text>
+                    <text x="75" y="32" font-size="15" font-weight="bold" fill="#5B21B6">Named Entity Recognition</text>
+                    <text x="75" y="53" font-size="13" fill="#6B21A8">• Person, Place, Org • Religious &amp; Cultural entities</text>
+                </g>
+
+                <!-- Arrow 9-10 -->
+                <line x1="325" y1="905" x2="325" y2="925" stroke="#0F4C81" stroke-width="3" marker-end="url(#arrow-down)"/>
+
+                <!-- Stage 10: Terminology Recognition (Semantic Processing - Purple Accent) -->
+                <g transform="translate(100, 930)">
+                    <rect width="450" height="75" rx="10" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2" filter="url(#shadow)"/>
+                    <circle cx="35" cy="37" r="16" fill="#7C3AED" opacity="0.15"/>
+                    <text x="35" y="43" font-size="14" font-weight="bold" fill="#6D28D9" text-anchor="middle">10</text>
+                    <text x="75" y="32" font-size="15" font-weight="bold" fill="#5B21B6">Terminology Recognition</text>
+                    <text x="75" y="53" font-size="13" fill="#6B21A8">• Technical Terms • Buddhist Vocabulary • User Dictionary</text>
+                </g>
+
+                <!-- Arrow 10-11 -->
+                <line x1="325" y1="1005" x2="325" y2="1025" stroke="#0F4C81" stroke-width="3" marker-end="url(#arrow-down)"/>
+
+                <!-- Stage 11: Semantic Analysis (Semantic Processing - Purple Accent) -->
+                <g transform="translate(100, 1030)">
+                    <rect width="450" height="75" rx="10" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2" filter="url(#shadow)"/>
+                    <circle cx="35" cy="37" r="16" fill="#7C3AED" opacity="0.15"/>
+                    <text x="35" y="43" font-size="14" font-weight="bold" fill="#6D28D9" text-anchor="middle">11</text>
+                    <text x="75" y="32" font-size="15" font-weight="bold" fill="#5B21B6">Semantic Analysis</text>
+                    <text x="75" y="53" font-size="13" fill="#6B21A8">• Context Graph • Meaning Representation • Intent Analysis</text>
+                </g>
+
+                <!-- Arrow 11-12 -->
+                <line x1="325" y1="1105" x2="325" y2="1125" stroke="#0F4C81" stroke-width="3" marker-end="url(#arrow-down)"/>
+
+                <!-- Stage 12: Immutable Document Snapshot (Output/State Anchor) -->
+                <g transform="translate(100, 1130)">
+                    <rect width="450" height="85" rx="10" fill="#0F4C81" stroke="#0A365F" stroke-width="2" filter="url(#shadow)"/>
+                    <circle cx="35" cy="42" r="16" fill="#FFFFFF" opacity="0.2"/>
+                    <text x="35" y="48" font-size="14" font-weight="bold" fill="#FFFFFF" text-anchor="middle">12</text>
+                    <text x="75" y="35" font-size="15" font-weight="bold" fill="#FFFFFF">Immutable Document Snapshot</text>
+                    <text x="75" y="56" font-size="13" fill="#E2E8F0">• Store parsed representation • Shared by plugins</text>
+                    <text x="75" y="73" font-size="13" fill="#E2E8F0">• Read-only centralized processing state</text>
+                </g>
+
+
+                <!-- ========================================== -->
+                <!-- FEATURE PLUGINS LAYER (RIGHT TOP)          -->
+                <!-- ========================================== -->
+
+                <!-- Connection from Stage 12 Snapshot to Feature Plugins -->
+                <path d="M 550 1172.5 L 680 1172.5 L 680 160 L 735 160" fill="none" stroke="#2563EB" stroke-width="2.5" stroke-dasharray="6,4" marker-end="url(#arrow-side)"/>
+
+                <!-- Feature Plugins Box -->
+                <g transform="translate(740, 30)">
+                    <rect width="680" height="260" rx="12" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2" filter="url(#shadow)"/>
+                    <text x="30" y="35" font-size="18" font-weight="bold" fill="#0F4C81">Feature Plugins Layer</text>
+                    <text x="30" y="55" font-size="13" fill="#64748B">All plugins consume the centralized immutable snapshot concurrently</text>
+                    
+                    <!-- Plugin Grid Items -->
+                    <g transform="translate(30, 75)">
+                        <!-- Spell Checker -->
+                        <rect x="0" y="0" width="195" height="45" rx="6" fill="#FFFFFF" stroke="#2563EB" stroke-width="1.5"/>
+                        <text x="15" y="27" font-size="13" font-weight="bold" fill="#1F2937">Spell Checker</text>
+
+                        <!-- Grammar Checker -->
+                        <rect x="210" y="0" width="195" height="45" rx="6" fill="#FFFFFF" stroke="#2563EB" stroke-width="1.5"/>
+                        <text x="225" y="27" font-size="13" font-weight="bold" fill="#1F2937">Grammar Checker</text>
+
+                        <!-- Translator -->
+                        <rect x="420" y="0" width="195" height="45" rx="6" fill="#FFFFFF" stroke="#2563EB" stroke-width="1.5"/>
+                        <text x="435" y="27" font-size="13" font-weight="bold" fill="#1F2937">Translator</text>
+
+                        <!-- Summarizer -->
+                        <rect x="0" y="55" width="195" height="45" rx="6" fill="#FFFFFF" stroke="#2563EB" stroke-width="1.5"/>
+                        <text x="15" y="82" font-size="13" font-weight="bold" fill="#1F2937">Summarizer</text>
+
+                        <!-- Citation Assistant -->
+                        <rect x="210" y="55" width="195" height="45" rx="6" fill="#FFFFFF" stroke="#2563EB" stroke-width="1.5"/>
+                        <text x="225" y="82" font-size="13" font-weight="bold" fill="#1F2937">Citation Assistant</text>
+
+                        <!-- Plagiarism Detector -->
+                        <rect x="420" y="55" width="195" height="45" rx="6" fill="#FFFFFF" stroke="#2563EB" stroke-width="1.5"/>
+                        <text x="435" y="82" font-size="13" font-weight="bold" fill="#1F2937">Plagiarism Detector</text>
+
+                        <!-- Autocomplete -->
+                        <rect x="0" y="110" width="195" height="45" rx="6" fill="#FFFFFF" stroke="#2563EB" stroke-width="1.5"/>
+                        <text x="15" y="137" font-size="13" font-weight="bold" fill="#1F2937">Autocomplete</text>
+
+                        <!-- Style Checker -->
+                        <rect x="210" y="110" width="195" height="45" rx="6" fill="#FFFFFF" stroke="#2563EB" stroke-width="1.5"/>
+                        <text x="225" y="137" font-size="13" font-weight="bold" fill="#1F2937">Style Checker</text>
+                    </g>
+                </g>
+
+
+                <!-- ========================================== -->
+                <!-- AI RUNTIME & FUSION ENGINE (RIGHT LOWER)   -->
+                <!-- ========================================== -->
+
+                <!-- Connection from Immutable Snapshot to AI Runtime -->
+                <path d="M 550 1150 L 980 1150 L 980 620" fill="none" stroke="#2563EB" stroke-width="3" marker-end="url(#arrow-side)"/>
+
+                <!-- AI Runtime Box (Accent Blue) -->
+                <g transform="translate(850, 620)">
+                    <rect width="260" height="150" rx="10" fill="#2563EB" stroke="#1D4ED8" stroke-width="2" filter="url(#shadow)"/>
+                    <text x="130" y="32" font-size="16" font-weight="bold" fill="#FFFFFF" text-anchor="middle">AI Runtime</text>
+                    <line x1="20" y1="45" x2="240" y2="45" stroke="#60A5FA" stroke-width="1"/>
+                    <text x="25" y="70" font-size="13" fill="#FFFFFF">• Inference</text>
+                    <text x="25" y="90" font-size="13" fill="#FFFFFF">• Semantic Reasoning</text>
+                    <text x="25" y="110" font-size="13" fill="#FFFFFF">• Suggestion Generation</text>
+                    <text x="25" y="130" font-size="13" fill="#FFFFFF">• Translation &amp; Summarization</text>
+                </g>
+
+                <!-- Arrow AI Runtime -> Suggestion Fusion Engine -->
+                <line x1="980" y1="770" x2="980" y2="820" stroke="#0F4C81" stroke-width="3" marker-end="url(#arrow-down)"/>
+
+                <!-- Suggestion Fusion Engine Box -->
+                <g transform="translate(850, 825)">
+                    <rect width="260" height="110" rx="10" fill="#FFFFFF" stroke="#0F4C81" stroke-width="2" filter="url(#shadow)"/>
+                    <text x="130" y="30" font-size="16" font-weight="bold" fill="#0F4C81" text-anchor="middle">Suggestion Fusion Engine</text>
+                    <line x1="20" y1="42" x2="240" y2="42" stroke="#E2E8F0" stroke-width="1"/>
+                    <text x="25" y="62" font-size="13" fill="#475569">• Merge Results &amp; Conflicts</text>
+                    <text x="25" y="82" font-size="13" fill="#475569">• Rank Suggestions</text>
+                    <text x="25" y="100" font-size="13" fill="#475569">• Generate Final Patch</text>
+                </g>
+
+            </svg>
+        </div>
+
+        <div class="caption">
+            <strong>Figure 5.</strong> Language Processing Pipeline of the Tibetan Editor Enterprise Architecture (TEEA), illustrating the transformation of raw Tibetan text into a structured semantic representation that serves as the foundation for intelligent plugins and local AI-powered writing assistance.
+        </div>
+    </div>
+</body>
+</html>

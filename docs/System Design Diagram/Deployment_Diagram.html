@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>09_Deployment_Diagram.html</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #FFFFFF;
+            color: #1F2937;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 1700px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: #0F4C81;
+            margin-bottom: 8px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .description {
+            font-size: 1.1rem;
+            color: #475569;
+            text-align: center;
+            max-width: 950px;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .diagram-container {
+            width: 100%;
+            background-color: #FFFFFF;
+            border: 1px solid #CBD5E1;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+
+        svg {
+            width: 100%;
+            height: auto;
+            max-height: 82vh;
+        }
+
+        .caption {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: #1F2937;
+            max-width: 1500px;
+            border-top: 2px solid #F8FAFC;
+            padding-top: 15px;
+            text-align: left;
+        }
+
+        .caption strong {
+            color: #0F4C81;
+        }
+
+        @media print {
+            body {
+                padding: 0;
+            }
+            .diagram-container {
+                border: none;
+                box-shadow: none;
+                padding: 0;
+            }
+            @page {
+                size: A4 landscape;
+                margin: 1cm;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Deployment Diagram - Tibetan Editor Enterprise Architecture</h1>
+        <p class="description">Physical deployment architecture illustrating local workstation components, runtime services, local AI models, persistent storage repositories, and secure IPC pathways.</p>
+
+        <div class="diagram-container">
+            <svg viewBox="0 0 1600 1150" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <!-- Soft Drop Shadow -->
+                    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+                        <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#000000" flood-opacity="0.08"/>
+                    </filter>
+
+                    <!-- Standard Blue Arrow Marker -->
+                    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                        <path d="M 0 0 L 10 5 L 0 10 Z" fill="#2563EB"/>
+                    </marker>
+
+                    <!-- Dark Blue Arrow Marker -->
+                    <marker id="arrow-dark" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                        <path d="M 0 0 L 10 5 L 0 10 Z" fill="#0F4C81"/>
+                    </marker>
+                </defs>
+
+                <!-- ========================================== -->
+                <!-- DEPLOYMENT NODE: WINDOWS 11 WORKSTATION    -->
+                <!-- ========================================== -->
+                <g transform="translate(30, 20)">
+                    <rect width="1180" height="1100" rx="16" fill="#F8FAFC" stroke="#64748B" stroke-width="2.5" stroke-dasharray="12,6" filter="url(#shadow)"/>
+                    <text x="30" y="35" font-size="18" font-weight="bold" fill="#0F4C81">«deployment node» Windows 11 Workstation</text>
+                    <text x="30" y="55" font-size="12" fill="#475569">Hardware: • Multi-core CPU • Dedicated GPU • 16GB+ RAM • NVMe SSD</text>
+
+                    <!-- ========================================== -->
+                    <!-- HOST APPLICATION: MICROSOFT WORD           -->
+                    <!-- ========================================== -->
+                    <g transform="translate(40, 80)">
+                        <rect width="250" height="120" rx="10" fill="#FFFFFF" stroke="#0F4C81" stroke-width="2" filter="url(#shadow)"/>
+                        <text x="125" y="25" font-size="15" font-weight="bold" fill="#0F4C81" text-anchor="middle">Microsoft Word</text>
+                        <line x1="20" y1="35" x2="230" y2="35" stroke="#E2E8F0" stroke-width="1"/>
+                        <text x="25" y="55" font-size="12" fill="#475569">• Document Editor</text>
+                        <text x="25" y="75" font-size="12" fill="#475569">• Office Runtime</text>
+                        <text x="25" y="95" font-size="12" fill="#475569">• User Interface</text>
+                    </g>
+
+                    <!-- ========================================== -->
+                    <!-- OFFICE ADD-IN                              -->
+                    <!-- ========================================== -->
+                    <g transform="translate(330, 80)">
+                        <rect width="270" height="120" rx="10" fill="#FFFFFF" stroke="#0F4C81" stroke-width="2" filter="url(#shadow)"/>
+                        <text x="135" y="25" font-size="15" font-weight="bold" fill="#0F4C81" text-anchor="middle">Office.js Add-in</text>
+                        <line x1="20" y1="35" x2="250" y2="35" stroke="#E2E8F0" stroke-width="1"/>
+                        <text x="25" y="55" font-size="12" fill="#475569">• Ribbon Commands • Task Pane</text>
+                        <text x="25" y="75" font-size="12" fill="#475569">• UI Layer • IPC Client</text>
+                    </g>
+
+                    <!-- ========================================== -->
+                    <!-- LOCAL IPC                                  -->
+                    <!-- ========================================== -->
+                    <g transform="translate(640, 115)">
+                        <rect width="210" height="50" rx="8" fill="#E0F2FE" stroke="#0284C7" stroke-width="2" filter="url(#shadow)"/>
+                        <text x="105" y="22" font-size="13" font-weight="bold" fill="#0369A1" text-anchor="middle">Named Pipe / Local IPC</text>
+                        <text x="105" y="38" font-size="11" fill="#0284C7" text-anchor="middle">Secure Local Comms</text>
+                    </g>
+
+                    <!-- ========================================== -->
+                    <!-- DESKTOP DAEMON RUNTIME CONTAINER           -->
+                    <!-- ========================================== -->
+                    <g transform="translate(40, 230)">
+                        <rect width="1100" height="420" rx="12" fill="#FFFFFF" stroke="#0F4C81" stroke-width="2" stroke-dasharray="8,4" filter="url(#shadow)"/>
+                        <text x="25" y="30" font-size="16" font-weight="bold" fill="#0F4C81">«execution environment» Desktop Daemon Runtime</text>
+
+                        <!-- Bus Components -->
+                        <g transform="translate(25, 55)">
+                            <rect x="0" y="0" width="130" height="38" rx="6" fill="#F1F5F9" stroke="#0F4C81" stroke-width="1.5"/>
+                            <text x="65" y="24" font-size="12" font-weight="bold" fill="#1F2937" text-anchor="middle">Command Bus</text>
+
+                            <rect x="145" y="0" width="130" height="38" rx="6" fill="#F1F5F9" stroke="#0F4C81" stroke-width="1.5"/>
+                            <text x="210" y="24" font-size="12" font-weight="bold" fill="#1F2937" text-anchor="middle">Query Bus</text>
+
+                            <rect x="290" y="0" width="130" height="38" rx="6" fill="#F1F5F9" stroke="#0F4C81" stroke-width="1.5"/>
+                            <text x="355" y="24" font-size="12" font-weight="bold" fill="#1F2937" text-anchor="middle">Event Bus</text>
+
+                            <rect x="435" y="0" width="130" height="38" rx="6" fill="#F1F5F9" stroke="#0F4C81" stroke-width="1.5"/>
+                            <text x="500" y="24" font-size="12" font-weight="bold" fill="#1F2937" text-anchor="middle">Scheduler</text>
+
+                            <rect x="580" y="0" width="160" height="38" rx="6" fill="#F1F5F9" stroke="#0F4C81" stroke-width="1.5"/>
+                            <text x="660" y="24" font-size="12" font-weight="bold" fill="#1F2937" text-anchor="middle">Capability Registry</text>
+                        </g>
+
+                        <!-- Core Service Components inside Daemon -->
+                        <g transform="translate(25, 115)">
+                            <!-- Language Server -->
+                            <rect x="0" y="0" width="220" height="110" rx="8" fill="#FFFFFF" stroke="#0F4C81" stroke-width="2" filter="url(#shadow)"/>
+                            <text x="110" y="25" font-size="14" font-weight="bold" fill="#0F4C81" text-anchor="middle">Language Server</text>
+                            <line x1="15" y1="35" x2="205" y2="35" stroke="#E2E8F0" stroke-width="1"/>
+                            <text x="20" y="55" font-size="12" fill="#475569">• Text Tokenization</text>
+                            <text x="20" y="73" font-size="12" fill="#475569">• Morphology &amp; POS</text>
+                            <text x="20" y="91" font-size="12" fill="#475569">• Dependency Parsing</text>
+
+                            <!-- Plugin Runtime -->
+                            <rect x="245" y="0" width="260" height="110" rx="8" fill="#FFFFFF" stroke="#0F4C81" stroke-width="2" filter="url(#shadow)"/>
+                            <text x="130" y="25" font-size="14" font-weight="bold" fill="#0F4C81" text-anchor="middle">Plugin Runtime</text>
+                            <line x1="15" y1="35" x2="245" y2="35" stroke="#E2E8F0" stroke-width="1"/>
+                            <text x="20" y="55" font-size="12" fill="#475569">• Sandbox Execution</text>
+                            <text x="20" y="73" font-size="12" fill="#475569">• Feature Dispatcher</text>
+                            <text x="20" y="91" font-size="12" fill="#475569">• Plagiarism &amp; Checkers</text>
+
+                            <!-- Suggestion Fusion Engine -->
+                            <rect x="530" y="0" width="240" height="110" rx="8" fill="#FFFFFF" stroke="#0F4C81" stroke-width="2" filter="url(#shadow)"/>
+                            <text x="120" y="25" font-size="14" font-weight="bold" fill="#0F4C81" text-anchor="middle">Suggestion Fusion Engine</text>
+                            <line x1="15" y1="35" x2="225" y2="35" stroke="#E2E8F0" stroke-width="1"/>
+                            <text x="20" y="55" font-size="12" fill="#475569">• Result Merging</text>
+                            <text x="20" y="73" font-size="12" fill="#475569">• Conflict Resolution</text>
+                            <text x="20" y="91" font-size="12" fill="#475569">• Confidence Ranking</text>
+                        </g>
+
+                        <!-- AI Runtime Nested Container -->
+                        <g transform="translate(25, 245)">
+                            <rect width="1050" height="155" rx="10" fill="#F8FAFC" stroke="#2563EB" stroke-width="2" filter="url(#shadow)"/>
+                            <text x="20" y="25" font-size="14" font-weight="bold" fill="#2563EB">«subsystem» AI Runtime</text>
+
+                            <g transform="translate(20, 40)">
+                                <rect x="0" y="0" width="160" height="95" rx="6" fill="#FFFFFF" stroke="#2563EB" stroke-width="1.5"/>
+                                <text x="80" y="22" font-size="12" font-weight="bold" fill="#1F2937" text-anchor="middle">Inference Manager</text>
+                                <text x="12" y="45" font-size="11" fill="#475569">• Execution Queue</text>
+                                <text x="12" y="62" font-size="11" fill="#475569">• Batch Scheduler</text>
+                                <text x="12" y="79" font-size="11" fill="#475569">• Priority Dispatch</text>
+
+                                <rect x="175" y="0" width="160" height="95" rx="6" fill="#FFFFFF" stroke="#2563EB" stroke-width="1.5"/>
+                                <text x="85" y="22" font-size="12" font-weight="bold" fill="#1F2937" text-anchor="middle">Model Registry</text>
+                                <text x="12" y="45" font-size="11" fill="#475569">• Version Control</text>
+                                <text x="12" y="62" font-size="11" fill="#475569">• Capabilities Meta</text>
+                                <text x="12" y="79" font-size="11" fill="#475569">• State Validator</text>
+
+                                <rect x="350" y="0" width="160" height="95" rx="6" fill="#FFFFFF" stroke="#2563EB" stroke-width="1.5"/>
+                                <text x="80" y="22" font-size="12" font-weight="bold" fill="#1F2937" text-anchor="middle">Model Loader</text>
+                                <text x="12" y="45" font-size="11" fill="#475569">• Memory Mapping</text>
+                                <text x="12" y="62" font-size="11" fill="#475569">• Weight Warmup</text>
+                                <text x="12" y="79" font-size="11" fill="#475569">• Lazy Unloading</text>
+
+                                <rect x="525" y="0" width="160" height="95" rx="6" fill="#FFFFFF" stroke="#2563EB" stroke-width="1.5"/>
+                                <text x="80" y="22" font-size="12" font-weight="bold" fill="#1F2937" text-anchor="middle">ONNX Runtime</text>
+                                <text x="12" y="45" font-size="11" fill="#475569">• DirectML / CUDA</text>
+                                <text x="12" y="62" font-size="11" fill="#475569">• Tensor Execution</text>
+                                <text x="12" y="79" font-size="11" fill="#475569">• Hardware Acceleration</text>
+
+                                <rect x="700" y="0" width="160" height="95" rx="6" fill="#FFFFFF" stroke="#2563EB" stroke-width="1.5"/>
+                                <text x="80" y="22" font-size="12" font-weight="bold" fill="#1F2937" text-anchor="middle">GPU Resource Mgr</text>
+                                <text x="12" y="45" font-size="11" fill="#475569">• VRAM Allocation</text>
+                                <text x="12" y="62" font-size="11" fill="#475569">• Thermal Governor</text>
+                                <text x="12" y="79" font-size="11" fill="#475569">• Context Caching</text>
+
+                                <rect x="875" y="0" width="150" height="95" rx="6" fill="#FFFFFF" stroke="#2563EB" stroke-width="1.5"/>
+                                <text x="75" y="22" font-size="12" font-weight="bold" fill="#1F2937" text-anchor="middle">Memory Manager</text>
+                                <text x="12" y="45" font-size="11" fill="#475569">• Heap Trimming</text>
+                                <text x="12" y="62" font-size="11" fill="#475569">• Leak Prevention</text>
+                                <text x="12" y="79" font-size="11" fill="#475569">• GC Synchronization</text>
+                            </g>
+                        </g>
+                    </g>
+
+                    <!-- ========================================== -->
+                    <!-- LOCAL STORAGE & AI MODELS (BOTTOM ROW)     -->
+                    <!-- ========================================== -->
+
+                    <!-- SQLite Database -->
+                    <g transform="translate(40, 675)">
+                        <rect width="210" height="85" rx="8" fill="#FFFFFF" stroke="#64748B" stroke-width="2" filter="url(#shadow)"/>
+                        <text x="105" y="22" font-size="13" font-weight="bold" fill="#1F2937" text-anchor="middle">«database» SQLite</text>
+                        <line x1="15" y1="30" x2="195" y2="30" stroke="#E2E8F0" stroke-width="1"/>
+                        <text x="20" y="48" font-size="11" fill="#475569">• Preferences • Config</text>
+                        <text x="20" y="65" font-size="11" fill="#475569">• Plugin Metadata</text>
+                    </g>
+
+                    <!-- LMDB Cache -->
+                    <g transform="translate(270, 675)">
+                        <rect width="210" height="85" rx="8" fill="#FFFFFF" stroke="#64748B" stroke-width="2" filter="url(#shadow)"/>
+                        <text x="105" y="22" font-size="13" font-weight="bold" fill="#1F2937" text-anchor="middle">«database» LMDB Cache</text>
+                        <line x1="15" y1="30" x2="195" y2="30" stroke="#E2E8F0" stroke-width="1"/>
+                        <text x="20" y="48" font-size="11" fill="#475569">• Cached Results</text>
+                        <text x="20" y="65" font-size="11" fill="#475569">• Embeddings &amp; Temp</text>
+                    </g>
+
+                    <!-- Dictionary Repository -->
+                    <g transform="translate(500, 675)">
+                        <rect width="210" height="85" rx="8" fill="#FFFFFF" stroke="#64748B" stroke-width="2" filter="url(#shadow)"/>
+                        <text x="105" y="22" font-size="13" font-weight="bold" fill="#1F2937" text-anchor="middle">«artifact» Dictionary Repo</text>
+                        <line x1="15" y1="30" x2="195" y2="30" stroke="#E2E8F0" stroke-width="1"/>
+                        <text x="20" y="48" font-size="11" fill="#475569">• Tibetan Dictionary</text>
+                        <text x="20" y="65" font-size="11" fill="#475569">• Grammar &amp; Terminology</text>
+                    </g>
+
+                    <!-- Fingerprint Database -->
+                    <g transform="translate(730, 675)">
+                        <rect width="210" height="85" rx="8" fill="#FFFFFF" stroke="#64748B" stroke-width="2" filter="url(#shadow)"/>
+                        <text x="105" y="22" font-size="13" font-weight="bold" fill="#1F2937" text-anchor="middle">«database» Fingerprint DB</text>
+                        <line x1="15" y1="30" x2="195" y2="30" stroke="#E2E8F0" stroke-width="1"/>
+                        <text x="20" y="48" font-size="11" fill="#475569">• Winnowing Fingerprints</text>
+                        <text x="20" y="65" font-size="11" fill="#475569">• Similarity Index</text>
+                    </g>
+
+                    <!-- Local AI Models Node -->
+                    <g transform="translate(40, 785)">
+                        <rect width="1100" height="295" rx="12" fill="#F8FAFC" stroke="#7C3AED" stroke-width="2" stroke-dasharray="8,4" filter="url(#shadow)"/>
+                        <text x="25" y="30" font-size="16" font-weight="bold" fill="#6D28D9">«deployment node» Local AI Models Repository</text>
+
+                        <g transform="translate(25, 50)">
+                            <!-- TiBERT Model -->
+                            <rect x="0" y="0" width="165" height="100" rx="8" fill="#FFFFFF" stroke="#7C3AED" stroke-width="1.5" filter="url(#shadow)"/>
+                            <text x="82.5" y="25" font-size="13" font-weight="bold" fill="#5B21B6" text-anchor="middle">TiBERT Model</text>
+                            <line x1="15" y1="35" x2="150" y2="35" stroke="#EDE9FE" stroke-width="1"/>
+                            <text x="15" y="55" font-size="11" fill="#475569">• Tibetan Base LLM</text>
+                            <text x="15" y="72" font-size="11" fill="#475569">• Encoder-Decoder</text>
+                            <text x="15" y="89" font-size="11" fill="#475569">• Weights (ONNX)</text>
+
+                            <!-- Translation Model -->
+                            <rect x="185" y="0" width="165" height="100" rx="8" fill="#FFFFFF" stroke="#7C3AED" stroke-width="1.5" filter="url(#shadow)"/>
+                            <text x="82.5" y="25" font-size="13" font-weight="bold" fill="#5B21B6" text-anchor="middle">Translation Model</text>
+                            <line x1="15" y1="35" x2="150" y2="35" stroke="#EDE9FE" stroke-width="1"/>
+                            <text x="15" y="55" font-size="11" fill="#475569">• Tibetan-English</text>
+                            <text x="15" y="72" font-size="11" fill="#475569">• Neural MT Engine</text>
+                            <text x="15" y="89" font-size="11" fill="#475569">• Quantized INT8</text>
+
+                            <!-- Grammar Model -->
+                            <rect x="370" y="0" width="165" height="100" rx="8" fill="#FFFFFF" stroke="#7C3AED" stroke-width="1.5" filter="url(#shadow)"/>
+                            <text x="82.5" y="25" font-size="13" font-weight="bold" fill="#5B21B6" text-anchor="middle">Grammar Model</text>
+                            <line x1="15" y1="35" x2="150" y2="35" stroke="#EDE9FE" stroke-width="1"/>
+                            <text x="15" y="55" font-size="11" fill="#475569">• Syntax Checker</text>
+                            <text x="15" y="72" font-size="11" fill="#475569">• Particle Validator</text>
+                            <text x="15" y="89" font-size="11" fill="#475569">• Token Classifier</text>
+
+                            <!-- Summarization Model -->
+                            <rect x="555" y="0" width="165" height="100" rx="8" fill="#FFFFFF" stroke="#7C3AED" stroke-width="1.5" filter="url(#shadow)"/>
+                            <text x="82.5" y="25" font-size="13" font-weight="bold" fill="#5B21B6" text-anchor="middle">Summarizer Model</text>
+                            <line x1="15" y1="35" x2="150" y2="35" stroke="#EDE9FE" stroke-width="1"/>
+                            <text x="15" y="55" font-size="11" fill="#475569">• Abstractive Summary</text>
+                            <text x="15" y="72" font-size="11" fill="#475569">• Context Reduction</text>
+                            <text x="15" y="89" font-size="11" fill="#475569">• Fast Inference</text>
+
+                            <!-- Embedding Model -->
+                            <rect x="740" y="0" width="165" height="100" rx="8" fill="#FFFFFF" stroke="#7C3AED" stroke-width="1.5" filter="url(#shadow)"/>
+                            <text x="82.5" y="25" font-size="13" font-weight="bold" fill="#5B21B6" text-anchor="middle">Embedding Model</text>
+                            <line x1="15" y1="35" x2="150" y2="35" stroke="#EDE9FE" stroke-width="1"/>
+                            <text x="15" y="55" font-size="11" fill="#475569">• Semantic Vectors</text>
+                            <text x="15" y="72" font-size="11" fill="#475569">• Vector Similarity</text>
+                            <text x="15" y="89" font-size="11" fill="#475569">• 768-dim space</text>
+
+                            <!-- Future Models -->
+                            <rect x="925" y="0" width="135" height="100" rx="8" fill="#F8FAFC" stroke="#7C3AED" stroke-width="1.5" stroke-dasharray="4,2"/>
+                            <text x="67.5" y="25" font-size="13" font-weight="bold" fill="#7C3AED" text-anchor="middle">Future Models</text>
+                            <line x1="15" y1="35" x2="120" y2="35" stroke="#EDE9FE" stroke-width="1"/>
+                            <text x="15" y="55" font-size="11" fill="#64748B">• Plug-and-Play</text>
+                            <text x="15" y="72" font-size="11" fill="#64748B">• Custom Adapters</text>
+                            <text x="15" y="89" font-size="11" fill="#64748B">• Hot-Swap Ready</text>
+                        </g>
+
+                        <!-- AI Runtime to Models Communication Sub-Layer -->
+                        <text x="550" y="180" font-size="12" font-weight="bold" fill="#5B21B6" text-anchor="middle">«communication» Model Loading &amp; Tensor Execution (ONNX Runtime ⇄ Local AI Models)</text>
+                    </g>
+
+                </g> <!-- End Windows 11 Workstation Node -->
+
+
+                <!-- ========================================== -->
+                <!-- SIDE PANEL: DEPLOYMENT CHARACTERISTICS     -->
+                <!-- ========================================== -->
+                <g transform="translate(1230, 20)">
+                    <rect width="340" height="1100" rx="12" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2" filter="url(#shadow)"/>
+                    <text x="170" y="35" font-size="16" font-weight="bold" fill="#0F4C81" text-anchor="middle">Deployment Characteristics</text>
+                    <line x1="20" y1="50" x2="320" y2="50" stroke="#CBD5E1" stroke-width="1"/>
+
+                    <!-- Characteristics Items -->
+                    <g transform="translate(25, 75)">
+                        <rect x="0" y="0" width="290" height="90" rx="6" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+                        <text x="15" y="25" font-size="13" font-weight="bold" fill="#0F4C81">Offline First</text>
+                        <text x="15" y="45" font-size="12" fill="#475569">Complete operation without internet dependency; all data stays local.</text>
+                        <text x="15" y="65" font-size="11" fill="#0284C7">Zero cloud telemetry or data leakage.</text>
+
+                        <rect x="0" y="105" width="290" height="90" rx="6" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+                        <text x="15" y="130" font-size="13" font-weight="bold" fill="#0F4C81">Local Processing</text>
+                        <text x="15" y="150" font-size="12" fill="#475569">Hardware accelerated inference via DirectML/CUDA using ONNX Runtime.</text>
+
+                        <rect x="0" y="210" width="290" height="90" rx="6" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+                        <text x="15" y="235" font-size="13" font-weight="bold" fill="#0F4C81">Plugin-Based Architecture</text>
+                        <text x="15" y="255" font-size="12" fill="#475569">Modular runtime loading feature plugins dynamically through capability registry.</text>
+
+                        <rect x="0" y="315" width="290" height="90" rx="6" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+                        <text x="15" y="340" font-size="13" font-weight="bold" fill="#0F4C81">Secure Local IPC</text>
+                        <text x="15" y="360" font-size="12" fill="#475569">Named pipe communication linking Office.js add-in with the desktop daemon.</text>
+
+                        <rect x="0" y="420" width="290" height="90" rx="6" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+                        <text x="15" y="445" font-size="13" font-weight="bold" fill="#0F4C81">AI Model Agnostic</text>
+                        <text x="15" y="465" font-size="12" fill="#475569">Model registry supports hot-swapping TiBERT and custom specialized models.</text>
+
+                        <rect x="0" y="525" width="290" height="90" rx="6" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+                        <text x="15" y="550" font-size="13" font-weight="bold" fill="#0F4C81">Modular Runtime</text>
+                        <text x="15" y="570" font-size="12" fill="#475569">Clean separation between presentation, application bus, and AI inference.</text>
+                    </g>
+                </g>
+
+
+                <!-- ========================================== -->
+                <!-- COMMUNICATION PATHWAY ARROWS               -->
+                <!-- ========================================== -->
+
+                <!-- Word -> Office.js -->
+                <path d="M 220 140 L 330 140" fill="none" stroke="#2563EB" stroke-width="2" marker-end="url(#arrow)"/>
+                <text x="275" y="130" font-size="10" fill="#1F2937" text-anchor="middle">Render/UI</text>
+
+                <!-- Office.js -> Local IPC -->
+                <path d="M 600 140 L 640 140" fill="none" stroke="#2563EB" stroke-width="2" marker-end="url(#arrow)"/>
+                <text x="620" y="130" font-size="10" fill="#1F2937" text-anchor="middle">IPC Msg</text>
+
+                <!-- Local IPC -> Desktop Daemon (Command Bus) -->
+                <path d="M 745 165 L 745 230 L 150 230 L 150 280" fill="none" stroke="#2563EB" stroke-width="2" marker-end="url(#arrow)"/>
+                <text x="450" y="222" font-size="11" fill="#1F2937" text-anchor="middle">Analysis Request</text>
+
+                <!-- Plugin Runtime <-> Language Server -->
+                <path d="M 315 380 L 265 380" fill="none" stroke="#0F4C81" stroke-width="2" stroke-dasharray="4,2" marker-end="url(#arrow-dark)"/>
+                <text x="290" y="372" font-size="10" fill="#0F4C81" text-anchor="middle">Parse</text>
+
+                <!-- Plugin Runtime <-> AI Runtime -->
+                <path d="M 425 435 L 425 475" fill="none" stroke="#2563EB" stroke-width="2" marker-end="url(#arrow)"/>
+                <text x="460" y="460" font-size="10" fill="#2563EB" text-anchor="middle">Inference Req</text>
+
+                <!-- AI Runtime <-> Local AI Models -->
+                <path d="M 400 625 L 400 785" fill="none" stroke="#7C3AED" stroke-width="2" marker-end="url(#arrow)"/>
+                <text x="440" y="720" font-size="11" fill="#7C3AED">Model Loading</text>
+
+                <!-- AI Runtime <-> SQLite -->
+                <path d="M 145 625 L 145 675" fill="none" stroke="#2563EB" stroke-width="2" marker-end="url(#arrow)"/>
+                <text x="120" y="655" font-size="10" fill="#2563EB">DB Read</text>
+
+                <!-- AI Runtime <-> LMDB -->
+                <path d="M 375 625 L 375 675" fill="none" stroke="#2563EB" stroke-width="2" marker-end="url(#arrow)"/>
+                <text x="350" y="655" font-size="10" fill="#2563EB">Cache Access</text>
+
+                <!-- Language Server <-> Dictionary Repository -->
+                <path d="M 605 625 L 605 675" fill="none" stroke="#2563EB" stroke-width="2" marker-end="url(#arrow)"/>
+                <text x="630" y="655" font-size="10" fill="#2563EB">Dictionary Lookup</text>
+
+                <!-- Plagiarism Plugin <-> Fingerprint Database -->
+                <path d="M 835 625 L 835 675" fill="none" stroke="#2563EB" stroke-width="2" marker-end="url(#arrow)"/>
+                <text x="860" y="655" font-size="10" fill="#2563EB">Fingerprint Index</text>
+
+                <!-- Suggestion Fusion Engine -> Office.js (Return merged suggestions) -->
+                <path d="M 835 340 L 1150 340 L 1150 100 L 465 100 L 465 80" fill="none" stroke="#2563EB" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrow)"/>
+                <text x="800" y="92" font-size="11" fill="#2563EB" text-anchor="middle">Merged &amp; Rendered Suggestions</text>
+
+            </svg>
+        </div>
+
+        <div class="caption">
+            <strong>Figure 9.</strong> Deployment Diagram of the Tibetan Editor Enterprise Architecture (TEEA), illustrating the physical deployment of Microsoft Word, the Office.js Add-in, the Desktop Daemon Runtime, AI Runtime, local databases, and AI models on a Windows workstation, together with their communication pathways and deployment relationships.
+        </div>
+    </div>
+</body>
+</html>

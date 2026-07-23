@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>01_High_Level_Architecture</title>
+    <style>
+        /* 
+         * Enterprise Software Architecture Documentation
+         * Optimized for A4 Landscape & PDF Export
+         */
+        :root {
+            --primary-blue: #0F4C81;
+            --accent-blue: #2563EB;
+            --light-gray: #F8FAFC;
+            --border-gray: #CBD5E1;
+            --text-dark: #1F2937;
+            --text-light: #64748B;
+            --white: #FFFFFF;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--white);
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .page-container {
+            width: 100%;
+            max-width: 1500px;
+            padding: 40px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: var(--primary-blue);
+            font-size: 32px;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            color: var(--text-light);
+            font-size: 16px;
+            line-height: 1.5;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .diagram-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .svg-canvas {
+            width: 100%;
+            height: auto;
+            max-width: 1400px;
+        }
+
+        .caption {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-dark);
+            max-width: 1200px;
+            margin: 0 auto;
+            border-top: 1px solid var(--border-gray);
+            padding-top: 15px;
+            text-align: justify;
+        }
+
+        .caption strong {
+            color: var(--primary-blue);
+        }
+
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .page-container {
+                padding: 10mm 15mm;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    <div class="header">
+        <h1>Tibetan Editor Enterprise Architecture (TEEA)</h1>
+        <p>A comprehensive high-level view of the system's modular boundaries, inter-process communication, and internal daemon logic ensuring high-performance, offline-first execution.</p>
+    </div>
+
+    <div class="diagram-container">
+        <!-- SVG Canvas (1400 x 920) -->
+        <svg class="svg-canvas" viewBox="0 0 1400 920" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <!-- Soft Drop Shadow for Enterprise Look -->
+                <filter id="shadow" x="-5%" y="-5%" width="115%" height="115%">
+                    <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#1F2937" flood-opacity="0.08"/>
+                </filter>
+                <filter id="shadow-light" x="-5%" y="-5%" width="115%" height="115%">
+                    <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#1F2937" flood-opacity="0.05"/>
+                </filter>
+
+                <!-- Arrow Markers -->
+                <marker id="arrow-start" markerWidth="10" markerHeight="10" refX="1" refY="5" orient="auto-start-reverse">
+                    <path d="M 10 0 L 0 5 L 10 10 Z" fill="#2563EB"/>
+                </marker>
+                <marker id="arrow-end" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+                    <path d="M 0 0 L 10 5 L 0 10 Z" fill="#2563EB"/>
+                </marker>
+            </defs>
+
+            <!-- ========================================== -->
+            <!-- LAYER SEPARATORS & BANDS                   -->
+            <!-- ========================================== -->
+            
+            <!-- Horizontal Dashed Dividers -->
+            <line x1="70" y1="160" x2="1360" y2="160" stroke="#CBD5E1" stroke-dasharray="4 4" stroke-width="1.5"/>
+            <line x1="70" y1="270" x2="1360" y2="270" stroke="#CBD5E1" stroke-dasharray="4 4" stroke-width="1.5"/>
+            <line x1="70" y1="655" x2="1360" y2="655" stroke="#CBD5E1" stroke-dasharray="4 4" stroke-width="1.5"/>
+
+            <!-- Functional Bands (Left Margin) -->
+            <!-- Presentation Layer -->
+            <rect x="20" y="20" width="36" height="120" rx="6" fill="#0F4C81"/>
+            <text x="-80" y="43" transform="rotate(-90)" fill="#FFFFFF" font-size="12" font-weight="700" letter-spacing="2" text-anchor="middle">PRESENTATION</text>
+            
+            <!-- Communication Layer -->
+            <rect x="20" y="175" width="36" height="80" rx="6" fill="#0F4C81"/>
+            <text x="-215" y="43" transform="rotate(-90)" fill="#FFFFFF" font-size="12" font-weight="700" letter-spacing="2" text-anchor="middle">COMMUNICATION</text>
+            
+            <!-- Runtime Layer -->
+            <rect x="20" y="285" width="36" height="360" rx="6" fill="#0F4C81"/>
+            <text x="-465" y="43" transform="rotate(-90)" fill="#FFFFFF" font-size="12" font-weight="700" letter-spacing="2" text-anchor="middle">RUNTIME LAYER</text>
+            
+            <!-- Persistence Layer -->
+            <rect x="20" y="665" width="36" height="235" rx="6" fill="#0F4C81"/>
+            <text x="-782" y="43" transform="rotate(-90)" fill="#FFFFFF" font-size="12" font-weight="700" letter-spacing="2" text-anchor="middle">PERSISTENCE</text>
+
+
+            <!-- ========================================== -->
+            <!-- RELATIONSHIP ROUTING LINES                 -->
+            <!-- ========================================== -->
+
+            <!-- Word -> Office.js -->
+            <path d="M 755 90 L 755 107" fill="none" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrow-end)"/>
+            
+            <!-- Office.js -> IPC -->
+            <path d="M 755 170 L 755 192" fill="none" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrow-end)"/>
+            
+            <!-- IPC -> Desktop Daemon -->
+            <path d="M 755 255 L 755 297" fill="none" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrow-end)"/>
+
+            <!-- Language Server -> Plugin Runtime -->
+            <path d="M 420 455 L 462 455" fill="none" stroke="#2563EB" stroke-width="2.5" marker-end="url(#arrow-end)"/>
+
+            <!-- Plugin Runtime <-> Suggestion Fusion Engine -->
+            <path d="M 738 455 L 772 455" fill="none" stroke="#2563EB" stroke-width="2.5" marker-start="url(#arrow-start)" marker-end="url(#arrow-end)"/>
+
+            <!-- Plugin Runtime <-> AI Runtime (Over the top) -->
+            <path d="M 600 332 L 600 315 L 1220 315 L 1220 332" fill="none" stroke="#2563EB" stroke-width="2.5" stroke-linejoin="round" marker-start="url(#arrow-start)" marker-end="url(#arrow-end)"/>
+
+            <!-- Suggestion Fusion Engine -> Office.js -->
+            <!-- Exits top of SFE, routes up and left to right edge of Office.js -->
+            <path d="M 910 332 L 910 140 L 908 140" fill="none" stroke="#2563EB" stroke-width="2.5" stroke-linejoin="round" marker-end="url(#arrow-end)"/>
+
+            <!-- Language Server <-> Storage Platform -->
+            <!-- Exits bottom of LS, routes down and right to left edge of Storage -->
+            <path d="M 290 628 L 290 770 L 597 770" fill="none" stroke="#2563EB" stroke-width="2.5" stroke-linejoin="round" marker-start="url(#arrow-start)" marker-end="url(#arrow-end)"/>
+
+            <!-- AI Runtime <-> Storage Platform -->
+            <!-- Exits bottom of AI, routes down and left to right edge of Storage -->
+            <path d="M 1220 548 L 1220 770 L 913 770" fill="none" stroke="#2563EB" stroke-width="2.5" stroke-linejoin="round" marker-start="url(#arrow-start)" marker-end="url(#arrow-end)"/>
+
+
+            <!-- ========================================== -->
+            <!-- TOP LEVEL COMPONENTS                       -->
+            <!-- ========================================== -->
+
+            <!-- Microsoft Word -->
+            <g filter="url(#shadow)">
+                <rect x="605" y="30" width="300" height="60" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+                <rect x="625" y="42" width="36" height="36" rx="6" fill="#2563EB"/>
+                <text x="643" y="67" fill="#FFFFFF" font-size="20" font-weight="700" text-anchor="middle">W</text>
+                <text x="675" y="66" fill="#1F2937" font-size="18" font-weight="700">Microsoft Word</text>
+            </g>
+
+            <!-- Office.js Add-in -->
+            <g filter="url(#shadow)">
+                <rect x="605" y="110" width="300" height="60" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+                <text x="755" y="137" fill="#1F2937" font-size="18" font-weight="700" text-anchor="middle">Office.js Add-in</text>
+                <text x="755" y="155" fill="#64748B" font-size="13" font-weight="500" text-anchor="middle">(Presentation Layer)</text>
+            </g>
+
+            <!-- Local IPC Layer -->
+            <g filter="url(#shadow)">
+                <rect x="605" y="195" width="300" height="60" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+                <text x="755" y="231" fill="#1F2937" font-size="18" font-weight="700" text-anchor="middle">Local IPC Layer</text>
+            </g>
+
+
+            <!-- ========================================== -->
+            <!-- DESKTOP DAEMON RUNTIME                     -->
+            <!-- ========================================== -->
+            
+            <!-- Daemon Boundary -->
+            <rect x="120" y="305" width="1240" height="585" fill="#F8FAFC" stroke="#0F4C81" stroke-width="2" stroke-dasharray="10 6" rx="12"/>
+            
+            <!-- Daemon Label (with solid background to hide dashed border behind text) -->
+            <rect x="150" y="291" width="225" height="28" fill="#F8FAFC"/>
+            <text x="262" y="311" fill="#0F4C81" font-size="16" font-weight="700" text-anchor="middle">Desktop Daemon Runtime</text>
+
+            <!-- 1. Language Server -->
+            <g filter="url(#shadow)">
+                <!-- Base Box -->
+                <rect x="160" y="340" width="260" height="280" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5" rx="8"/>
+                <!-- Header -->
+                <path d="M 160 348 A 8 8 0 0 1 168 340 L 412 340 A 8 8 0 0 1 420 348 L 420 380 L 160 380 Z" fill="#0F4C81"/>
+                <text x="290" y="365" fill="#FFFFFF" font-size="15" font-weight="700" text-anchor="middle">Language Server</text>
+                <!-- Items -->
+                <circle cx="185" cy="405" r="4" fill="#2563EB"/><text x="205" y="410" fill="#1F2937" font-size="14">Unicode Normalization</text>
+                <circle cx="185" cy="433" r="4" fill="#2563EB"/><text x="205" y="438" fill="#1F2937" font-size="14">Sentence Segmentation</text>
+                <circle cx="185" cy="461" r="4" fill="#2563EB"/><text x="205" y="466" fill="#1F2937" font-size="14">Tokenization</text>
+                <circle cx="185" cy="489" r="4" fill="#2563EB"/><text x="205" y="494" fill="#1F2937" font-size="14">Morphological Analysis</text>
+                <circle cx="185" cy="517" r="4" fill="#2563EB"/><text x="205" y="522" fill="#1F2937" font-size="14">POS Tagging</text>
+                <circle cx="185" cy="545" r="4" fill="#2563EB"/><text x="205" y="550" fill="#1F2937" font-size="14">Dependency Parsing</text>
+                <circle cx="185" cy="573" r="4" fill="#2563EB"/><text x="205" y="578" fill="#1F2937" font-size="14">Named Entity Recognition</text>
+                <circle cx="185" cy="601" r="4" fill="#2563EB"/><text x="205" y="606" fill="#1F2937" font-size="14">Semantic Graph</text>
+            </g>
+
+            <!-- 2. Plugin Runtime -->
+            <g filter="url(#shadow)">
+                <rect x="470" y="340" width="260" height="230" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5" rx="8"/>
+                <path d="M 470 348 A 8 8 0 0 1 478 340 L 722 340 A 8 8 0 0 1 730 348 L 730 380 L 470 380 Z" fill="#0F4C81"/>
+                <text x="600" y="365" fill="#FFFFFF" font-size="15" font-weight="700" text-anchor="middle">Plugin Runtime</text>
+                <!-- Items -->
+                <circle cx="495" cy="405" r="4" fill="#2563EB"/><text x="515" y="410" fill="#1F2937" font-size="14">Spell Checker</text>
+                <circle cx="495" cy="433" r="4" fill="#2563EB"/><text x="515" y="438" fill="#1F2937" font-size="14">Grammar Checker</text>
+                <circle cx="495" cy="461" r="4" fill="#2563EB"/><text x="515" y="466" fill="#1F2937" font-size="14">Translator</text>
+                <circle cx="495" cy="489" r="4" fill="#2563EB"/><text x="515" y="494" fill="#1F2937" font-size="14">Summarizer</text>
+                <circle cx="495" cy="517" r="4" fill="#2563EB"/><text x="515" y="522" fill="#1F2937" font-size="14">Citation Assistant</text>
+                <circle cx="495" cy="545" r="4" fill="#2563EB"/><text x="515" y="550" fill="#1F2937" font-size="14">Plagiarism Detector</text>
+            </g>
+
+            <!-- 3. Suggestion Fusion Engine -->
+            <g filter="url(#shadow)">
+                <rect x="780" y="340" width="260" height="205" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5" rx="8"/>
+                <path d="M 780 348 A 8 8 0 0 1 788 340 L 1032 340 A 8 8 0 0 1 1040 348 L 1040 380 L 780 380 Z" fill="#0F4C81"/>
+                <text x="910" y="365" fill="#FFFFFF" font-size="15" font-weight="700" text-anchor="middle">Suggestion Fusion Engine</text>
+                <!-- Items -->
+                <circle cx="805" cy="405" r="4" fill="#2563EB"/><text x="825" y="410" fill="#1F2937" font-size="14">Merge Suggestions</text>
+                <circle cx="805" cy="433" r="4" fill="#2563EB"/><text x="825" y="438" fill="#1F2937" font-size="14">Deduplicate</text>
+                <circle cx="805" cy="461" r="4" fill="#2563EB"/><text x="825" y="466" fill="#1F2937" font-size="14">Conflict Resolution</text>
+                <circle cx="805" cy="489" r="4" fill="#2563EB"/><text x="825" y="494" fill="#1F2937" font-size="14">Confidence Ranking</text>
+                <circle cx="805" cy="517" r="4" fill="#2563EB"/><text x="825" y="522" fill="#1F2937" font-size="14">Patch Generation</text>
+            </g>
+
+            <!-- 4. AI Runtime -->
+            <g filter="url(#shadow)">
+                <rect x="1090" y="340" width="260" height="205" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5" rx="8"/>
+                <path d="M 1090 348 A 8 8 0 0 1 1098 340 L 1342 340 A 8 8 0 0 1 1350 348 L 1350 380 L 1090 380 Z" fill="#0F4C81"/>
+                <text x="1220" y="365" fill="#FFFFFF" font-size="15" font-weight="700" text-anchor="middle">AI Runtime</text>
+                <!-- Items -->
+                <circle cx="1115" cy="405" r="4" fill="#2563EB"/><text x="1135" y="410" fill="#1F2937" font-size="14">Capability Registry</text>
+                <circle cx="1115" cy="433" r="4" fill="#2563EB"/><text x="1135" y="438" fill="#1F2937" font-size="14">Model Registry</text>
+                <circle cx="1115" cy="461" r="4" fill="#2563EB"/><text x="1135" y="466" fill="#1F2937" font-size="14">Inference Manager</text>
+                <circle cx="1115" cy="489" r="4" fill="#2563EB"/><text x="1135" y="494" fill="#1F2937" font-size="14">ONNX Runtime</text>
+                <circle cx="1115" cy="517" r="4" fill="#2563EB"/><text x="1135" y="522" fill="#1F2937" font-size="14">Local AI Models</text>
+            </g>
+
+            <!-- 5. Storage Platform -->
+            <g filter="url(#shadow)">
+                <rect x="605" y="680" width="300" height="185" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5" rx="8"/>
+                <path d="M 605 688 A 8 8 0 0 1 613 680 L 897 680 A 8 8 0 0 1 905 688 L 905 720 L 605 720 Z" fill="#0F4C81"/>
+                <text x="755" y="705" fill="#FFFFFF" font-size="15" font-weight="700" text-anchor="middle">Storage Platform</text>
+                <!-- Items (Centered Layout for balance) -->
+                <circle cx="680" cy="745" r="4" fill="#2563EB"/><text x="700" y="750" fill="#1F2937" font-size="14">SQLite</text>
+                <circle cx="680" cy="773" r="4" fill="#2563EB"/><text x="700" y="778" fill="#1F2937" font-size="14">LMDB</text>
+                <circle cx="680" cy="801" r="4" fill="#2563EB"/><text x="700" y="806" fill="#1F2937" font-size="14">Dictionaries</text>
+                <circle cx="680" cy="829" r="4" fill="#2563EB"/><text x="700" y="834" fill="#1F2937" font-size="14">Fingerprint Index</text>
+                <circle cx="680" cy="857" r="4" fill="#2563EB"/><text x="700" y="862" fill="#1F2937" font-size="14">Cache</text>
+            </g>
+
+        </svg>
+    </div>
+
+    <div class="caption">
+        <strong>Figure 1.</strong> High-Level Architecture of the Tibetan Editor Enterprise Architecture (TEEA), illustrating communication between Microsoft Word, the Office.js Add-in, the Local IPC layer, and the modular Desktop Daemon Runtime responsible for language processing, AI inference, suggestion fusion, plugin execution, and persistent storage.
+    </div>
+</div>
+
+</body>
+</html>

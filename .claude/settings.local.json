@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(sort -k2)",
+      "Bash(python -m pip list)",
+      "Bash(python -c \"import teea; print\\(teea.__file__\\)\")",
+      "Bash(python -c ' *)",
+      "WebFetch(domain:api.github.com)",
+      "Bash(PYTHONIOENCODING=utf-8 python -c ' *)",
+      "Bash(PYTHONIOENCODING=utf-8 python \"C:/Users/kalsa/AppData/Local/Temp/claude/C--Users-kalsa-Desktop-Tibetan-Editor-Enterprise-Architecture/ecc23ae0-6d90-4534-8b64-8624e501c73a/scratchpad/probe.py\")",
+      "Bash(python -m mypy --version)",
+      "Bash(PYTHONIOENCODING=utf-8 python -m mypy src)",
+      "Bash(python -m ruff --version)",
+      "Bash(PYTHONIOENCODING=utf-8 python \"C:/Users/kalsa/AppData/Local/Temp/claude/C--Users-kalsa-Desktop-Tibetan-Editor-Enterprise-Architecture/ecc23ae0-6d90-4534-8b64-8624e501c73a/scratchpad/probe2.py\")",
+      "Bash(python -m pip install --quiet \"mypy>=1.13,<2\" \"ruff>=0.8.4,<1\")",
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(PYTHONIOENCODING=utf-8 python \"C:/Users/kalsa/AppData/Local/Temp/claude/C--Users-kalsa-Desktop-Tibetan-Editor-Enterprise-Architecture/ecc23ae0-6d90-4534-8b64-8624e501c73a/scratchpad/probe3.py\")",
+      "Bash(python -m ruff check src)",
+      "Bash(PYTHONIOENCODING=utf-8 cat src/teea/nlp/tokenization/__init__.py)",
+      "Bash(PYTHONIOENCODING=utf-8 python \"C:/Users/kalsa/AppData/Local/Temp/claude/C--Users-kalsa-Desktop-Tibetan-Editor-Enterprise-Architecture/ecc23ae0-6d90-4534-8b64-8624e501c73a/scratchpad/probe4.py\")",
+      "Bash(python -m ruff check src --output-format=concise)"
+    ]
+  }
+}
