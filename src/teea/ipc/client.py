@@ -46,6 +46,8 @@ from teea.ipc.errors import (
 )
 from teea.ipc.interfaces import MessageCodec, Transport
 from teea.ipc.models import (
+    FAULT_ORIGIN_KEY,
+    FAULT_ORIGIN_PROTOCOL,
     PROTOCOL_VERSION,
     IpcFault,
     IpcRequest,
@@ -54,8 +56,10 @@ from teea.ipc.models import (
     protocol_major,
 )
 
-#: The error codes that map back to a specific client-side exception. Anything
-#: else the server returns becomes a generic :class:`RemoteError`.
+#: The protocol-layer error codes that map back to a specific client-side
+#: exception -- but only for faults the *server's routing* raised, not faults a
+#: handler raised. A handler failure always becomes a :class:`RemoteError`
+#: carrying the handler's own code, which is the propagation contract.
 _SPECIFIC_ERRORS: dict[ErrorCode, type[IPCError]] = {
     ErrorCode.IPC_METHOD_NOT_FOUND: MethodNotFoundError,
     ErrorCode.IPC_PROTOCOL_MISMATCH: ProtocolVersionError,
@@ -85,8 +89,15 @@ class PendingCall:
 
     @property
     def done(self) -> bool:
-        """Whether the response has arrived."""
-        return self._event.is_set()
+        """Whether a response has actually arrived.
+
+        Distinct from cancellation: a timed-out or cancelled call is *settled*
+        but not ``done``, because no answer was delivered. Reading the response
+        rather than the wait event keeps ``done`` and :attr:`cancelled` mutually
+        exclusive.
+        """
+        with self._lock:
+            return self._response is not None
 
     @property
     def cancelled(self) -> bool:
@@ -117,28 +128,47 @@ class PendingCall:
             RemoteError: If the handler failed. The error keeps the handler's own
                 code across the boundary.
         """
-        if not self._event.wait(timeout):
-            self._client._abandon(self._request_id)
+        if self._event.wait(timeout):
             with self._lock:
-                self._cancelled = True
-            self._client._notify_cancel(self._request_id)
-            raise RequestTimeoutError(
-                "The call did not complete within the deadline.",
-                context={"request_id": self._request_id, "timeout": timeout},
+                response = self._response
+            if response is not None:
+                return _unwrap(response)
+            raise RequestCancelledError(
+                "The call was cancelled.",
+                context={"request_id": self._request_id},
             )
+
+        # The deadline lapsed. The response may have arrived in the race window
+        # between the wait timing out and this lock -- take it if so, and only
+        # commit to cancelling when there really is nothing to return.
         with self._lock:
-            if self._cancelled or self._response is None:
-                raise RequestCancelledError(
-                    "The call was cancelled.",
-                    context={"request_id": self._request_id},
-                )
-            response = self._response
-        return _unwrap(response)
+            if self._response is not None:
+                response = self._response
+            else:
+                self._cancelled = True
+                response = None
+            # Settle the event either way, so a second result() returns at once
+            # rather than re-waiting the whole deadline.
+            self._event.set()
+        if response is not None:
+            return _unwrap(response)
+        self._client._abandon(self._request_id)
+        self._client._notify_cancel(self._request_id)
+        raise RequestTimeoutError(
+            "The call did not complete within the deadline.",
+            context={"request_id": self._request_id, "timeout": timeout},
+        )
 
     def cancel(self) -> None:
-        """Abandon the call and tell the server to skip it. Idempotent."""
+        """Abandon the call and tell the server to skip it. Idempotent.
+
+        A no-op once a response has arrived: cancelling then would throw away an
+        answer already in hand and leave the call reporting both ``done`` and
+        ``cancelled``. This mirrors :meth:`concurrent.futures.Future.cancel`,
+        which refuses once the future is done.
+        """
         with self._lock:
-            if self._cancelled:
+            if self._cancelled or self._response is not None:
                 return
             self._cancelled = True
         self._client._abandon(self._request_id)
@@ -193,10 +223,18 @@ class IpcClient:
             timeout: How long to wait for the handshake.
 
         Raises:
+            NotConnectedError: If a session is already established. Reconnecting
+                without closing first would orphan the previous server session,
+                which only ``$disconnect`` on the old id could ever reclaim.
             ProtocolVersionError: If the server speaks an incompatible protocol.
             RequestTimeoutError: If the handshake is not answered in time.
         """
         with self._lock:
+            if self._session_id is not None:
+                raise NotConnectedError(
+                    "The client is already connected; close it before reconnecting.",
+                    context={"session_id": self._session_id},
+                )
             self._transport = transport
         transport.set_receiver(self._on_message)
         result = self._call_raw("$connect", {}, session_id=None, timeout=timeout)
@@ -322,7 +360,14 @@ class IpcClient:
         *,
         expects_response: bool,
     ) -> PendingCall:
-        """Build, register and send one request."""
+        """Build, register and send one request.
+
+        The pending entry is registered *before* the send, not after, because the
+        synchronous loopback transport delivers the response inline -- the reply
+        can be resolved before :meth:`send` returns, so the entry has to exist
+        first. To keep that from leaking a pending entry when the send fails, the
+        registration is rolled back on any error.
+        """
         with self._lock:
             self._request_counter += 1
             request_id = f"req-{self._request_counter}"
@@ -330,16 +375,21 @@ class IpcClient:
             if expects_response:
                 self._pending[request_id] = call
             transport = self._transport
-        request = IpcRequest(
-            request_id=request_id,
-            method=method,
-            params=dict(params),
-            session_id=session_id,
-            expects_response=expects_response,
-        )
-        if transport is None:
-            raise NotConnectedError("The client has no transport.")
-        transport.send(self._codec.encode(request))
+        try:
+            if transport is None:
+                raise NotConnectedError("The client has no transport.")
+            request = IpcRequest(
+                request_id=request_id,
+                method=method,
+                params=dict(params),
+                session_id=session_id,
+                expects_response=expects_response,
+            )
+            transport.send(self._codec.encode(request))
+        except BaseException:
+            with self._lock:
+                self._pending.pop(request_id, None)
+            raise
         return call
 
     def _on_message(self, payload: bytes) -> None:
@@ -392,19 +442,32 @@ def _unwrap(response: IpcResponse) -> Mapping[str, Any]:
 
 
 def _raise_fault(fault: IpcFault) -> Mapping[str, Any]:
-    """Raise the client-side exception for a server fault."""
+    """Raise the client-side exception for a server fault.
+
+    A fault the *server's routing* produced (method not found, bad session,
+    version mismatch) becomes its specific protocol exception, which the client
+    reacts to. A fault a *handler* raised becomes a :class:`RemoteError` carrying
+    the handler's own code, whatever that code is -- so a handler that raises an
+    IPC-coded ``TEEAError`` is still reported as a handler failure, not mistaken
+    for a protocol event.
+    """
+    context = dict(fault.context)
+    from_protocol = context.pop(FAULT_ORIGIN_KEY, None) == FAULT_ORIGIN_PROTOCOL
     try:
         code = ErrorCode(fault.code)
     except ValueError:
+        # A code from a newer peer this build does not know. Keep the wire value
+        # so the caller can still see what the server actually said.
+        context.setdefault("remote_code", fault.code)
         code = ErrorCode.UNKNOWN
-    specific = _SPECIFIC_ERRORS.get(code)
+    specific = _SPECIFIC_ERRORS.get(code) if from_protocol else None
     if specific is not None:
-        raise specific(fault.message, context=dict(fault.context))
+        raise specific(fault.message, context=context)
     raise RemoteError(
         fault.message,
         code=code,
         remote_error_type=fault.error_type,
-        context=dict(fault.context),
+        context=context,
     )
 
 

@@ -28,6 +28,7 @@ Status of all entries: **Accepted**, 2026-07-22.
 | 017 | The Suggestion Fusion Engine owns the suggestion format, and excludes the AI hook |
 | 018 | Plugin isolation is supervised in-process execution, not separate processes |
 | 019 | The AI Runtime ships orchestration and no inference engine |
+| 020 | The Local IPC layer ships the protocol and routing; the byte transport is an injected adapter |
 
 **Document precedence** established by ADR-002 and ADR-003, highest first:
 
@@ -1288,6 +1289,88 @@ same mechanism-versus-policy split ADR-016 and ADR-018 drew.
   and other weights the Local AI Models Layer names, is the next step for this
   component. It is an additive change -- one new class implementing an existing
   protocol -- not a redesign.
+
+---
+
+## ADR-020 — The Local IPC layer ships the protocol and routing; the byte transport is an injected adapter
+
+### Ambiguity
+
+Figure 3 places a Local IPC Layer at P3 with two jobs, "Message Transport" and
+"Request Routing"; Figure 9 labels the wire "Named Pipe / Local IPC · Secure
+Local Comms"; and SRS 2.1 describes the product as "split across a local network
+loopback boundary" over "gRPC/Named Pipes". Named pipes and gRPC are native,
+OS-specific transports. But the milestone forbids "networking beyond documented
+local IPC" and "remote communication"; ADR-002 fixed the core as offline,
+pure-Python; and `tests/test_architecture.py` already bans `socket` package-wide.
+So what, of the IPC layer, is actually to be built?
+
+### Evidence
+
+The same split every prior boundary decision drew applies here. FR-8 states the
+functional requirement -- "non-blocking, asynchronous command and query buses" --
+which is *routing and dispatch*, a pure-Python, deterministic, testable concern.
+The transport underneath is *byte I/O over an OS primitive*, which is neither, and
+which no feature needs in order to exercise the protocol: two ends in one process
+talk over a loopback, exactly as SRS 2.1's word implies.
+
+This is the pattern of ADR-006 (repositories ship in memory; SQLite/LMDB are
+deferred adapters), ADR-018 (the Plugin Runtime ships supervision, no plugin) and
+ADR-019 (the AI Runtime ships orchestration, no inference engine). In each case
+the platform ships the *mechanism and the contract*, and the concrete backend --
+storage engine, plugin, model, wire -- arrives later behind a stated protocol.
+
+### Decision
+
+**`teea.ipc` ships the protocol, routing, and lifecycle, and no socket.** It
+provides:
+
+* the message models (`IpcRequest`, `IpcResponse`, `IpcFault`, `Session`,
+  `MethodDescriptor`, `HealthStatus`) and `PROTOCOL_VERSION`;
+* `IpcServer` -- routing, dispatch, sessions, four built-in `$`-methods
+  (`$connect`, `$disconnect`, `$health`, `$cancel`), optional executor dispatch;
+* `IpcClient` + `PendingCall` -- connect handshake, queries, commands (FR-8),
+  timeouts, cancellation, and capability discovery;
+* three replaceable seams: `Transport` (the byte channel), `MessageCodec` (the
+  serialization), `RequestHandler` (the extension point the daemon registers);
+* `LoopbackTransport` and `JsonMessageCodec` as the shipped defaults.
+
+The **byte transport is the extension point.** A named-pipe or gRPC transport
+implements the `Transport` protocol and drops in without the server or client
+changing. **No such transport ships**, because it is OS-specific I/O outside the
+offline pure-Python core; `LoopbackTransport` -- two ends in one process -- is the
+reference implementation the protocol is defined and tested against, and the one
+the daemon and add-in use when they run in-process.
+
+`teea.ipc` depends on `teea.core` alone. It routes to handlers the daemon
+registers and knows nothing of the Language Server, the AI Runtime, the Fusion
+Engine or the Plugin Runtime; the dependency runs from the handler to those, never
+the reverse. Nothing imports `teea.ipc`. Both directions, and the absence of a
+socket import, are enforced by `tests/test_architecture.py`.
+
+### Consequences
+
+* A handler's failure propagates with its code intact: a `TEEAError` raised in a
+  handler is serialized into an `IpcFault` and re-raised on the client as a
+  `RemoteError` carrying that same code. Composed with ADR-018/019, an AI-runtime
+  `TEEA-3xxx` raised deep in a plugin reaches the add-in as `TEEA-3xxx`, not a
+  generic crash. Protocol-layer faults (method-not-found, bad-session,
+  version-mismatch) are distinguished from handler faults by a context marker, so
+  the client raises the specific protocol exception only for the former.
+* Concurrency is injected, not owned: dispatch runs on an
+  `Executor` when one is supplied and synchronously otherwise, the same
+  mechanism-versus-policy split as ADR-016/018/019. The daemon's tiered scheduler
+  (NFR 5.1) owns *when* to dispatch.
+* Cancellation is scoped to `(session_id, request_id)` and to requests actually
+  in flight, so one session cannot void another's work and the tracking sets stay
+  bounded -- a correctness constraint learned from the adversarial review of the
+  first implementation.
+* Measured (loopback, trivial handlers): connection establishment ~85 µs, a query
+  round trip ~30 µs, flat across 1 / 16 / 256 registered methods (O(1) routing).
+  No optimization was warranted.
+* Building a named-pipe or gRPC `Transport`, and wiring the add-in to it, is the
+  next step for this boundary. It is an additive change -- one class implementing
+  an existing protocol -- not a redesign.
 
 ---
 

@@ -43,6 +43,8 @@ from teea.ipc.codec import JsonMessageCodec
 from teea.ipc.errors import MalformedMessageError, TransportClosedError
 from teea.ipc.interfaces import MessageCodec, RequestHandler, Transport
 from teea.ipc.models import (
+    FAULT_ORIGIN_KEY,
+    FAULT_ORIGIN_PROTOCOL,
     PROTOCOL_VERSION,
     HealthStatus,
     IpcFault,
@@ -82,7 +84,12 @@ class IpcServer:
         self._transport: Transport | None = None
         self._serving = False
         self._sessions: dict[str, Session] = {}
-        self._cancelled: set[str] = set()
+        # Cancellation is keyed by (session_id, request_id): a client's ids are
+        # only unique per connection, so a global id-only set would let one
+        # session cancel another's work. Both sets are bounded by the number of
+        # in-flight requests.
+        self._inflight: set[tuple[str, str]] = set()
+        self._cancelled: set[tuple[str, str]] = set()
         self._session_counter = 0
 
     # -- Registration --------------------------------------------------------
@@ -170,6 +177,7 @@ class IpcServer:
             self._transport = None
             self._sessions.clear()
             self._cancelled.clear()
+            self._inflight.clear()
 
     def health(self) -> HealthStatus:
         """Return a snapshot of the server's state."""
@@ -185,6 +193,12 @@ class IpcServer:
     # -- Message handling ----------------------------------------------------
     def _on_message(self, payload: bytes) -> None:
         """Decode, route and dispatch one incoming payload."""
+        with self._lock:
+            if not self._serving:
+                # A stopped server has released its transport and its sessions;
+                # a message arriving after stop() must not be decoded, routed,
+                # dispatched, or allowed to mint a session.
+                return
         try:
             request = self._codec.decode_request(payload)
         except MalformedMessageError:
@@ -207,11 +221,11 @@ class IpcServer:
             )
             return
 
-        if request.method == "$cancel":
-            self._handle_cancel(request)
-            return
         if request.method == "$connect":
-            self._reply(request, self._handle_connect(request))
+            # A handshake with no reply channel would mint a session whose id is
+            # told to no one, so a $connect must be a query.
+            if request.expects_response:
+                self._reply(request, self._handle_connect(request))
             return
 
         session = self._session_for(request)
@@ -227,6 +241,14 @@ class IpcServer:
             )
             return
 
+        if request.method == "$cancel":
+            # Cancellation is now scoped to the caller's own session, so it is
+            # routed *after* the session check, not before. It is a command, but
+            # a caller that sent it as a query still gets an acknowledgement
+            # rather than hanging on a reply that never comes.
+            self._handle_cancel(request, session)
+            self._reply(request, {"cancelled": request.params.get("request_id")})
+            return
         if request.method == "$disconnect":
             self._reply(request, self._handle_disconnect(session))
             return
@@ -258,12 +280,23 @@ class IpcServer:
             self._sessions.pop(session.session_id, None)
         return {"closed": session.session_id}
 
-    def _handle_cancel(self, request: IpcRequest) -> None:
-        """Record a request id as cancelled, so a queued dispatch is skipped."""
+    def _handle_cancel(self, request: IpcRequest, session: Session) -> None:
+        """Mark one in-flight request cancelled, so its dispatch is skipped.
+
+        Scoped to ``session`` and to requests actually in flight, which is what
+        keeps the cancelled set bounded and stops one session cancelling
+        another's work: a client's request ids are only unique per connection, so
+        a global, id-only kill-list would let a stale cancel void an unrelated
+        future request. A cancel for an id that is not in flight -- already
+        served, or never sent -- is simply ignored.
+        """
         target = request.params.get("request_id")
-        if isinstance(target, str) and target:
-            with self._lock:
-                self._cancelled.add(target)
+        if not isinstance(target, str) or not target:
+            return
+        key = (session.session_id, target)
+        with self._lock:
+            if key in self._inflight:
+                self._cancelled.add(key)
 
     # -- User-method dispatch ------------------------------------------------
     def _dispatch_user(self, request: IpcRequest, session: Session) -> None:
@@ -281,6 +314,8 @@ class IpcServer:
             )
             return
         handler, _kind = entry
+        with self._lock:
+            self._inflight.add((session.session_id, request.request_id))
         if self._executor is not None:
             self._executor.submit(self._run, request, session, handler)
         else:
@@ -289,22 +324,46 @@ class IpcServer:
     def _run(
         self, request: IpcRequest, session: Session, handler: RequestHandler
     ) -> None:
-        """Run one handler and reply, unless the request was cancelled first."""
-        with self._lock:
-            if request.request_id in self._cancelled:
-                self._cancelled.discard(request.request_id)
-                return
+        """Run one handler and reply, unless the request was cancelled first.
+
+        The success response is built *and sent* inside the inner try, so a
+        handler returning something that is not a JSON-serializable mapping --
+        whether it fails at ``dict()``, at model validation, or only at encode
+        time -- is caught and reported as a handler failure rather than escaping.
+        On the synchronous transport it would otherwise unwind through the
+        client's own send. (A closed transport is not a handler fault; ``_send``
+        suppresses that itself, so only a genuine serialization error reaches the
+        ``except``.)
+        """
+        key = (session.session_id, request.request_id)
         try:
-            result = handler.handle(request.params, session)
-        except TEEAError as exc:
-            self._reply_error(request, _fault_from_exception(exc, exc.code.value))
-            return
-        except Exception as exc:  # noqa: BLE001 - a handler is untrusted feature code
-            self._reply_error(
-                request, _fault_from_exception(exc, "IPC_HANDLER_FAILED")
-            )
-            return
-        self._reply(request, result)
+            with self._lock:
+                cancelled = key in self._cancelled
+            if cancelled:
+                self._reply_error(
+                    request,
+                    _fault_from(
+                        "IPC_CANCELLED",
+                        "RequestCancelledError",
+                        "The request was cancelled before it was served.",
+                        {"request_id": request.request_id},
+                    ),
+                )
+                return
+            try:
+                result = handler.handle(request.params, session)
+                if request.expects_response:
+                    self._send(IpcResponse.success(request.request_id, dict(result)))
+            except TEEAError as exc:
+                self._reply_error(request, _fault_from_exception(exc, exc.code.value))
+            except Exception as exc:  # noqa: BLE001 - a handler is untrusted
+                self._reply_error(
+                    request, _fault_from_exception(exc, "IPC_HANDLER_FAILED")
+                )
+        finally:
+            with self._lock:
+                self._inflight.discard(key)
+                self._cancelled.discard(key)
 
     # -- Replying ------------------------------------------------------------
     def _reply(self, request: IpcRequest, result: Mapping[str, Any]) -> None:
@@ -344,12 +403,19 @@ class IpcServer:
 def _fault_from(
     code: str, error_type: str, message: str, context: Mapping[str, Any]
 ) -> IpcFault:
-    """Build a fault from a known IPC error code value."""
+    """Build a fault the server's own routing raised.
+
+    Marked as protocol-originated, so the client raises the matching protocol
+    exception (``MethodNotFoundError`` and the like) for it -- a distinction it
+    must not draw for a handler that happens to raise an IPC-coded error.
+    """
+    marked = dict(context)
+    marked[FAULT_ORIGIN_KEY] = FAULT_ORIGIN_PROTOCOL
     return IpcFault(
         code=ErrorCode[code].value,
         error_type=error_type,
         message=message,
-        context=dict(context),
+        context=marked,
     )
 
 

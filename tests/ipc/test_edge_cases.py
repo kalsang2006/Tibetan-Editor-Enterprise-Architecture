@@ -32,6 +32,7 @@ from teea.ipc import (
     Session,
 )
 from teea.ipc.client import PendingCall, _raise_fault
+from teea.ipc.models import FAULT_ORIGIN_KEY, FAULT_ORIGIN_PROTOCOL
 from tests.ipc.conftest import BlockingHandler, EchoHandler, RecordingHandler, connect
 
 
@@ -106,24 +107,51 @@ def test_a_cancel_for_an_unknown_request_is_harmless() -> None:
 
 
 def test_an_unknown_fault_code_degrades_to_unknown() -> None:
-    """A peer built against a newer taxonomy must not crash this one."""
+    """A peer built against a newer taxonomy must not crash this one.
+
+    The wire code is preserved in context so an older client can still report
+    what the newer server actually said (regression: F7).
+    """
     with pytest.raises(RemoteError) as error:
         _raise_fault(
             IpcFault(code="TEEA-9999", error_type="FutureError", message="from tomorrow")
         )
     assert error.value.code is ErrorCode.UNKNOWN
     assert error.value.remote_error_type == "FutureError"
+    assert error.value.context["remote_code"] == "TEEA-9999"
 
 
-def test_a_known_ipc_fault_maps_to_its_own_exception() -> None:
+def test_a_protocol_fault_maps_to_its_own_exception() -> None:
+    """A fault the server's routing marks as protocol-originated keeps its type."""
     with pytest.raises(MethodNotFoundError):
         _raise_fault(
             IpcFault(
                 code=ErrorCode.IPC_METHOD_NOT_FOUND.value,
                 error_type="MethodNotFoundError",
                 message="nope",
+                context={FAULT_ORIGIN_KEY: FAULT_ORIGIN_PROTOCOL},
             )
         )
+
+
+def test_an_unmarked_ipc_coded_fault_is_a_remote_error() -> None:
+    """Regression F6: a handler raising an IPC-coded error is NOT a protocol event.
+
+    Without the protocol-origin marker -- i.e. a fault a handler produced -- the
+    same code surfaces as a ``RemoteError`` carrying that code, not the specific
+    protocol exception, so a caller cannot mistake a handler bug for a dead
+    session.
+    """
+    with pytest.raises(RemoteError) as error:
+        _raise_fault(
+            IpcFault(
+                code=ErrorCode.IPC_SESSION_INVALID.value,
+                error_type="SessionError",
+                message="the handler raised this",
+            )
+        )
+    assert error.value.code is ErrorCode.IPC_SESSION_INVALID
+    assert error.value.remote_error_type == "SessionError"
 
 
 # -- Replies with nowhere to go ------------------------------------------------
