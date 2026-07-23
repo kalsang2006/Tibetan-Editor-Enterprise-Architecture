@@ -32,6 +32,7 @@ for a stateful, concurrently-called component.
 
 from __future__ import annotations
 
+import contextlib
 import threading
 from collections.abc import Mapping
 from concurrent.futures import Executor
@@ -329,10 +330,8 @@ class IpcServer:
             transport = self._transport
         if transport is None:
             return
-        try:
+        with contextlib.suppress(TransportClosedError):
             transport.send(self._codec.encode(response))
-        except TransportClosedError:
-            pass
 
     def _session_for(self, request: IpcRequest) -> Session | None:
         """Return the live session named by ``request``, or ``None``."""

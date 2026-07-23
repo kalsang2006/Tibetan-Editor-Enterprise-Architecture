@@ -184,7 +184,60 @@ def test_the_language_layer_never_imports_the_fusion_engine() -> None:
 
 #: Runtime Layer components, from Figure 1, in dependency order. Each may use the
 #: ones before it; none may reach forward.
-RUNTIME_LAYERS = ("teea.ai", "teea.fusion", "teea.nlp", "teea.plugins")
+RUNTIME_LAYERS = ("teea.ai", "teea.fusion", "teea.ipc", "teea.nlp", "teea.plugins")
+
+
+def test_the_ipc_layer_depends_only_on_core() -> None:
+    """Figure 3 puts the Local IPC Layer at P3, in front of everything.
+
+    It routes to handlers the daemon registers; it must not know what they call.
+    An IPC layer that imported the Language Server would make the transport
+    boundary depend on the analysis chain, and every future handler -- plugin,
+    AI, fusion -- would inherit that coupling.
+    """
+    forbidden = ("teea.nlp", "teea.fusion", "teea.plugins", "teea.ai", "teea.persistence")
+    violations = {
+        name: sorted(t for t in targets if t.startswith(forbidden))
+        for name, targets in IMPORTS.items()
+        if name.startswith("teea.ipc")
+    }
+    assert not any(violations.values()), violations
+
+
+def test_nothing_else_imports_the_ipc_layer() -> None:
+    """Every component must be usable, and testable, without the boundary.
+
+    The daemon composes IPC with the rest; the rest does not reach for IPC. This
+    is what lets the whole analysis stack run in-process with no transport at
+    all, as every other test module does.
+    """
+    violations = {
+        name: sorted(t for t in targets if t.startswith("teea.ipc"))
+        for name, targets in IMPORTS.items()
+        if not name.startswith("teea.ipc")
+    }
+    assert not any(violations.values()), violations
+
+
+def test_the_ipc_layer_ships_no_socket_transport() -> None:
+    """ADR-020: the wire is behind the Transport protocol, not implemented here.
+
+    ``socket`` is already banned package-wide as a network client; this states
+    the same rule as an IPC-specific guarantee, so a future named-pipe adapter is
+    added as a separate, explicitly-reviewed component rather than sliding in.
+    """
+    forbidden = {"socket", "socketserver", "asyncio", "grpc", "multiprocessing"}
+    for name, path in MODULES.items():
+        if not name.startswith("teea.ipc"):
+            continue
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+        imported: set[str] = set()
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                imported.update(alias.name.split(".")[0] for alias in node.names)
+            elif isinstance(node, ast.ImportFrom) and node.module:
+                imported.add(node.module.split(".")[0])
+        assert not (imported & forbidden), f"{name} imports a transport dependency"
 
 
 def test_the_ai_runtime_depends_only_on_core() -> None:

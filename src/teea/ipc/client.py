@@ -25,6 +25,7 @@ server, and a late response is discarded because nothing is waiting for its id.
 
 from __future__ import annotations
 
+import contextlib
 import threading
 from collections.abc import Mapping
 from typing import Any
@@ -222,12 +223,12 @@ class IpcClient:
             self._session_id = None
             pending = list(self._pending.values())
         if session_id is not None:
-            try:
+            # A close that cannot reach the server is still a close; there is
+            # nothing useful to do with the failure.
+            with contextlib.suppress(IPCError):
                 self._call_raw(
                     "$disconnect", {}, session_id=session_id, timeout=timeout
                 )
-            except IPCError:
-                pass
         for call in pending:
             call.cancel()
 
@@ -371,21 +372,23 @@ class IpcClient:
             session_id=session_id,
             expects_response=False,
         )
-        from teea.ipc.errors import TransportClosedError
-
-        try:
+        # Cancellation is best-effort: if the channel has gone, the server has
+        # nothing left to cancel.
+        with contextlib.suppress(TransportClosedError):
             transport.send(self._codec.encode(request))
-        except TransportClosedError:
-            pass
 
 
 def _unwrap(response: IpcResponse) -> Mapping[str, Any]:
-    """Return a response's result, or raise the fault it carries."""
-    if response.ok:
-        return response.result or {}
+    """Return a response's result, or raise the fault it carries.
+
+    Reading the fault first rather than branching on ``ok`` lets the type narrow
+    without an assertion: :class:`IpcResponse` already guarantees that exactly
+    one of the two is present.
+    """
     fault = response.error
-    assert fault is not None  # noqa: S101 - guaranteed by IpcResponse's validator
-    return _raise_fault(fault)
+    if fault is not None:
+        return _raise_fault(fault)
+    return response.result or {}
 
 
 def _raise_fault(fault: IpcFault) -> Mapping[str, Any]:
