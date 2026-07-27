@@ -160,9 +160,7 @@ _REPORTED_TAGS = frozenset({"cl.quot", "case.nare"})
 
 #: Every tag the intent classifier treats as evidence, so the audit trail can be
 #: collected in one pass.
-_INTENT_TAGS = (
-    _INTERROGATIVE_TAGS | _IMPERATIVE_TAGS | _NEGATION_TAGS | _REPORTED_TAGS
-)
+_INTENT_TAGS = _INTERROGATIVE_TAGS | _IMPERATIVE_TAGS | _NEGATION_TAGS | _REPORTED_TAGS
 
 
 class _Unit(NamedTuple):
@@ -282,22 +280,17 @@ class TibetanSemanticAnalyzer:
         )
 
         nodes = tuple(
-            self._build_node(tree, units[unit_index], slot)
-            for slot, unit_index in enumerate(keep)
+            self._build_node(tree, units[unit_index], slot) for slot, unit_index in enumerate(keep)
         )
         edges = tuple(
             edge
             for slot, unit_index in enumerate(keep)
             if (edge := self._build_edge(layout, unit_index, slot, nodes)) is not None
         )
-        return SemanticGraph(
-            source=tree.source, nodes=nodes, edges=edges, intent=intent
-        )
+        return SemanticGraph(source=tree.source, nodes=nodes, edges=edges, intent=intent)
 
     # -- Node construction ---------------------------------------------------
-    def _build_node(
-        self, tree: DependencyTree, unit: _Unit, slot: int
-    ) -> SemanticNode:
+    def _build_node(self, tree: DependencyTree, unit: _Unit, slot: int) -> SemanticNode:
         """Assemble the semantic node for one unit.
 
         The text is the source slice rather than the morphemes joined, so the
@@ -374,9 +367,7 @@ class TibetanSemanticAnalyzer:
                 role, evidence = _resolve_role(
                     tree, unit, nodes[governor], layout.case_tags[unit.end]
                 )
-                return SemanticEdge(
-                    source=governor, target=slot, role=role, evidence=evidence
-                )
+                return SemanticEdge(source=governor, target=slot, role=role, evidence=evidence)
             current = tree.nodes[current].head
         return None
 
@@ -550,10 +541,7 @@ def _is_node(tree: DependencyTree, unit: _Unit) -> bool:
     if unit.entity is not None or unit.term is not None:
         return True
     head = tree.nodes[unit.head]
-    return (
-        head.morpheme.category in _NODE_CATEGORIES
-        and head.relation not in _SUPPORT_RELATIONS
-    )
+    return head.morpheme.category in _NODE_CATEGORIES and head.relation not in _SUPPORT_RELATIONS
 
 
 def _node_kind(
@@ -566,9 +554,7 @@ def _node_kind(
     tests read Stage 8's own output rather than re-deriving what counts as a
     finite verb, so the two stages cannot drift apart.
     """
-    if morpheme.category is PosCategory.VERB and (
-        is_root or relation is DependencyRelation.MARK
-    ):
+    if morpheme.category is PosCategory.VERB and (is_root or relation is DependencyRelation.MARK):
         return SemanticNodeKind.PREDICATE
     return SemanticNodeKind.CONCEPT
 
@@ -647,9 +633,7 @@ def _classify_intent(morphemes: tuple[TaggedMorpheme, ...]) -> SentenceIntent:
 
     return SentenceIntent(
         mood=mood,
-        polarity=(
-            Polarity.NEGATIVE if present & _NEGATION_TAGS else Polarity.AFFIRMATIVE
-        ),
+        polarity=(Polarity.NEGATIVE if present & _NEGATION_TAGS else Polarity.AFFIRMATIVE),
         is_reported=bool(present & _REPORTED_TAGS),
         evidence=tuple(seen),
     )

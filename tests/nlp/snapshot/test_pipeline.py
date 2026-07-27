@@ -82,9 +82,7 @@ def test_a_document_flows_through_every_stage(
     snapshot_builder: LanguageServerSnapshotBuilder, corpus_document: str
 ) -> None:
     """Stage 2 -> 4 -> 6 -> 7 -> 8 -> 9 -> 10 -> 11 -> 12 on a real document."""
-    normalized = TextNormalizer(form="NFC", collapse_whitespace=False).normalize(
-        corpus_document
-    )
+    normalized = TextNormalizer(form="NFC", collapse_whitespace=False).normalize(corpus_document)
     snapshot = snapshot_builder.analyze(normalized)
 
     assert snapshot.source == normalized
@@ -122,9 +120,7 @@ def test_the_snapshot_is_exactly_what_the_stages_produce(
         assert analysis.tree == tree
         assert analysis.entities == entities
         assert analysis.terms == terms
-        assert analysis.graph == semantics.analyze(
-            tree, entities=entities, terms=terms
-        )
+        assert analysis.graph == semantics.analyze(tree, entities=entities, terms=terms)
         assert analysis.content_hash == sentence_hash(sentence.text)
 
 
@@ -145,9 +141,7 @@ def test_every_span_in_the_snapshot_addresses_the_document(
         for node in analysis.graph.nodes:
             where = analysis.document_span(node.span)
             assert corpus_document[where.char_start : where.char_end] == node.text
-            assert encoded[where.byte_start : where.byte_end] == node.text.encode(
-                "utf-8"
-            )
+            assert encoded[where.byte_start : where.byte_end] == node.text.encode("utf-8")
             checked += 1
         for entity in analysis.entities.entities:
             where = analysis.document_span(entity.span)
@@ -214,15 +208,8 @@ def test_incremental_analysis_equals_cold_analysis_on_real_text(
     """Reuse is an optimisation, never a difference in result."""
     snapshot = snapshot_builder.analyze(corpus_document)
     target = snapshot.analyses[-1]
-    edited = (
-        corpus_document[: target.span.char_start]
-        + target.text[:2]
-        + "ཀ"
-        + target.text[2:]
-    )
-    assert snapshot_builder.reanalyze(snapshot, edited) == snapshot_builder.analyze(
-        edited
-    )
+    edited = corpus_document[: target.span.char_start] + target.text[:2] + "ཀ" + target.text[2:]
+    assert snapshot_builder.reanalyze(snapshot, edited) == snapshot_builder.analyze(edited)
 
 
 def test_editing_near_the_end_leaves_earlier_analyses_untouched(
@@ -235,18 +222,11 @@ def test_editing_near_the_end_leaves_earlier_analyses_untouched(
     """
     snapshot = snapshot_builder.analyze(corpus_document)
     target = snapshot.analyses[-1]
-    edited = (
-        corpus_document[: target.span.char_start]
-        + target.text[:2]
-        + "ཀ"
-        + target.text[2:]
-    )
+    edited = corpus_document[: target.span.char_start] + target.text[:2] + "ཀ" + target.text[2:]
     rebuilt = snapshot_builder.reanalyze(snapshot, edited)
 
     shared = sum(
-        1
-        for new, old in zip(rebuilt.analyses, snapshot.analyses, strict=False)
-        if new is old
+        1 for new, old in zip(rebuilt.analyses, snapshot.analyses, strict=False) if new is old
     )
     assert shared >= snapshot.num_sentences - 2, shared
 
@@ -271,9 +251,7 @@ def test_concurrent_readers_agree(
 ) -> None:
     """Many plugins reading one snapshot at once must see the same thing."""
     snapshot = snapshot_builder.analyze(corpus_document)
-    span = TextSpan(
-        char_start=0, char_end=len(corpus_document), byte_start=0, byte_end=0
-    )
+    span = TextSpan(char_start=0, char_end=len(corpus_document), byte_start=0, byte_end=0)
 
     def summarise(_: int) -> tuple[int, ...]:
         return (
@@ -304,9 +282,7 @@ def test_concurrent_analysis_matches_serial_analysis(
 def test_the_pipeline_is_deterministic(
     snapshot_builder: LanguageServerSnapshotBuilder, corpus_document: str
 ) -> None:
-    assert snapshot_builder.analyze(corpus_document) == snapshot_builder.analyze(
-        corpus_document
-    )
+    assert snapshot_builder.analyze(corpus_document) == snapshot_builder.analyze(corpus_document)
 
 
 # -- Linguistic content survives the aggregation -------------------------------

@@ -108,14 +108,11 @@ class TibetanEntityRecognizer:
             match_length = self._longest_gazetteer_match(morphemes, index, limit)
             if match_length:
                 tagged_too = all(
-                    _is_tagged_proper_noun(m)
-                    for m in morphemes[index : index + match_length]
+                    _is_tagged_proper_noun(m) for m in morphemes[index : index + match_length]
                 )
                 evidence = EntityEvidence.BOTH if tagged_too else EntityEvidence.GAZETTEER
                 entities.append(
-                    self._build(
-                        tree.source, morphemes, index, index + match_length, evidence
-                    )
+                    self._build(tree.source, morphemes, index, index + match_length, evidence)
                 )
                 index += match_length
                 continue
@@ -125,9 +122,7 @@ class TibetanEntityRecognizer:
                 while end < len(morphemes) and _is_tagged_proper_noun(morphemes[end]):
                     end += 1
                 entities.append(
-                    self._build(
-                        tree.source, morphemes, index, end, EntityEvidence.TAGGER
-                    )
+                    self._build(tree.source, morphemes, index, end, EntityEvidence.TAGGER)
                 )
                 index = end
                 continue

@@ -95,9 +95,7 @@ class PriorityRankedFusionEngine:
         # `is None`, not `or`: an empty mapping is falsy, and a caller who
         # deliberately weights nothing must not silently get something else.
         # The same defect was found and fixed in Stages 07, 09 and 10.
-        self._weights: Mapping[str, float] = (
-            {} if plugin_weights is None else dict(plugin_weights)
-        )
+        self._weights: Mapping[str, float] = {} if plugin_weights is None else dict(plugin_weights)
         self._merge_adjacent = merge_adjacent
 
     @property
@@ -119,9 +117,7 @@ class PriorityRankedFusionEngine:
         """
         return min(1.0, max(0.0, suggestion.score * self.weight_of(suggestion.source)))
 
-    def fuse(
-        self, source: str, suggestions: Iterable[Suggestion]
-    ) -> UnifiedSuggestions:
+    def fuse(self, source: str, suggestions: Iterable[Suggestion]) -> UnifiedSuggestions:
         """Merge plugin recommendations into one ranked, conflict-free package.
 
         Total: no input can raise. Everything discarded is reported.
@@ -178,18 +174,14 @@ class PriorityRankedFusionEngine:
             span = suggestion.span
             if span.char_end > len(source):
                 rejected.append(
-                    RejectedSuggestion(
-                        suggestion=suggestion, reason=RejectionReason.INVALID_RANGE
-                    )
+                    RejectedSuggestion(suggestion=suggestion, reason=RejectionReason.INVALID_RANGE)
                 )
                 continue
             if suggestion.replacement is not None and (
                 source[span.char_start : span.char_end] == suggestion.replacement
             ):
                 rejected.append(
-                    RejectedSuggestion(
-                        suggestion=suggestion, reason=RejectionReason.NO_OP
-                    )
+                    RejectedSuggestion(suggestion=suggestion, reason=RejectionReason.NO_OP)
                 )
                 continue
 

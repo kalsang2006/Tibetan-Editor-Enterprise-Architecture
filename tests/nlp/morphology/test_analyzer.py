@@ -148,9 +148,7 @@ def test_a_standalone_particle_is_recognized(
     assert analysis.root_text == KHYIM
 
 
-@pytest.mark.parametrize(
-    "allomorph", ["འི", "ཀྱི", "གྱི", "གི", "ཡི"]
-)
+@pytest.mark.parametrize("allomorph", ["འི", "ཀྱི", "གྱི", "གི", "ཡི"])
 def test_all_genitive_allomorphs_map_to_one_category(
     morphological_analyzer: TibetanMorphologicalAnalyzer, allomorph: str
 ) -> None:

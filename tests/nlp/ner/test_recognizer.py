@@ -67,9 +67,7 @@ def build_tree(*pairs: tuple[str, str]) -> DependencyTree:
             )
         )
         cursor = end + len(TSHEG)
-    return TibetanDependencyParser().parse(
-        TaggedText(source=source, morphemes=tuple(morphemes))
-    )
+    return TibetanDependencyParser().parse(TaggedText(source=source, morphemes=tuple(morphemes)))
 
 
 class StubGazetteer:
@@ -106,9 +104,7 @@ def assert_well_formed(annotation: EntityAnnotation) -> None:
         sliced = annotation.source[entity.span.char_start : entity.span.char_end]
         assert sliced == entity.text
         encoded = annotation.source.encode("utf-8")
-        assert encoded[entity.span.byte_start : entity.span.byte_end] == entity.text.encode(
-            "utf-8"
-        )
+        assert encoded[entity.span.byte_start : entity.span.byte_end] == entity.text.encode("utf-8")
 
 
 # -- Protocol and configuration -----------------------------------------------
@@ -120,9 +116,7 @@ def test_satisfies_the_entity_recognizer_protocol(
 
 def test_tagger_evidence_flag_reflects_construction() -> None:
     assert TibetanEntityRecognizer().use_tagger_evidence is True
-    assert (
-        TibetanEntityRecognizer(use_tagger_evidence=False).use_tagger_evidence is False
-    )
+    assert TibetanEntityRecognizer(use_tagger_evidence=False).use_tagger_evidence is False
 
 
 # -- Totality -----------------------------------------------------------------
@@ -151,9 +145,7 @@ def test_text_without_names_yields_no_entities(
 
 # -- Matching behaviour -------------------------------------------------------
 def test_a_confident_gazetteer_entry_is_recognised() -> None:
-    recognizer = TibetanEntityRecognizer(
-        gazetteer=StubGazetteer(confident={("ཀ", "ཁ")})
-    )
+    recognizer = TibetanEntityRecognizer(gazetteer=StubGazetteer(confident={("ཀ", "ཁ")}))
     annotation = recognizer.recognize(
         build_tree(("ཀ", "n.count"), ("ཁ", "n.count"), ("སོང", "v.past"))
     )
@@ -163,9 +155,7 @@ def test_a_confident_gazetteer_entry_is_recognised() -> None:
 
 
 def test_a_confident_entry_the_tagger_also_marks_reports_both() -> None:
-    recognizer = TibetanEntityRecognizer(
-        gazetteer=StubGazetteer(confident={("ཀ", "ཁ")})
-    )
+    recognizer = TibetanEntityRecognizer(gazetteer=StubGazetteer(confident={("ཀ", "ཁ")}))
     annotation = recognizer.recognize(
         build_tree(("ཀ", "n.prop"), ("ཁ", "n.prop"), ("སོང", "v.past"))
     )
@@ -177,17 +167,13 @@ def test_an_ambiguous_entry_needs_the_tagger_to_agree() -> None:
 
     This is the rule that took held-out precision from 35% to 58%.
     """
-    recognizer = TibetanEntityRecognizer(
-        gazetteer=StubGazetteer(ambiguous={("ཀ", "ཁ")})
-    )
+    recognizer = TibetanEntityRecognizer(gazetteer=StubGazetteer(ambiguous={("ཀ", "ཁ")}))
     unsupported = recognizer.recognize(
         build_tree(("ཀ", "n.count"), ("ཁ", "n.count"), ("སོང", "v.past"))
     )
     assert unsupported.is_empty
 
-    supported = recognizer.recognize(
-        build_tree(("ཀ", "n.prop"), ("ཁ", "n.prop"), ("སོང", "v.past"))
-    )
+    supported = recognizer.recognize(build_tree(("ཀ", "n.prop"), ("ཁ", "n.prop"), ("སོང", "v.past")))
     assert supported.num_entities == 1
     assert supported.entities[0].syllables == ("ཀ", "ཁ")
 
@@ -242,9 +228,7 @@ def test_a_name_may_span_an_internal_particle(
 def test_tagger_evidence_alone_can_recognise_a_name(
     entity_recognizer: TibetanEntityRecognizer,
 ) -> None:
-    annotation = entity_recognizer.recognize(
-        build_tree(("ཟཟཟ", "n.prop"), ("སོང", "v.past"))
-    )
+    annotation = entity_recognizer.recognize(build_tree(("ཟཟཟ", "n.prop"), ("སོང", "v.past")))
     assert annotation.num_entities == 1
     assert annotation.entities[0].evidence is EntityEvidence.TAGGER
 
@@ -260,9 +244,7 @@ def test_adjacent_proper_noun_tags_form_one_entity(
 
 
 def test_tagger_evidence_can_be_disabled() -> None:
-    recognizer = TibetanEntityRecognizer(
-        gazetteer=StubGazetteer(), use_tagger_evidence=False
-    )
+    recognizer = TibetanEntityRecognizer(gazetteer=StubGazetteer(), use_tagger_evidence=False)
     annotation = recognizer.recognize(build_tree(("ཟཟཟ", "n.prop"), ("སོང", "v.past")))
     assert annotation.is_empty
 
@@ -275,16 +257,12 @@ def test_an_empty_injected_gazetteer_is_not_silently_replaced() -> None:
     injected store was silently discarded and the shipped 2,767-entry one loaded
     in its place -- the caller would have had no way to tell.
     """
-    recognizer = TibetanEntityRecognizer(
-        gazetteer=StubGazetteer(), use_tagger_evidence=False
-    )
+    recognizer = TibetanEntityRecognizer(gazetteer=StubGazetteer(), use_tagger_evidence=False)
     assert len(recognizer._gazetteer) == 0
 
 
 def test_an_injected_gazetteer_is_used_instead_of_the_default() -> None:
-    recognizer = TibetanEntityRecognizer(
-        gazetteer=StubGazetteer(), use_tagger_evidence=False
-    )
+    recognizer = TibetanEntityRecognizer(gazetteer=StubGazetteer(), use_tagger_evidence=False)
     annotation = recognizer.recognize(
         build_tree(("འཛམ", "n.count"), ("བུ", "n.count"), ("འི", "case.gen"), ("གླིང", "n.count"))
     )
@@ -298,10 +276,7 @@ def recognize_corpus(
     analyzer = TibetanMorphologicalAnalyzer()
     tagger = HmmPosTagger()
     parser = TibetanDependencyParser()
-    return [
-        recognizer.recognize(parser.parse(tagger.tag(analyzer.analyze(s))))
-        for s in sentences
-    ]
+    return [recognizer.recognize(parser.parse(tagger.tag(analyzer.analyze(s)))) for s in sentences]
 
 
 def test_annotations_are_well_formed_over_the_corpus(
@@ -315,9 +290,7 @@ def test_entities_never_overlap_over_the_corpus(
     entity_recognizer: TibetanEntityRecognizer, corpus_sentences: list[str]
 ) -> None:
     for annotation in recognize_corpus(entity_recognizer, corpus_sentences):
-        for previous, current in zip(
-            annotation.entities, annotation.entities[1:], strict=False
-        ):
+        for previous, current in zip(annotation.entities, annotation.entities[1:], strict=False):
             assert previous.end_index <= current.start_index
 
 
@@ -391,9 +364,7 @@ def score(
         gold = {s for s in gold if s[1] > s[0]}
 
         annotation = recognizer.recognize(parser.parse(tagger.tag(analyzer.analyze(text))))
-        predicted = {
-            trim((e.span.char_start, e.span.char_end), text) for e in annotation.entities
-        }
+        predicted = {trim((e.span.char_start, e.span.char_end), text) for e in annotation.entities}
         predicted = {s for s in predicted if s[1] > s[0]}
 
         gold_count += len(gold)
@@ -452,12 +423,8 @@ def test_the_two_tier_rule_beats_firing_on_every_entry(
     precision.
     """
     shipped = default_gazetteer()
-    promoted = StubGazetteer(
-        confident=set(shipped._entries) | set(shipped._ambiguous)
-    )
+    promoted = StubGazetteer(confident=set(shipped._entries) | set(shipped._ambiguous))
 
     tiered_precision, _, _, _ = score(TibetanEntityRecognizer(), heldout_corpus)
-    flat_precision, _, _, _ = score(
-        TibetanEntityRecognizer(gazetteer=promoted), heldout_corpus
-    )
+    flat_precision, _, _, _ = score(TibetanEntityRecognizer(gazetteer=promoted), heldout_corpus)
     assert tiered_precision > flat_precision

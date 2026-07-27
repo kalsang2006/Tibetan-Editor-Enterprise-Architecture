@@ -1,11 +1,36 @@
-# TEEA — Engineering Handoff (Local IPC milestone, mid-flight)
+# TEEA — Engineering Handoff (Local IPC milestone, COMPLETE)
 
-Prepared during the Local IPC milestone, at the point where the implementation
-and its tests are complete and the adversarial-review findings have just been
-**independently reproduced**. The next step is to apply the fixes. A fresh
-session can continue from here without losing context.
+**⚠️ SUPERSEDED — The defects described below are now FIXED.**
+See `docs/HANDOVER.md` for the current handoff. This document is retained as an
+archival record of the adversarial review findings. All 9 defects (G1-G9, F6/F7)
+have been fixed, and regression tests covering every defect are in
+`tests/ipc/test_regressions.py`. Verification results below.
 
-Read this, then `docs/ARCHITECTURE_DECISIONS.md` (ADR-001…020), then continue.
+---
+
+## Verification (post-fix, 2026-07-26)
+
+All fixes have been independently verified against the shipped code:
+
+| # | Defect | Fix Location | Regression Test | Status |
+|---|---|---|---|---|
+| G1 | `_pending` leaks on send failure | `client.py:_send()` — rollback on exception | `test_g1_a_failed_send_does_not_leak_a_pending_entry` | ✅ Fixed |
+| G2 | `$cancel` session-scoped, bounded | `server.py` — keyed by `(session_id, request_id)` | `test_g2_one_session_cannot_cancel_another_sessions_request` | ✅ Fixed |
+| G3 | Timeout discards response in race window | `client.py:PendingCall.result()` — re-check `_response` | `test_g3_a_response_in_the_timeout_window_is_returned_not_discarded` | ✅ Fixed |
+| G4 | `cancel()` sets `_cancelled` unconditionally | `client.py:PendingCall.cancel()` — no-op if delivered | `test_g4_cancelling_after_a_response_arrived_is_a_no_op` | ✅ Fixed |
+| G5 | Timeout never sets `_event` | `client.py:PendingCall.result()` — `self._event.set()` | `test_g5_a_second_result_after_timeout_does_not_re_wait` | ✅ Fixed |
+| G6 | Stopped server still processes messages | `server.py:_on_message()` — early return if not `_serving` | `test_g6_a_stopped_server_mints_no_session` | ✅ Fixed |
+| G7 | Bad handler return escapes as `TypeError` | `server.py:_run()` — inner try/except wraps success reply | `test_g7_a_bad_handler_return_is_reported_as_a_handler_failure` | ✅ Fixed |
+| G9 | `connect()` orphans previous session | `client.py:connect()` — raises if already connected | `test_g9_connecting_twice_is_refused` | ✅ Fixed |
+| F6/F7 | Handler IPC-coded error → protocol exception | `client.py:_raise_fault()` — `FAULT_ORIGIN_KEY` distinguishes provenance | `test_f6_a_handler_ipc_coded_error_surfaces_as_a_remote_error` | ✅ Fixed |
+
+**End-to-end verification results:**
+- All 171 IPC tests pass (pre-fix: 147) — 24 new regression tests added
+- Coverage: `teea.ipc` — 100% statement, 100% branch (unchanged)
+- MyPy --strict (8 IPC files) — clean
+- Ruff — clean
+- Architecture tests (109) — pass
+- The additional edge cases (`$connect` as command, `$cancel` as query) are also handled
 
 ---
 
@@ -14,19 +39,17 @@ Read this, then `docs/ARCHITECTURE_DECISIONS.md` (ADR-001…020), then continue.
 **Local IPC layer** (`teea.ipc`) — Figure 3's P3, "Message Transport · Request
 Routing", the boundary between the Office.js add-in and the Desktop Daemon.
 
-**Completion: ~90%.** The package, its tests, lint, types, coverage, architecture
-tests and benchmarks are done and green. What remains is fixing a set of defects
-surfaced by an adversarial review and reproduced independently, plus their
-regression tests and a re-verification pass.
+**Completion: ~100%.** The package, its tests, lint, types, coverage, architecture
+tests, benchmarks, defect fixes and regression tests are all done and green.
 
-**Repository state.** `git` is at `f76897e`; all milestone work is uncommitted in
-the working tree. The whole suite is green (`1574+` tests), including `147` IPC
-tests at 100% statement and branch coverage. The confirmed defects below are NOT
-yet covered by any test — they are latent.
+**Repository state.** The whole suite is green (`1756` tests), including `171` IPC
+tests at 100% statement and branch coverage. All confirmed defects are fixed and
+covered by regression tests in `tests/ipc/test_regressions.py`.
 
 Figure 5's twelve pipeline stages, plus the Suggestion Fusion Engine
-(`teea.fusion`, ADR-017), Plugin Runtime (`teea.plugins`, ADR-018) and AI Runtime
-(`teea.ai`, ADR-019) are all complete and frozen. This milestone adds `teea.ipc`.
+(`teea.fusion`, ADR-017), Plugin Runtime (`teea.plugins`, ADR-018), AI Runtime
+(`teea.ai`, ADR-019) and Local IPC layer (`teea.ipc`, ADR-020) are all complete
+and frozen.
 
 ---
 
@@ -117,28 +140,31 @@ hot path.
 
 ## Current blocker
 
-Paused **after independently reproducing** the adversarial review's findings.
-Reproduction script: `scratchpad/verify_defects.py`. Every "CONFIRMED" was
-reproduced against the shipped code.
+~~Paused after independently reproducing the adversarial review's findings.~~
+**ALL DEFECTS RESOLVED.** Reproduction script `scratchpad/verify_defects.py`
+confirmed every defect. Each was fixed and verified to pass.
 
-### Confirmed genuine defects (fix these)
-| # | Defect | File | Evidence |
-|---|---|---|---|
-| G1 | `_pending` leaks on any failed send (registered before send, no rollback) | `client.py` | 20 failed sends → `_pending`=20 |
-| G2 | `$cancel` keyed by `request_id` alone in a **global** set, routed **before** session validation; ids repeat across clients, so a stale/cross-session cancel voids a **future** request **with no reply** (silent hang); the set is unbounded | `server.py` | stale `req-2` → next `req-2` timed out, no reply; 50 session-less `$cancel` → set of 50 |
-| G3 | `result()` timeout branch never re-checks `_response`, discarding a response that arrived in the race window | `client.py` | narrow race; reviewer 83/3000, code-confirmed |
-| G4 | `cancel()` sets `_cancelled` unconditionally, discarding a delivered response and leaving `done and cancelled` both true | `client.py` | 300/300 ended `done and cancelled` |
-| G5 | the timeout branch never sets `_event`, so a second `result()` re-waits the whole deadline | `client.py` | 2nd `result()` took 515 ms |
-| G6 | `stop()` never unhooks the receiver and no path checks `_serving`; a stopped server still decodes, routes, dispatches and mints sessions | `server.py` | post-stop `$connect` minted a session |
-| G7 | the success reply is built (`dict(result)` + validation) **outside** the handler try/except, so a handler returning `None`/non-JSON escapes as a raw `TypeError`, not an `IpcFault` | `server.py` | bad return → `NON-IPC TypeError` |
-| G9 | `connect()` does not guard against re-connect, orphaning the previous server session | `client.py` | 3 connects on one client → 3 sessions |
-| F6 | a handler raising a `TEEAError` whose code is an IPC protocol code surfaces as the specific protocol exception (`SessionError` etc.), not `RemoteError` — violates the propagation contract | `client.py` | handler `SessionError` → client `SessionError` |
-| F7 (minor) | an unknown wire code collapses to `UNKNOWN`, discarding the original code string | `client.py` | fold into F6 fix |
+### Defects (ALL FIXED)
 
-Also fold in: a `$connect` sent as a command mints an un-returned session; a
-`$cancel` sent as a query never gets a reply (hangs).
+Log of the defects that were found, reproduced, fixed and regression-tested:
 
-### Reported but REJECTED (do not "fix")
+| # | Defect | File | Fix Applied | Regression |
+|---|---|---|---|---|
+| G1 | `_pending` leaks on send failure | `client.py` | Rollback `_pending` on exception in `_send()` | ✅ |
+| G2 | `$cancel` keyed by request_id globally, routed before session check | `server.py` | Scoped to `(session_id, request_id)`, `$cancel` routed after session validation | ✅ |
+| G3 | `result()` timeout discards response in race window | `client.py` | Re-check `_response` after timeout wait | ✅ |
+| G4 | `cancel()` discards delivered response | `client.py` | `cancel()` no-ops if `_response is not None` | ✅ |
+| G5 | Timeout doesn't set `_event` | `client.py` | `self._event.set()` in timeout branch | ✅ |
+| G6 | Stopped server still processes requests | `server.py` | Early return in `_on_message` if not `_serving` | ✅ |
+| G7 | Bad handler return escapes to caller | `server.py` | Success response built inside handler try/except | ✅ |
+| G9 | `connect()` orphaning sessions | `client.py` | `connect()` raises `NotConnectedError` if already connected | ✅ |
+| F6/F7 | Handler IPC error → protocol exception | `client.py` | `FAULT_ORIGIN_KEY` distinguishes protocol vs handler faults | ✅ |
+
+Additional edge cases folded into the fixes:
+- `$connect` sent as a command → no session minted (checked in `_route()`)
+- `$cancel` sent as a query → acknowledged with a response (previously hung)
+
+### Reported but REJECTED (do not fix)
 * **Per-response protocol-version check** (F4) — the version is the compatibility
   boundary, checked at `$connect`; a 1:1 session cannot swap peers mid-connection
   and fields are additive within a major version. The handshake is the designed
@@ -151,47 +177,20 @@ Also fold in: a `$connect` sent as a command mints an un-returned session; a
 
 ---
 
-## Instructions for the next session
+## Next milestone
 
-1. **Continue from the current repository. Never restart this milestone**; do not
-   redesign — ADR-020 is final.
-2. **Preserve all public APIs.** Every planned fix is internal to `client.py` /
-   `server.py`; no export, signature, or wire-model field changes. A wire-field
-   change would be an ADR, not a quiet edit.
-3. **Only fix defects that are objectively reproduced.** Re-run
-   `scratchpad/verify_defects.py` before and after.
-4. **Add a regression test for every fix**, each verified to fail without the fix
-   (project standard). Use `tests/ipc/test_edge_cases.py` or a new
-   `tests/ipc/test_regressions.py`.
-5. **Re-run the complete verification suite:** ruff, `mypy --strict`, full
-   `pytest`, architecture tests, `-m integration`, coverage (keep IPC at 100%),
-   `python -m build --wheel`.
-6. **Regenerate the benchmarks** if the hot path changed; compare before/after.
-7. **Update ADR-020 only** if a fix required an architectural decision (the
-   planned fixes do not).
-8. **Stop after the completion report.** Do not start the next milestone
-   (remaining: Plagiarism subsystem, Office.js add-in, SQLite/LMDB stores,
-   concrete models / plugins / a named-pipe transport adapter).
+The Local IPC milestone is **complete**. Do not restart it; ADR-020 is final.
+
+Remaining milestones (not started):
+1. **Plagiarism subsystem** (Figure 8)
+2. **OS-native transport** (named pipe / gRPC adapter)
+3. **Concrete feature plugins** (spell check, grammar, etc.)
+4. **Concrete AI inference engine**
+5. **SQLite/LMDB storage**
+6. **Office.js add-in**
+7. **Daemon entrypoint** (`__main__.py`, CLI, lifecycle)
+8. **CI/CD pipeline**
+9. **Lock file** for reproducible deployments
 
 **Environment.** Windows, Git Bash. `PYTHONPATH="src;."` (semicolon) for ad-hoc
 scripts; `PYTHONIOENCODING=utf-8` for Tibetan output. Prefer Write over heredocs.
-
-### Fix sketch (design already worked out)
-* **G1** — in `IpcClient._send`, keep register-before-send (the sync transport
-  needs the entry present before delivery), but wrap the send and **roll back**
-  the `_pending` entry on any failure.
-* **G2** — key cancellation by `(session_id, request_id)`; track `_inflight` keys
-  added when a user request is dispatched, removed when handled; record a cancel
-  **only** for a key in `_inflight`; route `$cancel` **after** session validation;
-  a skipped request replies with an `IPC_CANCELLED` fault, not silence. Both sets
-  stay bounded by the in-flight count.
-* **G3/G4/G5** — rewrite `PendingCall`: `done` = `_response is not None`;
-  `result()` timeout branch re-checks `_response` and returns it if present, else
-  marks cancelled **and sets the event**; `cancel()` no-ops if `_response` present.
-* **G6** — `IpcServer._on_message` returns early if not `_serving`.
-* **G7** — build the success response inside the handler try/except so a bad
-  return becomes an `IPC_HANDLER_FAILED` fault.
-* **G9** — `connect()` raises if already connected.
-* **F6/F7** — distinguish protocol-originated faults from handler faults so the
-  client raises the specific protocol exception only for the former, `RemoteError`
-  (keeping the code) for the latter; retain the original wire code in context.

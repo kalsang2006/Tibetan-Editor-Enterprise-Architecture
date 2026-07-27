@@ -104,9 +104,7 @@ class InMemoryCapabilityRegistry:
     def capabilities(self) -> frozenset[CapabilityKind]:
         """Every capability at least one registered model provides."""
         return frozenset(
-            capability
-            for capability, providers in self._by_capability.items()
-            if providers
+            capability for capability, providers in self._by_capability.items() if providers
         )
 
 

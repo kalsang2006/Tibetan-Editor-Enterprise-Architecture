@@ -48,9 +48,7 @@ TSHEG_CHARS = frozenset({"\u0f0b", "\u0f0c"})
 #: U+0F13 is deliberately excluded: it is an annotation mark, not a terminator.
 #: This is exactly the set syllable segmentation has always used; it is lifted
 #: here verbatim rather than redefined, so behaviour is unchanged.
-SHAD_CHARS = frozenset(
-    {"\u0f0d", "\u0f0e", "\u0f0f", "\u0f10", "\u0f11", "\u0f12", "\u0f14"}
-)
+SHAD_CHARS = frozenset({"\u0f0d", "\u0f0e", "\u0f0f", "\u0f10", "\u0f11", "\u0f12", "\u0f14"})
 
 #: Every character that ends a line or a paragraph.
 #:
@@ -64,9 +62,7 @@ SHAD_CHARS = frozenset(
 #: The legacy information separators (U+001C-U+001E) are deliberately excluded:
 #: they carry no meaning in a Word document, so Stage 2 is right to remove them
 #: as invalid characters.
-LINE_BREAK_CHARS = frozenset(
-    {"\n", "\r", "\v", "\f", "\x85", "\u2028", "\u2029"}
-)
+LINE_BREAK_CHARS = frozenset({"\n", "\r", "\v", "\f", "\x85", "\u2028", "\u2029"})
 
 
 class TextSpan(BaseModel):

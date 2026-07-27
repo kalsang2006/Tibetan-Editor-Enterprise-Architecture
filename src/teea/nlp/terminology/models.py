@@ -50,8 +50,7 @@ class RecognizedTerm(BaseModel):
             raise ValueError("end_index must be greater than start_index")
         if len(self.morphemes) != self.end_index - self.start_index:
             raise ValueError(
-                f"expected {self.end_index - self.start_index} morphemes, "
-                f"got {len(self.morphemes)}"
+                f"expected {self.end_index - self.start_index} morphemes, got {len(self.morphemes)}"
             )
         if self.span.char_start != self.morphemes[0].span.char_start:
             raise ValueError("span must start at the first morpheme")

@@ -100,8 +100,7 @@ class PluginOutcome(BaseModel):
         for suggestion in self.suggestions:
             if suggestion.source != self.plugin:
                 raise ValueError(
-                    f"{self.plugin!r} attributed a suggestion to "
-                    f"{suggestion.source!r}"
+                    f"{self.plugin!r} attributed a suggestion to {suggestion.source!r}"
                 )
         return self
 
@@ -160,18 +159,12 @@ class PluginResults(BaseModel):
         Flattened in plugin-name order. The Fusion Engine is order-independent by
         contract, so this ordering is for reproducibility rather than for it.
         """
-        return tuple(
-            suggestion
-            for outcome in self.outcomes
-            for suggestion in outcome.suggestions
-        )
+        return tuple(suggestion for outcome in self.outcomes for suggestion in outcome.suggestions)
 
     @property
     def failures(self) -> tuple[PluginFailure, ...]:
         """Every fault that was captured, in plugin-name order."""
-        return tuple(
-            outcome.failure for outcome in self.outcomes if outcome.failure is not None
-        )
+        return tuple(outcome.failure for outcome in self.outcomes if outcome.failure is not None)
 
     @property
     def num_suggestions(self) -> int:

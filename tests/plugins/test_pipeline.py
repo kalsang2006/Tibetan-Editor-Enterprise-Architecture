@@ -103,9 +103,7 @@ def test_a_document_flows_from_the_language_server_through_to_a_patch(
     corpus_document: str,
 ) -> None:
     """P4 -> P5 -> P6, on a real multi-paragraph document."""
-    normalized = TextNormalizer(form="NFC", collapse_whitespace=False).normalize(
-        corpus_document
-    )
+    normalized = TextNormalizer(form="NFC", collapse_whitespace=False).normalize(corpus_document)
     snapshot = language_server().analyze(normalized)
     results = SupervisedPluginRuntime(
         [PredicateRewriter(), EntityHighlighter(), SilentPlugin()]
@@ -134,15 +132,11 @@ def test_spans_survive_the_whole_chain(corpus_document: str) -> None:
     for suggestion in results.suggestions:
         where = suggestion.span
         assert corpus_document[where.char_start : where.char_end]
-        assert where.byte_start == len(
-            corpus_document[: where.char_start].encode("utf-8")
-        )
+        assert where.byte_start == len(corpus_document[: where.char_start].encode("utf-8"))
         checked += 1
     assert checked > 5
 
-    patch = PriorityRankedFusionEngine().fuse(
-        snapshot.source, results.suggestions
-    ).patch
+    patch = PriorityRankedFusionEngine().fuse(snapshot.source, results.suggestions).patch
     assert patch.apply() != corpus_document
 
 
@@ -189,9 +183,7 @@ def test_advisories_reach_the_user_alongside_edits(
 ) -> None:
     """A citation notice and a grammar fix are both results, not competitors."""
     snapshot = language_server().analyze("".join(corpus_sentences[:20]))
-    results = SupervisedPluginRuntime(
-        [PredicateRewriter(), EntityHighlighter()]
-    ).dispatch(snapshot)
+    results = SupervisedPluginRuntime([PredicateRewriter(), EntityHighlighter()]).dispatch(snapshot)
     unified = PriorityRankedFusionEngine().fuse(snapshot.source, results.suggestions)
 
     assert unified.advisories
@@ -229,9 +221,9 @@ def test_an_impersonated_plugin_gains_nothing_from_the_impersonation(
     """
     snapshot = language_server().analyze("".join(corpus_sentences[:4]))
     honest = SupervisedPluginRuntime([WellBehavedPlugin()]).dispatch(snapshot)
-    with_liar = SupervisedPluginRuntime(
-        [WellBehavedPlugin(), ImpersonatingPlugin()]
-    ).dispatch(snapshot)
+    with_liar = SupervisedPluginRuntime([WellBehavedPlugin(), ImpersonatingPlugin()]).dispatch(
+        snapshot
+    )
 
     engine = PriorityRankedFusionEngine()
     assert with_liar.suggestions == honest.suggestions
@@ -271,9 +263,7 @@ def test_a_plugin_tripped_by_real_corpus_data_is_contained(
                 for analysis in snap.analyses
             ]
 
-    results = SupervisedPluginRuntime([Unguarded(), PredicateRewriter()]).dispatch(
-        snapshot
-    )
+    results = SupervisedPluginRuntime([Unguarded(), PredicateRewriter()]).dispatch(snapshot)
     assert results.failures[0].error_type == "IndexError"
     assert results.outcome_of("grammar") is not None
     assert results.num_suggestions > 0, "the well-behaved plugin still delivered"
@@ -282,9 +272,7 @@ def test_a_plugin_tripped_by_real_corpus_data_is_contained(
 # -- Determinism and concurrency across the chain -----------------------------
 def test_the_whole_chain_is_deterministic(corpus_sentences: list[str]) -> None:
     snapshot = language_server().analyze("".join(corpus_sentences[:10]))
-    runtime = SupervisedPluginRuntime(
-        [PredicateRewriter(), EntityHighlighter(), CrashingPlugin()]
-    )
+    runtime = SupervisedPluginRuntime([PredicateRewriter(), EntityHighlighter(), CrashingPlugin()])
     engine = PriorityRankedFusionEngine()
 
     def run() -> object:

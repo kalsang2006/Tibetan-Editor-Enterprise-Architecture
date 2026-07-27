@@ -760,14 +760,6 @@ def test_input_just_within_the_limit_is_accepted(
     assert encoded.num_content_tokens == 4
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason=(
-        "TiBERTTokenizer.encode computes 'was_truncated = truncate and len(ids) >= max_len', "
-        "so an input that fits exactly is reported as truncated whenever truncate=True. "
-        "was_truncated is a data-loss signal, so a false positive is not harmless."
-    ),
-)
 def test_exactly_maximum_length_input_is_not_reported_as_truncated(
     make_tokenizer: Callable[..., TiBERTTokenizer],
 ) -> None:

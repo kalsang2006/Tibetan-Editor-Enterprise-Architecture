@@ -122,12 +122,11 @@ def test_a_plugin_emitting_only_garbage_cannot_break_the_others(
     assert reasons_of(package) == [RejectionReason.INVALID_RANGE] * 2
 
 
-def test_fusing_accepts_any_iterable(
-    engine: PriorityRankedFusionEngine, document: str
-) -> None:
+def test_fusing_accepts_any_iterable(engine: PriorityRankedFusionEngine, document: str) -> None:
     """Plugins report as a stream, so a generator must work as well as a list."""
-    items = (make_suggestion(source=f"p{i}", char_start=i * 4, char_end=i * 4 + 2)
-             for i in range(3))
+    items = (
+        make_suggestion(source=f"p{i}", char_start=i * 4, char_end=i * 4 + 2) for i in range(3)
+    )
     assert engine.fuse(document, items).num_suggestions == 3
 
 
@@ -186,28 +185,22 @@ def test_the_same_edit_from_a_different_plugin_is_not_a_duplicate(
     assert reasons_of(package) == [RejectionReason.SUPERSEDED]
 
 
-def test_an_advisory_is_never_a_no_op(
-    engine: PriorityRankedFusionEngine, document: str
-) -> None:
+def test_an_advisory_is_never_a_no_op(engine: PriorityRankedFusionEngine, document: str) -> None:
     """It proposes no replacement, so it cannot equal the text it covers."""
-    package = engine.fuse(
-        document, [make_suggestion(char_start=0, char_end=3, replacement=None)]
-    )
+    package = engine.fuse(document, [make_suggestion(char_start=0, char_end=3, replacement=None)])
     assert package.num_suggestions == 1
 
 
 # -- 3. Conflict Resolution Engine (FR-7) -------------------------------------
-def test_the_higher_priority_edit_wins(
-    engine: PriorityRankedFusionEngine, document: str
-) -> None:
+def test_the_higher_priority_edit_wins(engine: PriorityRankedFusionEngine, document: str) -> None:
     """The Priority Manager is applied last, so its classification dominates."""
     package = engine.fuse(
         document,
         [
-            make_suggestion(source="spell", char_start=0, char_end=4, score=1.0,
-                            priority=P.LOW),
-            make_suggestion(source="grammar", char_start=2, char_end=6, score=0.1,
-                            priority=P.CRITICAL),
+            make_suggestion(source="spell", char_start=0, char_end=4, score=1.0, priority=P.LOW),
+            make_suggestion(
+                source="grammar", char_start=2, char_end=6, score=0.1, priority=P.CRITICAL
+            ),
         ],
     )
     assert sources_of(package) == ["grammar"]
@@ -265,8 +258,9 @@ def test_advisories_survive_alongside_the_edits_they_cover(
     package = engine.fuse(
         document,
         [
-            make_suggestion(source="plagiarism", char_start=0, char_end=12,
-                            replacement=None, priority=P.LOW),
+            make_suggestion(
+                source="plagiarism", char_start=0, char_end=12, replacement=None, priority=P.LOW
+            ),
             make_suggestion(source="spell", char_start=2, char_end=5, priority=P.HIGH),
         ],
     )
@@ -290,9 +284,7 @@ def test_many_advisories_over_the_same_range_all_survive(
 
 
 # -- 4. Merge Engine -----------------------------------------------------------
-def test_adjacent_edits_are_consolidated(
-    engine: PriorityRankedFusionEngine, document: str
-) -> None:
+def test_adjacent_edits_are_consolidated(engine: PriorityRankedFusionEngine, document: str) -> None:
     """Figure 7: "Combine adjacent edits · Consolidate recommendations"."""
     package = engine.fuse(
         document,
@@ -371,9 +363,7 @@ def test_three_adjacent_edits_consolidate_into_one(
 def test_advisories_contribute_no_operation(
     engine: PriorityRankedFusionEngine, document: str
 ) -> None:
-    package = engine.fuse(
-        document, [make_suggestion(char_start=0, char_end=8, replacement=None)]
-    )
+    package = engine.fuse(document, [make_suggestion(char_start=0, char_end=8, replacement=None)])
     assert package.num_suggestions == 1
     assert package.patch.is_empty
     assert package.patch.apply() == document
@@ -386,14 +376,14 @@ def test_survivors_are_ranked_by_priority_then_confidence(
     package = engine.fuse(
         document,
         [
-            make_suggestion(source="low", char_start=0, char_end=2, priority=P.LOW,
-                            score=1.0),
-            make_suggestion(source="medium", char_start=3, char_end=5,
-                            priority=P.MEDIUM, score=0.1),
-            make_suggestion(source="critical", char_start=6, char_end=8,
-                            priority=P.CRITICAL, score=0.1),
-            make_suggestion(source="high", char_start=9, char_end=11, priority=P.HIGH,
-                            score=0.1),
+            make_suggestion(source="low", char_start=0, char_end=2, priority=P.LOW, score=1.0),
+            make_suggestion(
+                source="medium", char_start=3, char_end=5, priority=P.MEDIUM, score=0.1
+            ),
+            make_suggestion(
+                source="critical", char_start=6, char_end=8, priority=P.CRITICAL, score=0.1
+            ),
+            make_suggestion(source="high", char_start=9, char_end=11, priority=P.HIGH, score=0.1),
         ],
     )
     assert sources_of(package) == ["critical", "high", "medium", "low"]
@@ -439,17 +429,19 @@ def shuffled_corpus() -> list[Suggestion]:
     """A mixed batch exercising every stage at once."""
     return [
         make_suggestion(source="spell", char_start=0, char_end=3, priority=P.HIGH),
-        make_suggestion(source="grammar", char_start=2, char_end=6, score=0.95,
-                        priority=P.CRITICAL),
+        make_suggestion(
+            source="grammar", char_start=2, char_end=6, score=0.95, priority=P.CRITICAL
+        ),
         make_suggestion(source="style", char_start=8, char_end=12, priority=P.MEDIUM),
         make_suggestion(source="spell", char_start=0, char_end=3, priority=P.HIGH),
-        make_suggestion(source="lint", char_start=4, char_end=7,
-                        replacement=DOCUMENT[4:7], priority=P.LOW),
+        make_suggestion(
+            source="lint", char_start=4, char_end=7, replacement=DOCUMENT[4:7], priority=P.LOW
+        ),
         make_suggestion(source="broken", char_start=100, char_end=120, priority=P.LOW),
-        make_suggestion(source="plagiarism", char_start=0, char_end=8,
-                        replacement=None, priority=P.LOW),
-        make_suggestion(source="auto", char_start=12, char_end=12, replacement="ཀ",
-                        priority=P.LOW),
+        make_suggestion(
+            source="plagiarism", char_start=0, char_end=8, replacement=None, priority=P.LOW
+        ),
+        make_suggestion(source="auto", char_start=12, char_end=12, replacement="ཀ", priority=P.LOW),
     ]
 
 
@@ -466,9 +458,7 @@ def test_arrival_order_does_not_change_the_result(
         assert engine.fuse(document, shuffled) == expected
 
 
-def test_fusion_is_deterministic(
-    engine: PriorityRankedFusionEngine, document: str
-) -> None:
+def test_fusion_is_deterministic(engine: PriorityRankedFusionEngine, document: str) -> None:
     items = shuffled_corpus()
     assert engine.fuse(document, items) == engine.fuse(document, items)
 
@@ -641,8 +631,7 @@ def test_a_patch_built_from_many_edits_still_applies(
 ) -> None:
     """The document must survive a full-width rewrite without corruption."""
     items = [
-        make_suggestion(source=f"p{i}", char_start=i, char_end=i + 1, replacement="ཀ",
-                        score=0.5)
+        make_suggestion(source=f"p{i}", char_start=i, char_end=i + 1, replacement="ཀ", score=0.5)
         for i in range(0, len(document), 2)
     ]
     package = engine.fuse(document, items)

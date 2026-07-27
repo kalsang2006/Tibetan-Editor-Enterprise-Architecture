@@ -104,9 +104,7 @@ class TibetanMorphologicalAnalyzer:
 
         for syllable in self._segmenter.segment(text):
             morphemes.extend(
-                self._analyze_syllable(
-                    syllable.text, syllable.span.char_start, byte_offsets
-                )
+                self._analyze_syllable(syllable.text, syllable.span.char_start, byte_offsets)
             )
 
         return MorphologicalAnalysis(source=text, morphemes=tuple(morphemes))
@@ -123,18 +121,14 @@ class TibetanMorphologicalAnalyzer:
         if attested is not None:
             categories, ambiguous = attested
             kind = MorphemeKind.AMBIGUOUS if ambiguous else MorphemeKind.AFFIX
-            return [
-                self._morpheme(surface, start, byte_offsets, kind=kind, categories=categories)
-            ]
+            return [self._morpheme(surface, start, byte_offsets, kind=kind, categories=categories)]
 
         if self._split_fused_affixes:
             split = self._split_fused(surface, start, byte_offsets)
             if split is not None:
                 return split
 
-        return [
-            self._morpheme(surface, start, byte_offsets, kind=MorphemeKind.ROOT)
-        ]
+        return [self._morpheme(surface, start, byte_offsets, kind=MorphemeKind.ROOT)]
 
     def _split_fused(
         self, surface: str, start: int, byte_offsets: list[int]

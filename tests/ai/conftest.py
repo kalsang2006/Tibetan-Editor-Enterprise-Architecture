@@ -45,9 +45,7 @@ class RecordingEngine:
             self.contexts.append(context)
             self.resident.add(descriptor.key)
 
-    def infer(
-        self, descriptor: ModelDescriptor, request: InferenceRequest
-    ) -> Mapping[str, Any]:
+    def infer(self, descriptor: ModelDescriptor, request: InferenceRequest) -> Mapping[str, Any]:
         with self._lock:
             self.infer_calls.append(descriptor.key)
             assert descriptor.key in self.resident, "the runtime ran an unloaded model"
@@ -68,9 +66,7 @@ class FailingLoadEngine:
     def load(self, descriptor: ModelDescriptor, context: ExecutionContext) -> None:
         raise self._error
 
-    def infer(
-        self, descriptor: ModelDescriptor, request: InferenceRequest
-    ) -> Mapping[str, Any]:
+    def infer(self, descriptor: ModelDescriptor, request: InferenceRequest) -> Mapping[str, Any]:
         raise AssertionError("infer should be unreachable")  # pragma: no cover
 
     def unload(self, descriptor: ModelDescriptor) -> None:
@@ -86,9 +82,7 @@ class FailingInferEngine:
     def load(self, descriptor: ModelDescriptor, context: ExecutionContext) -> None:
         return None
 
-    def infer(
-        self, descriptor: ModelDescriptor, request: InferenceRequest
-    ) -> Mapping[str, Any]:
+    def infer(self, descriptor: ModelDescriptor, request: InferenceRequest) -> Mapping[str, Any]:
         raise self._error
 
     def unload(self, descriptor: ModelDescriptor) -> None:
@@ -101,9 +95,7 @@ class FailingUnloadEngine:
     def load(self, descriptor: ModelDescriptor, context: ExecutionContext) -> None:
         return None
 
-    def infer(
-        self, descriptor: ModelDescriptor, request: InferenceRequest
-    ) -> Mapping[str, Any]:
+    def infer(self, descriptor: ModelDescriptor, request: InferenceRequest) -> Mapping[str, Any]:
         return {"model": descriptor.key}
 
     def unload(self, descriptor: ModelDescriptor) -> None:

@@ -54,9 +54,7 @@ class LengthEngine:
     def load(self, d: ModelDescriptor, c: ExecutionContext) -> None:
         return None
 
-    def infer(
-        self, d: ModelDescriptor, request: InferenceRequest
-    ) -> Mapping[str, Any]:
+    def infer(self, d: ModelDescriptor, request: InferenceRequest) -> Mapping[str, Any]:
         return {"score": 1.0 / (1.0 + len(str(request.inputs.get("text", ""))))}
 
     def unload(self, d: ModelDescriptor) -> None:
@@ -129,9 +127,7 @@ class FeaturesHandler:
 def daemon(*, executor: ThreadPoolExecutor | None = None) -> IpcServer:
     """A server routing the methods the daemon would expose."""
     runtime = LocalAIRuntime(LengthEngine())
-    runtime.register(
-        ModelDescriptor(name="tibert", version="1", provides={FEATURES})
-    )
+    runtime.register(ModelDescriptor(name="tibert", version="1", provides={FEATURES}))
     runtime.start()
 
     server = IpcServer(executor=executor)
@@ -266,9 +262,7 @@ def test_a_daemon_failure_does_not_break_the_next_call(
     client, _t = connected(daemon())
     with pytest.raises(RemoteError):
         client.call("analyze", {})
-    result = client.call(
-        "analyze", {"text": "".join(corpus_sentences[:3])}, timeout=30.0
-    )
+    result = client.call("analyze", {"text": "".join(corpus_sentences[:3])}, timeout=30.0)
     assert result["sentences"] > 0
     client.close()
 
@@ -287,8 +281,7 @@ def test_concurrent_analyses_stay_correlated(corpus_sentences: list[str]) -> Non
             counts = list(callers.map(analyse, documents))
 
         expected = [
-            LanguageServerSnapshotBuilder().analyze(text).num_sentences
-            for text in documents
+            LanguageServerSnapshotBuilder().analyze(text).num_sentences for text in documents
         ]
         assert counts == expected
         client.close()

@@ -249,9 +249,7 @@ def test_a_request_with_no_session_is_refused() -> None:
     codec = JsonMessageCodec()
     replies: list[bytes] = []
     client_end.set_receiver(replies.append)
-    client_end.send(
-        codec.encode(IpcRequest(request_id="r1", method="echo", session_id=None))
-    )
+    client_end.send(codec.encode(IpcRequest(request_id="r1", method="echo", session_id=None)))
     response = codec.decode_response(replies[0])
     assert response.ok is False
     assert response.error is not None
@@ -268,9 +266,7 @@ def test_a_forged_session_cannot_reach_a_handler() -> None:
     replies: list[bytes] = []
     client_end.set_receiver(replies.append)
     client_end.send(
-        codec.encode(
-            IpcRequest(request_id="r1", method="record", session_id="sess-999")
-        )
+        codec.encode(IpcRequest(request_id="r1", method="record", session_id="sess-999"))
     )
     assert handler.calls == []
     assert codec.decode_response(replies[0]).ok is False
@@ -311,9 +307,7 @@ def test_an_incompatible_client_version_is_refused() -> None:
     replies: list[bytes] = []
     client_end.set_receiver(replies.append)
     client_end.send(
-        codec.encode(
-            IpcRequest(request_id="r1", method="$connect", protocol_version="99.0")
-        )
+        codec.encode(IpcRequest(request_id="r1", method="$connect", protocol_version="99.0"))
     )
     response = codec.decode_response(replies[0])
     assert response.ok is False
@@ -332,11 +326,7 @@ def test_a_compatible_minor_version_is_accepted() -> None:
     client_end.set_receiver(replies.append)
     major = PROTOCOL_VERSION.split(".", 1)[0]
     client_end.send(
-        codec.encode(
-            IpcRequest(
-                request_id="r1", method="$connect", protocol_version=f"{major}.99"
-            )
-        )
+        codec.encode(IpcRequest(request_id="r1", method="$connect", protocol_version=f"{major}.99"))
     )
     assert codec.decode_response(replies[0]).ok is True
 
@@ -413,9 +403,7 @@ def test_an_executor_lets_a_slow_handler_run_off_the_transport_thread() -> None:
     entered = threading.Event()
 
     class Slow:
-        def handle(
-            self, params: Mapping[str, Any], session: Session
-        ) -> Mapping[str, Any]:
+        def handle(self, params: Mapping[str, Any], session: Session) -> Mapping[str, Any]:
             entered.set()
             return {"ok": True}
 

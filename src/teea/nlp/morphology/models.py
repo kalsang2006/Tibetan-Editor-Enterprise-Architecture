@@ -182,9 +182,7 @@ class MorphologicalAnalysis(BaseModel):
             if span.char_end > len(self.source):
                 raise ValueError("morpheme span exceeds the source text")
             if self.source[span.char_start : span.char_end] != morpheme.text:
-                raise ValueError(
-                    f"morpheme {position} span does not select its own text"
-                )
+                raise ValueError(f"morpheme {position} span does not select its own text")
             previous_end = span.char_end
         return self
 
@@ -221,6 +219,7 @@ class MorphologicalAnalysis(BaseModel):
     def categories(self) -> frozenset[AffixCategory]:
         """Every grammatical function present anywhere in the analysis."""
         return frozenset().union(*(m.categories for m in self.morphemes))
+
     def morpheme_at_char(self, char_index: int) -> Morpheme | None:
         """Return the morpheme whose span contains ``char_index``.
 

@@ -177,8 +177,7 @@ class SemanticNode(BaseModel):
             raise ValueError("end_index must be greater than start_index")
         if len(self.morphemes) != self.end_index - self.start_index:
             raise ValueError(
-                f"expected {self.end_index - self.start_index} morphemes, "
-                f"got {len(self.morphemes)}"
+                f"expected {self.end_index - self.start_index} morphemes, got {len(self.morphemes)}"
             )
         if not self.start_index <= self.head_index < self.end_index:
             raise ValueError("head_index must lie inside the node's own run")
@@ -365,9 +364,7 @@ class SemanticGraph(BaseModel):
         seen_edges: set[tuple[int, int, SemanticRole]] = set()
         for edge in self.edges:
             if edge.source >= count or edge.target >= count:
-                raise ValueError(
-                    f"edge {edge.source}->{edge.target} refers to a node out of range"
-                )
+                raise ValueError(f"edge {edge.source}->{edge.target} refers to a node out of range")
             key = (edge.source, edge.target, edge.role)
             if key in seen_edges:
                 raise ValueError(f"duplicate edge {edge.source}->{edge.target}")

@@ -55,9 +55,7 @@ class GlossaryTerminologyRecognizer:
     def __init__(self, *, terminology: TerminologyRepository | None = None) -> None:
         # `is None`, not `or`: an empty repository is falsy because it defines
         # __len__, so `or` would silently substitute the shipped glossary.
-        self._terminology = (
-            default_terminology() if terminology is None else terminology
-        )
+        self._terminology = default_terminology() if terminology is None else terminology
 
     def recognize(self, tree: DependencyTree) -> TerminologyAnnotation:
         """Find every technical term in ``tree``.
@@ -84,9 +82,7 @@ class GlossaryTerminologyRecognizer:
                 index += 1
                 continue
             length, source = match
-            terms.append(
-                self._build(tree.source, morphemes, index, index + length, source)
-            )
+            terms.append(self._build(tree.source, morphemes, index, index + length, source))
             index += length
 
         return TerminologyAnnotation(source=tree.source, terms=tuple(terms))

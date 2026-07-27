@@ -51,9 +51,7 @@ FEATURES = CapabilityKind.SEMANTIC_FEATURES
 GRAMMAR = CapabilityKind.GRAMMAR
 
 
-def request(
-    capability: CapabilityKind = FEATURES, **kwargs: Any
-) -> InferenceRequest:
+def request(capability: CapabilityKind = FEATURES, **kwargs: Any) -> InferenceRequest:
     return InferenceRequest(capability=capability, **kwargs)
 
 
@@ -73,18 +71,14 @@ def test_the_injected_registries_are_used(engine: RecordingEngine) -> None:
     """Interface Segregation: either registry can be replaced."""
     models = InMemoryModelRegistry()
     capabilities = InMemoryCapabilityRegistry()
-    runtime = LocalAIRuntime(
-        engine, model_registry=models, capability_registry=capabilities
-    )
+    runtime = LocalAIRuntime(engine, model_registry=models, capability_registry=capabilities)
     runtime.register(descriptor())
     assert len(models) == 1
     assert capabilities.resolve(FEATURES) is not None
 
 
 def test_the_context_reflects_the_configured_device(engine: RecordingEngine) -> None:
-    runtime = LocalAIRuntime(
-        engine, settings=AIRuntimeSettings(default_device=Device.GPU)
-    )
+    runtime = LocalAIRuntime(engine, settings=AIRuntimeSettings(default_device=Device.GPU))
     assert runtime.context == ExecutionContext(device=Device.GPU)
 
 
@@ -266,9 +260,7 @@ def test_a_preferred_model_is_honoured(engine: RecordingEngine) -> None:
     runtime.register(descriptor(name="fast", provides={FEATURES}))
     runtime.register(descriptor(name="accurate", provides={FEATURES}))
     runtime.start()
-    assert runtime.infer(
-        request(preferred="accurate")
-    ).produced_by == "accurate:1"
+    assert runtime.infer(request(preferred="accurate")).produced_by == "accurate:1"
 
 
 def test_an_unprovided_capability_is_refused(started_runtime: LocalAIRuntime) -> None:
@@ -287,9 +279,7 @@ def test_the_response_echoes_the_engine_output(
 
 
 def test_the_configured_device_reaches_the_engine(engine: RecordingEngine) -> None:
-    runtime = LocalAIRuntime(
-        engine, settings=AIRuntimeSettings(default_device=Device.CPU)
-    )
+    runtime = LocalAIRuntime(engine, settings=AIRuntimeSettings(default_device=Device.CPU))
     runtime.register(descriptor())
     runtime.start()
     runtime.infer(request())
@@ -499,9 +489,7 @@ def test_an_empty_batch_returns_nothing(started_runtime: LocalAIRuntime) -> None
 def test_a_batch_is_all_or_nothing(started_runtime: LocalAIRuntime) -> None:
     """One bad request fails the batch; a partial unordered result is useless."""
     with pytest.raises(CapabilityUnavailableError):
-        started_runtime.infer_batch(
-            [request(FEATURES), request(CapabilityKind.SPELLING)]
-        )
+        started_runtime.infer_batch([request(FEATURES), request(CapabilityKind.SPELLING)])
 
 
 def test_a_batch_requires_a_running_runtime(engine: RecordingEngine) -> None:
@@ -568,9 +556,7 @@ def test_the_runtime_holds_no_cross_call_state(
 def test_a_custom_engine_satisfies_the_protocol() -> None:
     class Minimal:
         def load(self, d: ModelDescriptor, c: ExecutionContext) -> None: ...
-        def infer(
-            self, d: ModelDescriptor, r: InferenceRequest
-        ) -> Mapping[str, Any]:
+        def infer(self, d: ModelDescriptor, r: InferenceRequest) -> Mapping[str, Any]:
             return {}
 
         def unload(self, d: ModelDescriptor) -> None: ...

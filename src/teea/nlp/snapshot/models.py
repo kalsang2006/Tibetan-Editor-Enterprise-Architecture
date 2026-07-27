@@ -208,18 +208,14 @@ class DocumentSnapshot(BaseModel):
         previous_end = -1
         for position, analysis in enumerate(self.analyses):
             if analysis.index != position:
-                raise ValueError(
-                    f"analysis at position {position} carries index {analysis.index}"
-                )
+                raise ValueError(f"analysis at position {position} carries index {analysis.index}")
             span = analysis.span
             if span.char_start < previous_end:
                 raise ValueError("sentence spans must not overlap")
             if span.char_end > len(self.source):
                 raise ValueError(f"analysis {position} span exceeds the document")
             if self.source[span.char_start : span.char_end] != analysis.text:
-                raise ValueError(
-                    f"analysis {position} span does not select its own text"
-                )
+                raise ValueError(f"analysis {position} span does not select its own text")
             previous_end = span.char_end
         return self
 

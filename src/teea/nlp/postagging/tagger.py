@@ -260,9 +260,7 @@ class HmmPosTagger:
             return self._transition_logp_table[SENTENCE_START][tag]
         return row[tag]
 
-    def _viterbi(
-        self, surfaces: Sequence[str], candidates: Sequence[tuple[str, ...]]
-    ) -> list[str]:
+    def _viterbi(self, surfaces: Sequence[str], candidates: Sequence[tuple[str, ...]]) -> list[str]:
         """Decode the most probable tag sequence.
 
         Standard Viterbi over log-probabilities: sums rather than products, so

@@ -128,9 +128,7 @@ class TaggedMorpheme(BaseModel):
         if not self.tag:
             raise ValueError("tag must not be empty")
         if self.category is not coarse_category(self.tag):
-            raise ValueError(
-                f"category {self.category.value!r} does not match tag {self.tag!r}"
-            )
+            raise ValueError(f"category {self.category.value!r} does not match tag {self.tag!r}")
         return self
 
     @property

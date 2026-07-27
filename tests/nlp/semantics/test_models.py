@@ -32,12 +32,8 @@ from teea.persistence import ArgumentSlot, TermSource, Transitivity, VerbFrame
 
 TSHEG = "་"
 
-TRANSITIVE = VerbFrame(
-    lemma="ཀློག་", frame="Erg-Abs", slots=frozenset({ArgumentSlot.ERGATIVE})
-)
-INTRANSITIVE = VerbFrame(
-    lemma="ཀེར་", frame="Abs-Obl", slots=frozenset({ArgumentSlot.ABSOLUTIVE})
-)
+TRANSITIVE = VerbFrame(lemma="ཀློག་", frame="Erg-Abs", slots=frozenset({ArgumentSlot.ERGATIVE}))
+INTRANSITIVE = VerbFrame(lemma="ཀེར་", frame="Abs-Obl", slots=frozenset({ArgumentSlot.ABSOLUTIVE}))
 SILENT = VerbFrame(lemma="ཀླན་")
 OTHER_TRANSITIVE = VerbFrame(lemma="ཉོ་", transitivity=Transitivity.TRANSITIVE)
 
@@ -131,22 +127,24 @@ def test_a_node_reports_its_own_shape() -> None:
 
 
 def test_a_predicate_node_says_so() -> None:
-    source, morphemes = build_morphemes(("ཀློག", "v.pres"),)
+    source, morphemes = build_morphemes(
+        ("ཀློག", "v.pres"),
+    )
     node = make_node(source, morphemes, kind=SemanticNodeKind.PREDICATE)
     assert node.is_predicate is True
 
 
 def test_the_head_is_addressed_relative_to_the_run() -> None:
     """``head_index`` is a Stage 8 index, so it must be offset before use."""
-    source, morphemes = build_morphemes(
-        ("འཛམ", "n.prop"), ("བུ", "n.prop"), ("གླིང", "n.prop")
-    )
+    source, morphemes = build_morphemes(("འཛམ", "n.prop"), ("བུ", "n.prop"), ("གླིང", "n.prop"))
     node = make_node(source, morphemes, start_index=5, head_index=7)
     assert node.head is morphemes[2]
 
 
 def test_an_empty_node_is_rejected() -> None:
-    source, morphemes = build_morphemes(("ཀློག", "v.pres"),)
+    source, morphemes = build_morphemes(
+        ("ཀློག", "v.pres"),
+    )
     with pytest.raises(ValidationError, match="must not be empty"):
         SemanticNode(
             index=0,
@@ -162,7 +160,9 @@ def test_an_empty_node_is_rejected() -> None:
 
 
 def test_a_node_covering_no_morpheme_is_rejected() -> None:
-    source, morphemes = build_morphemes(("ཀློག", "v.pres"),)
+    source, morphemes = build_morphemes(
+        ("ཀློག", "v.pres"),
+    )
     with pytest.raises(ValidationError, match="end_index must be greater"):
         SemanticNode(
             index=0,
@@ -177,7 +177,9 @@ def test_a_node_covering_no_morpheme_is_rejected() -> None:
 
 
 def test_a_morpheme_count_that_disagrees_with_the_range_is_rejected() -> None:
-    source, morphemes = build_morphemes(("ཀློག", "v.pres"),)
+    source, morphemes = build_morphemes(
+        ("ཀློག", "v.pres"),
+    )
     with pytest.raises(ValidationError, match="expected 2 morphemes"):
         SemanticNode(
             index=0,
@@ -194,7 +196,9 @@ def test_a_morpheme_count_that_disagrees_with_the_range_is_rejected() -> None:
 @pytest.mark.parametrize("head_index", [-1, 1])
 def test_a_head_outside_the_run_is_rejected(head_index: int) -> None:
     """The head is the member the node attaches through, so it must be a member."""
-    source, morphemes = build_morphemes(("ཀློག", "v.pres"),)
+    source, morphemes = build_morphemes(
+        ("ཀློག", "v.pres"),
+    )
     with pytest.raises(ValidationError):
         SemanticNode(
             index=0,
@@ -252,7 +256,9 @@ def test_a_span_that_does_not_end_at_the_last_morpheme_is_rejected() -> None:
 
 # -- Lexical evidence on a node ------------------------------------------------
 def test_one_attested_entry_gives_a_lemma_and_a_transitivity() -> None:
-    source, morphemes = build_morphemes(("ཀློག", "v.pres"),)
+    source, morphemes = build_morphemes(
+        ("ཀློག", "v.pres"),
+    )
     node = make_node(source, morphemes, frames=(TRANSITIVE,))
     assert node.lemma == "ཀློག་"
     assert node.is_transitive is True
@@ -261,7 +267,9 @@ def test_one_attested_entry_gives_a_lemma_and_a_transitivity() -> None:
 
 def test_entries_agreeing_on_a_lemma_still_give_a_lemma() -> None:
     """Two senses of one headword are still one predicate identity."""
-    source, morphemes = build_morphemes(("ཀློག", "v.pres"),)
+    source, morphemes = build_morphemes(
+        ("ཀློག", "v.pres"),
+    )
     sibling = VerbFrame(lemma="ཀློག་", transitivity=Transitivity.TRANSITIVE)
     node = make_node(source, morphemes, frames=(TRANSITIVE, sibling))
     assert node.lemma == "ཀློག་"
@@ -271,34 +279,44 @@ def test_entries_agreeing_on_a_lemma_still_give_a_lemma() -> None:
 
 def test_entries_disagreeing_about_the_lemma_report_no_lemma() -> None:
     """Reporting one of several candidates would be a guess, not a finding."""
-    source, morphemes = build_morphemes(("ཟེར", "v.pres"),)
+    source, morphemes = build_morphemes(
+        ("ཟེར", "v.pres"),
+    )
     node = make_node(source, morphemes, frames=(TRANSITIVE, INTRANSITIVE))
     assert node.lemma is None
     assert node.is_lexically_ambiguous is True
 
 
 def test_entries_disagreeing_about_transitivity_decide_nothing() -> None:
-    source, morphemes = build_morphemes(("ཟེར", "v.pres"),)
+    source, morphemes = build_morphemes(
+        ("ཟེར", "v.pres"),
+    )
     node = make_node(source, morphemes, frames=(TRANSITIVE, INTRANSITIVE))
     assert node.is_transitive is None
 
 
 def test_a_silent_entry_does_not_outvote_an_informative_one() -> None:
     """Silence is not disagreement; discarding the only evidence would be worse."""
-    source, morphemes = build_morphemes(("ཀློག", "v.pres"),)
+    source, morphemes = build_morphemes(
+        ("ཀློག", "v.pres"),
+    )
     node = make_node(source, morphemes, frames=(TRANSITIVE, SILENT))
     assert node.is_transitive is True
 
 
 def test_two_informative_entries_that_agree_decide() -> None:
-    source, morphemes = build_morphemes(("ཉོས", "v.past"),)
+    source, morphemes = build_morphemes(
+        ("ཉོས", "v.past"),
+    )
     node = make_node(source, morphemes, frames=(TRANSITIVE, OTHER_TRANSITIVE))
     assert node.is_transitive is True
     assert node.lemma is None
 
 
 def test_no_entries_decide_nothing() -> None:
-    source, morphemes = build_morphemes(("ཞིང", "n.count"),)
+    source, morphemes = build_morphemes(
+        ("ཞིང", "n.count"),
+    )
     node = make_node(source, morphemes)
     assert node.frames == ()
     assert node.lemma is None
@@ -339,9 +357,7 @@ def test_a_node_can_carry_the_term_stage_10_found() -> None:
 
 # -- SemanticEdge --------------------------------------------------------------
 def test_an_edge_records_its_role_and_its_evidence() -> None:
-    edge = SemanticEdge(
-        source=1, target=0, role=SemanticRole.AGENT, evidence=RoleEvidence.CASE
-    )
+    edge = SemanticEdge(source=1, target=0, role=SemanticRole.AGENT, evidence=RoleEvidence.CASE)
     assert edge.role is SemanticRole.AGENT
     assert edge.evidence is RoleEvidence.CASE
 
@@ -357,9 +373,7 @@ def test_a_node_cannot_govern_itself() -> None:
 
 
 def test_an_edge_is_immutable() -> None:
-    edge = SemanticEdge(
-        source=1, target=0, role=SemanticRole.AGENT, evidence=RoleEvidence.CASE
-    )
+    edge = SemanticEdge(source=1, target=0, role=SemanticRole.AGENT, evidence=RoleEvidence.CASE)
     with pytest.raises(ValidationError):
         edge.role = SemanticRole.THEME  # type: ignore[misc]
 
@@ -495,18 +509,20 @@ def test_overlapping_nodes_are_rejected() -> None:
 
 
 def test_a_span_beyond_the_source_is_rejected() -> None:
-    source, morphemes = build_morphemes(("ཞིང", "n.count"),)
+    source, morphemes = build_morphemes(
+        ("ཞིང", "n.count"),
+    )
     with pytest.raises(ValidationError, match="exceeds the source text"):
         SemanticGraph(source="", nodes=(make_node(source, morphemes),))
 
 
 def test_a_span_that_selects_different_text_is_rejected() -> None:
     """The invariant every stage in this pipeline maintains."""
-    source, morphemes = build_morphemes(("ཞིང", "n.count"),)
+    source, morphemes = build_morphemes(
+        ("ཞིང", "n.count"),
+    )
     with pytest.raises(ValidationError, match="does not select its own text"):
-        SemanticGraph(
-            source="x" * len(source), nodes=(make_node(source, morphemes),)
-        )
+        SemanticGraph(source="x" * len(source), nodes=(make_node(source, morphemes),))
 
 
 def test_an_edge_referring_to_a_missing_node_is_rejected() -> None:
@@ -546,9 +562,7 @@ def test_an_edge_leaving_a_missing_node_is_rejected() -> None:
 def test_a_duplicate_edge_is_rejected() -> None:
     graph = two_node_graph()
     with pytest.raises(ValidationError, match="duplicate edge"):
-        SemanticGraph(
-            source=graph.source, nodes=graph.nodes, edges=graph.edges + graph.edges
-        )
+        SemanticGraph(source=graph.source, nodes=graph.nodes, edges=graph.edges + graph.edges)
 
 
 def test_a_cycle_is_rejected() -> None:

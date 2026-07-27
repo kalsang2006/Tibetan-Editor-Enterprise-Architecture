@@ -83,9 +83,7 @@ def test_registration_preserves_the_order_it_was_given() -> None:
 
 
 def test_registration_accepts_any_iterable() -> None:
-    runtime = SupervisedPluginRuntime(
-        WellBehavedPlugin(f"p{index}") for index in range(3)
-    )
+    runtime = SupervisedPluginRuntime(WellBehavedPlugin(f"p{index}") for index in range(3))
     assert runtime.plugins == ("p0", "p1", "p2")
 
 
@@ -157,9 +155,7 @@ def test_every_registered_plugin_gets_an_outcome(
     plugin_snapshot: DocumentSnapshot,
 ) -> None:
     """Reporting only successes would hide which plugins never ran."""
-    runtime = SupervisedPluginRuntime(
-        [WellBehavedPlugin(), SilentPlugin(), CrashingPlugin()]
-    )
+    runtime = SupervisedPluginRuntime([WellBehavedPlugin(), SilentPlugin(), CrashingPlugin()])
     results = runtime.dispatch(plugin_snapshot)
     assert {o.plugin for o in results.outcomes} == {"spell", "quiet", "crash"}
     assert results.num_plugins == 3
@@ -201,10 +197,8 @@ def test_a_crashing_plugin_does_not_raise(
 def test_one_plugins_crash_leaves_the_others_untouched(
     plugin_snapshot: DocumentSnapshot,
 ) -> None:
-    """"...without causing the host Word interface or other running tools to crash"."""
-    runtime = SupervisedPluginRuntime(
-        [CrashingPlugin(), WellBehavedPlugin(), SilentPlugin()]
-    )
+    """ "...without causing the host Word interface or other running tools to crash"."""
+    runtime = SupervisedPluginRuntime([CrashingPlugin(), WellBehavedPlugin(), SilentPlugin()])
     results = runtime.dispatch(plugin_snapshot)
     alone = SupervisedPluginRuntime([WellBehavedPlugin()]).dispatch(plugin_snapshot)
 
@@ -259,9 +253,7 @@ def test_an_exception_with_no_message_is_still_recorded(
     assert results.failures[0].error_type == "RuntimeError"
 
 
-@pytest.mark.parametrize(
-    "raised", [KeyboardInterrupt, SystemExit], ids=["interrupt", "exit"]
-)
+@pytest.mark.parametrize("raised", [KeyboardInterrupt, SystemExit], ids=["interrupt", "exit"])
 def test_operator_signals_are_not_swallowed(
     plugin_snapshot: DocumentSnapshot, raised: type[BaseException]
 ) -> None:
@@ -324,9 +316,7 @@ def test_a_refused_submission_is_not_treated_as_a_plugin_fault(
     plugin_snapshot: DocumentSnapshot,
 ) -> None:
     """NFR 5.3 isolates plugins, not the scheduler the caller supplied."""
-    runtime = SupervisedPluginRuntime(
-        [WellBehavedPlugin()], executor=ExhaustedExecutor()
-    )
+    runtime = SupervisedPluginRuntime([WellBehavedPlugin()], executor=ExhaustedExecutor())
     with pytest.raises(RuntimeError, match="after shutdown"):
         runtime.dispatch(plugin_snapshot)
 
@@ -335,9 +325,7 @@ def test_many_documents_dispatch_concurrently_against_one_runtime(
     plugin_snapshot: DocumentSnapshot,
 ) -> None:
     """The daemon shares one runtime across documents."""
-    runtime = SupervisedPluginRuntime(
-        [WellBehavedPlugin(), SilentPlugin(), CrashingPlugin()]
-    )
+    runtime = SupervisedPluginRuntime([WellBehavedPlugin(), SilentPlugin(), CrashingPlugin()])
     serial = [runtime.dispatch(plugin_snapshot) for _ in range(16)]
     with ThreadPoolExecutor(max_workers=8) as pool:
         concurrent = list(pool.map(runtime.dispatch, [plugin_snapshot] * 16))
@@ -346,9 +334,7 @@ def test_many_documents_dispatch_concurrently_against_one_runtime(
 
 # -- Determinism ---------------------------------------------------------------
 def test_dispatch_is_deterministic(plugin_snapshot: DocumentSnapshot) -> None:
-    runtime = SupervisedPluginRuntime(
-        [WellBehavedPlugin(), CrashingPlugin(), SilentPlugin()]
-    )
+    runtime = SupervisedPluginRuntime([WellBehavedPlugin(), CrashingPlugin(), SilentPlugin()])
     assert runtime.dispatch(plugin_snapshot) == runtime.dispatch(plugin_snapshot)
 
 

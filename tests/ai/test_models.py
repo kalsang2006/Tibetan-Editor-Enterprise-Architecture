@@ -75,21 +75,15 @@ def test_a_descriptor_must_provide_a_capability() -> None:
 
 def test_a_negative_size_is_rejected() -> None:
     with pytest.raises(ValidationError):
-        ModelDescriptor(
-            name="x", version="1", provides={CapabilityKind.GRAMMAR}, size_bytes=-1
-        )
+        ModelDescriptor(name="x", version="1", provides={CapabilityKind.GRAMMAR}, size_bytes=-1)
 
 
 def test_size_defaults_to_zero_meaning_unbudgeted() -> None:
-    assert ModelDescriptor(
-        name="x", version="1", provides={CapabilityKind.GRAMMAR}
-    ).size_bytes == 0
+    assert ModelDescriptor(name="x", version="1", provides={CapabilityKind.GRAMMAR}).size_bytes == 0
 
 
 def test_a_descriptor_is_immutable() -> None:
-    descriptor = ModelDescriptor(
-        name="x", version="1", provides={CapabilityKind.GRAMMAR}
-    )
+    descriptor = ModelDescriptor(name="x", version="1", provides={CapabilityKind.GRAMMAR})
     with pytest.raises(ValidationError):
         descriptor.name = "y"  # type: ignore[misc]
 
@@ -115,9 +109,7 @@ def test_the_context_carries_a_device_choice() -> None:
 
 # -- InferenceRequest / InferenceResponse -------------------------------------
 def test_a_request_names_a_capability() -> None:
-    request = InferenceRequest(
-        capability=CapabilityKind.TRANSLATION, inputs={"text": "བཀྲ"}
-    )
+    request = InferenceRequest(capability=CapabilityKind.TRANSLATION, inputs={"text": "བཀྲ"})
     assert request.capability is CapabilityKind.TRANSLATION
     assert request.preferred is None
     assert request.inputs == {"text": "བཀྲ"}

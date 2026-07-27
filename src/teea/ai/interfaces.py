@@ -54,9 +54,7 @@ class InferenceEngine(Protocol):
         """
         ...
 
-    def infer(
-        self, descriptor: ModelDescriptor, request: InferenceRequest
-    ) -> Mapping[str, Any]:
+    def infer(self, descriptor: ModelDescriptor, request: InferenceRequest) -> Mapping[str, Any]:
         """Run the loaded model named by ``descriptor`` over ``request``.
 
         The runtime guarantees the model is loaded before calling this. The

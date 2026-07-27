@@ -268,9 +268,7 @@ def test_was_ambiguous_marks_exactly_the_stage_6_ambiguities(
     assert seen_any, "corpus should contain at least one ambiguous morpheme"
 
 
-def test_tagging_is_deterministic(
-    pos_tagger: HmmPosTagger, corpus_sentences: list[str]
-) -> None:
+def test_tagging_is_deterministic(pos_tagger: HmmPosTagger, corpus_sentences: list[str]) -> None:
     analysis = analyse(corpus_sentences[4])
     assert pos_tagger.tag(analysis) == pos_tagger.tag(analysis)
 
@@ -414,9 +412,7 @@ def test_stage_6_categories_constrain_an_unknown_surface() -> None:
     assert stub.lookup(unseen) is None, "premise: the surface must be unknown"
 
     offsets = utf8_byte_offsets(unseen)
-    span = TextSpan(
-        char_start=0, char_end=len(unseen), byte_start=0, byte_end=offsets[len(unseen)]
-    )
+    span = TextSpan(char_start=0, char_end=len(unseen), byte_start=0, byte_end=offsets[len(unseen)])
     analysis = MorphologicalAnalysis(
         source=unseen,
         morphemes=(

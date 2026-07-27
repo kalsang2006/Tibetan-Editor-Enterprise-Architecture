@@ -138,8 +138,7 @@ class SupervisedPluginRuntime:
         """
         if self._executor is None:
             outcomes = [
-                self._supervise(name, plugin, snapshot)
-                for name, plugin in self._registered
+                self._supervise(name, plugin, snapshot) for name, plugin in self._registered
             ]
         else:
             futures = [
@@ -148,15 +147,11 @@ class SupervisedPluginRuntime:
             ]
             outcomes = [future.result() for future in futures]
 
-        return PluginResults(
-            outcomes=tuple(sorted(outcomes, key=lambda outcome: outcome.plugin))
-        )
+        return PluginResults(outcomes=tuple(sorted(outcomes, key=lambda outcome: outcome.plugin)))
 
     # -- Internals -----------------------------------------------------------
     @staticmethod
-    def _supervise(
-        name: str, plugin: FeaturePlugin, snapshot: DocumentSnapshot
-    ) -> PluginOutcome:
+    def _supervise(name: str, plugin: FeaturePlugin, snapshot: DocumentSnapshot) -> PluginOutcome:
         """Run one plugin, converting any fault into a recorded outcome.
 
         The blind except is the sandbox boundary NFR 5.3 requires: this is the
@@ -175,9 +170,7 @@ class SupervisedPluginRuntime:
         :class:`pydantic.ValidationError`.
         """
         try:
-            return PluginOutcome(
-                plugin=name, suggestions=tuple(plugin.examine(snapshot))
-            )
+            return PluginOutcome(plugin=name, suggestions=tuple(plugin.examine(snapshot)))
         except Exception as exc:  # noqa: BLE001 - the NFR 5.3 sandbox boundary
             return PluginOutcome(plugin=name, failure=_capture(name, exc))
 
@@ -198,9 +191,7 @@ def _capture(name: str, exc: Exception) -> PluginFailure:
         code = ErrorCode.PLUGIN_CONTRACT_VIOLATED
     else:
         code = ErrorCode.PLUGIN_EXECUTION_FAILED
-    return PluginFailure(
-        plugin=name, code=code, error_type=type(exc).__name__, message=str(exc)
-    )
+    return PluginFailure(plugin=name, code=code, error_type=type(exc).__name__, message=str(exc))
 
 
 __all__ = ["SupervisedPluginRuntime"]

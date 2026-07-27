@@ -88,20 +88,12 @@ class LanguageServerSnapshotBuilder:
         # `or` would silently substitute the shipped one. That was a real defect
         # in Stages 07, 09 and 10.
         self._segmenter = TibetanSentenceSegmenter() if segmenter is None else segmenter
-        self._morphology = (
-            TibetanMorphologicalAnalyzer() if morphology is None else morphology
-        )
+        self._morphology = TibetanMorphologicalAnalyzer() if morphology is None else morphology
         self._tagger = HmmPosTagger() if tagger is None else tagger
         self._parser = TibetanDependencyParser() if parser is None else parser
-        self._recognizer = (
-            TibetanEntityRecognizer() if recognizer is None else recognizer
-        )
-        self._terminology = (
-            GlossaryTerminologyRecognizer() if terminology is None else terminology
-        )
-        self._semantics = (
-            TibetanSemanticAnalyzer() if semantics is None else semantics
-        )
+        self._recognizer = TibetanEntityRecognizer() if recognizer is None else recognizer
+        self._terminology = GlossaryTerminologyRecognizer() if terminology is None else terminology
+        self._semantics = TibetanSemanticAnalyzer() if semantics is None else semantics
 
     def analyze(self, text: str) -> DocumentSnapshot:
         """Analyse ``text`` from scratch.
@@ -134,9 +126,7 @@ class LanguageServerSnapshotBuilder:
             The immutable snapshot of ``text``, equal to what :meth:`analyze`
             would return for it.
         """
-        reusable = {
-            analysis.content_hash: analysis for analysis in previous.analyses
-        }
+        reusable = {analysis.content_hash: analysis for analysis in previous.analyses}
         sentences = self._segmenter.segment(text).sentences
         return DocumentSnapshot(
             source=text,
@@ -150,9 +140,7 @@ class LanguageServerSnapshotBuilder:
     # -- Internals -----------------------------------------------------------
     def _analyze(self, sentence: Sentence) -> SentenceAnalysis:
         """Run Stages 06 -> 11 over one sentence."""
-        tree = self._parser.parse(
-            self._tagger.tag(self._morphology.analyze(sentence.text))
-        )
+        tree = self._parser.parse(self._tagger.tag(self._morphology.analyze(sentence.text)))
         entities = self._recognizer.recognize(tree)
         terms = self._terminology.recognize(tree)
         return SentenceAnalysis(

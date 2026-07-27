@@ -131,9 +131,7 @@ def test_a_non_utf8_payload_raises_configuration_error(tmp_path: Path) -> None:
 
 
 @pytest.mark.parametrize("payload", [42, "text", [1, 2]])
-def test_a_non_object_payload_raises_configuration_error(
-    tmp_path: Path, payload: object
-) -> None:
+def test_a_non_object_payload_raises_configuration_error(tmp_path: Path, payload: object) -> None:
     with pytest.raises(ConfigurationError, match="must be a JSON object"):
         InMemoryGazetteer(write_payload(tmp_path / "scalar.json", payload))
 
@@ -168,9 +166,7 @@ def test_a_hand_written_payload_is_independent_of_the_shipped_one(
 
 def test_a_payload_without_an_ambiguous_tier_still_loads(tmp_path: Path) -> None:
     """The section is optional, so an older payload keeps working."""
-    custom = InMemoryGazetteer(
-        write_payload(tmp_path / "legacy.json", {"entries": [["ཀ", "ཁ"]]})
-    )
+    custom = InMemoryGazetteer(write_payload(tmp_path / "legacy.json", {"entries": [["ཀ", "ཁ"]]}))
     assert custom.num_ambiguous == 0
     assert custom.contains(("ཀ", "ཁ"))
 

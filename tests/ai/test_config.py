@@ -23,9 +23,7 @@ def test_the_defaults_are_lazy_unlimited_and_auto() -> None:
 
 
 def test_settings_are_overridable_by_keyword() -> None:
-    settings = load_ai_settings(
-        memory_budget_bytes=1_024, default_device="gpu", eager_load=True
-    )
+    settings = load_ai_settings(memory_budget_bytes=1_024, default_device="gpu", eager_load=True)
     assert settings.memory_budget_bytes == 1_024
     assert settings.default_device is Device.GPU
     assert settings.eager_load is True

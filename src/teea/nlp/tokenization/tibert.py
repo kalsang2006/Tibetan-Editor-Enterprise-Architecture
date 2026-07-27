@@ -284,7 +284,19 @@ class TiBERTTokenizer:
             ) from exc
 
         ids = list(encoding["input_ids"])
-        was_truncated = truncate and len(ids) >= max_len
+        if truncate and len(ids) == max_len:
+            # Cannot distinguish exact-fit from truly-truncated by the output
+            # alone, so check the pre-truncation length with a second call.
+            pre_ids = self._backend(
+                normalized,
+                add_special_tokens=add_special,
+                truncation=False,
+                max_length=max_len,
+                return_offsets_mapping=False,
+            )["input_ids"]
+            was_truncated = len(pre_ids) > max_len
+        else:
+            was_truncated = False
 
         if not truncate and len(ids) > max_len:
             raise InputTooLongError(produced=len(ids), maximum=max_len)

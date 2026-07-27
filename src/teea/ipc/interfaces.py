@@ -98,9 +98,7 @@ class RequestHandler(Protocol):
     several requests at once through an executor.
     """
 
-    def handle(
-        self, params: Mapping[str, Any], session: Session
-    ) -> Mapping[str, Any]:
+    def handle(self, params: Mapping[str, Any], session: Session) -> Mapping[str, Any]:
         """Serve one call.
 
         Args:

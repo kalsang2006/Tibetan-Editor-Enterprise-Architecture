@@ -135,9 +135,7 @@ def test_only_an_affix_can_be_fused() -> None:
 def test_is_affix_covers_both_confident_and_ambiguous() -> None:
     """An ambiguous surface is still a candidate affix."""
     affix = make_morpheme(GEN, 0, len(GEN), kind=MorphemeKind.AFFIX, categories=GENITIVE)
-    ambiguous = make_morpheme(
-        GEN, 0, len(GEN), kind=MorphemeKind.AMBIGUOUS, categories=GENITIVE
-    )
+    ambiguous = make_morpheme(GEN, 0, len(GEN), kind=MorphemeKind.AMBIGUOUS, categories=GENITIVE)
     root = make_morpheme(KHYIM, 0, len(KHYIM))
 
     assert affix.is_affix and ambiguous.is_affix
@@ -272,9 +270,7 @@ def test_categories_is_empty_when_there_are_no_affixes() -> None:
 
 def test_has_ambiguity_reflects_ambiguous_morphemes() -> None:
     source = MI_GEN
-    ambiguous = make_morpheme(
-        source, 0, len(MI), kind=MorphemeKind.AMBIGUOUS, categories=GENITIVE
-    )
+    ambiguous = make_morpheme(source, 0, len(MI), kind=MorphemeKind.AMBIGUOUS, categories=GENITIVE)
     analysis = MorphologicalAnalysis(source=source, morphemes=(ambiguous,))
     assert analysis.has_ambiguity
 

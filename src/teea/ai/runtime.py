@@ -100,13 +100,9 @@ class LocalAIRuntime:
         # Stages 07/09/10 and the Fusion Engine.
         self._engine = engine
         self._settings = AIRuntimeSettings() if settings is None else settings
-        self._models = (
-            InMemoryModelRegistry() if model_registry is None else model_registry
-        )
+        self._models = InMemoryModelRegistry() if model_registry is None else model_registry
         self._capabilities = (
-            InMemoryCapabilityRegistry()
-            if capability_registry is None
-            else capability_registry
+            InMemoryCapabilityRegistry() if capability_registry is None else capability_registry
         )
         self._context = ExecutionContext(device=self._settings.default_device)
 
@@ -296,9 +292,7 @@ class LocalAIRuntime:
             self._require_running()
             return self._infer_locked(request)
 
-    def infer_batch(
-        self, requests: Iterable[InferenceRequest]
-    ) -> tuple[InferenceResponse, ...]:
+    def infer_batch(self, requests: Iterable[InferenceRequest]) -> tuple[InferenceResponse, ...]:
         """Serve a batch of requests, loading each model at most once.
 
         Figure 6's "Batch processing". Requests are grouped by the model they
@@ -354,9 +348,7 @@ class LocalAIRuntime:
             )
         return descriptor
 
-    def _run(
-        self, descriptor: ModelDescriptor, request: InferenceRequest
-    ) -> InferenceResponse:
+    def _run(self, descriptor: ModelDescriptor, request: InferenceRequest) -> InferenceResponse:
         """Ensure ``descriptor`` is loaded, run it, and tag the response."""
         self._ensure_loaded(descriptor)
         self._touch(descriptor.key)

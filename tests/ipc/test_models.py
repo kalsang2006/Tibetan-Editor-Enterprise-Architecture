@@ -50,19 +50,14 @@ def test_the_protocol_version_is_major_dot_minor() -> None:
 @pytest.mark.parametrize(
     ("version", "expected"), [("1.0", "1"), ("1.7", "1"), ("2.0", "2"), ("10.3", "10")]
 )
-def test_only_the_major_component_decides_compatibility(
-    version: str, expected: str
-) -> None:
+def test_only_the_major_component_decides_compatibility(version: str, expected: str) -> None:
     """A minor bump is additive; a major bump is not."""
     assert protocol_major(version) == expected
 
 
 def test_messages_carry_the_protocol_version_by_default() -> None:
     assert IpcRequest(request_id="r1", method="m").protocol_version == PROTOCOL_VERSION
-    assert (
-        IpcResponse(request_id="r1", ok=True, result={}).protocol_version
-        == PROTOCOL_VERSION
-    )
+    assert IpcResponse(request_id="r1", ok=True, result={}).protocol_version == PROTOCOL_VERSION
 
 
 # -- IpcRequest ----------------------------------------------------------------
@@ -77,9 +72,9 @@ def test_a_request_carries_its_call() -> None:
 
 def test_a_command_expects_no_response() -> None:
     """FR-8's non-blocking bus: a command is fire-and-forget."""
-    assert IpcRequest(
-        request_id="r1", method="ping", expects_response=False
-    ).expects_response is False
+    assert (
+        IpcRequest(request_id="r1", method="ping", expects_response=False).expects_response is False
+    )
 
 
 def test_a_request_must_carry_an_id() -> None:

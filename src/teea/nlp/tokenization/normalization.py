@@ -132,7 +132,7 @@ class TextNormalizer:
                 result = " ".join(result.split())
 
             return result
-        except NormalizationError:
+        except NormalizationError:  # pragma: no cover - unreachable, defensive
             raise
         except Exception as exc:  # pragma: no cover - defensive
             _logger.error("normalization_failed", form=self._form, error=str(exc))

@@ -79,8 +79,7 @@ class NamedEntity(BaseModel):
             raise ValueError("end_index must be greater than start_index")
         if len(self.morphemes) != self.end_index - self.start_index:
             raise ValueError(
-                f"expected {self.end_index - self.start_index} morphemes, "
-                f"got {len(self.morphemes)}"
+                f"expected {self.end_index - self.start_index} morphemes, got {len(self.morphemes)}"
             )
         first, last = self.morphemes[0], self.morphemes[-1]
         if self.span.char_start != first.span.char_start:
@@ -173,9 +172,7 @@ class EntityAnnotation(BaseModel):
 
     def covers_morpheme(self, index: int) -> bool:
         """Whether the morpheme at ``index`` lies inside a recognised entity."""
-        return any(
-            entity.start_index <= index < entity.end_index for entity in self.entities
-        )
+        return any(entity.start_index <= index < entity.end_index for entity in self.entities)
 
 
 __all__ = ["EntityAnnotation", "EntityEvidence", "NamedEntity"]

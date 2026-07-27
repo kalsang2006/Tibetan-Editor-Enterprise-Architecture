@@ -36,6 +36,7 @@ from pydantic import Field, ValidationError, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from teea.core.errors import ConfigurationError
+from teea.plagiarism.config import PlagiarismSettings
 
 NormalizationForm = Literal["NFC", "NFKC", "NFD", "NFKD"]
 
@@ -122,6 +123,7 @@ class TEEASettings(BaseSettings):
     log_level: str = "INFO"
     log_json: bool = True
     tokenization: TokenizationSettings = Field(default_factory=TokenizationSettings)
+    plagiarism: PlagiarismSettings = Field(default_factory=PlagiarismSettings)
 
     @field_validator("log_level")
     @classmethod

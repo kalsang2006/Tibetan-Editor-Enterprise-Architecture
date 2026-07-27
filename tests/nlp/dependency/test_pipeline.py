@@ -32,9 +32,7 @@ def test_a_document_flows_through_every_stage(
     corpus_document: str,
 ) -> None:
     """Stage 2 -> 4 -> 6 -> 7 -> 8 on a real multi-paragraph document."""
-    normalized = TextNormalizer(form="NFC", collapse_whitespace=False).normalize(
-        corpus_document
-    )
+    normalized = TextNormalizer(form="NFC", collapse_whitespace=False).normalize(corpus_document)
     segmented = sentence_segmenter.segment(normalized)
     assert segmented.num_sentences > 10
 
@@ -93,9 +91,7 @@ def test_every_stage_7_morpheme_becomes_exactly_one_stage_8_node(
         tree = dependency_parser.parse(tagged)
 
         assert tree.num_nodes == tagged.num_morphemes
-        assert tuple(n.text for n in tree.nodes) == tuple(
-            m.text for m in tagged.morphemes
-        )
+        assert tuple(n.text for n in tree.nodes) == tuple(m.text for m in tagged.morphemes)
         assert tuple(n.tag for n in tree.nodes) == tagged.tags
 
 
@@ -133,9 +129,7 @@ def test_most_sentences_receive_an_argument_structure(
     """Figure 5's "subject & object detection", measured on real sentences."""
     with_argument = 0
     for sentence in corpus_sentences:
-        tree = dependency_parser.parse(
-            pos_tagger.tag(morphological_analyzer.analyze(sentence))
-        )
+        tree = dependency_parser.parse(pos_tagger.tag(morphological_analyzer.analyze(sentence)))
         if tree.subjects or tree.objects:
             with_argument += 1
 
@@ -151,9 +145,7 @@ def test_case_particles_are_attached_to_their_host_not_the_root(
     """A case particle marks a nominal, so it must depend on that nominal."""
     checked = 0
     for sentence in corpus_sentences:
-        tree = dependency_parser.parse(
-            pos_tagger.tag(morphological_analyzer.analyze(sentence))
-        )
+        tree = dependency_parser.parse(pos_tagger.tag(morphological_analyzer.analyze(sentence)))
         for node in tree.of_relation(DependencyRelation.CASE):
             head = tree.head_of(node.index)
             assert head is not None

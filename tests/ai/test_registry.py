@@ -25,9 +25,7 @@ FEATURES = CapabilityKind.SEMANTIC_FEATURES
 
 
 def descriptor(name: str, version: str, *caps: CapabilityKind) -> ModelDescriptor:
-    return ModelDescriptor(
-        name=name, version=version, provides=frozenset(caps or (GRAMMAR,))
-    )
+    return ModelDescriptor(name=name, version=version, provides=frozenset(caps or (GRAMMAR,)))
 
 
 # -- Protocol conformance ------------------------------------------------------

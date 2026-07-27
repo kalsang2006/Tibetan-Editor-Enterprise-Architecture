@@ -30,6 +30,30 @@ from structlog.typing import Processor
 _CORRELATION_KEY = "correlation_id"
 
 
+class _CurrentStderr:
+    """File-like object that delegates to the live ``sys.stderr``.
+
+    This avoids capturing a stale reference to ``sys.stderr`` when a
+    ``PrintLogger`` or ``PrintLoggerFactory`` is created during capsys
+    capture (which replaces ``sys.stderr`` with a ``StringIO`` that is
+    subsequently closed).  By resolving ``sys.stderr`` on every write we
+    stay safe regardless of capsys / colorama lifecycle.
+    """
+
+    def write(self, text: str) -> None:
+        sys.stderr.write(text)
+
+    def flush(self) -> None:
+        sys.stderr.flush()
+
+    def isatty(self) -> bool:
+        return sys.stderr.isatty()
+
+    @property
+    def encoding(self) -> str:
+        return sys.stderr.encoding
+
+
 def configure_logging(*, level: str = "INFO", json_output: bool = True) -> None:
     """Configure process-wide structured logging.
 
@@ -71,8 +95,8 @@ def configure_logging(*, level: str = "INFO", json_output: bool = True) -> None:
         processors=[*shared_processors, renderer],
         wrapper_class=structlog.make_filtering_bound_logger(numeric_level),
         context_class=dict,
-        logger_factory=structlog.PrintLoggerFactory(file=sys.stderr),
-        cache_logger_on_first_use=True,
+        logger_factory=structlog.PrintLoggerFactory(file=_CurrentStderr()),  # type: ignore[arg-type]
+        cache_logger_on_first_use=False,
     )
 
 

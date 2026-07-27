@@ -279,9 +279,7 @@ def test_a_cycle_is_rejected() -> None:
     This is the case a naive "does a root exist" check would miss.
     """
     source = KHYIM + MI + SONG
-    a = node(
-        source, 0, len(KHYIM), "n.count", index=0, head=1, relation=DependencyRelation.AMOD
-    )
+    a = node(source, 0, len(KHYIM), "n.count", index=0, head=1, relation=DependencyRelation.AMOD)
     b = node(
         source,
         len(KHYIM),

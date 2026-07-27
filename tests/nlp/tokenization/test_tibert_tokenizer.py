@@ -144,7 +144,7 @@ def _assert_span_ground_truth(encoded: EncodedText) -> None:
         span = token.span
         assert span is not None, f"content token {token.piece!r} has no span"
         expected = token.piece.removeprefix(METASPACE)
-        assert normalized[span.char_start:span.char_end] == expected
+        assert normalized[span.char_start : span.char_end] == expected
 
 
 # -- Piece-surface helpers --------------------------------------------------
@@ -363,8 +363,8 @@ def test_byte_offsets_are_consistent_with_utf8_encoding(
     for token in encoded.content_tokens:
         span = token.span
         assert span is not None
-        assert span.byte_start == len(normalized[:span.char_start].encode("utf-8"))
-        assert span.byte_end == len(normalized[:span.char_end].encode("utf-8"))
+        assert span.byte_start == len(normalized[: span.char_start].encode("utf-8"))
+        assert span.byte_end == len(normalized[: span.char_end].encode("utf-8"))
         assert span.byte_length == len(token.text.encode("utf-8"))
         # Tibetan is three bytes per code point, so bytes must exceed chars.
         assert span.byte_length > span.char_length
@@ -414,9 +414,7 @@ def test_tokenize_of_a_bare_lexicon_entry_yields_one_piece(
     tokenizer: TiBERTTokenizer, lexicon_sample: list[str]
 ) -> None:
     # A bare, tsheg-less lexicon headword is a single contiguous run.
-    entry = next(
-        item for item in lexicon_sample if item and not (set(item) & {"་", "༌"})
-    )
+    entry = next(item for item in lexicon_sample if item and not (set(item) & {"་", "༌"}))
     assert tokenizer.tokenize(entry) == [f"{METASPACE}{entry}"]
 
 
@@ -440,9 +438,7 @@ def test_decode_can_retain_special_tokens(
 
 
 @pytest.mark.parametrize("ids", [123, None, 4.5, "abc", b"ab"])
-def test_decode_rejects_non_sequences_and_strings(
-    tokenizer: TiBERTTokenizer, ids: object
-) -> None:
+def test_decode_rejects_non_sequences_and_strings(tokenizer: TiBERTTokenizer, ids: object) -> None:
     with pytest.raises(InputNotStringError) as exc_info:
         tokenizer.decode(ids)  # type: ignore[arg-type]
     assert exc_info.value.context["received_type"] == type(ids).__name__
@@ -537,9 +533,7 @@ def test_unknown_pieces_are_flagged_and_counted(
     encoded = make_tokenizer(unk_surface=missing_surface).encode(sentence)
     assert encoded.has_unknown is True
     assert encoded.num_unknown == 1
-    assert encoded.unknown_ratio == pytest.approx(
-        encoded.num_unknown / encoded.num_content_tokens
-    )
+    assert encoded.unknown_ratio == pytest.approx(encoded.num_unknown / encoded.num_content_tokens)
     assert 0.0 < encoded.unknown_ratio <= 1.0
     unknown = [token for token in encoded.tokens if token.is_unknown]
     assert len(unknown) == 1

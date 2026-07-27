@@ -71,9 +71,7 @@ def build_tree(*pairs: tuple[str, str]) -> DependencyTree:
             )
         )
         cursor = end + len(TSHEG)
-    return TibetanDependencyParser().parse(
-        TaggedText(source=source, morphemes=tuple(morphemes))
-    )
+    return TibetanDependencyParser().parse(TaggedText(source=source, morphemes=tuple(morphemes)))
 
 
 class StubTerminology:
@@ -217,9 +215,7 @@ def test_a_non_utf8_payload_raises_configuration_error(tmp_path: Path) -> None:
 
 
 @pytest.mark.parametrize("payload", [7, "text", [1]])
-def test_a_non_object_payload_raises_configuration_error(
-    tmp_path: Path, payload: object
-) -> None:
+def test_a_non_object_payload_raises_configuration_error(tmp_path: Path, payload: object) -> None:
     with pytest.raises(ConfigurationError, match="must be a JSON object"):
         InMemoryTerminology(write_payload(tmp_path / "s.json", payload))
 
@@ -235,9 +231,7 @@ def test_entries_must_be_a_list(tmp_path: Path) -> None:
 
 
 def test_a_custom_payload_is_independent_of_the_shipped_one(tmp_path: Path) -> None:
-    custom = InMemoryTerminology(
-        write_payload(tmp_path / "tiny.json", {"entries": [["ཀ", "ཁ"]]})
-    )
+    custom = InMemoryTerminology(write_payload(tmp_path / "tiny.json", {"entries": [["ཀ", "ཁ"]]}))
     assert len(custom) == 1
     assert custom.lookup(("ཀ", "ཁ")) is TermSource.GLOSSARY
     assert custom.lookup(ARHAT) is None
@@ -455,9 +449,7 @@ def test_longest_match_wins() -> None:
 
 
 def test_a_single_syllable_is_never_a_term() -> None:
-    recognizer = GlossaryTerminologyRecognizer(
-        terminology=StubTerminology(glossary={("ཀ",)})
-    )
+    recognizer = GlossaryTerminologyRecognizer(terminology=StubTerminology(glossary={("ཀ",)}))
     annotation = recognizer.recognize(build_tree(("ཀ", "n.count"), ("སོང", "v.past")))
     assert annotation.is_empty
 
@@ -480,9 +472,7 @@ def test_an_empty_injected_repository_is_not_silently_replaced() -> None:
     """
     recognizer = GlossaryTerminologyRecognizer(terminology=StubTerminology())
     assert len(recognizer._terminology) == 0
-    assert recognizer.recognize(
-        build_tree(("དགྲ", "n.count"), ("བཅོམ", "n.count"))
-    ).is_empty
+    assert recognizer.recognize(build_tree(("དགྲ", "n.count"), ("བཅོམ", "n.count"))).is_empty
 
 
 # -- Guarantees over the real corpus ------------------------------------------
@@ -492,10 +482,7 @@ def recognize_corpus(
     analyzer = TibetanMorphologicalAnalyzer()
     tagger = HmmPosTagger()
     parser = TibetanDependencyParser()
-    return [
-        recognizer.recognize(parser.parse(tagger.tag(analyzer.analyze(s))))
-        for s in sentences
-    ]
+    return [recognizer.recognize(parser.parse(tagger.tag(analyzer.analyze(s)))) for s in sentences]
 
 
 def test_annotations_are_well_formed_over_the_corpus(
@@ -510,9 +497,7 @@ def test_annotations_are_well_formed_over_the_corpus(
             previous_end = term.end_index
             assert sentence[term.span.char_start : term.span.char_end] == term.text
             encoded = sentence.encode("utf-8")
-            assert encoded[term.span.byte_start : term.span.byte_end] == term.text.encode(
-                "utf-8"
-            )
+            assert encoded[term.span.byte_start : term.span.byte_end] == term.text.encode("utf-8")
 
 
 def test_recognition_is_deterministic(

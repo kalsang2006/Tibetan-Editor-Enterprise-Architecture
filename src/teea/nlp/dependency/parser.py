@@ -267,9 +267,7 @@ class TibetanDependencyParser:
             return root, DependencyRelation.MARK
 
         if _is_nominal(morpheme) or _is_deverbal_noun(morpheme):
-            return self._attach_nominal(
-                index, morpheme, morphemes, root, has_agentive=has_agentive
-            )
+            return self._attach_nominal(index, morpheme, morphemes, root, has_agentive=has_agentive)
 
         return root, DependencyRelation.DEP
 
@@ -310,9 +308,7 @@ class TibetanDependencyParser:
 
     # -- Neighbour searches --------------------------------------------------
     @staticmethod
-    def _previous_nominal(
-        index: int, morphemes: tuple[TaggedMorpheme, ...]
-    ) -> int | None:
+    def _previous_nominal(index: int, morphemes: tuple[TaggedMorpheme, ...]) -> int | None:
         """Return the nearest nominal to the left, or ``None``."""
         for candidate in range(index - 1, -1, -1):
             if _is_nominal(morphemes[candidate]):
@@ -328,9 +324,7 @@ class TibetanDependencyParser:
         return None
 
     @staticmethod
-    def _following_case_tag(
-        index: int, morphemes: tuple[TaggedMorpheme, ...]
-    ) -> str | None:
+    def _following_case_tag(index: int, morphemes: tuple[TaggedMorpheme, ...]) -> str | None:
         """Return the case particle marking the nominal at ``index``.
 
         The particle may be separated from its host by other modifiers, as in
@@ -352,9 +346,7 @@ class TibetanDependencyParser:
 
     # -- Tree repair ---------------------------------------------------------
     @staticmethod
-    def _repair(
-        heads: list[int], relations: list[DependencyRelation], root: int
-    ) -> None:
+    def _repair(heads: list[int], relations: list[DependencyRelation], root: int) -> None:
         """Re-attach any node that does not reach the root.
 
         Cycles are possible in principle -- two nominals could be made to point

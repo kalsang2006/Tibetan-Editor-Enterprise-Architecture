@@ -116,18 +116,14 @@ class SegmentedText(BaseModel):
         previous_end = -1
         for position, sentence in enumerate(self.sentences):
             if sentence.index != position:
-                raise ValueError(
-                    f"sentence at position {position} carries index {sentence.index}"
-                )
+                raise ValueError(f"sentence at position {position} carries index {sentence.index}")
             span = sentence.span
             if span.char_start < previous_end:
                 raise ValueError("sentence spans must not overlap")
             if span.char_end > len(self.source):
                 raise ValueError("sentence span exceeds the source text")
             if self.source[span.char_start : span.char_end] != sentence.text:
-                raise ValueError(
-                    f"sentence {position} span does not select its own text"
-                )
+                raise ValueError(f"sentence {position} span does not select its own text")
             previous_end = span.char_end
         return self
 

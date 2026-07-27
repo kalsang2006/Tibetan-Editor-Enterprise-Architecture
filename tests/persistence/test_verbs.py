@@ -153,18 +153,14 @@ def test_lookup_is_stable_across_calls(verb_lexicon: InMemoryVerbLexicon) -> Non
 
 # -- VerbFrame -----------------------------------------------------------------
 def test_a_frame_naming_an_ergative_slot_is_transitive() -> None:
-    frame = VerbFrame(
-        lemma="ཀློག་", frame="Erg-Abs", slots=frozenset({ArgumentSlot.ERGATIVE})
-    )
+    frame = VerbFrame(lemma="ཀློག་", frame="Erg-Abs", slots=frozenset({ArgumentSlot.ERGATIVE}))
     assert frame.has_agentive_slot is True
     assert frame.is_transitive is True
     assert frame.is_informative is True
 
 
 def test_a_frame_without_an_ergative_slot_is_intransitive() -> None:
-    frame = VerbFrame(
-        lemma="ཀེར་", frame="Abs-Obl", slots=frozenset({ArgumentSlot.ABSOLUTIVE})
-    )
+    frame = VerbFrame(lemma="ཀེར་", frame="Abs-Obl", slots=frozenset({ArgumentSlot.ABSOLUTIVE}))
     assert frame.has_agentive_slot is False
     assert frame.is_transitive is False
 

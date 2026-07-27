@@ -108,9 +108,7 @@ def test_normalizing_already_normalized_corpus_is_a_no_op(
     sentence_segmenter: TibetanSentenceSegmenter, corpus_document: str
 ) -> None:
     """So normalize -> segment agrees with segmenting directly."""
-    normalized = TextNormalizer(form="NFC", collapse_whitespace=False).normalize(
-        corpus_document
-    )
+    normalized = TextNormalizer(form="NFC", collapse_whitespace=False).normalize(corpus_document)
     assert normalized == corpus_document
     assert (
         sentence_segmenter.segment(normalized).texts
@@ -174,9 +172,7 @@ def test_sentence_byte_offsets_compose_with_the_document_encoding(
     encoded_document = corpus_document.encode("utf-8")
     for sentence in sentence_segmenter.segment(corpus_document).sentences:
         span = sentence.span
-        assert encoded_document[span.byte_start : span.byte_end] == sentence.text.encode(
-            "utf-8"
-        )
+        assert encoded_document[span.byte_start : span.byte_end] == sentence.text.encode("utf-8")
 
 
 # -- Incremental re-parsing (SRS 3.1, FR-4) -----------------------------------
@@ -210,7 +206,5 @@ def test_reparsing_only_the_touched_sentence_is_cheaper_than_the_document(
     assert len(touched) == 1
 
     reparsed_tokens = sum(tokenizer.encode(s.text).num_tokens for s in touched)
-    whole_document_tokens = sum(
-        tokenizer.encode(s.text).num_tokens for s in segmented.sentences
-    )
+    whole_document_tokens = sum(tokenizer.encode(s.text).num_tokens for s in segmented.sentences)
     assert reparsed_tokens < whole_document_tokens / 10

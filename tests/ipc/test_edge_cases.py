@@ -113,9 +113,7 @@ def test_an_unknown_fault_code_degrades_to_unknown() -> None:
     what the newer server actually said (regression: F7).
     """
     with pytest.raises(RemoteError) as error:
-        _raise_fault(
-            IpcFault(code="TEEA-9999", error_type="FutureError", message="from tomorrow")
-        )
+        _raise_fault(IpcFault(code="TEEA-9999", error_type="FutureError", message="from tomorrow"))
     assert error.value.code is ErrorCode.UNKNOWN
     assert error.value.remote_error_type == "FutureError"
     assert error.value.context["remote_code"] == "TEEA-9999"
@@ -168,11 +166,11 @@ def test_a_reply_after_the_server_stopped_is_dropped() -> None:
         client, _t = connect(server)
         pending = client.call_async("slow", {"n": 1})
         handler.entered.wait(2.0)
-        server.stop()          # transport dropped while the handler runs
+        server.stop()  # transport dropped while the handler runs
         handler.release()
         pool.shutdown(wait=True)
-    assert handler.completed == [1]   # the handler finished
-    assert pending.done is False      # and its answer went nowhere
+    assert handler.completed == [1]  # the handler finished
+    assert pending.done is False  # and its answer went nowhere
 
 
 def test_a_reply_over_a_closed_transport_is_dropped() -> None:
@@ -188,7 +186,7 @@ def test_a_reply_over_a_closed_transport_is_dropped() -> None:
         handler.release()
         pool.shutdown(wait=True)
     assert handler.completed == [1]
-    assert server.is_serving is True   # the server survived the failed send
+    assert server.is_serving is True  # the server survived the failed send
 
 
 def test_a_client_receiving_a_response_it_never_asked_for_ignores_it() -> None:
@@ -218,9 +216,7 @@ def test_stopping_mid_flight_leaves_the_server_reusable() -> None:
 
 def test_a_handler_returning_an_empty_result_is_fine() -> None:
     class Empty:
-        def handle(
-            self, params: Mapping[str, Any], session: Session
-        ) -> Mapping[str, Any]:
+        def handle(self, params: Mapping[str, Any], session: Session) -> Mapping[str, Any]:
             return {}
 
     server = IpcServer()

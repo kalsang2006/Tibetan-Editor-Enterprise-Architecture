@@ -95,9 +95,7 @@ def test_a_document_flows_through_every_stage(
 ) -> None:
     """Stage 2 -> 4 -> 6 -> 7 -> 8 -> 9 -> 10 -> 11 on a real document."""
     pipeline = Pipeline(semantic_analyzer)
-    normalized = TextNormalizer(form="NFC", collapse_whitespace=False).normalize(
-        corpus_document
-    )
+    normalized = TextNormalizer(form="NFC", collapse_whitespace=False).normalize(corpus_document)
     segmented = sentence_segmenter.segment(normalized)
     assert segmented.num_sentences > 10
 
@@ -216,9 +214,7 @@ def test_most_sentences_receive_a_predicate(
 ) -> None:
     """Figure 5's *Meaning Representation*, measured on real sentences."""
     pipeline = Pipeline(semantic_analyzer)
-    with_predicate = sum(
-        1 for sentence in corpus_sentences if pipeline.graph(sentence).predicates
-    )
+    with_predicate = sum(1 for sentence in corpus_sentences if pipeline.graph(sentence).predicates)
     assert with_predicate / len(corpus_sentences) >= 0.80, with_predicate
 
 
@@ -287,8 +283,7 @@ def count_reclassified(pipeline: Pipeline, sentence: str) -> int:
     return sum(
         1
         for edge in graph.edges
-        if tree.nodes[graph.nodes[edge.target].head_index].relation
-        is DependencyRelation.ARG1
+        if tree.nodes[graph.nodes[edge.target].head_index].relation is DependencyRelation.ARG1
         and edge.role is SemanticRole.PATIENT
         and edge.evidence is RoleEvidence.LEXICON
     )
@@ -348,9 +343,7 @@ def test_the_reclassification_is_corroborated_by_the_gold_annotation(
             is_agentive.extend([tag == "case.agn"] * len(surface))
 
         for sentence in sentence_segmenter.segment(text).sentences:
-            gold_has_agentive = any(
-                is_agentive[sentence.span.char_start : sentence.span.char_end]
-            )
+            gold_has_agentive = any(is_agentive[sentence.span.char_start : sentence.span.char_end])
             here = count_reclassified(pipeline, sentence.text)
             reclassified += here
             corroborated += here if gold_has_agentive else 0
@@ -358,9 +351,7 @@ def test_the_reclassification_is_corroborated_by_the_gold_annotation(
             if gold_has_agentive:
                 gold_agentive_sentences += 1
                 tree = pipeline.tree(sentence.text)
-                pipeline_missed += not any(
-                    node.tag == "case.agn" for node in tree.nodes
-                )
+                pipeline_missed += not any(node.tag == "case.agn" for node in tree.nodes)
 
     assert reclassified > 100, reclassified
     assert corroborated / reclassified >= 0.20, (corroborated, reclassified)
@@ -446,9 +437,7 @@ def test_the_shared_lexicon_is_loaded_once_for_many_analyzers() -> None:
     """Cold start matters: the daemon must not re-parse the payload per request."""
     first = TibetanSemanticAnalyzer()
     second = TibetanSemanticAnalyzer()
-    assert first.analyze(DependencyTree(source="")) == second.analyze(
-        DependencyTree(source="")
-    )
+    assert first.analyze(DependencyTree(source="")) == second.analyze(DependencyTree(source=""))
     assert default_verb_lexicon() is default_verb_lexicon()
 
 
@@ -468,9 +457,7 @@ def test_the_lexicon_is_consulted_at_most_twice_per_verb(
     verbal = 0
     for sentence in corpus_sentences:
         graph = pipeline.graph(sentence)
-        verbal += sum(
-            1 for node in graph.nodes if node.head.category.value == "verb"
-        )
+        verbal += sum(1 for node in graph.nodes if node.head.category.value == "verb")
 
     assert verbal > 50
     assert counting.lookups <= 2 * verbal, (counting.lookups, verbal)

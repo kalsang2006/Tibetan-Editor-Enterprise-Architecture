@@ -184,7 +184,7 @@ def test_the_language_layer_never_imports_the_fusion_engine() -> None:
 
 #: Runtime Layer components, from Figure 1, in dependency order. Each may use the
 #: ones before it; none may reach forward.
-RUNTIME_LAYERS = ("teea.ai", "teea.fusion", "teea.ipc", "teea.nlp", "teea.plugins")
+RUNTIME_LAYERS = ("teea.ai", "teea.fusion", "teea.ipc", "teea.nlp", "teea.plagiarism", "teea.plugins")
 
 
 def test_the_ipc_layer_depends_only_on_core() -> None:
@@ -214,7 +214,7 @@ def test_nothing_else_imports_the_ipc_layer() -> None:
     violations = {
         name: sorted(t for t in targets if t.startswith("teea.ipc"))
         for name, targets in IMPORTS.items()
-        if not name.startswith("teea.ipc")
+        if not name.startswith("teea.ipc") and name != "teea.daemon"
     }
     assert not any(violations.values()), violations
 
@@ -282,10 +282,11 @@ def test_nothing_below_the_plugin_runtime_imports_it() -> None:
     dependency the other way would make the microkernel a prerequisite for the
     components it exists to connect.
     """
+    application = {"teea.cli", "teea.daemon", "teea.workflow", "teea.__main__"}
     violations = {
         name: sorted(target for target in targets if target.startswith("teea.plugins"))
         for name, targets in IMPORTS.items()
-        if not name.startswith("teea.plugins")
+        if not name.startswith("teea.plugins") and name not in application
     }
     assert not any(violations.values()), violations
 
@@ -306,10 +307,17 @@ def test_no_feature_module_depends_on_another() -> None:
 
 def test_every_top_level_package_is_a_known_architectural_layer() -> None:
     """Guard the layering tests against a new package that escapes them all."""
-    known = {"teea.core", "teea.persistence", *RUNTIME_LAYERS}
-    packages = {
-        ".".join(name.split(".")[:2]) for name in MODULES if name.count(".") >= 1
+    known = {
+        "teea.core",
+        "teea.persistence",
+        "teea.plagiarism",
+        *RUNTIME_LAYERS,
+        "teea.__main__",
+        "teea.cli",
+        "teea.daemon",
+        "teea.workflow",
     }
+    packages = {".".join(name.split(".")[:2]) for name in MODULES if name.count(".") >= 1}
     assert packages - {"teea"} == known, packages
 
 
@@ -370,8 +378,7 @@ def test_shared_character_classes_are_defined_exactly_once(constant: str) -> Non
         if any(
             isinstance(node, ast.Assign)
             and any(
-                isinstance(target, ast.Name) and target.id == constant
-                for target in node.targets
+                isinstance(target, ast.Name) and target.id == constant for target in node.targets
             )
             for node in ast.parse(path.read_text(encoding="utf-8")).body
         )

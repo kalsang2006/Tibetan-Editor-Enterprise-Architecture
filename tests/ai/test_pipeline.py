@@ -45,9 +45,7 @@ class SimilarityEngine:
     def load(self, d: ModelDescriptor, c: ExecutionContext) -> None:
         return None
 
-    def infer(
-        self, d: ModelDescriptor, request: InferenceRequest
-    ) -> Mapping[str, Any]:
+    def infer(self, d: ModelDescriptor, request: InferenceRequest) -> Mapping[str, Any]:
         text = str(request.inputs.get("text", ""))
         return {"score": 1.0 / (1.0 + len(text))}
 

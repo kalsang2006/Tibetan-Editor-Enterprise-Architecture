@@ -321,9 +321,7 @@ class IpcServer:
         else:
             self._run(request, session, handler)
 
-    def _run(
-        self, request: IpcRequest, session: Session, handler: RequestHandler
-    ) -> None:
+    def _run(self, request: IpcRequest, session: Session, handler: RequestHandler) -> None:
         """Run one handler and reply, unless the request was cancelled first.
 
         The success response is built *and sent* inside the inner try, so a
@@ -357,9 +355,7 @@ class IpcServer:
             except TEEAError as exc:
                 self._reply_error(request, _fault_from_exception(exc, exc.code.value))
             except Exception as exc:  # noqa: BLE001 - a handler is untrusted
-                self._reply_error(
-                    request, _fault_from_exception(exc, "IPC_HANDLER_FAILED")
-                )
+                self._reply_error(request, _fault_from_exception(exc, "IPC_HANDLER_FAILED"))
         finally:
             with self._lock:
                 self._inflight.discard(key)
@@ -400,9 +396,7 @@ class IpcServer:
             return self._sessions.get(request.session_id)
 
 
-def _fault_from(
-    code: str, error_type: str, message: str, context: Mapping[str, Any]
-) -> IpcFault:
+def _fault_from(code: str, error_type: str, message: str, context: Mapping[str, Any]) -> IpcFault:
     """Build a fault the server's own routing raised.
 
     Marked as protocol-originated, so the client raises the matching protocol

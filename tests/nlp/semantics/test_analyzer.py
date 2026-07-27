@@ -83,9 +83,7 @@ def build_tree(*pairs: tuple[str, str]) -> DependencyTree:
             )
         )
         cursor = end + len(TSHEG)
-    return TibetanDependencyParser().parse(
-        TaggedText(source=source, morphemes=tuple(morphemes))
-    )
+    return TibetanDependencyParser().parse(TaggedText(source=source, morphemes=tuple(morphemes)))
 
 
 def entity_over(tree: DependencyTree, start: int, end: int) -> EntityAnnotation:
@@ -139,9 +137,7 @@ def term_over(tree: DependencyTree, start: int, end: int) -> TerminologyAnnotati
 class StubVerbLexicon:
     """A tiny lexicon, to prove the injected one is really used."""
 
-    def __init__(
-        self, entries: dict[tuple[str, ...], tuple[VerbFrame, ...]] | None = None
-    ) -> None:
+    def __init__(self, entries: dict[tuple[str, ...], tuple[VerbFrame, ...]] | None = None) -> None:
         self._entries = entries or {}
 
     @property
@@ -157,9 +153,7 @@ class StubVerbLexicon:
 
 def analyzer_with(*frames: tuple[tuple[str, ...], VerbFrame]) -> TibetanSemanticAnalyzer:
     """An analyser backed by a stub lexicon holding exactly ``frames``."""
-    return TibetanSemanticAnalyzer(
-        verbs=StubVerbLexicon({key: (frame,) for key, frame in frames})
-    )
+    return TibetanSemanticAnalyzer(verbs=StubVerbLexicon({key: (frame,) for key, frame in frames}))
 
 
 def role_of(graph: SemanticGraph, target_text: str) -> tuple[SemanticRole, RoleEvidence]:
@@ -200,9 +194,7 @@ def test_an_empty_injected_lexicon_is_not_silently_replaced() -> None:
 def test_the_default_analyzer_uses_the_shipped_lexicon(
     semantic_analyzer: TibetanSemanticAnalyzer,
 ) -> None:
-    graph = semantic_analyzer.analyze(
-        build_tree(("ཞིང", "n.count"), ("ཀློག", "v.pres"))
-    )
+    graph = semantic_analyzer.analyze(build_tree(("ཞིང", "n.count"), ("ཀློག", "v.pres")))
     assert graph.predicates[0].lemma == "ཀློག་"
 
 
@@ -234,9 +226,7 @@ def test_annotations_may_be_omitted(
     semantic_analyzer: TibetanSemanticAnalyzer,
 ) -> None:
     """A caller that has not run Stages 9 and 10 still gets a graph."""
-    graph = semantic_analyzer.analyze(
-        build_tree(("ཞིང", "n.count"), ("ཀློག", "v.pres"))
-    )
+    graph = semantic_analyzer.analyze(build_tree(("ཞིང", "n.count"), ("ཀློག", "v.pres")))
     assert graph.num_nodes == 2
     assert graph.named_entities == ()
     assert graph.terminology == ()
@@ -269,11 +259,7 @@ def test_an_entity_indexing_past_the_tree_is_rejected(
     tree = build_tree(("ཞིང", "n.count"), ("ཀློག", "v.pres"))
     annotation = entity_over(tree, 0, 2)
     stretched = annotation.model_copy(
-        update={
-            "entities": (
-                annotation.entities[0].model_copy(update={"end_index": 9}),
-            )
-        }
+        update={"entities": (annotation.entities[0].model_copy(update={"end_index": 9}),)}
     )
     with pytest.raises(InputValidationError, match="does not have") as error:
         semantic_analyzer.analyze(tree, entities=stretched)
@@ -350,9 +336,7 @@ def test_an_auxiliary_does_not_become_a_node(
     """A copula is verbal, so the category filter admits it, but it supports a
     predicate rather than being one -- and Stage 8 attaches its arguments
     elsewhere, so a node here would have none."""
-    graph = semantic_analyzer.analyze(
-        build_tree(("ཞིང", "n.count"), ("ཡིན", "v.cop"))
-    )
+    graph = semantic_analyzer.analyze(build_tree(("ཞིང", "n.count"), ("ཡིན", "v.cop")))
     assert "ཡིན" not in {node.text for node in graph.nodes}
 
 
@@ -360,9 +344,7 @@ def test_an_auxiliary_does_not_become_a_node(
 def test_the_sentence_head_verb_is_a_predicate(
     semantic_analyzer: TibetanSemanticAnalyzer,
 ) -> None:
-    graph = semantic_analyzer.analyze(
-        build_tree(("ཞིང", "n.count"), ("ཀློག", "v.pres"))
-    )
+    graph = semantic_analyzer.analyze(build_tree(("ཞིང", "n.count"), ("ཀློག", "v.pres")))
     assert [node.text for node in graph.predicates] == ["ཀློག"]
 
 
@@ -379,9 +361,7 @@ def test_a_subordinate_clause_head_is_also_a_predicate(
 def test_a_nominal_sentence_head_is_a_concept(
     semantic_analyzer: TibetanSemanticAnalyzer,
 ) -> None:
-    graph = semantic_analyzer.analyze(
-        build_tree(("ཞིང", "n.count"), ("ཡུལ", "n.count"))
-    )
+    graph = semantic_analyzer.analyze(build_tree(("ཞིང", "n.count"), ("ཡུལ", "n.count")))
     assert graph.predicates == ()
     assert len(graph.concepts) == 2
 
@@ -391,9 +371,7 @@ def test_a_deverbal_noun_heading_a_verbless_clause_is_a_predicate(
 ) -> None:
     """Stage 8 heads a verbless fragment with its last nominal, and the
     constraint grammars count deverbal nouns among head nouns."""
-    graph = semantic_analyzer.analyze(
-        build_tree(("ཞིང", "n.count"), ("བྱས", "n.v.past"))
-    )
+    graph = semantic_analyzer.analyze(build_tree(("ཞིང", "n.count"), ("བྱས", "n.v.past")))
     assert [node.text for node in graph.predicates] == ["བྱས"]
     assert graph.nodes[1].kind is SemanticNodeKind.PREDICATE
 
@@ -411,9 +389,7 @@ def test_only_verbal_material_is_looked_up() -> None:
 
 
 def test_a_multi_syllable_verb_form_is_looked_up_as_a_whole() -> None:
-    analyzer = TibetanSemanticAnalyzer(
-        verbs=StubVerbLexicon({("ཀུམ", "པ"): (TRANSITIVE,)})
-    )
+    analyzer = TibetanSemanticAnalyzer(verbs=StubVerbLexicon({("ཀུམ", "པ"): (TRANSITIVE,)}))
     tree = build_tree(("ཀུམ", "n.v.pres"), ("པ", "n.v.pres"))
     graph = analyzer.analyze(tree, entities=entity_over(tree, 0, 2))
     assert graph.nodes[0].frames == (TRANSITIVE,)
@@ -432,9 +408,7 @@ def test_the_head_syllable_is_tried_when_the_whole_run_misses() -> None:
 
 def test_a_run_the_lexicon_does_not_know_reports_no_frame() -> None:
     """Neither the whole run nor the head syllable is attested."""
-    analyzer = TibetanSemanticAnalyzer(
-        verbs=StubVerbLexicon({("ཀློག",): (TRANSITIVE,)})
-    )
+    analyzer = TibetanSemanticAnalyzer(verbs=StubVerbLexicon({("ཀློག",): (TRANSITIVE,)}))
     tree = build_tree(("ཞིང", "n.v.pres"), ("ཀུམ", "n.v.pres"))
     graph = analyzer.analyze(tree, entities=entity_over(tree, 0, 2))
     assert graph.nodes[0].frames == ()
@@ -480,9 +454,7 @@ def test_the_oblique_cases_are_recovered_individually(
     semantic_analyzer: TibetanSemanticAnalyzer, tag: str, role: SemanticRole
 ) -> None:
     """Stage 8 collapses all of these into ``obl``; the particle distinguishes them."""
-    graph = semantic_analyzer.analyze(
-        build_tree(("ཡུལ", "n.count"), ("ན", tag), ("འགྲོ", "v.pres"))
-    )
+    graph = semantic_analyzer.analyze(build_tree(("ཡུལ", "n.count"), ("ན", tag), ("འགྲོ", "v.pres")))
     assert role_of(graph, "ཡུལ") == (role, RoleEvidence.CASE)
 
 
@@ -537,9 +509,7 @@ def test_a_case_particle_belonging_to_another_nominal_is_not_borrowed(
 def test_a_nominal_at_the_end_of_the_sentence_has_no_case_particle(
     semantic_analyzer: TibetanSemanticAnalyzer,
 ) -> None:
-    graph = semantic_analyzer.analyze(
-        build_tree(("འགྲོ", "v.pres"), ("ཡུལ", "n.count"))
-    )
+    graph = semantic_analyzer.analyze(build_tree(("འགྲོ", "v.pres"), ("ཡུལ", "n.count")))
     assert graph.num_nodes == 2
 
 
@@ -701,9 +671,7 @@ def test_an_oblique_whose_particle_cannot_be_recovered_is_unspecified(
 def test_the_sentence_head_has_no_governor(
     semantic_analyzer: TibetanSemanticAnalyzer,
 ) -> None:
-    graph = semantic_analyzer.analyze(
-        build_tree(("ཞིང", "n.count"), ("ཀློག", "v.pres"))
-    )
+    graph = semantic_analyzer.analyze(build_tree(("ཞིང", "n.count"), ("ཀློག", "v.pres")))
     assert graph.governor_of(graph.predicates[0].index) is None
 
 
@@ -759,9 +727,7 @@ def test_the_longer_anchor_wins_when_two_overlap(
     semantic_analyzer: TibetanSemanticAnalyzer,
 ) -> None:
     """The longer run is the more specific identification."""
-    tree = build_tree(
-        ("དགྲ", "n.prop"), ("བཅོམ", "n.prop"), ("པ", "n.prop"), ("འགྲོ", "v.pres")
-    )
+    tree = build_tree(("དགྲ", "n.prop"), ("བཅོམ", "n.prop"), ("པ", "n.prop"), ("འགྲོ", "v.pres"))
     graph = semantic_analyzer.analyze(
         tree, entities=entity_over(tree, 0, 2), terms=term_over(tree, 0, 3)
     )
@@ -774,9 +740,7 @@ def test_the_name_wins_when_two_anchors_are_the_same_length(
     semantic_analyzer: TibetanSemanticAnalyzer,
 ) -> None:
     """Figure 5 runs Stage 9 before Stage 10, so the name is the earlier claim."""
-    tree = build_tree(
-        ("དགྲ", "n.prop"), ("བཅོམ", "n.prop"), ("པ", "n.prop"), ("འགྲོ", "v.pres")
-    )
+    tree = build_tree(("དགྲ", "n.prop"), ("བཅོམ", "n.prop"), ("པ", "n.prop"), ("འགྲོ", "v.pres"))
     graph = semantic_analyzer.analyze(
         tree, entities=entity_over(tree, 0, 2), terms=term_over(tree, 1, 3)
     )
@@ -812,9 +776,7 @@ def test_anchored_syllables_keep_the_tsheg_between_them(
 def test_interrogative_morphology_marks_a_question(
     semantic_analyzer: TibetanSemanticAnalyzer, tag: str
 ) -> None:
-    graph = semantic_analyzer.analyze(
-        build_tree(("ཞིང", "n.count"), ("འགྲོ", "v.pres"), ("ཨེ", tag))
-    )
+    graph = semantic_analyzer.analyze(build_tree(("ཞིང", "n.count"), ("འགྲོ", "v.pres"), ("ཨེ", tag)))
     assert graph.intent.mood is SentenceMood.INTERROGATIVE
     assert graph.intent.evidence == (tag,)
 
@@ -831,9 +793,7 @@ def test_imperative_morphology_marks_a_command(
 def test_an_unmarked_sentence_is_declarative(
     semantic_analyzer: TibetanSemanticAnalyzer,
 ) -> None:
-    graph = semantic_analyzer.analyze(
-        build_tree(("ཞིང", "n.count"), ("འགྲོ", "v.pres"))
-    )
+    graph = semantic_analyzer.analyze(build_tree(("ཞིང", "n.count"), ("འགྲོ", "v.pres")))
     assert graph.intent.mood is SentenceMood.DECLARATIVE
     assert graph.intent.is_marked is False
 
@@ -843,9 +803,7 @@ def test_a_question_outranks_an_imperative_stem(
 ) -> None:
     """The question particle scopes over the clause; an imperative stem is a
     property of the verb inside it."""
-    graph = semantic_analyzer.analyze(
-        build_tree(("སོང", "v.imp"), ("ཨེ", "cv.ques"))
-    )
+    graph = semantic_analyzer.analyze(build_tree(("སོང", "v.imp"), ("ཨེ", "cv.ques")))
     assert graph.intent.mood is SentenceMood.INTERROGATIVE
 
 
@@ -863,9 +821,7 @@ def test_a_quotative_marks_reported_speech(
     semantic_analyzer: TibetanSemanticAnalyzer, tag: str
 ) -> None:
     """A grammar checker should leave a quotation as the author wrote it."""
-    graph = semantic_analyzer.analyze(
-        build_tree(("ཞིང", "n.count"), ("ཞེས", tag), ("འགྲོ", "v.pres"))
-    )
+    graph = semantic_analyzer.analyze(build_tree(("ཞིང", "n.count"), ("ཞེས", tag), ("འགྲོ", "v.pres")))
     assert graph.intent.is_reported is True
     assert tag in graph.intent.evidence
 
@@ -1068,9 +1024,7 @@ def test_spans_are_preserved_verbatim_from_stage_6(
     semantic_analyzer: TibetanSemanticAnalyzer,
 ) -> None:
     """The invariant every stage from 6 onward maintains."""
-    tree = build_tree(
-        ("བཀྲ", "n.count"), ("ཤིས", "n.count"), ("བདེ", "adj"), ("འགྲོ", "v.pres")
-    )
+    tree = build_tree(("བཀྲ", "n.count"), ("ཤིས", "n.count"), ("བདེ", "adj"), ("འགྲོ", "v.pres"))
     graph = semantic_analyzer.analyze(tree)
     for node in graph.nodes:
         assert tree.source[node.span.char_start : node.span.char_end] == node.text

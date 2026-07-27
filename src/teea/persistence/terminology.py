@@ -107,9 +107,7 @@ class InMemoryTerminology:
         self._user: frozenset[tuple[str, ...]] = frozenset(
             tuple(term) for term in user_terms if tuple(term)
         )
-        self._max_length = max(
-            (len(term) for term in (self._glossary | self._user)), default=0
-        )
+        self._max_length = max((len(term) for term in (self._glossary | self._user)), default=0)
 
     @staticmethod
     def _load(source: Path) -> dict[str, Any]:

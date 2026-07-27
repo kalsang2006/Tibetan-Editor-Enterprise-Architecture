@@ -101,14 +101,10 @@ class LoopbackTransport:
         """
         with self._lock:
             if not self._open:
-                raise TransportClosedError(
-                    "The transport is closed.", context={"end": self._name}
-                )
+                raise TransportClosedError("The transport is closed.", context={"end": self._name})
             peer = self._peer
         if peer is None or not peer._is_open_locked():
-            raise TransportClosedError(
-                "The peer end is closed.", context={"end": self._name}
-            )
+            raise TransportClosedError("The peer end is closed.", context={"end": self._name})
         receiver = peer._receiver_locked()
         if receiver is None:
             raise TransportClosedError(

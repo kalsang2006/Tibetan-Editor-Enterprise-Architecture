@@ -120,9 +120,7 @@ def test_the_injected_segmenter_is_used(
     snapshot_builder: LanguageServerSnapshotBuilder,
 ) -> None:
     default = snapshot_builder.analyze(DOCUMENT)
-    injected = LanguageServerSnapshotBuilder(
-        segmenter=SingleSentenceSegmenter()
-    ).analyze(DOCUMENT)
+    injected = LanguageServerSnapshotBuilder(segmenter=SingleSentenceSegmenter()).analyze(DOCUMENT)
     assert default.num_sentences == 3
     assert injected.num_sentences == 0
 
@@ -264,9 +262,7 @@ def test_incremental_analysis_equals_cold_analysis(
     """The contract the protocol states: reuse is an optimisation, not a variant."""
     snapshot = snapshot_builder.analyze(DOCUMENT)
     edited = edit_sentence(snapshot, index)
-    assert snapshot_builder.reanalyze(snapshot, edited) == snapshot_builder.analyze(
-        edited
-    )
+    assert snapshot_builder.reanalyze(snapshot, edited) == snapshot_builder.analyze(edited)
 
 
 def test_incremental_analysis_survives_repeated_edits(
@@ -380,9 +376,7 @@ def test_hashes_are_consistent_with_the_sentences(
     snapshot_builder: LanguageServerSnapshotBuilder,
 ) -> None:
     snapshot = snapshot_builder.analyze(DOCUMENT)
-    assert snapshot.content_hashes == tuple(
-        sentence_hash(s.text) for s in snapshot.sentences
-    )
+    assert snapshot.content_hashes == tuple(sentence_hash(s.text) for s in snapshot.sentences)
 
 
 def test_the_default_builder_wires_the_shipped_stages(

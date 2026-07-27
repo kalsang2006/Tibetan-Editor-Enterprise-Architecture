@@ -148,9 +148,7 @@ def test_a_single_morpheme_becomes_the_root(
 def test_the_final_verb_heads_the_sentence(
     dependency_parser: TibetanDependencyParser,
 ) -> None:
-    tree = dependency_parser.parse(
-        build(("ཁྱིམ", "n.count"), ("བཟོས", "v.past"), ("སོང", "v.past"))
-    )
+    tree = dependency_parser.parse(build(("ཁྱིམ", "n.count"), ("བཟོས", "v.past"), ("སོང", "v.past")))
     assert tree.root is not None
     assert tree.root.text == "སོང", "Tibetan is verb-final; the last verb heads"
 
@@ -169,9 +167,7 @@ def test_an_auxiliary_does_not_head_the_clause(
     dependency_parser: TibetanDependencyParser,
 ) -> None:
     """Auxiliaries support a main verb rather than heading one."""
-    tree = dependency_parser.parse(
-        build(("ཁྱིམ", "n.count"), ("བཟོས", "v.past"), ("ཡིན", "v.cop"))
-    )
+    tree = dependency_parser.parse(build(("ཁྱིམ", "n.count"), ("བཟོས", "v.past"), ("ཡིན", "v.cop")))
     assert tree.root is not None
     assert tree.root.text == "བཟོས"
     assert relation_of(tree, "ཡིན") is DependencyRelation.AUX
@@ -231,30 +227,22 @@ def test_ergative_alignment_makes_the_absolutive_a_subject_when_no_agent_is_pres
 def test_allative_and_terminative_mark_a_goal(
     dependency_parser: TibetanDependencyParser, case_tag: str
 ) -> None:
-    tree = dependency_parser.parse(
-        build(("ཁྱིམ", "n.count"), ("ལ", case_tag), ("སོང", "v.past"))
-    )
+    tree = dependency_parser.parse(build(("ཁྱིམ", "n.count"), ("ལ", case_tag), ("སོང", "v.past")))
     assert relation_of(tree, "ཁྱིམ") is DependencyRelation.ARG3
 
 
-@pytest.mark.parametrize(
-    "case_tag", ["case.loc", "case.abl", "case.ela", "case.ass", "case.comp"]
-)
+@pytest.mark.parametrize("case_tag", ["case.loc", "case.abl", "case.ela", "case.ass", "case.comp"])
 def test_remaining_cases_are_obliques(
     dependency_parser: TibetanDependencyParser, case_tag: str
 ) -> None:
-    tree = dependency_parser.parse(
-        build(("ཁྱིམ", "n.count"), ("ན", case_tag), ("སོང", "v.past"))
-    )
+    tree = dependency_parser.parse(build(("ཁྱིམ", "n.count"), ("ན", case_tag), ("སོང", "v.past")))
     assert relation_of(tree, "ཁྱིམ") is DependencyRelation.OBL
 
 
 def test_a_case_particle_attaches_to_the_nominal_it_marks(
     dependency_parser: TibetanDependencyParser,
 ) -> None:
-    tree = dependency_parser.parse(
-        build(("ཁྱིམ", "n.count"), ("ལ", "case.all"), ("སོང", "v.past"))
-    )
+    tree = dependency_parser.parse(build(("ཁྱིམ", "n.count"), ("ལ", "case.all"), ("སོང", "v.past")))
     assert relation_of(tree, "ལ") is DependencyRelation.CASE
     assert head_text(tree, "ལ") == "ཁྱིམ"
 
@@ -282,9 +270,7 @@ def test_genitive_attachment_can_be_redirected_to_the_clause_head() -> None:
 def test_a_trailing_genitive_with_nothing_to_modify_becomes_oblique(
     dependency_parser: TibetanDependencyParser,
 ) -> None:
-    tree = dependency_parser.parse(
-        build(("མི", "n.count"), ("འི", "case.gen"), ("སོང", "v.past"))
-    )
+    tree = dependency_parser.parse(build(("མི", "n.count"), ("འི", "case.gen"), ("སོང", "v.past")))
     assert relation_of(tree, "མི") is DependencyRelation.OBL
     assert_is_a_tree(tree, 3)
 
@@ -301,9 +287,7 @@ def test_modifiers_attach_to_the_preceding_head_noun(
     dependency_parser: TibetanDependencyParser, tag: str, expected: DependencyRelation
 ) -> None:
     """SETPARENT (ADJ|NUM|DET) TO (-1* Head_NOUN ...): Tibetan is noun-initial."""
-    tree = dependency_parser.parse(
-        build(("ཁྱིམ", "n.count"), ("ཆེན", tag), ("སོང", "v.past"))
-    )
+    tree = dependency_parser.parse(build(("ཁྱིམ", "n.count"), ("ཆེན", tag), ("སོང", "v.past")))
     assert relation_of(tree, "ཆེན") is expected
     assert head_text(tree, "ཆེན") == "ཁྱིམ"
 
@@ -344,9 +328,7 @@ def test_clause_level_material_attaches_to_the_root(
 
 
 def test_a_subordinate_verb_is_marked(dependency_parser: TibetanDependencyParser) -> None:
-    tree = dependency_parser.parse(
-        build(("བཟོས", "v.past"), ("ནས", "cv.ela"), ("སོང", "v.past"))
-    )
+    tree = dependency_parser.parse(build(("བཟོས", "v.past"), ("ནས", "cv.ela"), ("སོང", "v.past")))
     assert tree.root is not None
     assert tree.root.text == "སོང"
     assert relation_of(tree, "བཟོས") is DependencyRelation.MARK
@@ -404,9 +386,7 @@ def test_node_order_matches_surface_order(
     corpus_sentences: list[str],
 ) -> None:
     for sentence in corpus_sentences[:25]:
-        tree = dependency_parser.parse(
-            pos_tagger.tag(morphological_analyzer.analyze(sentence))
-        )
+        tree = dependency_parser.parse(pos_tagger.tag(morphological_analyzer.analyze(sentence)))
         for previous, current in itertools.pairwise(tree.nodes):
             assert previous.span.char_end <= current.span.char_start
 
@@ -427,9 +407,7 @@ def test_the_unresolved_rate_stays_low_on_real_text(
     """
     total = unresolved = 0
     for sentence in corpus_sentences:
-        tree = dependency_parser.parse(
-            pos_tagger.tag(morphological_analyzer.analyze(sentence))
-        )
+        tree = dependency_parser.parse(pos_tagger.tag(morphological_analyzer.analyze(sentence)))
         total += tree.num_nodes
         unresolved += tree.num_unresolved
 

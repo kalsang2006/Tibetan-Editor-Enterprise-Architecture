@@ -162,9 +162,7 @@ class IpcResponse(BaseModel):
         return self
 
     @classmethod
-    def success(
-        cls, request_id: str, result: Mapping[str, Any]
-    ) -> IpcResponse:
+    def success(cls, request_id: str, result: Mapping[str, Any]) -> IpcResponse:
         """Build a successful response."""
         return cls(request_id=request_id, ok=True, result=result)
 

@@ -138,9 +138,7 @@ def test_the_span_must_start_at_the_first_morpheme() -> None:
     with pytest.raises(ValidationError, match="must start at the first morpheme"):
         NamedEntity(
             text=SOURCE[4:11],
-            span=TextSpan(
-                char_start=4, char_end=11, byte_start=offsets[4], byte_end=offsets[11]
-            ),
+            span=TextSpan(char_start=4, char_end=11, byte_start=offsets[4], byte_end=offsets[11]),
             start_index=0,
             end_index=3,
             evidence=EntityEvidence.GAZETTEER,
@@ -153,9 +151,7 @@ def test_the_span_must_end_at_the_last_morpheme() -> None:
     with pytest.raises(ValidationError, match="must end at the last morpheme"):
         NamedEntity(
             text=SOURCE[0:6],
-            span=TextSpan(
-                char_start=0, char_end=6, byte_start=0, byte_end=offsets[6]
-            ),
+            span=TextSpan(char_start=0, char_end=6, byte_start=0, byte_end=offsets[6]),
             start_index=0,
             end_index=3,
             evidence=EntityEvidence.GAZETTEER,
@@ -216,9 +212,7 @@ def test_an_entity_whose_span_does_not_select_its_text_is_rejected() -> None:
     offsets = utf8_byte_offsets(SOURCE)
     lying = NamedEntity(
         text="ཁྱིམ",
-        span=TextSpan(
-            char_start=0, char_end=4, byte_start=0, byte_end=offsets[4]
-        ),
+        span=TextSpan(char_start=0, char_end=4, byte_start=0, byte_end=offsets[4]),
         start_index=0,
         end_index=1,
         evidence=EntityEvidence.TAGGER,
@@ -239,12 +233,8 @@ def test_adjacent_non_overlapping_entities_are_allowed() -> None:
 # -- Accessors ----------------------------------------------------------------
 def test_of_evidence_filters() -> None:
     gazetteer_entity = name_entity()
-    tagger_entity = entity(
-        SOURCE, 3, 4, (KHYIM,), evidence=EntityEvidence.TAGGER
-    )
-    annotation = EntityAnnotation(
-        source=SOURCE, entities=(gazetteer_entity, tagger_entity)
-    )
+    tagger_entity = entity(SOURCE, 3, 4, (KHYIM,), evidence=EntityEvidence.TAGGER)
+    annotation = EntityAnnotation(source=SOURCE, entities=(gazetteer_entity, tagger_entity))
     assert annotation.of_evidence(EntityEvidence.GAZETTEER) == (gazetteer_entity,)
     assert annotation.of_evidence(EntityEvidence.TAGGER) == (tagger_entity,)
     assert annotation.of_evidence(EntityEvidence.BOTH) == ()

@@ -171,9 +171,7 @@ def test_translating_the_whole_sentence_span_is_allowed(
 
 
 @pytest.mark.parametrize("field", ["char_end", "byte_end"])
-def test_a_span_from_another_sentence_is_rejected(
-    snapshot: DocumentSnapshot, field: str
-) -> None:
+def test_a_span_from_another_sentence_is_rejected(snapshot: DocumentSnapshot, field: str) -> None:
     """A span that overruns the sentence did not come from its analysis."""
     first = snapshot.analyses[0]
     kwargs = {"char_start": 0, "char_end": 1, "byte_start": 0, "byte_end": 1}
@@ -206,9 +204,7 @@ def test_a_snapshot_exposes_the_document(snapshot: DocumentSnapshot) -> None:
 def test_a_snapshot_summarises_the_whole_document(snapshot: DocumentSnapshot) -> None:
     """Figure 5's "centralized processing state", as a set of totals."""
     assert snapshot.num_morphemes == sum(a.num_morphemes for a in snapshot.analyses)
-    assert snapshot.num_semantic_nodes == sum(
-        a.num_semantic_nodes for a in snapshot.analyses
-    )
+    assert snapshot.num_semantic_nodes == sum(a.num_semantic_nodes for a in snapshot.analyses)
     assert snapshot.num_entities == sum(a.num_entities for a in snapshot.analyses)
     assert snapshot.num_terms == sum(a.num_terms for a in snapshot.analyses)
     assert snapshot.num_morphemes > 0
@@ -232,9 +228,10 @@ def test_an_edit_reports_the_sentences_it_invalidates(
     """FR-4's incremental primitive."""
     assert [a.index for a in snapshot.analyses_overlapping(0, 1)] == [0]
     assert [a.index for a in snapshot.analyses_overlapping(0, len(DOCUMENT))] == [0, 1]
-    assert [
-        a.index for a in snapshot.analyses_overlapping(len(FIRST) - 1, len(FIRST) + 1)
-    ] == [0, 1]
+    assert [a.index for a in snapshot.analyses_overlapping(len(FIRST) - 1, len(FIRST) + 1)] == [
+        0,
+        1,
+    ]
     assert snapshot.analyses_overlapping(len(DOCUMENT), len(DOCUMENT)) == ()
 
 

@@ -36,9 +36,7 @@ class SuggestionFusionEngine(Protocol):
     daemon fuses for many documents at once against one engine.
     """
 
-    def fuse(
-        self, source: str, suggestions: Iterable[Suggestion]
-    ) -> UnifiedSuggestions:
+    def fuse(self, source: str, suggestions: Iterable[Suggestion]) -> UnifiedSuggestions:
         """Merge plugin recommendations into one ranked, conflict-free package.
 
         Implementations must be **total**: no suggestion, however malformed its

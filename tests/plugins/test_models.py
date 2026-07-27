@@ -21,9 +21,7 @@ P = SuggestionPriority
 
 def span(start: int = 0, end: int = 3) -> TextSpan:
     """A span with true three-bytes-per-character Tibetan offsets."""
-    return TextSpan(
-        char_start=start, char_end=end, byte_start=start * 3, byte_end=end * 3
-    )
+    return TextSpan(char_start=start, char_end=end, byte_start=start * 3, byte_end=end * 3)
 
 
 def suggestion(source: str = "spell", start: int = 0, end: int = 3) -> Suggestion:
@@ -140,9 +138,7 @@ def test_a_failure_from_a_different_plugin_is_rejected() -> None:
 def test_a_failed_plugin_cannot_also_have_produced_output() -> None:
     """Partial output from a crash is not trustworthy and must not reach fusion."""
     with pytest.raises(ValidationError, match="cannot also have produced output"):
-        PluginOutcome(
-            plugin="crash", suggestions=(suggestion("crash"),), failure=failure("crash")
-        )
+        PluginOutcome(plugin="crash", suggestions=(suggestion("crash"),), failure=failure("crash"))
 
 
 def test_a_plugin_cannot_attribute_output_to_another_plugin() -> None:
@@ -222,16 +218,12 @@ def test_one_plugins_outcome_can_be_looked_up() -> None:
 def test_outcomes_must_be_ordered_by_plugin_name() -> None:
     """Ordering is what makes the result independent of finishing order."""
     with pytest.raises(ValidationError, match="ordered by plugin name"):
-        PluginResults(
-            outcomes=(PluginOutcome(plugin="spell"), PluginOutcome(plugin="crash"))
-        )
+        PluginResults(outcomes=(PluginOutcome(plugin="spell"), PluginOutcome(plugin="crash")))
 
 
 def test_a_plugin_must_not_appear_twice() -> None:
     with pytest.raises(ValidationError, match="must not appear twice"):
-        PluginResults(
-            outcomes=(PluginOutcome(plugin="spell"), PluginOutcome(plugin="spell"))
-        )
+        PluginResults(outcomes=(PluginOutcome(plugin="spell"), PluginOutcome(plugin="spell")))
 
 
 def test_results_are_immutable() -> None:

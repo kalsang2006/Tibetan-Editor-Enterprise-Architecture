@@ -150,12 +150,12 @@ def test_g2_a_genuinely_queued_request_is_still_cancellable() -> None:
     client, handler, pool = blocking()
     try:
         first = client.call_async("slow", {"n": 1})
-        handler.entered.wait(2.0)          # the worker is busy with n=1
+        handler.entered.wait(2.0)  # the worker is busy with n=1
         queued = client.call_async("slow", {"n": 2})  # waits behind it
         queued.cancel()
         handler.release()
         pool.shutdown(wait=True)
-        assert handler.completed == [1]    # n=2 never ran
+        assert handler.completed == [1]  # n=2 never ran
         first.result(2.0)
     finally:
         handler.release()
@@ -239,11 +239,7 @@ def test_g6_a_stopped_server_dispatches_no_handler() -> None:
     server.stop()
     codec = JsonMessageCodec()
     transport.set_receiver(lambda _p: None)
-    transport.send(
-        codec.encode(
-            IpcRequest(request_id="x1", method="work", session_id=session_id)
-        )
-    )
+    transport.send(codec.encode(IpcRequest(request_id="x1", method="work", session_id=session_id)))
     assert handler.calls == []
 
 
@@ -330,9 +326,7 @@ def test_f6_a_domain_error_keeps_its_code(  # the control that was always correc
     server = IpcServer()
 
     class Boom:
-        def handle(
-            self, params: Mapping[str, Any], session: Session
-        ) -> Mapping[str, Any]:
+        def handle(self, params: Mapping[str, Any], session: Session) -> Mapping[str, Any]:
             raise ConfigurationError("no dictionary")
 
     server.register("boom", Boom())
@@ -351,9 +345,7 @@ def test_a_connect_sent_as_a_command_mints_no_session() -> None:
     codec = JsonMessageCodec()
     client_end.set_receiver(lambda _p: None)
     client_end.send(
-        codec.encode(
-            IpcRequest(request_id="x1", method="$connect", expects_response=False)
-        )
+        codec.encode(IpcRequest(request_id="x1", method="$connect", expects_response=False))
     )
     assert server.active_sessions == 0
 

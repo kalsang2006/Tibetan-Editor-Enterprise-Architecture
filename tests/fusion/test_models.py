@@ -31,7 +31,7 @@ def test_the_four_priority_classes_are_exactly_figure_7s() -> None:
 
 
 def test_priorities_rank_in_the_order_figure_7_lists_them() -> None:
-    """"Critical, High, Medium, Low priority ordering & classification"."""
+    """ "Critical, High, Medium, Low priority ordering & classification"."""
     assert [p.rank for p in P] == [0, 1, 2, 3]
     assert sorted(P, key=lambda p: p.rank) == list(P)
 
@@ -156,18 +156,14 @@ def test_an_insertion_at_the_end_of_a_range_does_not_conflict() -> None:
 
 
 # -- RejectedSuggestion --------------------------------------------------------
-@pytest.mark.parametrize(
-    "reason", [RejectionReason.SUPERSEDED, RejectionReason.DUPLICATE]
-)
+@pytest.mark.parametrize("reason", [RejectionReason.SUPERSEDED, RejectionReason.DUPLICATE])
 def test_losing_a_contest_must_name_the_winner(reason: RejectionReason) -> None:
     """A rejection the user might question has to say what beat it."""
     with pytest.raises(ValidationError, match="must name the suggestion that won"):
         RejectedSuggestion(suggestion=make_suggestion(), reason=reason)
 
 
-@pytest.mark.parametrize(
-    "reason", [RejectionReason.INVALID_RANGE, RejectionReason.NO_OP]
-)
+@pytest.mark.parametrize("reason", [RejectionReason.INVALID_RANGE, RejectionReason.NO_OP])
 def test_a_structural_rejection_cannot_name_a_winner(reason: RejectionReason) -> None:
     with pytest.raises(ValidationError, match="cannot name a winner"):
         RejectedSuggestion(
@@ -186,9 +182,7 @@ def test_a_rejection_keeps_the_suggestion_unchanged() -> None:
 
 # -- EditOperation -------------------------------------------------------------
 def test_an_operation_names_every_plugin_that_produced_it() -> None:
-    operation = EditOperation(
-        span=span(0, 3), replacement="ཀ", sources=("spell", "grammar")
-    )
+    operation = EditOperation(span=span(0, 3), replacement="ཀ", sources=("spell", "grammar"))
     assert operation.sources == ("spell", "grammar")
 
 
@@ -256,9 +250,7 @@ def test_an_operation_past_the_end_of_the_document_is_rejected() -> None:
     with pytest.raises(ValidationError, match="extends past the document"):
         DocumentPatch(
             source=DOCUMENT,
-            operations=(
-                EditOperation(span=span(50, 60), replacement="ཀ", sources=("a",)),
-            ),
+            operations=(EditOperation(span=span(50, 60), replacement="ཀ", sources=("a",)),),
         )
 
 
@@ -285,9 +277,7 @@ def unified() -> UnifiedSuggestions:
         suggestions=(edit, advisory),
         patch=DocumentPatch(
             source=DOCUMENT,
-            operations=(
-                EditOperation(span=span(0, 3), replacement="ཀཀཀ", sources=("spell",)),
-            ),
+            operations=(EditOperation(span=span(0, 3), replacement="ཀཀཀ", sources=("spell",)),),
         ),
         rejected=(
             RejectedSuggestion(

@@ -246,9 +246,7 @@ class IpcClient:
             )
         with self._lock:
             self._session_id = str(result["session_id"])
-            self._methods = tuple(
-                MethodDescriptor.model_validate(d) for d in result["methods"]
-            )
+            self._methods = tuple(MethodDescriptor.model_validate(d) for d in result["methods"])
 
     def close(self, *, timeout: float | None = 5.0) -> None:
         """Close the session. Idempotent.
@@ -264,9 +262,7 @@ class IpcClient:
             # A close that cannot reach the server is still a close; there is
             # nothing useful to do with the failure.
             with contextlib.suppress(IPCError):
-                self._call_raw(
-                    "$disconnect", {}, session_id=session_id, timeout=timeout
-                )
+                self._call_raw("$disconnect", {}, session_id=session_id, timeout=timeout)
         for call in pending:
             call.cancel()
 
@@ -295,9 +291,7 @@ class IpcClient:
         """
         return self.call_async(method, params).result(timeout)
 
-    def call_async(
-        self, method: str, params: Mapping[str, Any] | None = None
-    ) -> PendingCall:
+    def call_async(self, method: str, params: Mapping[str, Any] | None = None) -> PendingCall:
         """Send a query and return a handle to await or cancel.
 
         Args:
@@ -313,9 +307,7 @@ class IpcClient:
         session_id = self._require_session()
         return self._send(method, params or {}, session_id, expects_response=True)
 
-    def notify(
-        self, method: str, params: Mapping[str, Any] | None = None
-    ) -> None:
+    def notify(self, method: str, params: Mapping[str, Any] | None = None) -> None:
         """Send a command: fire-and-forget, no response awaited (FR-8).
 
         Args:
@@ -348,9 +340,7 @@ class IpcClient:
         timeout: float | None,
     ) -> Mapping[str, Any]:
         """Send a query without requiring an established session (for handshakes)."""
-        return self._send(method, params, session_id, expects_response=True).result(
-            timeout
-        )
+        return self._send(method, params, session_id, expects_response=True).result(timeout)
 
     def _send(
         self,
