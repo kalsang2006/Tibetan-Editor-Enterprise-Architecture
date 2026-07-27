@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>03_Data_Flow_Diagram</title>
+    <style>
+        :root {
+            --primary-blue: #0F4C81;
+            --accent-blue: #2563EB;
+            --border: #CBD5E1;
+            --bg: #F8FAFC;
+            --text: #1F2937;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--white);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1800px;
+            padding: 40px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            color: var(--primary-blue);
+            font-size: 32px;
+            font-weight: 600;
+            text-align: center;
+            margin: 0 0 16px 0;
+            letter-spacing: -0.5px;
+        }
+
+        .description {
+            text-align: center;
+            font-size: 16px;
+            color: #475569;
+            max-width: 1000px;
+            margin: 0 auto 40px auto;
+            line-height: 1.5;
+        }
+
+        .svg-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        svg {
+            width: 100%;
+            max-width: 1750px;
+            height: auto;
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .caption {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text);
+            border-top: 2px solid var(--border);
+            padding-top: 16px;
+            margin: 0 auto;
+            max-width: 1400px;
+        }
+
+        .caption strong {
+            color: var(--primary-blue);
+        }
+
+        /* SVG Inner Styling */
+        .process-box {
+            fill: var(--white);
+            stroke: var(--primary-blue);
+            stroke-width: 2px;
+        }
+        
+        .entity-box {
+            fill: var(--accent-blue);
+            stroke: var(--primary-blue);
+            stroke-width: 2px;
+        }
+
+        .store-shape {
+            fill: var(--white);
+            stroke: var(--primary-blue);
+            stroke-width: 2px;
+        }
+
+        .header-bg {
+            fill: var(--bg);
+        }
+
+        .line {
+            fill: none;
+            stroke: var(--accent-blue);
+            stroke-width: 2.5px;
+            stroke-linejoin: round;
+        }
+
+        .line-label {
+            font-size: 12px;
+            font-weight: 600;
+            fill: var(--primary-blue);
+        }
+
+        .process-id {
+            font-size: 13px;
+            font-weight: 700;
+            fill: var(--primary-blue);
+        }
+
+        .process-title {
+            font-size: 15px;
+            font-weight: 700;
+            fill: var(--text);
+        }
+
+        .process-item {
+            font-size: 13px;
+            fill: #334155;
+        }
+
+        .entity-title {
+            font-size: 18px;
+            font-weight: 700;
+            fill: var(--white);
+        }
+
+        .store-title {
+            font-size: 13px;
+            font-weight: 700;
+            fill: var(--primary-blue);
+        }
+
+        .store-item {
+            font-size: 11px;
+            fill: #334155;
+        }
+
+        @media print {
+            body {
+                background-color: white;
+            }
+            .container {
+                padding: 10mm;
+            }
+            svg {
+                box-shadow: none;
+                border: 1px solid #E2E8F0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Tibetan Editor Enterprise Architecture (TEEA) Data Flow</h1>
+        <p class="description">
+            A Level-1 Data Flow Diagram tracking the transformation of user inputs into intelligent writing assistance. It illustrates the sequence of data passing through the application layers, language processing servers, plugins, and persistent stores.
+        </p>
+
+        <div class="svg-container">
+            <svg viewBox="0 0 1750 1100" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <filter id="shadow" x="-5%" y="-5%" width="115%" height="115%">
+                        <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#0F4C81" flood-opacity="0.1"/>
+                    </filter>
+                    
+                    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+                        <path d="M 0 0 L 10 5 L 0 10 Z" fill="#2563EB"/>
+                    </marker>
+                    
+                    <marker id="arrow-reverse" markerWidth="10" markerHeight="10" refX="1" refY="5" orient="auto-start-reverse">
+                        <path d="M 10 0 L 0 5 L 10 10 Z" fill="#2563EB"/>
+                    </marker>
+                </defs>
+
+                <!-- ================== DATA FLOW LINES ================== -->
+
+                <!-- User <-> MS Word -->
+                <path class="line" d="M 160 380 L 240 380" marker-end="url(#arrow)"/>
+                <text class="line-label" x="200" y="372" text-anchor="middle">Document Text</text>
+                
+                <path class="line" d="M 240 460 L 160 460" marker-end="url(#arrow)"/>
+                <text class="line-label" x="200" y="452" text-anchor="middle">Visual Feedback</text>
+
+                <!-- MS Word <-> Office.js -->
+                <path class="line" d="M 460 380 L 540 380" marker-end="url(#arrow)"/>
+                <text class="line-label" x="500" y="372" text-anchor="middle">Editing Events</text>
+
+                <path class="line" d="M 540 460 L 460 460" marker-end="url(#arrow)"/>
+                <text class="line-label" x="500" y="452" text-anchor="middle">Rendered Suggestions</text>
+
+                <!-- Office.js -> IPC -->
+                <path class="line" d="M 760 420 L 840 420" marker-end="url(#arrow)"/>
+                <text class="line-label" x="800" y="412" text-anchor="middle">Analysis Request</text>
+
+                <!-- IPC -> Lang Server -->
+                <path class="line" d="M 1060 420 L 1140 420" marker-end="url(#arrow)"/>
+                <text class="line-label" x="1100" y="412" text-anchor="middle">Context Payload</text>
+
+                <!-- Lang Server -> Plugin Runtime -->
+                <path class="line" d="M 1360 420 L 1440 420" marker-end="url(#arrow)"/>
+                <text class="line-label" x="1400" y="412" text-anchor="middle">Parsed Tokens / Graph</text>
+
+                <!-- Plugin Runtime -> Fusion Engine -->
+                <path class="line" d="M 1550 310 L 1550 220" marker-end="url(#arrow)"/>
+                <text class="line-label" x="1560" y="270">Plugin Results</text>
+
+                <!-- Fusion Engine -> Office.js -->
+                <path class="line" d="M 1440 120 L 650 120 L 650 310" marker-end="url(#arrow)"/>
+                <text class="line-label" x="1050" y="110" text-anchor="middle">Merged Suggestions</text>
+
+                <!-- Plugin Runtime <-> AI Runtime -->
+                <path class="line" d="M 1510 530 L 1510 630" marker-end="url(#arrow)"/>
+                <text class="line-label" x="1495" y="585" text-anchor="end">AI Request</text>
+
+                <path class="line" d="M 1590 630 L 1590 530" marker-end="url(#arrow)"/>
+                <text class="line-label" x="1605" y="585" text-anchor="start">AI Response</text>
+
+                <!-- Lang Server <-> Dictionary Repo -->
+                <path class="line" d="M 1210 530 L 1210 580 L 1100 580 L 1100 915" marker-start="url(#arrow-reverse)" marker-end="url(#arrow)"/>
+                <text class="line-label" x="1155" y="572" text-anchor="middle">Dictionary Lookup</text>
+
+                <!-- Lang Server -> Fingerprint DB -->
+                <path class="line" d="M 1290 530 L 1290 580 L 1280 580 L 1280 915" marker-end="url(#arrow)"/>
+                <text class="line-label" x="1350" y="572" text-anchor="middle">Fingerprint Query</text>
+
+                <!-- AI Runtime <-> SQLite -->
+                <path class="line" d="M 1500 810 L 1500 860 L 1460 860 L 1460 915" marker-start="url(#arrow-reverse)" marker-end="url(#arrow)"/>
+                <text class="line-label" x="1455" y="852" text-anchor="end">Read/Write Prefs</text>
+
+                <!-- AI Runtime <-> LMDB -->
+                <path class="line" d="M 1600 810 L 1600 860 L 1640 860 L 1640 915" marker-start="url(#arrow-reverse)" marker-end="url(#arrow)"/>
+                <text class="line-label" x="1650" y="852" text-anchor="start">Cache Lookup/Store</text>
+
+
+                <!-- ================== EXTERNAL ENTITY ================== -->
+                
+                <!-- User -->
+                <g filter="url(#shadow)">
+                    <rect x="40" y="380" width="120" height="80" rx="4" class="entity-box"/>
+                    <text class="entity-title" x="100" y="426" text-anchor="middle">User</text>
+                </g>
+
+
+                <!-- ================== PROCESSES ================== -->
+
+                <!-- P1: Microsoft Word -->
+                <g filter="url(#shadow)">
+                    <rect x="240" y="310" width="220" height="220" rx="8" class="process-box"/>
+                    <path d="M 240 318 A 8 8 0 0 1 248 310 L 452 310 A 8 8 0 0 1 460 318 L 460 355 L 240 355 Z" class="header-bg"/>
+                    <line x1="240" y1="355" x2="460" y2="355" stroke="#CBD5E1" stroke-width="2"/>
+                    <text class="process-id" x="255" y="335">P1</text>
+                    <text class="process-title" x="285" y="335">Microsoft Word</text>
+                    
+                    <text class="process-item" x="260" y="390">• Document Editing</text>
+                    <text class="process-item" x="260" y="415">• User Interaction</text>
+                </g>
+
+                <!-- P2: Office.js Add-in -->
+                <g filter="url(#shadow)">
+                    <rect x="540" y="310" width="220" height="220" rx="8" class="process-box"/>
+                    <path d="M 540 318 A 8 8 0 0 1 548 310 L 752 310 A 8 8 0 0 1 760 318 L 760 355 L 540 355 Z" class="header-bg"/>
+                    <line x1="540" y1="355" x2="760" y2="355" stroke="#CBD5E1" stroke-width="2"/>
+                    <text class="process-id" x="555" y="335">P2</text>
+                    <text class="process-title" x="585" y="335">Office.js Add-in</text>
+                    
+                    <text class="process-item" x="560" y="390">• Task Pane</text>
+                    <text class="process-item" x="560" y="415">• Ribbon Commands</text>
+                    <text class="process-item" x="560" y="440">• UI Rendering</text>
+                </g>
+
+                <!-- P3: Local IPC Layer -->
+                <g filter="url(#shadow)">
+                    <rect x="840" y="310" width="220" height="220" rx="8" class="process-box"/>
+                    <path d="M 840 318 A 8 8 0 0 1 848 310 L 1052 310 A 8 8 0 0 1 1060 318 L 1060 355 L 840 355 Z" class="header-bg"/>
+                    <line x1="840" y1="355" x2="1060" y2="355" stroke="#CBD5E1" stroke-width="2"/>
+                    <text class="process-id" x="855" y="335">P3</text>
+                    <text class="process-title" x="885" y="335">Local IPC Layer</text>
+                    
+                    <text class="process-item" x="860" y="390">• Message Transport</text>
+                    <text class="process-item" x="860" y="415">• Request Routing</text>
+                </g>
+
+                <!-- P4: Language Server -->
+                <g filter="url(#shadow)">
+                    <rect x="1140" y="310" width="220" height="220" rx="8" class="process-box"/>
+                    <path d="M 1140 318 A 8 8 0 0 1 1148 310 L 1352 310 A 8 8 0 0 1 1360 318 L 1360 355 L 1140 355 Z" class="header-bg"/>
+                    <line x1="1140" y1="355" x2="1360" y2="355" stroke="#CBD5E1" stroke-width="2"/>
+                    <text class="process-id" x="1155" y="335">P4</text>
+                    <text class="process-title" x="1185" y="335">Language Server</text>
+                    
+                    <text class="process-item" x="1160" y="385">• Text Analysis</text>
+                    <text class="process-item" x="1160" y="410">• Tokenization</text>
+                    <text class="process-item" x="1160" y="435">• Morphology</text>
+                    <text class="process-item" x="1160" y="460">• Parsing</text>
+                    <text class="process-item" x="1160" y="485">• Semantic Processing</text>
+                </g>
+
+                <!-- P5: Plugin Runtime -->
+                <g filter="url(#shadow)">
+                    <rect x="1440" y="310" width="220" height="220" rx="8" class="process-box"/>
+                    <path d="M 1440 318 A 8 8 0 0 1 1448 310 L 1652 310 A 8 8 0 0 1 1660 318 L 1660 355 L 1440 355 Z" class="header-bg"/>
+                    <line x1="1440" y1="355" x2="1660" y2="355" stroke="#CBD5E1" stroke-width="2"/>
+                    <text class="process-id" x="1455" y="335">P5</text>
+                    <text class="process-title" x="1485" y="335">Plugin Runtime</text>
+                    
+                    <text class="process-item" x="1460" y="375">• Execute Plugins</text>
+                    <text class="process-item" x="1460" y="395">• Spell Checking</text>
+                    <text class="process-item" x="1460" y="415">• Grammar Checking</text>
+                    <text class="process-item" x="1460" y="435">• Translation</text>
+                    <text class="process-item" x="1460" y="455">• Summarization</text>
+                    <text class="process-item" x="1460" y="475">• Citation</text>
+                    <text class="process-item" x="1460" y="495">• Plagiarism Detection</text>
+                </g>
+
+                <!-- P6: Suggestion Fusion Engine -->
+                <g filter="url(#shadow)">
+                    <rect x="1440" y="40" width="220" height="180" rx="8" class="process-box"/>
+                    <path d="M 1440 48 A 8 8 0 0 1 1448 40 L 1652 40 A 8 8 0 0 1 1660 48 L 1660 75 L 1440 75 Z" class="header-bg"/>
+                    <line x1="1440" y1="75" x2="1660" y2="75" stroke="#CBD5E1" stroke-width="2"/>
+                    <text class="process-id" x="1455" y="60">P6</text>
+                    <text class="process-title" x="1485" y="60">Suggestion Fusion</text>
+                    
+                    <text class="process-item" x="1460" y="110">• Merge Suggestions</text>
+                    <text class="process-item" x="1460" y="135">• Deduplicate</text>
+                    <text class="process-item" x="1460" y="160">• Resolve Conflicts</text>
+                    <text class="process-item" x="1460" y="185">• Confidence Ranking</text>
+                </g>
+
+                <!-- P7: AI Runtime -->
+                <g filter="url(#shadow)">
+                    <rect x="1440" y="630" width="220" height="180" rx="8" class="process-box"/>
+                    <path d="M 1440 638 A 8 8 0 0 1 1448 630 L 1652 630 A 8 8 0 0 1 1660 638 L 1660 665 L 1440 665 Z" class="header-bg"/>
+                    <line x1="1440" y1="665" x2="1660" y2="665" stroke="#CBD5E1" stroke-width="2"/>
+                    <text class="process-id" x="1455" y="650">P7</text>
+                    <text class="process-title" x="1485" y="650">AI Runtime</text>
+                    
+                    <text class="process-item" x="1460" y="705">• Model Selection</text>
+                    <text class="process-item" x="1460" y="735">• Local Inference</text>
+                    <text class="process-item" x="1460" y="765">• Capability Execution</text>
+                </g>
+
+
+                <!-- ================== DATA STORES ================== -->
+
+                <!-- D1: Dictionary Repository -->
+                <g filter="url(#shadow)">
+                    <path d="M 1030 915 L 1030 1005 A 70 15 0 0 0 1170 1005 L 1170 915 Z" class="store-shape"/>
+                    <ellipse cx="1100" cy="915" rx="70" ry="15" fill="#F8FAFC" stroke="#0F4C81" stroke-width="2"/>
+                    <text class="store-title" x="1100" y="945" text-anchor="middle">Dictionary Repo</text>
+                    <text class="store-item" x="1045" y="970">• Tibetan Dictionary</text>
+                    <text class="store-item" x="1045" y="990">• Grammar Rules</text>
+                </g>
+
+                <!-- D2: Fingerprint Database -->
+                <g filter="url(#shadow)">
+                    <path d="M 1210 915 L 1210 1005 A 70 15 0 0 0 1350 1005 L 1350 915 Z" class="store-shape"/>
+                    <ellipse cx="1280" cy="915" rx="70" ry="15" fill="#F8FAFC" stroke="#0F4C81" stroke-width="2"/>
+                    <text class="store-title" x="1280" y="945" text-anchor="middle">Fingerprint DB</text>
+                    <text class="store-item" x="1225" y="970">• Winnowing Prints</text>
+                    <text class="store-item" x="1225" y="990">• Similarity Index</text>
+                </g>
+
+                <!-- D3: SQLite Database -->
+                <g filter="url(#shadow)">
+                    <path d="M 1390 915 L 1390 1005 A 70 15 0 0 0 1530 1005 L 1530 915 Z" class="store-shape"/>
+                    <ellipse cx="1460" cy="915" rx="70" ry="15" fill="#F8FAFC" stroke="#0F4C81" stroke-width="2"/>
+                    <text class="store-title" x="1460" y="945" text-anchor="middle">SQLite Database</text>
+                    <text class="store-item" x="1405" y="965">• User Preferences</text>
+                    <text class="store-item" x="1405" y="980">• Settings</text>
+                    <text class="store-item" x="1405" y="995">• Plugin Metadata</text>
+                </g>
+
+                <!-- D4: LMDB Cache -->
+                <g filter="url(#shadow)">
+                    <path d="M 1570 915 L 1570 1005 A 70 15 0 0 0 1710 1005 L 1710 915 Z" class="store-shape"/>
+                    <ellipse cx="1640" cy="915" rx="70" ry="15" fill="#F8FAFC" stroke="#0F4C81" stroke-width="2"/>
+                    <text class="store-title" x="1640" y="945" text-anchor="middle">LMDB Cache</text>
+                    <text class="store-item" x="1585" y="970">• Temp Results</text>
+                    <text class="store-item" x="1585" y="990">• Cached Suggestions</text>
+                </g>
+
+            </svg>
+        </div>
+
+        <div class="caption">
+            <strong>Figure 3.</strong> Level-1 Data Flow Diagram of the Tibetan Editor Enterprise Architecture (TEEA), illustrating how document data moves between Microsoft Word, the Office.js Add-in, the language processing services, AI runtime, and persistent storage components to produce intelligent writing assistance.
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>02_Component_Diagram</title>
+<style>
+  @page { size: A4 landscape; margin: 10mm; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #FFFFFF;
+    color: #1F2937;
+    margin: 0;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    box-sizing: border-box;
+  }
+  h1 {
+    font-size: 22px;
+    color: #0F4C81;
+    margin: 0 0 4px 0;
+    text-align: center;
+    font-weight: 700;
+  }
+  p.desc {
+    font-size: 13px;
+    color: #475569;
+    margin: 0 0 10px 0;
+    text-align: center;
+    max-width: 950px;
+    line-height: 1.35;
+  }
+  .diagram-container {
+    width: 100%;
+    max-width: 1160px;
+    height: 610px;
+    background: #F8FAFC;
+    border: 1px solid #CBD5E1;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    box-sizing: border-box;
+  }
+  svg {
+    width: 100%;
+    height: 100%;
+    max-height: 600px;
+  }
+  .caption {
+    font-size: 11px;
+    font-style: italic;
+    color: #64748B;
+    margin-top: 8px;
+    text-align: center;
+    max-width: 1000px;
+  }
+</style>
+</head>
+<body>
+  <h1>Tibetan Editor Enterprise Architecture (TEEA) - UML Component Diagram</h1>
+  <p class="desc">Enterprise architecture component breakdown showing logical layering from Microsoft Word presentation components through application busses, language processing and AI runtimes, down to persistent storage engines.</p>
+  
+  <div class="diagram-container">
+    <svg viewBox="0 0 1120 580" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="shadow-comp" x="-5%" y="-5%" width="110%" height="110%">
+          <feDropShadow dx="1" dy="3" stdDeviation="3" flood-color="#000000" flood-opacity="0.08"/>
+        </filter>
+        <marker id="dep-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 1 L 10 5 L 0 9 z" fill="#2563EB"/>
+        </marker>
+        <marker id="sub-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+          <path d="M 0 1 L 10 5 L 0 9 z" fill="#64748B"/>
+        </marker>
+      </defs>
+
+      <!-- ARCHITECTURAL LAYER CONTAINERS (Dashed Dashed Grouping Boxes) -->
+      
+      <!-- 1. Presentation Layer Group -->
+      <g filter="url(#shadow-comp)">
+        <rect x="20" y="15" width="250" height="545" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="6,4"/>
+        <text x="35" y="38" font-size="13" font-weight="bold" fill="#0F4C81">Presentation Layer</text>
+      </g>
+
+      <!-- 2. Application Layer Group -->
+      <g filter="url(#shadow-comp)">
+        <rect x="290" y="15" width="260" height="545" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="6,4"/>
+        <text x="305" y="38" font-size="13" font-weight="bold" fill="#0F4C81">Application Layer</text>
+      </g>
+
+      <!-- 3. Language & AI Layer Group -->
+      <g filter="url(#shadow-comp)">
+        <rect x="570" y="15" width="260" height="545" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="6,4"/>
+        <text x="585" y="38" font-size="13" font-weight="bold" fill="#0F4C81">Language &amp; AI Layer</text>
+      </g>
+
+      <!-- 4. Persistence Layer Group -->
+      <g filter="url(#shadow-comp)">
+        <rect x="850" y="15" width="250" height="545" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="6,4"/>
+        <text x="865" y="38" font-size="13" font-weight="bold" fill="#0F4C81">Persistence Layer</text>
+      </g>
+
+
+      <!-- ================= COMPONENT BLOCKS ================= -->
+
+      <!-- PRESENTATION LAYER COMPONENTS -->
+      
+      <!-- Microsoft Word Component -->
+      <g transform="translate(35, 55)" filter="url(#shadow-comp)">
+        <rect x="0" y="0" width="220" height="115" rx="6" fill="#F8FAFC" stroke="#0F4C81" stroke-width="1.8"/>
+        <path d="M 185 10 L 205 10 L 205 30 M 195 5 L 195 15 M 185 15 L 205 15" stroke="#0F4C81" stroke-width="1.2" fill="none"/>
+        <rect x="180" y="5" width="30" height="25" rx="2" fill="none" stroke="#0F4C81" stroke-width="1.2"/>
+        <text x="12" y="24" font-size="11" font-weight="bold" fill="#0F4C81">&laquo;component&gt;&gt;</text>
+        <text x="12" y="40" font-size="13" font-weight="bold" fill="#1F2937">Microsoft Word</text>
+        <line x1="12" y1="48" x2="208" y2="48" stroke="#CBD5E1" stroke-width="1"/>
+        <text x="12" y="64" font-size="11" fill="#475569">• Host Process Interface</text>
+        <text x="12" y="80" font-size="11" fill="#475569">• Document Selection State</text>
+        <text x="12" y="96" font-size="11" fill="#475569">• Native UI Host Window</text>
+      </g>
+
+      <!-- Office.js Add-in Component -->
+      <g transform="translate(35, 185)" filter="url(#shadow-comp)">
+        <rect x="0" y="0" width="220" height="115" rx="6" fill="#F8FAFC" stroke="#0F4C81" stroke-width="1.8"/>
+        <path d="M 185 10 L 205 10 L 205 30 M 195 5 L 195 15 M 185 15 L 205 15" stroke="#0F4C81" stroke-width="1.2" fill="none"/>
+        <rect x="180" y="5" width="30" height="25" rx="2" fill="none" stroke="#0F4C81" stroke-width="1.2"/>
+        <text x="12" y="24" font-size="11" font-weight="bold" fill="#0F4C81">&laquo;component&gt;&gt;</text>
+        <text x="12" y="40" font-size="13" font-weight="bold" fill="#1F2937">Office.js Add-in</text>
+        <line x1="12" y1="48" x2="208" y2="48" stroke="#CBD5E1" stroke-width="1"/>
+        <text x="12" y="64" font-size="11" fill="#475569">• Task Pane UI Webview</text>
+        <text x="12" y="80" font-size="11" fill="#475569">• Ribbon Commands Interop</text>
+        <text x="12" y="96" font-size="11" fill="#475569">• Document XML API Bridge</text>
+      </g>
+
+      <!-- Task Pane UI & Ribbon Commands Combined Component -->
+      <g transform="translate(35, 315)" filter="url(#shadow-comp)">
+        <rect x="0" y="0" width="220" height="115" rx="6" fill="#F8FAFC" stroke="#0F4C81" stroke-width="1.8"/>
+        <path d="M 185 10 L 205 10 L 205 30 M 195 5 L 195 15 M 185 15 L 205 15" stroke="#0F4C81" stroke-width="1.2" fill="none"/>
+        <rect x="180" y="5" width="30" height="25" rx="2" fill="none" stroke="#0F4C81" stroke-width="1.2"/>
+        <text x="12" y="24" font-size="11" font-weight="bold" fill="#0F4C81">&laquo;component&gt;&gt;</text>
+        <text x="12" y="40" font-size="13" font-weight="bold" fill="#1F2937">UI Widgets &amp; Commands</text>
+        <line x1="12" y1="48" x2="208" y2="48" stroke="#CBD5E1" stroke-width="1"/>
+        <text x="12" y="64" font-size="11" fill="#475569">• Task Pane Panel Layout</text>
+        <text x="12" y="80" font-size="11" fill="#475569">• Ribbon Custom Buttons</text>
+        <text x="12" y="96" font-size="11" fill="#475569">• Real-time Text Decoration</text>
+      </g>
+
+
+      <!-- APPLICATION LAYER COMPONENTS -->
+
+      <!-- Application Busses & Scheduler (Command Bus, Query Bus, Event Bus, Scheduler) -->
+      <g transform="translate(305, 55)" filter="url(#shadow-comp)">
+        <rect x="0" y="0" width="230" height="120" rx="6" fill="#F8FAFC" stroke="#0F4C81" stroke-width="1.8"/>
+        <path d="M 195 10 L 215 10 L 215 30 M 205 5 L 205 15 M 195 15 L 215 15" stroke="#0F4C81" stroke-width="1.2" fill="none"/>
+        <rect x="200" y="5" width="30" height="25" rx="2" fill="none" stroke="#0F4C81" stroke-width="1.2"/>
+        <text x="12" y="24" font-size="11" font-weight="bold" fill="#0F4C81">&laquo;component&gt;&gt;</text>
+        <text x="12" y="40" font-size="13" font-weight="bold" fill="#1F2937">Application Busses &amp; Sched.</text>
+        <line x1="12" y1="48" x2="218" y2="48" stroke="#CBD5E1" stroke-width="1"/>
+        <text x="12" y="64" font-size="11" fill="#475569">• Command / Query / Event Busses</text>
+        <text x="12" y="80" font-size="11" fill="#475569">• Background Task Scheduler</text>
+        <text x="12" y="96" font-size="11" fill="#475569">• Request / Dispatch Routing</text>
+      </g>
+
+      <!-- Plugin Runtime Component -->
+      <g transform="translate(305, 195)" filter="url(#shadow-comp)">
+        <rect x="0" y="0" width="230" height="115" rx="6" fill="#F8FAFC" stroke="#0F4C81" stroke-width="1.8"/>
+        <path d="M 195 10 L 215 10 L 215 30 M 205 5 L 205 15 M 195 15 L 215 15" stroke="#0F4C81" stroke-width="1.2" fill="none"/>
+        <rect x="200" y="5" width="30" height="25" rx="2" fill="none" stroke="#0F4C81" stroke-width="1.2"/>
+        <text x="12" y="24" font-size="11" font-weight="bold" fill="#0F4C81">&laquo;component&gt;&gt;</text>
+        <text x="12" y="40" font-size="13" font-weight="bold" fill="#1F2937">Plugin Runtime</text>
+        <line x1="12" y1="48" x2="218" y2="48" stroke="#CBD5E1" stroke-width="1"/>
+        <text x="12" y="64" font-size="11" fill="#475569">• Execute Features &amp; Load Plugins</text>
+        <text x="12" y="80" font-size="11" fill="#475569">• Sandbox Extension Management</text>
+        <text x="12" y="96" font-size="11" fill="#475569">• Lifecycle &amp; Request Dispatching</text>
+      </g>
+
+      <!-- Suggestion Fusion Engine Component -->
+      <g transform="translate(305, 330)" filter="url(#shadow-comp)">
+        <rect x="0" y="0" width="230" height="115" rx="6" fill="#F8FAFC" stroke="#0F4C81" stroke-width="1.8"/>
+        <path d="M 195 10 L 215 10 L 215 30 M 205 5 L 205 15 M 195 15 L 215 15" stroke="#0F4C81" stroke-width="1.2" fill="none"/>
+        <rect x="200" y="5" width="30" height="25" rx="2" fill="none" stroke="#0F4C81" stroke-width="1.2"/>
+        <text x="12" y="24" font-size="11" font-weight="bold" fill="#0F4C81">&laquo;component&gt;&gt;</text>
+        <text x="12" y="40" font-size="13" font-weight="bold" fill="#1F2937">Suggestion Fusion Engine</text>
+        <line x1="12" y1="48" x2="218" y2="48" stroke="#CBD5E1" stroke-width="1"/>
+        <text x="12" y="64" font-size="11" fill="#475569">• Merge Results &amp; Deduplication</text>
+        <text x="12" y="80" font-size="11" fill="#475569">• Resolve Analytical Conflicts</text>
+        <text x="12" y="96" font-size="11" fill="#475569">• Rank &amp; Format Suggestions</text>
+      </g>
+
+      <!-- Capability Registry Component -->
+      <g transform="translate(305, 460)" filter="url(#shadow-comp)">
+        <rect x="0" y="0" width="230" height="90" rx="6" fill="#F8FAFC" stroke="#0F4C81" stroke-width="1.8"/>
+        <path d="M 195 10 L 215 10 L 215 30 M 205 5 L 205 15 M 195 15 L 215 15" stroke="#0F4C81" stroke-width="1.2" fill="none"/>
+        <rect x="200" y="5" width="30" height="25" rx="2" fill="none" stroke="#0F4C81" stroke-width="1.2"/>
+        <text x="12" y="24" font-size="11" font-weight="bold" fill="#0F4C81">&laquo;component&gt;&gt;</text>
+        <text x="12" y="40" font-size="13" font-weight="bold" fill="#1F2937">Capability Registry</text>
+        <line x1="12" y1="48" x2="218" y2="48" stroke="#CBD5E1" stroke-width="1"/>
+        <text x="12" y="64" font-size="11" fill="#475569">• Feature Capability Mapping</text>
+        <text x="12" y="78" font-size="11" fill="#475569">• Dynamic Module Discovery</text>
+      </g>
+
+
+      <!-- LANGUAGE & AI LAYER COMPONENTS -->
+
+      <!-- Language Server (Tokenizer, Morphology, POS Tagger, Dependency Parser, Semantic Graph) -->
+      <g transform="translate(585, 55)" filter="url(#shadow-comp)">
+        <rect x="0" y="0" width="230" height="220" rx="6" fill="#F8FAFC" stroke="#0F4C81" stroke-width="1.8"/>
+        <path d="M 195 10 L 215 10 L 215 30 M 205 5 L 205 15 M 195 15 L 215 15" stroke="#0F4C81" stroke-width="1.2" fill="none"/>
+        <rect x="200" y="5" width="30" height="25" rx="2" fill="none" stroke="#0F4C81" stroke-width="1.2"/>
+        <text x="12" y="24" font-size="11" font-weight="bold" fill="#0F4C81">&laquo;component&gt;&gt;</text>
+        <text x="12" y="40" font-size="13" font-weight="bold" fill="#1F2937">Language Server</text>
+        <line x1="12" y1="48" x2="218" y2="48" stroke="#CBD5E1" stroke-width="1"/>
+        <text x="12" y="66" font-size="11" font-weight="bold" fill="#0F4C81">Responsibilities:</text>
+        <text x="12" y="84" font-size="11" fill="#475569">• Text Processing &amp; Tokenization</text>
+        <text x="12" y="100" font-size="11" fill="#475569">• Grammar Analysis &amp; Morphology</text>
+        <text x="12" y="116" font-size="11" fill="#475569">• POS Tagging &amp; Dependency Parser</text>
+        <text x="12" y="132" font-size="11" fill="#475569">• Semantic Graph Construction</text>
+        <line x1="12" y1="145" x2="218" y2="145" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="3,3"/>
+        <text x="12" y="162" font-size="10" fill="#64748B">Sub-modules:</text>
+        <text x="12" y="178" font-size="10" fill="#475569">Tokenizer, Morphology, POS Tagger,</text>
+        <text x="12" y="194" font-size="10" fill="#475569">Dependency Parser, Semantic Graph</text>
+      </g>
+
+      <!-- AI Runtime (Inference Manager, Model Registry, ONNX Runtime) -->
+      <g transform="translate(585, 290)" filter="url(#shadow-comp)">
+        <rect x="0" y="0" width="230" height="260" rx="6" fill="#F8FAFC" stroke="#0F4C81" stroke-width="1.8"/>
+        <path d="M 195 10 L 215 10 L 215 30 M 205 5 L 205 15 M 195 15 L 215 15" stroke="#0F4C81" stroke-width="1.2" fill="none"/>
+        <rect x="200" y="5" width="30" height="25" rx="2" fill="none" stroke="#0F4C81" stroke-width="1.2"/>
+        <text x="12" y="24" font-size="11" font-weight="bold" fill="#0F4C81">&laquo;component&gt;&gt;</text>
+        <text x="12" y="40" font-size="13" font-weight="bold" fill="#1F2937">AI Runtime &amp; Inference</text>
+        <line x1="12" y1="48" x2="218" y2="48" stroke="#CBD5E1" stroke-width="1"/>
+        <text x="12" y="66" font-size="11" font-weight="bold" fill="#0F4C81">Responsibilities:</text>
+        <text x="12" y="84" font-size="11" fill="#475569">• Execute Models &amp; Manage Inference</text>
+        <text x="12" y="100" font-size="11" fill="#475569">• Select &amp; Enforce Capabilities</text>
+        <text x="12" y="116" font-size="11" fill="#475569">• ONNX Execution Management</text>
+        <line x1="12" y1="128" x2="218" y2="128" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="3,3"/>
+        <text x="12" y="145" font-size="10" font-weight="bold" fill="#0F4C81">Internal Sub-components:</text>
+        <text x="12" y="163" font-size="10" fill="#475569">• Inference Manager (Execution Engine)</text>
+        <text x="12" y="181" font-size="10" fill="#475569">• Model Registry (Weights Catalog)</text>
+        <text x="12" y="199" font-size="10" fill="#475569">• ONNX Runtime (Hardware Accel.)</text>
+      </g>
+
+
+      <!-- PERSISTENCE LAYER COMPONENTS -->
+
+      <!-- Storage Repositories (SQLite, LMDB, Dictionary Repository, Fingerprint Index, Cache) -->
+      <g transform="translate(865, 55)" filter="url(#shadow-comp)">
+        <rect x="0" y="0" width="220" height="495" rx="6" fill="#F8FAFC" stroke="#0F4C81" stroke-width="1.8"/>
+        <path d="M 185 10 L 205 10 L 205 30 M 195 5 L 195 15 M 185 15 L 205 15" stroke="#0F4C81" stroke-width="1.2" fill="none"/>
+        <rect x="180" y="5" width="30" height="25" rx="2" fill="none" stroke="#0F4C81" stroke-width="1.2"/>
+        <text x="12" y="24" font-size="11" font-weight="bold" fill="#0F4C81">&laquo;component&gt;&gt;</text>
+        <text x="12" y="40" font-size="13" font-weight="bold" fill="#1F2937">Persistence &amp; Storage</text>
+        <line x1="12" y1="48" x2="208" y2="48" stroke="#CBD5E1" stroke-width="1"/>
+        <text x="12" y="68" font-size="11" font-weight="bold" fill="#0F4C81">Primary Repositories:</text>
+        
+        <!-- SQLite Database Icon box -->
+        <rect x="15" y="80" width="190" height="65" rx="4" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+        <text x="25" y="100" font-size="11" font-weight="bold" fill="#1F2937">SQLite Database</text>
+        <text x="25" y="118" font-size="10" fill="#475569">• Structured document store</text>
+        <text x="25" y="132" font-size="10" fill="#475569">• State and audit logs</text>
+
+        <!-- LMDB Cache Icon box -->
+        <rect x="15" y="155" width="190" height="65" rx="4" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+        <text x="25" y="175" font-size="11" font-weight="bold" fill="#1F2937">LMDB Key-Value Cache</text>
+        <text x="25" y="193" font-size="10" fill="#475569">• Low-latency vector cache</text>
+        <text x="25" y="207" font-size="10" fill="#475569">• High-speed memory map</text>
+
+        <!-- Dictionary Repository Icon box -->
+        <rect x="15" y="230" width="190" height="65" rx="4" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+        <text x="25" y="250" font-size="11" font-weight="bold" fill="#1F2937">Dictionary Repository</text>
+        <text x="25" y="268" font-size="10" fill="#475569">• Tibetan lexicon &amp; lemma store</text>
+        <text x="25" y="282" font-size="10" fill="#475569">• Morphological rules catalog</text>
+
+        <!-- Fingerprint Index Icon box -->
+        <rect x="15" y="305" width="190" height="65" rx="4" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+        <text x="25" y="325" font-size="11" font-weight="bold" fill="#1F2937">Fingerprint Index</text>
+        <text x="25" y="343" font-size="10" fill="#475569">• Winnowing hash indexes</text>
+        <text x="25" y="357" font-size="10" fill="#475569">• Plagiarism matching vectors</text>
+
+        <!-- Cache Manager Icon box -->
+        <rect x="15" y="380" width="190" height="65" rx="4" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+        <text x="25" y="400" font-size="11" font-weight="bold" fill="#1F2937">Cache Subsystem</text>
+        <text x="25" y="418" font-size="10" fill="#475569">• Inference result caching</text>
+        <text x="25" y="432" font-size="10" fill="#475569">• LRU eviction policies</text>
+      </g>
+
+
+      <!-- ================= DEPENDENCY ARROWS ================= -->
+
+      <!-- Layer-to-Layer Major Dependencies -->
+      <!-- Presentation -> Application (Word/Office.js -> Busses) -->
+      <path d="M 255 110 L 305 110" fill="none" stroke="#2563EB" stroke-width="2" marker-end="url(#dep-arrow)" stroke-dasharray="5,3"/>
+      
+      <!-- Application -> Language & AI Layer -->
+      <path d="M 535 250 L 585 250" fill="none" stroke="#2563EB" stroke-width="2" marker-end="url(#dep-arrow)" stroke-dasharray="5,3"/>
+
+      <!-- Language & AI -> Persistence Layer -->
+      <path d="M 815 160 L 865 160" fill="none" stroke="#2563EB" stroke-width="2" marker-end="url(#dep-arrow)" stroke-dasharray="5,3"/>
+
+
+      <!-- Specific Internal Component Dependencies -->
+
+      <!-- Plugin Runtime -> Language Server -->
+      <path d="M 535 210 L 585 140" fill="none" stroke="#2563EB" stroke-width="1.5" marker-end="url(#dep-arrow)" stroke-dasharray="4,2"/>
+
+      <!-- Plugin Runtime -> AI Runtime -->
+      <path d="M 535 260 L 585 340" fill="none" stroke="#2563EB" stroke-width="1.5" marker-end="url(#dep-arrow)" stroke-dasharray="4,2"/>
+
+      <!-- Plugin Runtime -> Suggestion Fusion Engine -->
+      <path d="M 420 310 L 420 330" fill="none" stroke="#2563EB" stroke-width="1.5" marker-end="url(#dep-arrow)" stroke-dasharray="4,2"/>
+
+      <!-- Suggestion Fusion Engine -> Office.js (Feedback Loop) -->
+      <path d="M 305 385 C 200 385, 200 240, 255 240" fill="none" stroke="#2563EB" stroke-width="1.5" marker-end="url(#dep-arrow)" stroke-dasharray="4,2"/>
+
+      <!-- Language Server -> Dictionary Repository -->
+      <path d="M 815 110 L 865 110" fill="none" stroke="#2563EB" stroke-width="1.5" marker-end="url(#dep-arrow)" stroke-dasharray="4,2"/>
+
+      <!-- Language Server -> Fingerprint Index -->
+      <path d="M 815 190 C 840 190, 840 335, 865 335" fill="none" stroke="#2563EB" stroke-width="1.5" marker-end="url(#dep-arrow)" stroke-dasharray="4,2"/>
+
+      <!-- AI Runtime -> Model Registry -->
+      <path d="M 695 550 C 695 565, 960 565, 960 550" fill="none" stroke="#2563EB" stroke-width="1.2" marker-end="url(#dep-arrow)" stroke-dasharray="2,2"/>
+
+      <!-- Inference Manager -> ONNX Runtime (internal representation) -->
+      <!-- Capability Registry -> AI Runtime -->
+      <path d="M 420 550 C 420 575, 700 575, 700 550" fill="none" stroke="#2563EB" stroke-width="1.2" marker-end="url(#dep-arrow)" stroke-dasharray="2,2"/>
+
+      <!-- AI Runtime -> SQLite -->
+      <path d="M 815 420 L 865 140" fill="none" stroke="#2563EB" stroke-width="1.5" marker-end="url(#dep-arrow)" stroke-dasharray="4,2"/>
+
+      <!-- AI Runtime -> LMDB -->
+      <path d="M 815 450 L 865 210" fill="none" stroke="#2563EB" stroke-width="1.5" marker-end="url(#dep-arrow)" stroke-dasharray="4,2"/>
+
+      <!-- Command Bus -> Plugin Runtime -->
+      <path d="M 420 175 L 420 195" fill="none" stroke="#2563EB" stroke-width="1.5" marker-end="url(#dep-arrow)" stroke-dasharray="4,2"/>
+
+      <!-- Query Bus / Scheduler -> Plugin Runtime -->
+      <path d="M 370 175 L 370 195" fill="none" stroke="#2563EB" stroke-width="1.2" marker-end="url(#dep-arrow)" stroke-dasharray="2,2"/>
+
+    </svg>
+  </div>
+
+  <div class="caption">Figure 2. UML Component Diagram of the Tibetan Editor Enterprise Architecture (TEEA), illustrating the logical organization of presentation, application, language processing, artificial intelligence, and persistence components together with their primary software dependencies.</div>
+</body>
+</html>

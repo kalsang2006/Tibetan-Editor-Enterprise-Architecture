@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>07_Suggestion_Fusion_Engine</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #FFFFFF;
+            color: #1F2937;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 1600px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: #0F4C81;
+            margin-bottom: 8px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .description {
+            font-size: 1.1rem;
+            color: #475569;
+            text-align: center;
+            max-width: 900px;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .diagram-container {
+            width: 100%;
+            background-color: #FFFFFF;
+            border: 1px solid #CBD5E1;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+
+        svg {
+            width: 100%;
+            height: auto;
+            max-height: 82vh;
+        }
+
+        .caption {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: #1F2937;
+            max-width: 1400px;
+            border-top: 2px solid #F8FAFC;
+            padding-top: 15px;
+            text-align: left;
+        }
+
+        .caption strong {
+            color: #0F4C81;
+        }
+
+        @media print {
+            body {
+                padding: 0;
+            }
+            .diagram-container {
+                border: none;
+                box-shadow: none;
+                padding: 0;
+            }
+            @page {
+                size: A4 landscape;
+                margin: 1cm;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Suggestion Fusion Engine Architecture</h1>
+        <p class="description">Enterprise processing pipeline for gathering, validating, conflict-resolving, merging, ranking, and finalizing plugin recommendations with AI semantic assistance.</p>
+
+        <div class="diagram-container">
+            <svg viewBox="0 0 1550 1100" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <!-- Soft Drop Shadow -->
+                    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+                        <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#000000" flood-opacity="0.08"/>
+                    </filter>
+
+                    <!-- Standard Arrow Marker -->
+                    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                        <path d="M 0 0 L 10 5 L 0 10 Z" fill="#0F4C81"/>
+                    </marker>
+
+                    <!-- Accent Arrow Marker -->
+                    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                        <path d="M 0 0 L 10 5 L 0 10 Z" fill="#2563EB"/>
+                    </marker>
+
+                    <!-- Purple AI Arrow Marker -->
+                    <marker id="arrow-ai" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                        <path d="M 0 0 L 10 5 L 0 10 Z" fill="#7C3AED"/>
+                    </marker>
+                </defs>
+
+                <!-- ========================================== -->
+                <!-- LEFT SECTION: FEATURE PLUGINS              -->
+                <!-- ========================================== -->
+                <g transform="translate(40, 50)">
+                    <rect width="280" height="920" rx="12" fill="#E0F2FE" stroke="#0284C7" stroke-width="2" filter="url(#shadow)"/>
+                    <text x="140" y="35" font-size="16" font-weight="bold" fill="#0369A1" text-anchor="middle">Feature Plugins</text>
+                    <text x="140" y="55" font-size="12" fill="#0284C7" text-anchor="middle">Outputs: Suggestions, Score, Priority</text>
+
+                    <!-- Plugin Items -->
+                    <g transform="translate(20, 75)">
+                        <!-- Spell Checker -->
+                        <rect x="0" y="0" width="240" height="42" rx="6" fill="#FFFFFF" stroke="#0284C7" stroke-width="1.5"/>
+                        <text x="120" y="26" font-size="13" font-weight="bold" fill="#1F2937" text-anchor="middle">Spell Checker</text>
+
+                        <!-- Grammar Checker -->
+                        <rect x="0" y="55" width="240" height="42" rx="6" fill="#FFFFFF" stroke="#0284C7" stroke-width="1.5"/>
+                        <text x="120" y="81" font-size="13" font-weight="bold" fill="#1F2937" text-anchor="middle">Grammar Checker</text>
+
+                        <!-- Style Checker -->
+                        <rect x="0" y="110" width="240" height="42" rx="6" fill="#FFFFFF" stroke="#0284C7" stroke-width="1.5"/>
+                        <text x="120" y="136" font-size="13" font-weight="bold" fill="#1F2937" text-anchor="middle">Style Checker</text>
+
+                        <!-- Translator -->
+                        <rect x="0" y="165" width="240" height="42" rx="6" fill="#FFFFFF" stroke="#0284C7" stroke-width="1.5"/>
+                        <text x="120" y="191" font-size="13" font-weight="bold" fill="#1F2937" text-anchor="middle">Translator</text>
+
+                        <!-- Summarizer -->
+                        <rect x="0" y="220" width="240" height="42" rx="6" fill="#FFFFFF" stroke="#0284C7" stroke-width="1.5"/>
+                        <text x="120" y="246" font-size="13" font-weight="bold" fill="#1F2937" text-anchor="middle">Summarizer</text>
+
+                        <!-- Citation Assistant -->
+                        <rect x="0" y="275" width="240" height="42" rx="6" fill="#FFFFFF" stroke="#0284C7" stroke-width="1.5"/>
+                        <text x="120" y="301" font-size="13" font-weight="bold" fill="#1F2937" text-anchor="middle">Citation Assistant</text>
+
+                        <!-- Autocomplete -->
+                        <rect x="0" y="330" width="240" height="42" rx="6" fill="#FFFFFF" stroke="#0284C7" stroke-width="1.5"/>
+                        <text x="120" y="356" font-size="13" font-weight="bold" fill="#1F2937" text-anchor="middle">Autocomplete</text>
+
+                        <!-- Plagiarism Detector -->
+                        <rect x="0" y="385" width="240" height="42" rx="6" fill="#FFFFFF" stroke="#0284C7" stroke-width="1.5"/>
+                        <text x="120" y="411" font-size="13" font-weight="bold" fill="#1F2937" text-anchor="middle">Plagiarism Detector</text>
+                    </g>
+                </g>
+
+                <!-- ========================================== -->
+                <!-- CENTER CONTAINER: SUGGESTION FUSION ENGINE -->
+                <!-- ========================================== -->
+                <g transform="translate(370, 50)">
+                    <rect width="760" height="730" rx="14" fill="#F8FAFC" stroke="#0F4C81" stroke-width="2.5" stroke-dasharray="10,6" filter="url(#shadow)"/>
+                    <text x="380" y="35" font-size="18" font-weight="bold" fill="#0F4C81" text-anchor="middle">Suggestion Fusion Engine</text>
+
+                    <!-- 1. Suggestion Collector -->
+                    <g transform="translate(30, 60)">
+                        <rect width="700" height="75" rx="8" fill="#2563EB" stroke="#1D4ED8" stroke-width="1.5" filter="url(#shadow)"/>
+                        <text x="350" y="28" font-size="15" font-weight="bold" fill="#FFFFFF" text-anchor="middle">Suggestion Collector</text>
+                        <text x="350" y="50" font-size="12" fill="#E2E8F0" text-anchor="middle">• Collect plugin outputs • Normalize suggestion format • Preserve metadata</text>
+                    </g>
+
+                    <!-- Arrow Collector -> Validator -->
+                    <line x1="380" y1="145" x2="380" y2="165" stroke="#0F4C81" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+                    <!-- 2. Suggestion Validator -->
+                    <g transform="translate(30, 170)">
+                        <rect width="700" height="75" rx="8" fill="#2563EB" stroke="#1D4ED8" stroke-width="1.5" filter="url(#shadow)"/>
+                        <text x="350" y="28" font-size="15" font-weight="bold" fill="#FFFFFF" text-anchor="middle">Suggestion Validator</text>
+                        <text x="350" y="50" font-size="12" fill="#E2E8F0" text-anchor="middle">• Validate suggestion structure • Remove invalid entries • Filter duplicates</text>
+                    </g>
+
+                    <!-- Arrow Validator -> Conflict Resolution -->
+                    <line x1="380" y1="255" x2="380" y2="275" stroke="#0F4C81" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+                    <!-- 3. Conflict Resolution Engine -->
+                    <g transform="translate(30, 280)">
+                        <rect width="700" height="75" rx="8" fill="#2563EB" stroke="#1D4ED8" stroke-width="1.5" filter="url(#shadow)"/>
+                        <text x="350" y="28" font-size="15" font-weight="bold" fill="#FFFFFF" text-anchor="middle">Conflict Resolution Engine</text>
+                        <text x="350" y="50" font-size="12" fill="#E2E8F0" text-anchor="middle">• Detect conflicting edits • Select best candidate • Resolve overlaps</text>
+                    </g>
+
+                    <!-- Arrow Conflict -> Merge Engine -->
+                    <line x1="380" y1="365" x2="380" y2="385" stroke="#0F4C81" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+                    <!-- 4. Merge Engine -->
+                    <g transform="translate(30, 390)">
+                        <rect width="700" height="75" rx="8" fill="#2563EB" stroke="#1D4ED8" stroke-width="1.5" filter="url(#shadow)"/>
+                        <text x="350" y="28" font-size="15" font-weight="bold" fill="#FFFFFF" text-anchor="middle">Merge Engine</text>
+                        <text x="350" y="50" font-size="12" fill="#E2E8F0" text-anchor="middle">• Merge compatible suggestions • Combine adjacent edits • Consolidate recommendations</text>
+                    </g>
+
+                    <!-- Arrow Merge -> Confidence Ranking -->
+                    <line x1="380" y1="475" x2="380" y2="495" stroke="#0F4C81" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+                    <!-- 5. Confidence Ranking -->
+                    <g transform="translate(30, 500)">
+                        <rect width="700" height="75" rx="8" fill="#2563EB" stroke="#1D4ED8" stroke-width="1.5" filter="url(#shadow)"/>
+                        <text x="350" y="28" font-size="15" font-weight="bold" fill="#FFFFFF" text-anchor="middle">Confidence Ranking</text>
+                        <text x="350" y="50" font-size="12" fill="#E2E8F0" text-anchor="middle">• Calculate confidence score • Apply plugin weighting • Rank suggestions</text>
+                    </g>
+
+                    <!-- Arrow Confidence -> Priority Manager -->
+                    <line x1="380" y1="585" x2="380" y2="605" stroke="#0F4C81" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+                    <!-- 6. Priority Manager -->
+                    <g transform="translate(30, 610)">
+                        <rect width="700" height="75" rx="8" fill="#2563EB" stroke="#1D4ED8" stroke-width="1.5" filter="url(#shadow)"/>
+                        <text x="350" y="28" font-size="15" font-weight="bold" fill="#FFFFFF" text-anchor="middle">Priority Manager</text>
+                        <text x="350" y="50" font-size="12" fill="#E2E8F0" text-anchor="middle">• Critical, High, Medium, Low priority ordering &amp; classification</text>
+                    </g>
+                </g>
+
+                <!-- Arrow Priority Manager -> Patch Generator -->
+                <line x1="750" y1="785" x2="750" y2="815" stroke="#0F4C81" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+                <!-- 7. Patch Generator (Spans below Fusion Engine container) -->
+                <g transform="translate(370, 820)">
+                    <rect width="760" height="85" rx="10" fill="#0F4C81" stroke="#0A365F" stroke-width="2" filter="url(#shadow)"/>
+                    <text x="380" y="30" font-size="16" font-weight="bold" fill="#FFFFFF" text-anchor="middle">Patch Generator</text>
+                    <text x="380" y="55" font-size="13" fill="#E2E8F0" text-anchor="middle">• Generate final document edits • Preserve formatting • Produce edit operations</text>
+                </g>
+
+                <!-- ========================================== -->
+                <!-- BOTTOM: AI RUNTIME                         -->
+                <!-- ========================================== -->
+                <g transform="translate(370, 940)">
+                    <rect width="760" height="110" rx="12" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2" filter="url(#shadow)"/>
+                    <text x="380" y="30" font-size="16" font-weight="bold" fill="#6D28D9" text-anchor="middle">AI Runtime (Semantic &amp; Context Verification)</text>
+                    <line x1="40" y1="42" x2="720" y2="42" stroke="#DDD6FE" stroke-width="1"/>
+                    <text x="380" y="65" font-size="13" fill="#5B21B6" text-anchor="middle">• Semantic validation • Confidence adjustment • Context verification • Ranking assistance</text>
+                    <text x="380" y="85" font-size="12" fill="#7C3AED" text-anchor="middle" font-style="italic">Bidirectional integration with Merge Engine &amp; Confidence Ranking</text>
+                </g>
+
+                <!-- Bidirectional Connection: Merge & Confidence <-> AI Runtime -->
+                <path d="M 330 450 L 300 450 L 300 995 L 365 995" fill="none" stroke="#7C3AED" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrow-ai)"/>
+                <path d="M 365 975 L 285 975 L 285 550 L 365 550" fill="none" stroke="#7C3AED" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrow-ai)"/>
+
+                <!-- ========================================== -->
+                <!-- RIGHT SECTION: UNIFIED SUGGESTIONS         -->
+                <!-- ========================================== -->
+                <g transform="translate(1160, 50)">
+                    <rect width="350" height="920" rx="12" fill="#DCFCE7" stroke="#22C55E" stroke-width="2" filter="url(#shadow)"/>
+                    <text x="175" y="35" font-size="16" font-weight="bold" fill="#15803D" text-anchor="middle">Unified Suggestions</text>
+                    <text x="175" y="55" font-size="12" fill="#166534" text-anchor="middle">Final Synchronized Output Package</text>
+
+                    <!-- Output Items -->
+                    <g transform="translate(25, 75)">
+                        <rect x="0" y="0" width="300" height="42" rx="6" fill="#FFFFFF" stroke="#22C55E" stroke-width="1.5"/>
+                        <text x="15" y="26" font-size="13" font-weight="bold" fill="#1F2937">Final Ranked Suggestions</text>
+
+                        <rect x="0" y="55" width="300" height="42" rx="6" fill="#FFFFFF" stroke="#22C55E" stroke-width="1.5"/>
+                        <text x="15" y="81" font-size="13" font-weight="bold" fill="#1F2937">Grammar Corrections</text>
+
+                        <rect x="0" y="110" width="300" height="42" rx="6" fill="#FFFFFF" stroke="#22C55E" stroke-width="1.5"/>
+                        <text x="15" y="136" font-size="13" font-weight="bold" fill="#1F2937">Spelling Corrections</text>
+
+                        <rect x="0" y="165" width="300" height="42" rx="6" fill="#FFFFFF" stroke="#22C55E" stroke-width="1.5"/>
+                        <text x="15" y="191" font-size="13" font-weight="bold" fill="#1F2937">Translation Recommendations</text>
+
+                        <rect x="0" y="220" width="300" height="42" rx="6" fill="#FFFFFF" stroke="#22C55E" stroke-width="1.5"/>
+                        <text x="15" y="246" font-size="13" font-weight="bold" fill="#1F2937">Summary &amp; Citations</text>
+
+                        <rect x="0" y="275" width="300" height="42" rx="6" fill="#FFFFFF" stroke="#22C55E" stroke-width="1.5"/>
+                        <text x="15" y="301" font-size="13" font-weight="bold" fill="#1F2937">Style Improvements</text>
+
+                        <rect x="0" y="330" width="300" height="42" rx="6" fill="#FFFFFF" stroke="#22C55E" stroke-width="1.5"/>
+                        <text x="15" y="356" font-size="13" font-weight="bold" fill="#1F2937">Autocomplete Snippets</text>
+
+                        <rect x="0" y="385" width="300" height="42" rx="6" fill="#FFFFFF" stroke="#22C55E" stroke-width="1.5"/>
+                        <text x="15" y="411" font-size="13" font-weight="bold" fill="#1F2937">Plagiarism Warnings</text>
+
+                        <rect x="0" y="440" width="300" height="50" rx="6" fill="#15803D" stroke="#166534" stroke-width="1.5"/>
+                        <text x="150" y="26" font-size="14" font-weight="bold" fill="#FFFFFF" text-anchor="middle">Document Patch</text>
+                        <text x="150" y="42" font-size="11" fill="#DCFCE7" text-anchor="middle">Ready for Office.js Rendering</text>
+                    </g>
+                </g>
+
+                <!-- ========================================== -->
+                <!-- CONNECTING FLOW ARROWS                     -->
+                <!-- ========================================== -->
+                
+                <!-- Plugins to Fusion Engine (Collector) -->
+                <path d="M 320 250 L 370 250" fill="none" stroke="#0F4C81" stroke-width="3" marker-end="url(#arrow)"/>
+
+                <!-- Patch Generator to Unified Suggestions -->
+                <path d="M 1130 862.5 L 1160 862.5" fill="none" stroke="#15803D" stroke-width="3" marker-end="url(#arrow-accent)"/>
+
+            </svg>
+        </div>
+
+        <div class="caption">
+            <strong>Figure 7.</strong> Suggestion Fusion Engine Architecture of the Tibetan Editor Enterprise Architecture (TEEA), illustrating how outputs from multiple intelligent feature plugins are collected, validated, merged, conflict-resolved, ranked by confidence, and transformed into a unified set of writing suggestions while leveraging AI-assisted semantic verification.
+        </div>
+    </div>
+</body>
+</html>
