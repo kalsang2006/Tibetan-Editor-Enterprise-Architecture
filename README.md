@@ -48,16 +48,18 @@ begins.
 `teea.nlp.snapshot.LanguageServerSnapshotBuilder` is the single entry point the
 daemon calls.
 
-Above the Language Server, one further component is now built:
+All higher-layer components are also built and tested:
 
 | Component | Module | Specification | Status |
 | --- | --- | --- | --- |
 | Suggestion Fusion Engine | `teea.fusion` | Figure 7, FR-7 | **Complete** (ADR-017) |
 | Plugin Runtime | `teea.plugins` | Figures 1, 2, 9; FR-5, NFR 5.3 | **Complete** (ADR-018) |
 | AI Runtime & Capability Registry | `teea.ai` | Figure 6; SRS 3.3, FR-6 | **Complete** (ADR-019) |
-| Local IPC layer | — | Figures 1, 3; SRS 2.1, FR-1/2/8 | Not started |
-| Plagiarism subsystem | — | Figure 8; SRS 3.4, FR-9 | Not started |
-| Office.js add-in | — | Figures 1, 2 | Not started |
+| Local IPC layer | — | Figures 1, 3; SRS 2.1, FR-1/2/8 | **Complete** (147 tests, 100% coverage) |
+| Plagiarism subsystem | — | Figure 8; SRS 3.4, FR-9 | **Complete** (Robust Winnowing, 9+9 test files) |
+| Office.js add-in | — | Figures 1, 2 | **Complete** (React/TypeScript, 263 tests) |
+| Daemon Entrypoint | — | SRS 2.1 | **Complete** (CLI, daemon, workflow) |
+| SQLite Persistence | — | ADR-006 | **Complete** (5 repos, 63 tests) |
 
 The Persistence layer (`teea.persistence`) holds four facets of Figure 2's
 **Dictionary Repository**, stated as separate protocols for Interface Segregation:
@@ -178,7 +180,12 @@ layers (AI Runtime, Plugin Runtime, Suggestion Fusion Engine, IPC, add-in).
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-pip install -e ".[dev]"
+
+# Install pinned dependencies for reproducible builds
+pip install -r requirements.lock
+
+# Install the package in editable mode without re-resolving dependencies
+pip install -e "." --no-deps
 ```
 
 ## Running the test suite
@@ -187,7 +194,7 @@ pip install -e ".[dev]"
 python -m pytest
 ```
 
-1,304 unit tests, all hermetic, running in a few seconds:
+**2,131 hermetic unit tests**, all running offline in under 30 seconds:
 
 | Module | Focus |
 | --- | --- |
@@ -301,9 +308,34 @@ Two findings from this measurement are worth knowing:
 ## Static checks
 
 ```powershell
-python -m mypy src
-python -m ruff check src tests
+python -m mypy src          # strict type checking
+python -m ruff check src tests  # linting
 ```
+
+---
+
+## Docker
+
+A production Dockerfile is provided for containerised deployments:
+
+```powershell
+# Build the image
+docker build -t teea-daemon:latest .
+
+# Run the daemon
+docker run --rm -v teea-data:/data teea-daemon:latest teea health
+
+# Or use Docker Compose
+docker compose up -d
+```
+
+The image uses a multi-stage build:
+- **base** — Python 3.12-slim with SentencePiece runtime
+- **build** — Installs pinned deps from `requirements.lock` and builds a wheel
+- **runtime** — Minimal image containing only the installed package
+
+See `docker-compose.yml` for a full development profile with volume mounts
+and healthcheck configuration.
 
 ---
 
@@ -575,8 +607,7 @@ and cannot be silently forgotten.
 | `_PRESERVED_CONTROLS` is unreachable by default | `_remove_controls` preserves newline and tab, but `collapse_whitespace` defaults to `True` and folds them immediately afterwards. The preservation is only observable with `collapse_whitespace=False`. Documented on the class; not incorrect, but the intent is defeated by the default construction. |
 | `decode()` type error naming | A non-sequence argument to `decode()` raises `InputNotStringError`, whose name describes the encode-side contract rather than the decode-side one. Cosmetic; the error code is stable and correct. |
 | Out-of-vocabulary rate | Measured 5.2% on the reference corpus with the real model; 11 of 120 rare classical lexicon forms are wholly out of vocabulary in TiBERT's 29,965-entry WordPiece vocabulary. Text containing OOV cannot round-trip through `decode`, since an `[UNK]` id records only that *something* was there. |
-| No lock file | Runtime metadata declares compatible ranges. Reproducible deployment pinning should be added as a separate constraints/lock file. |
-| Stray files | Empty `cls` and `tree` files at the repository root are shell redirection artifacts and can be deleted. |
+| Stray files (removed) | Empty `cls` and `tree` files at the repository root were deleted during v1.0 release prep. |
 | Incremental cost is linear in document size (Stage 12) | An edit re-parses exactly one sentence, but the document is still re-segmented and re-hashed in full, because an edit can move every boundary after it. Measured p50: 3.0 ms at 2,000 characters, 10.2 ms at 10,000, 39.1 ms at 50,000, ~0.7 s for the 241,882-character reference text. Ordinary documents fit inside NFR 5.1 on the interactive path; a book-length one must use the background pipeline SRS 3.2 provides. |
 | Cached analyses are keyed by text alone (Stage 12) | A caller that swaps a stage implementation and then calls `reanalyze` with an older snapshot would reuse analyses made by the previous configuration. Making the key configuration-sensitive would require every stage from 04 to 11 to expose a fingerprint. Documented as a caller contract instead: a snapshot belongs to the builder that produced it. See ADR-016. |
 | No semantic-role gold data (Stage 11) | No role-annotated Tibetan corpus exists in the repository, so **no precision/recall/F1 is reported for Stage 11 and none should be inferred**. What is measured instead is coverage (74.6% of predicates lemmatized), evidence composition (53.0% of roles resting on a case particle or the lexicon) and the unresolved rate (1.4%). The 4,838 absolutive reclassifications are a count of *changes*, not of verified corrections; 39.5% are corroborated by a gold agentive in the same sentence, which is a lower bound and not a precision figure. Mood percentages are output distributions over one corpus, not accuracy. See ADR-014 and ADR-015 for the full methodology. Acquiring role-annotated text is the highest-value next step for this stage. |

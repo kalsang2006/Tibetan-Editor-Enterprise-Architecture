@@ -2,29 +2,27 @@
 
 from __future__ import annotations
 
-import pytest
-
 from teea.plagiarism.fingerprinting import hash_set, normalize_and_fingerprint
 from teea.plagiarism.models import Fingerprint
 
 
 class TestNormalizeAndFingerprint:
     def test_empty_text_returns_empty_set(self) -> None:
-        text, fps = normalize_and_fingerprint("")
-        assert text == ""
+        _text, fps = normalize_and_fingerprint("")
+        assert _text == ""
         assert fps == frozenset()
 
     def test_short_text_returns_empty_set(self) -> None:
-        text, fps = normalize_and_fingerprint("ab")
+        _, fps = normalize_and_fingerprint("ab")
         assert fps == frozenset()
 
     def test_normalizes_unicode(self) -> None:
-        text, fps = normalize_and_fingerprint("a\u0301b", kgram_size=2, winnow_window=2)
-        # NFC normalization combines a+´ → á
-        assert "\u00e1" in text
+        nfc_text, _fps = normalize_and_fingerprint("a\u0301b", kgram_size=2, winnow_window=2)
+        # NFC normalization combines a+COMBINING ACUTE ACCENT into LATIN SMALL LETTER A WITH ACUTE
+        assert "\u00e1" in nfc_text
 
     def test_produces_fingerprints(self) -> None:
-        text, fps = normalize_and_fingerprint(
+        _, fps = normalize_and_fingerprint(
             "the quick brown fox jumps over the lazy dog",
             kgram_size=6,
             winnow_window=4,
@@ -33,17 +31,15 @@ class TestNormalizeAndFingerprint:
         assert all(isinstance(fp, Fingerprint) for fp in fps)
 
     def test_same_text_produces_same_hashes(self) -> None:
-        _, fps1 = normalize_and_fingerprint(
-            "hello world this is a test",
-            kgram_size=4,
-            winnow_window=3,
-        )
-        _, fps2 = normalize_and_fingerprint(
-            "hello world this is a test",
-            kgram_size=4,
-            winnow_window=3,
-        )
-        assert fps1 == fps2
+        f1, f2 = [
+            normalize_and_fingerprint(
+                "hello world this is a test",
+                kgram_size=4,
+                winnow_window=3,
+            )[1]
+            for _ in range(2)
+        ]
+        assert f1 == f2
 
     def test_tibetan_text(self) -> None:
         text = "བཀྲ་ཤིས་བདེ་ལེགས།"

@@ -8,6 +8,16 @@ from pathlib import Path
 import pytest
 
 from teea.cli import main
+from teea.core.config import load_settings
+from teea.daemon import create_daemon
+from teea.workflow import (
+    analyze_text,
+    full_workflow,
+    load_document,
+    save_json,
+    save_text,
+    snapshot_to_text,
+)
 
 
 def test_no_args_prints_help(capsys: pytest.CaptureFixture[str]) -> None:
@@ -31,8 +41,6 @@ def test_config_works() -> None:
 
 def test_config_json_output(tmp_path: Path) -> None:
     """Config JSON output can be verified via stdout redirect."""
-    import io, sys
-    from teea.core.config import load_settings
     settings = load_settings()
     data = settings.model_dump(mode="json")
     assert isinstance(data, dict)
@@ -40,7 +48,6 @@ def test_config_json_output(tmp_path: Path) -> None:
 
 def test_health_direct() -> None:
     """Health check works end-to-end."""
-    from teea.daemon import create_daemon
     daemon = create_daemon()
     diag = daemon.diagnose()
     assert "version" in diag
@@ -69,8 +76,6 @@ def test_format_file_not_found(capsys: pytest.CaptureFixture[str]) -> None:
 
 def test_analyze_outputs_json(tmp_path: Path) -> None:
     """Test the analyze pipeline writes JSON output correctly."""
-    from teea.workflow import analyze_text, load_document
-
     text = "བཀྲ་ཤིས་བདེ་ལེགས།"
     file = tmp_path / "input.txt"
     file.write_text(text, encoding="utf-8")
@@ -83,7 +88,6 @@ def test_analyze_outputs_json(tmp_path: Path) -> None:
         "snapshot": snapshot.model_dump(mode="json"),
     }
     out = tmp_path / "out.json"
-    import json
     with open(str(out), "w", encoding="utf-8") as f:
         json.dump(result, f, indent=2, ensure_ascii=False)
     assert out.exists()
@@ -94,8 +98,6 @@ def test_analyze_outputs_json(tmp_path: Path) -> None:
 
 def test_format_saves_report(tmp_path: Path) -> None:
     """Test format via direct workflow call (avoids structlog)."""
-    from teea.workflow import analyze_text, load_document, save_text, snapshot_to_text
-
     text = "བཀྲ་ཤིས་བདེ་ལེགས།"
     file = tmp_path / "input.txt"
     file.write_text(text, encoding="utf-8")
@@ -109,8 +111,6 @@ def test_format_saves_report(tmp_path: Path) -> None:
 
 
 def test_format_with_json_flag(tmp_path: Path) -> None:
-    from teea.workflow import analyze_text, load_document, save_json
-
     text = "བཀྲ་ཤིས་བདེ་ལེགས།"
     file = tmp_path / "input.txt"
     file.write_text(text, encoding="utf-8")
@@ -124,8 +124,6 @@ def test_format_with_json_flag(tmp_path: Path) -> None:
 
 
 def test_workflow_with_json_output(tmp_path: Path) -> None:
-    from teea.workflow import full_workflow
-
     text = "བཀྲ་ཤིས་བདེ་ལེགས།"
     file = tmp_path / "input.txt"
     file.write_text(text, encoding="utf-8")
@@ -137,8 +135,6 @@ def test_workflow_with_json_output(tmp_path: Path) -> None:
 
 
 def test_workflow_on_real_tibetan(tmp_path: Path) -> None:
-    from teea.workflow import full_workflow
-
     text = "བཀྲ་ཤིས་བདེ་ལེགས།"
     file = tmp_path / "input.txt"
     file.write_text(text, encoding="utf-8")

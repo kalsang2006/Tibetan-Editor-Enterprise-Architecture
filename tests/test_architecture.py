@@ -184,7 +184,10 @@ def test_the_language_layer_never_imports_the_fusion_engine() -> None:
 
 #: Runtime Layer components, from Figure 1, in dependency order. Each may use the
 #: ones before it; none may reach forward.
-RUNTIME_LAYERS = ("teea.ai", "teea.fusion", "teea.ipc", "teea.nlp", "teea.plagiarism", "teea.plugins")
+RUNTIME_LAYERS = (
+    "teea.ai", "teea.fusion", "teea.ipc", "teea.nlp",
+    "teea.plagiarism", "teea.plugins",
+)
 
 
 def test_the_ipc_layer_depends_only_on_core() -> None:
@@ -210,11 +213,74 @@ def test_nothing_else_imports_the_ipc_layer() -> None:
     The daemon composes IPC with the rest; the rest does not reach for IPC. This
     is what lets the whole analysis stack run in-process with no transport at
     all, as every other test module does.
+
+    ``teea.transport`` is the one deliberate exception, and it is scoped by
+    ``test_the_transport_layer_may_only_reuse_ipc_models`` to
+    ``teea.ipc.models`` alone: a second HTTP boundary reusing ADR-020's wire
+    vocabulary (``IpcRequest``, ``IpcResponse``, ``IpcFault``) is the
+    specification's own "reuse existing shapes, do not build parallel
+    messaging infrastructure" instruction, not a new coupling to the protocol
+    engine those models happen to live beside.
     """
     violations = {
         name: sorted(t for t in targets if t.startswith("teea.ipc"))
         for name, targets in IMPORTS.items()
-        if not name.startswith("teea.ipc") and name != "teea.daemon"
+        if not name.startswith("teea.ipc")
+        and name != "teea.daemon"
+        and not name.startswith("teea.transport")
+    }
+    assert not any(violations.values()), violations
+
+
+def test_the_transport_layer_may_only_reuse_ipc_models() -> None:
+    """``teea.transport`` may share ADR-020's wire shapes, never its engine.
+
+    The one exception ``test_nothing_else_imports_the_ipc_layer`` carves out is
+    for ``teea.ipc.models`` alone. Importing ``teea.ipc.server``,
+    ``teea.ipc.client``, ``teea.ipc.transport`` or ``teea.ipc.codec`` would
+    couple a second transport boundary to the first one's protocol engine --
+    exactly the coupling neither boundary needs, and the reason ``teea.ipc``
+    holds its message models in their own module in the first place.
+    """
+    allowed = "teea.ipc.models"
+    violations = {
+        name: sorted(t for t in targets if t.startswith("teea.ipc") and t != allowed)
+        for name, targets in IMPORTS.items()
+        if name.startswith("teea.transport")
+    }
+    assert not any(violations.values()), violations
+
+
+def test_the_transport_layer_never_imports_persistence() -> None:
+    """``teea.transport`` bridges the add-in to the runtime layer, not storage.
+
+    A bridge in this package calls straight into the collaborators a caller
+    hands it -- the Language Server, the Plugin Runtime, the Fusion Engine, the
+    AI Runtime -- never into the Dictionary Repository. Reaching into
+    persistence directly would duplicate the daemon's own composition role
+    instead of staying a thin adapter over handlers someone else built.
+    """
+    violations = {
+        name: sorted(t for t in targets if t.startswith("teea.persistence"))
+        for name, targets in IMPORTS.items()
+        if name.startswith("teea.transport")
+    }
+    assert not any(violations.values()), violations
+
+
+def test_nothing_imports_the_transport_layer() -> None:
+    """Nothing the transport bridges to may depend on the bridge itself.
+
+    No daemon entry point composes ``teea.transport`` yet -- building one is a
+    separate decision (host, port and lifecycle conventions nobody has signed
+    off on). Until it exists, every collaborator a bridge serves must stay
+    testable, and constructible, with no HTTP server ever started, exactly as
+    the existing handler tests do.
+    """
+    violations = {
+        name: sorted(t for t in targets if t.startswith("teea.transport"))
+        for name, targets in IMPORTS.items()
+        if not name.startswith("teea.transport")
     }
     assert not any(violations.values()), violations
 
@@ -282,7 +348,13 @@ def test_nothing_below_the_plugin_runtime_imports_it() -> None:
     dependency the other way would make the microkernel a prerequisite for the
     components it exists to connect.
     """
-    application = {"teea.cli", "teea.daemon", "teea.workflow", "teea.__main__"}
+    application = {
+        "teea.cli",
+        "teea.daemon",
+        "teea.workflow",
+        "teea.__main__",
+        "teea.transport.analysis_server",
+    }
     violations = {
         name: sorted(target for target in targets if target.startswith("teea.plugins"))
         for name, targets in IMPORTS.items()
@@ -311,6 +383,7 @@ def test_every_top_level_package_is_a_known_architectural_layer() -> None:
         "teea.core",
         "teea.persistence",
         "teea.plagiarism",
+        "teea.transport",
         *RUNTIME_LAYERS,
         "teea.__main__",
         "teea.cli",

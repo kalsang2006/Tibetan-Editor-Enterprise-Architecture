@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import pydantic
+import pytest
+
 from teea.plagiarism.config import PlagiarismSettings
 
 
@@ -29,16 +32,10 @@ class TestPlagiarismSettings:
         assert settings.min_similarity == 0.2
 
     def test_kgram_must_be_gt_1(self) -> None:
-        try:
+        with pytest.raises(ValueError):
             PlagiarismSettings(kgram_size=1)
-            assert False, "should have raised"
-        except Exception:
-            pass
 
     def test_frozen(self) -> None:
         settings = PlagiarismSettings()
-        try:
+        with pytest.raises(pydantic.ValidationError):
             settings.kgram_size = 10  # type: ignore[misc]
-            assert False, "should have raised"
-        except Exception:
-            pass

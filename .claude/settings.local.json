@@ -18,7 +18,23 @@
       "Bash(python -m ruff check src)",
       "Bash(PYTHONIOENCODING=utf-8 cat src/teea/nlp/tokenization/__init__.py)",
       "Bash(PYTHONIOENCODING=utf-8 python \"C:/Users/kalsa/AppData/Local/Temp/claude/C--Users-kalsa-Desktop-Tibetan-Editor-Enterprise-Architecture/ecc23ae0-6d90-4534-8b64-8624e501c73a/scratchpad/probe4.py\")",
-      "Bash(python -m ruff check src --output-format=concise)"
+      "Bash(python -m ruff check src --output-format=concise)",
+      "Bash(git -C .claude/worktrees/lead-orchestrator-setup-0fa034 status)",
+      "Bash(git -C .claude/worktrees/lead-orchestrator-setup-0fa034 log --oneline -15)",
+      "Bash(python -m pytest tests/test_architecture.py tests/transport -q)",
+      "Bash(python -m pytest tests/test_architecture.py tests/transport tests/test_daemon.py -q)",
+      "Bash(python -m pytest -q)",
+      "Bash(python -m mypy src/teea/transport tests/transport)",
+      "Bash(python -m ruff check src/teea/transport tests/transport tests/test_architecture.py)",
+      "Bash(git stash *)",
+      "Bash(python -m ruff check tests/test_architecture.py)",
+      "Bash(mkdir -p addin/src/taskpane/components addin/src/taskpane/hooks addin/src/taskpane/services addin/src/taskpane/types addin/test)",
+      "Bash(cp __TRACKED_VAR__/eslint.config.mjs addin/)",
+      "Bash(cp __TRACKED_VAR__/jest.config.js addin/)",
+      "Bash(cp __TRACKED_VAR__/manifest.xml addin/)",
+      "Bash(cp __TRACKED_VAR__/package.json addin/)",
+      "Bash",
+      "claude--dangerously-skip-permissions"
     ]
   }
 }

@@ -1,0 +1,45 @@
+# TEEA Docker Compose
+#
+# Development profile:
+#   docker compose up          # starts the daemon
+#
+# The Office.js add-in runs in the user's browser (Word) and connects to
+# the daemon via the Windows named pipe, so it is not containerised.
+#
+# Production:
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up
+
+version: "3.9"
+
+services:
+  daemon:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: teea-daemon:latest
+    container_name: teea-daemon
+    hostname: teea-daemon
+    # Reserved for future HTTP transport (not active in v1.0.0)
+    # ports:
+    #   - "127.0.0.1:8500:8500"
+    volumes:
+      # Persistent SQLite database and model cache
+      - teea-data:/data
+      # Mount the local source for hot-reload during development
+      - ./src:/app/src:ro
+    environment:
+      - TEEA_DATA_DIR=/data
+      - TEEA_LOG_LEVEL=INFO
+      - TEEA_LOG_JSON=true
+      - TEEA_TOKENIZATION__MODEL_CACHE_DIR=/data/models
+      - HF_HUB_OFFLINE=false
+    healthcheck:
+      test: ["CMD", "teea", "health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    restart: unless-stopped
+
+volumes:
+  teea-data:

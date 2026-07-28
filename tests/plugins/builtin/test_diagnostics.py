@@ -2,7 +2,16 @@
 
 from __future__ import annotations
 
+from teea.core.types import TextSpan
+from teea.nlp.dependency import DependencyNode, DependencyRelation, DependencyTree
+from teea.nlp.morphology.models import Morpheme, MorphemeKind
+from teea.nlp.ner import EntityAnnotation
+from teea.nlp.postagging.models import PosCategory, TaggedMorpheme
+from teea.nlp.segmentation import Sentence
+from teea.nlp.semantics import SemanticGraph
 from teea.nlp.snapshot import DocumentSnapshot, SentenceAnalysis
+from teea.nlp.snapshot.hashing import sentence_hash
+from teea.nlp.terminology import TerminologyAnnotation
 from teea.plugins.builtin.diagnostics import DocumentDiagnosticsPlugin
 
 
@@ -24,15 +33,6 @@ def test_examine_empty_snapshot() -> None:
 
 def test_examine_with_analyses_has_stats() -> None:
     plugin = DocumentDiagnosticsPlugin()
-    from teea.core.types import TextSpan
-    from teea.nlp.dependency import DependencyNode, DependencyRelation, DependencyTree
-    from teea.nlp.morphology.models import Morpheme, MorphemeKind
-    from teea.nlp.ner import EntityAnnotation
-    from teea.nlp.segmentation import Sentence
-    from teea.nlp.semantics import SemanticGraph
-    from teea.nlp.terminology import TerminologyAnnotation
-    from teea.nlp.postagging.models import PosCategory, TaggedMorpheme
-    from teea.nlp.snapshot.hashing import sentence_hash
 
     text = "བཀྲ"
     span = TextSpan(char_start=0, char_end=3, byte_start=0, byte_end=9)

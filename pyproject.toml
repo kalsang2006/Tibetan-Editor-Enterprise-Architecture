@@ -4,12 +4,12 @@ build-backend = "hatchling.build"
 
 [project]
 name = "teea"
-version = "0.1.0"
+version = "1.0.0"
 description = "Tibetan Editor Enterprise Architecture (TEEA) — core NLP platform. Tokenization module (TiBERT-backed)."
 readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "Proprietary" }
-authors = [{ name = "TEEA" }]
+authors = [{ name = "TEEA Contributors" }]
 keywords = ["tibetan", "nlp", "tokenization", "tibert", "word"]
 
 # Runtime dependencies for the tokenization module.

@@ -1,0 +1,106 @@
+# TEEA CI — run on every push and pull request
+#
+# Two independent jobs validate the Python backend and the TypeScript add-in.
+# Both must pass for the workflow to succeed.  Dependencies are cached across
+# runs so that a sequence of pushes on the same branch rebuilds quickly.
+#
+# The hermetic test filter (``-m 'not integration'``) is applied by default in
+# ``pyproject.toml``, so the Python job runs entirely offline.  Integration
+# tests that need the real TiBERT model are excluded.
+
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+env:
+  PYTHONIOENCODING: utf-8
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ── Python backend (Windows) ───────────────────────────────────────────────
+  # Windows is required: ``WindowsNamedPipeTransport`` (ADR-020) calls
+  # ``WinDLL("kernel32")`` at import time, which only works on Windows.
+  python:
+    name: Python (ruff → mypy → pytest)
+    runs-on: windows-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.lock
+
+      - name: Install pinned dependencies from lock file
+        shell: bash
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.lock
+          pip install -e "." --no-deps
+
+      - name: Lint with ruff
+        shell: bash
+        run: python -m ruff check src tests
+
+      - name: Static types with mypy (strict)
+        shell: bash
+        run: python -m mypy src
+
+      - name: Run hermetic tests with pytest
+        shell: bash
+        run: python -m pytest -q --tb=short
+
+  # ── TypeScript add-in (cross-platform) ─────────────────────────────────────
+  typescript:
+    name: TypeScript (tsc → eslint → jest → webpack)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    defaults:
+      run:
+        working-directory: addin
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+          cache-dependency-path: addin/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type-check with tsc
+        run: npm run typecheck
+
+      - name: Lint with eslint
+        run: npm run lint
+
+      - name: Run tests with jest
+        run: npm test
+
+      - name: Build production bundle with webpack
+        run: npm run build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: teea-addin-dist
+          path: addin/dist/
+          retention-days: 7

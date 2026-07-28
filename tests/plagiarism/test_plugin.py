@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from teea.nlp.snapshot import DocumentSnapshot
 from teea.plagiarism.engine import PlagiarismEngine
-from teea.plagiarism.models import FingerprintMatch, MatchResult
 from teea.plugins.builtin.plagiarism import PlagiarismDetectorPlugin
 
 
@@ -63,7 +62,10 @@ class TestPlagiarismDetectorPlugin:
     def test_plugin_uses_correct_priority(self) -> None:
         """High similarity should yield HIGH priority."""
         engine = PlagiarismEngine()
-        engine.add_text("ref", "the quick brown fox jumps over the lazy dog near the river by the woods")
+        engine.add_text(
+            "ref",
+            "the quick brown fox jumps over the lazy dog near the river by the woods",
+        )
         plugin = PlagiarismDetectorPlugin(engine)
         snapshot = DocumentSnapshot(source="the quick brown fox jumps over the lazy dog")
         results = list(plugin.examine(snapshot))

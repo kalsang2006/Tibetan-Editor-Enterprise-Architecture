@@ -16,8 +16,18 @@ def empty_index() -> InMemoryFingerprintIndex:
 @pytest.fixture
 def populated_index() -> InMemoryFingerprintIndex:
     idx = InMemoryFingerprintIndex()
-    idx.add(SourceDocument(document_id="d1", source="hello world", fingerprints=frozenset({1, 2, 3})))
-    idx.add(SourceDocument(document_id="d2", source="goodbye world", fingerprints=frozenset({3, 4, 5})))
+    idx.add(
+        SourceDocument(
+            document_id="d1",
+            source="hello world",
+            fingerprints=frozenset({1, 2, 3}),
+        )
+    )
+    idx.add(
+        SourceDocument(
+            document_id="d2", source="goodbye world", fingerprints=frozenset({3, 4, 5})
+        )
+    )
     idx.add(SourceDocument(document_id="d3", source="foo bar", fingerprints=frozenset({7, 8, 9})))
     return idx
 
@@ -43,7 +53,12 @@ class TestInMemoryFingerprintIndex:
 
     def test_add_duplicate_is_noop(self, populated_index: InMemoryFingerprintIndex) -> None:
         before = populated_index.total_fingerprints
-        populated_index.add(SourceDocument(document_id="d1", source="hello world", fingerprints=frozenset({1, 2, 3})))
+        duplicated = SourceDocument(
+            document_id="d1",
+            source="hello world",
+            fingerprints=frozenset({1, 2, 3}),
+        )
+        populated_index.add(duplicated)
         assert populated_index.total_fingerprints == before
 
     def test_remove_existing(self, populated_index: InMemoryFingerprintIndex) -> None:
@@ -63,7 +78,8 @@ class TestInMemoryFingerprintIndex:
         assert populated_index.size == 3
 
     def test_total_fingerprints(self, populated_index: InMemoryFingerprintIndex) -> None:
-        assert populated_index.total_fingerprints == 9  # 3 docs × 3 fingerprints each
+        # 3 docs x 3 fingerprints each
+        assert populated_index.total_fingerprints == 9
 
     def test_document_ids(self, populated_index: InMemoryFingerprintIndex) -> None:
         ids = list(populated_index.document_ids())

@@ -19,5 +19,11 @@ htmlcov/
 
 # OS
 .DS_Store
-Thumbs.dbnode_modules/
+Thumbs.db
+node_modules/
 addin/node_modules/
+
+# Build outputs
+dist/
+*.egg-info/
+*.whl

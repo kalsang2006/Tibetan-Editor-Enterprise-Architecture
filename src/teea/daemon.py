@@ -9,6 +9,7 @@ from __future__ import annotations
 import threading
 from collections.abc import Mapping
 from concurrent.futures import Executor
+from pathlib import Path
 from typing import Any
 
 from teea import __version__
@@ -44,6 +45,10 @@ class TEEADaemon:
         ai_engine: The AI inference engine (optional).
         plagiarism_engine: The plagiarism detection engine (optional).
         transport: IPC transport (optional).
+        db_path: Path to the SQLite database file for persistent storage.
+            When provided, the daemon uses SQLite-backed repositories
+            instead of in-memory stores.  ``None`` (the default) keeps
+            the existing in-memory behaviour.
     """
 
     def __init__(
@@ -57,6 +62,7 @@ class TEEADaemon:
         ai_engine: InferenceEngine | None = None,
         plagiarism_engine: PlagiarismEngine | None = None,
         transport: Transport | None = None,
+        db_path: Path | str | None = None,
     ) -> None:
         self._settings = load_settings() if settings is None else settings
         configure_logging(level=self._settings.log_level, json_output=self._settings.log_json)
@@ -70,9 +76,35 @@ class TEEADaemon:
         )
         self._fusion = fusion_engine or PriorityRankedFusionEngine()
         self._ai_runtime = LocalAIRuntime(ai_engine) if ai_engine else None
-        self._plagiarism = plagiarism_engine or PlagiarismEngine(
-            settings=self._settings.plagiarism,
-        )
+
+        # Use SQLite-backed persistence when a db_path is provided.
+        self._db_manager: Any = None
+        if db_path is not None:
+            from teea.persistence import DatabaseManager, populate_all  # noqa: PLC0415
+
+            self._db_manager = DatabaseManager(Path(db_path))
+            populate_all(self._db_manager)
+
+        if plagiarism_engine is not None:
+            self._plagiarism = plagiarism_engine
+        elif self._db_manager is not None:
+            # Wire plagiarism engine with SQLite-backed fingerprint storage
+            from teea.persistence import SqliteFingerprintRepository  # noqa: PLC0415
+            from teea.plagiarism.index import InMemoryFingerprintIndex  # noqa: PLC0415
+
+            fp_repo = SqliteFingerprintRepository(self._db_manager)
+            # Pre-load existing fingerprints from SQLite into the in-memory index
+            index = InMemoryFingerprintIndex()
+            for doc in fp_repo.all():
+                index.add(doc)
+            self._plagiarism = PlagiarismEngine(
+                index=index,
+                settings=self._settings.plagiarism,
+            )
+        else:
+            self._plagiarism = PlagiarismEngine(
+                settings=self._settings.plagiarism,
+            )
 
         self._server = IpcServer()
         self._register_handlers()

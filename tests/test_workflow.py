@@ -7,7 +7,9 @@ from pathlib import Path
 
 import pytest
 
-from teea.fusion import Suggestion, SuggestionPriority
+from teea.core.types import TextSpan
+from teea.fusion import PriorityRankedFusionEngine, Suggestion, SuggestionPriority
+from teea.nlp.snapshot import DocumentSnapshot
 from teea.workflow import (
     fuse_suggestions,
     load_document,
@@ -59,7 +61,6 @@ def test_save_text(tmp_path: Path) -> None:
 
 
 def test_snapshot_to_dict_empty() -> None:
-    from teea.nlp.snapshot import DocumentSnapshot
     snapshot = DocumentSnapshot(source="")
     result = snapshot_to_dict(snapshot)
     assert result["source"] == ""
@@ -67,7 +68,6 @@ def test_snapshot_to_dict_empty() -> None:
 
 
 def test_snapshot_to_text_empty() -> None:
-    from teea.nlp.snapshot import DocumentSnapshot
     snapshot = DocumentSnapshot(source="")
     text = snapshot_to_text(snapshot)
     assert "Document: 0 chars, 0 sentences" in text
@@ -79,7 +79,6 @@ def test_fuse_suggestions_empty() -> None:
 
 
 def test_fuse_suggestions_one() -> None:
-    from teea.core.types import TextSpan
     suggestion = Suggestion(
         source="test",
         span=TextSpan(char_start=0, char_end=5, byte_start=0, byte_end=5),
@@ -93,8 +92,6 @@ def test_fuse_suggestions_one() -> None:
 
 
 def test_fuse_suggestions_with_custom_engine() -> None:
-    from teea.core.types import TextSpan
-    from teea.fusion import PriorityRankedFusionEngine
     suggestion = Suggestion(
         source="test",
         span=TextSpan(char_start=0, char_end=5, byte_start=0, byte_end=5),

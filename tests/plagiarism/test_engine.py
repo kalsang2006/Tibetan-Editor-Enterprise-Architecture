@@ -88,8 +88,11 @@ class TestPlagiarismEngine:
         """Engine handles many documents efficiently."""
         engine = PlagiarismEngine()
         for i in range(50):
-            engine.add_text(f"doc_{i}", f"unique text number {i} with some common words here and there")
-        result = engine.detect("unique text number 42 with some common words here and there")
+            text = f"unique text number {i} with some common words here and there"
+            engine.add_text(f"doc_{i}", text)
+        result = engine.detect(
+            "unique text number 42 with some common words here and there"
+        )
         assert result.num_matches > 0
 
     def test_elapsed_ms_recorded(self) -> None:

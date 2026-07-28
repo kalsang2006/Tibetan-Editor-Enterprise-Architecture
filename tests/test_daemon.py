@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 from teea.daemon import TEEADaemon, create_daemon
+from teea.nlp.snapshot import DocumentSnapshot
+from teea.plugins.builtin.diagnostics import DocumentDiagnosticsPlugin
 
 
 def test_create_daemon_defaults() -> None:
@@ -54,11 +56,6 @@ def test_daemon_shutdown() -> None:
 
 
 def test_daemon_with_custom_plugins() -> None:
-    from teea.core.types import TextSpan
-    from teea.fusion import Suggestion, SuggestionPriority
-    from teea.nlp.snapshot import DocumentSnapshot
-    from teea.plugins.interfaces import FeaturePlugin
-
     class CountingPlugin:
         def __init__(self) -> None:
             self.call_count = 0
@@ -78,8 +75,6 @@ def test_daemon_with_custom_plugins() -> None:
 
 
 def test_daemon_diagnose_with_builtin_plugin() -> None:
-    from teea.plugins.builtin.diagnostics import DocumentDiagnosticsPlugin
-
     plugin = DocumentDiagnosticsPlugin()
     daemon = TEEADaemon(plugins=[plugin])
     diag = daemon.diagnose()

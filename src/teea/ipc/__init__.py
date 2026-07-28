@@ -20,7 +20,8 @@ Public API:
   timeouts, cancellation, capability discovery.
 * :class:`Transport`, :class:`MessageCodec`, :class:`RequestHandler` -- the three
   replaceable seams.
-* :class:`LoopbackTransport`, :class:`JsonMessageCodec` -- the shipped defaults.
+* :class:`LoopbackTransport`, :class:`WindowsNamedPipeTransport`, :class:`JsonMessageCodec`
+  -- the shipped defaults. The named-pipe transport requires Windows.
 * Message models: :class:`IpcRequest`, :class:`IpcResponse`, :class:`IpcFault`,
   :class:`Session`, :class:`MethodDescriptor`, :class:`MethodKind`,
   :class:`HealthStatus`, and :data:`PROTOCOL_VERSION`.
@@ -83,6 +84,7 @@ from teea.ipc.models import (
 )
 from teea.ipc.server import IpcServer
 from teea.ipc.transport import LoopbackTransport
+from teea.ipc.transport_np import WindowsNamedPipeTransport
 
 __all__ = [
     "PROTOCOL_VERSION",
@@ -111,5 +113,6 @@ __all__ = [
     "SessionError",
     "Transport",
     "TransportClosedError",
+    "WindowsNamedPipeTransport",
     "protocol_major",
 ]
