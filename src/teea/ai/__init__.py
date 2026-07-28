@@ -57,6 +57,7 @@ Typical usage, a plugin obtaining semantic features::
 from __future__ import annotations
 
 from teea.ai.config import AIRuntimeSettings, load_ai_settings
+from teea.ai.engines import DummyInferenceEngine
 from teea.ai.errors import (
     AIRuntimeError,
     CapabilityUnavailableError,
@@ -89,6 +90,7 @@ __all__ = [
     "CapabilityRegistry",
     "CapabilityUnavailableError",
     "Device",
+    "DummyInferenceEngine",
     "ExecutionContext",
     "HealthReport",
     "InMemoryCapabilityRegistry",
