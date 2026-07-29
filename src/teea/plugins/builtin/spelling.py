@@ -92,14 +92,13 @@ class SpellCheckerPlugin:
                 continue
 
             for node in tree.nodes:
-                # Skip punctuation and grammatical particles: these are
-                # pipeline artifacts, not lexeme candidates.
                 if node.relation in (
                     DependencyRelation.PUNCT,
                     DependencyRelation.CASE,
                     DependencyRelation.AUX,
                     DependencyRelation.MARK,
-                ):
+                    DependencyRelation.NEG,
+                ) or not node.text.strip("། ཿ"):
                     continue
 
                 surface = node.text

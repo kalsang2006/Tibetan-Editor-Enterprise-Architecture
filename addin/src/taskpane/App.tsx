@@ -12,6 +12,8 @@ import {
   FluentProvider,
   MessageBar,
   MessageBarBody,
+  Skeleton,
+  SkeletonItem,
   Spinner,
   Switch,
   Tab,
@@ -54,6 +56,24 @@ const useStyles = makeStyles({
     display: 'flex',
     alignItems: 'center',
     columnGap: tokens.spacingHorizontalS,
+  },
+
+  statusDot: {
+    width: '12px',
+    height: '12px',
+    borderRadius: '50%',
+    display: 'inline-block',
+  },
+  statusConnected: { backgroundColor: tokens.colorPaletteGreenBackground3 },
+  statusDisconnected: { backgroundColor: tokens.colorPaletteRedBackground3 },
+
+  skeletonCard: {
+    display: 'flex',
+    flexDirection: 'column',
+    rowGap: tokens.spacingVerticalS,
+    padding: tokens.spacingVerticalM,
+    border: `1px solid ${tokens.colorNeutralStroke2}`,
+    borderRadius: tokens.borderRadiusMedium,
   },
 
   spacer: {
@@ -199,6 +219,11 @@ export function App({
         <Text weight="semibold" size={400}>
           TEEA
         </Text>
+        <span 
+          className={`${styles.statusDot} ${daemonStatus === 'connected' ? styles.statusConnected : styles.statusDisconnected}`} 
+          aria-label={daemonStatus === 'connected' ? "Daemon connected" : "Daemon disconnected"}
+          title={daemonStatus === 'connected' ? "Daemon connected" : "Daemon disconnected"}
+        />
         <Switch
           className={styles.spacer}
           checked={themeName === 'dark'}
@@ -284,7 +309,31 @@ export function App({
             onUndo={() => void undo.executeUndo()}
             onRedo={() => void undo.executeRedo()}
           />
-          {engine.groups.length === 0 ? (
+          {analysisStatus === 'loading' ? (
+            <div className={styles.groups}>
+              <Skeleton>
+                <div className={styles.skeletonCard}>
+                  <SkeletonItem shape="rectangle" size={16} style={{ width: '40%' }} />
+                  <SkeletonItem shape="rectangle" size={16} style={{ width: '80%' }} />
+                  <SkeletonItem shape="rectangle" size={32} style={{ width: '60%' }} />
+                </div>
+              </Skeleton>
+              <Skeleton>
+                <div className={styles.skeletonCard}>
+                  <SkeletonItem shape="rectangle" size={16} style={{ width: '30%' }} />
+                  <SkeletonItem shape="rectangle" size={16} style={{ width: '90%' }} />
+                  <SkeletonItem shape="rectangle" size={32} style={{ width: '50%' }} />
+                </div>
+              </Skeleton>
+              <Skeleton>
+                <div className={styles.skeletonCard}>
+                  <SkeletonItem shape="rectangle" size={16} style={{ width: '50%' }} />
+                  <SkeletonItem shape="rectangle" size={16} style={{ width: '70%' }} />
+                  <SkeletonItem shape="rectangle" size={32} style={{ width: '40%' }} />
+                </div>
+              </Skeleton>
+            </div>
+          ) : engine.groups.length === 0 ? (
             <div className={styles.empty}>
               <Text>No suggestions. The document reads clean.</Text>
             </div>

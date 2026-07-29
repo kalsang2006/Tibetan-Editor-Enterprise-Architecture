@@ -139,6 +139,10 @@ export interface Suggestion {
   ruleId: string;
   /** The producing component's own confidence, 0.0 to 1.0. */
   confidence: number;
+  /** Snippet of text before the offset for UI context. */
+  contextBefore?: string;
+  /** Snippet of text after the offset for UI context. */
+  contextAfter?: string;
 }
 
 export type SuggestionCategory =

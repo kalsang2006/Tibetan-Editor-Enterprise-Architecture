@@ -327,8 +327,7 @@ def create_daemon(settings: TEEASettings | None = None) -> TEEADaemon:
     Returns:
         A ready-to-use daemon instance.
     """
-    from teea.ai.tibert_engine import TiBERTInferenceEngine
-    return TEEADaemon(settings=settings, ai_engine=TiBERTInferenceEngine())
+    return TEEADaemon(settings=settings)
 
 
 __all__ = ["TEEADaemon", "create_daemon"]

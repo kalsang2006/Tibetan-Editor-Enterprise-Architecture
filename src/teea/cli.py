@@ -8,15 +8,13 @@ from __future__ import annotations
 
 import argparse
 import json
-import signal
 import sys
-import threading
 from typing import Any
 
 from teea.core.config import load_settings
 from teea.core.logging import configure_logging, get_logger
 from teea.daemon import create_daemon
-from teea.transport import serve_http
+from teea.service.server import run_service
 from teea.workflow import (
     analyze_text,
     full_workflow,
@@ -180,36 +178,9 @@ def _cmd_health(args: argparse.Namespace) -> int:
 
 
 def _cmd_serve(args: argparse.Namespace) -> int:
-    """Start the combined HTTP+SSE bridge, then wait for SIGINT/SIGTERM."""
-    daemon = create_daemon()
-    daemon.start()
-
-    server = serve_http(
-        builder=daemon.builder,
-        plugins=daemon.plugins,
-        fusion=daemon.fusion,
-        host=args.host,
-        port=args.port,
-    )
-    print(f"TEEA daemon listening on {server.base_url}", flush=True)
-
-    shutdown_event = threading.Event()
-
-    def _handle_signal(signum: int, _frame: object) -> None:
-        print(f"\nReceived signal {signum}, shutting down...")
-        shutdown_event.set()
-
-    signal.signal(signal.SIGINT, _handle_signal)
-    signal.signal(signal.SIGTERM, _handle_signal)
-
-    try:
-        shutdown_event.wait()
-    except KeyboardInterrupt:
-        pass
-    finally:
-        server.shutdown()
-        daemon.stop()
-        print("TEEA daemon stopped.")
+    """Start the TEEA Local FastAPI service on specified host and port."""
+    print(f"Starting TEEA Local Service on http://{args.host}:{args.port}", flush=True)
+    run_service(host=args.host, port=args.port)
     return 0
 
 

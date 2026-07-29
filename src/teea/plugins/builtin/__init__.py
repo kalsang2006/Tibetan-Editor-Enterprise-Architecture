@@ -11,6 +11,7 @@ from teea.plugins.builtin.diagnostics import DocumentDiagnosticsPlugin
 from teea.plugins.builtin.grammar import GrammarCheckerPlugin
 from teea.plugins.builtin.plagiarism import PlagiarismDetectorPlugin
 from teea.plugins.builtin.spelling import SpellCheckerPlugin
+from teea.plugins.builtin.typography import TypographyPlugin
 
 __all__ = [
     "CorrectionProvider",
@@ -18,4 +19,5 @@ __all__ = [
     "GrammarCheckerPlugin",
     "PlagiarismDetectorPlugin",
     "SpellCheckerPlugin",
+    "TypographyPlugin",
 ]

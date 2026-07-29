@@ -354,6 +354,11 @@ def test_nothing_below_the_plugin_runtime_imports_it() -> None:
         "teea.__main__",
         "teea.transport.analysis_server",
         "teea.transport.http_server",
+        "teea.engine",
+        "teea.service",
+        "teea.service.app",
+        "teea.service.endpoints",
+        "teea.service.server",
     }
     violations = {
         name: sorted(target for target in targets if target.startswith("teea.plugins"))
@@ -389,6 +394,8 @@ def test_every_top_level_package_is_a_known_architectural_layer() -> None:
         "teea.cli",
         "teea.daemon",
         "teea.workflow",
+        "teea.engine",
+        "teea.service",
     }
     packages = {".".join(name.split(".")[:2]) for name in MODULES if name.count(".") >= 1}
     assert packages - {"teea"} == known, packages

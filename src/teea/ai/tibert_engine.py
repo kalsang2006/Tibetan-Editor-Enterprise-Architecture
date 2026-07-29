@@ -218,7 +218,8 @@ class TiBERTInferenceEngine:
             for pos in candidate_positions:
                 actual_token = input_ids[i, pos].item()
                 if actual_token == unk_token:
-                    # Heavily penalize UNK tokens so OOV candidates don't steal the high P([UNK]) mass
+                    # Heavily penalize UNK tokens so OOV candidates
+                    # don't steal the high P([UNK]) mass
                     total_log_prob += -100.0
                     continue
                 logits = batch_logits[i, pos]

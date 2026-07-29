@@ -59,7 +59,7 @@ class CorrectionProvider:
         vocabulary: frozenset[str],
         *,
         max_edit_distance: int = 2,
-        max_candidates: int = 10,
+        max_candidates: int = 20,
         confidence_threshold: float = 0.5,
     ) -> None:
         self._score = score_candidates
@@ -111,10 +111,12 @@ class CorrectionProvider:
 
         # Incorporate edit distance to balance language model and error model
         word_norm = unicodedata.normalize("NFC", word)
+        canon = _canonical_tibetan_syllable(word_norm)
         final_scores = {}
         for c in candidates:
             if c in scores:
-                dist = _levenshtein(word_norm, unicodedata.normalize("NFC", c))
+                c_norm = unicodedata.normalize("NFC", c)
+                dist = 0.5 if c_norm == canon else _damerau_levenshtein(word_norm, c_norm)
                 # Penalize each edit distance step heavily to prevent wildly different words from winning
                 final_scores[c] = scores[c] - (dist * 0.2)
 
@@ -125,21 +127,27 @@ class CorrectionProvider:
         best_word = max(final_scores, key=lambda k: final_scores[k])
         best_score = scores[best_word]  # Keep original TiBERT score for the threshold check
         if best_score >= self._threshold:
-            _logger.debug(
-                "correction_found",
-                word=word,
-                correction=best_word,
-                score=best_score,
-            )
+            try:
+                _logger.debug(
+                    "correction_found",
+                    word=word,
+                    correction=best_word,
+                    score=best_score,
+                )
+            except Exception:
+                pass
             return best_word
 
-        _logger.debug(
-            "correction_below_threshold",
-            word=word,
-            best=best_word,
-            score=best_score,
-            threshold=self._threshold,
-        )
+        try:
+            _logger.debug(
+                "correction_below_threshold",
+                word=word,
+                best=best_word,
+                score=best_score,
+                threshold=self._threshold,
+            )
+        except Exception:
+            pass
         return None
 
     def _validate_candidates(
@@ -159,8 +167,9 @@ class CorrectionProvider:
             if cand_has_tsheg and next_char == TSHEG:
                 continue
 
-            # Rule 2: Do not introduce a trailing tsheg if the source token lacked one.
-            if cand_has_tsheg and not word_has_tsheg:
+            # Rule 2: Do not introduce a trailing tsheg if the source token lacked one,
+            # unless the candidate is simply supplying the missing trailing tsheg (cand[:-1] == word).
+            if cand_has_tsheg and not word_has_tsheg and cand[:-1] != word:
                 continue
 
             # Rule 3: Do not drop a trailing tsheg if the source token had one,
@@ -186,19 +195,21 @@ class CorrectionProvider:
         word_initial = word_norm[0]
         word_len = len(word_norm)
 
-        # Fast path
+        # Check canonical vowel transposition candidate (e.g. བདོ -> བོད)
+        canon = _canonical_tibetan_syllable(word_norm)
+        if canon != word_norm and canon in self._vocabulary:
+            scored.append((1, canon))
+
+        # Fast path with initial character match
         for target_len in range(word_len - 2, word_len + 3):
             for vocab_norm, vocab_word in self._vocab_by_length.get(target_len, []):
-                # HACKATHON OPTIMIZATION: Require same initial character to drastically
-                # reduce the search space from O(N) to a small fraction.
                 if not vocab_norm or vocab_norm[0] != word_initial:
                     continue
 
-                # Skip exact matches
                 if vocab_norm == word_norm:
                     continue
                     
-                dist = _levenshtein(word_norm, vocab_norm)
+                dist = _damerau_levenshtein(word_norm, vocab_norm)
                 if 0 < dist <= max_dist:
                     scored.append((dist, vocab_word))
 
@@ -208,11 +219,10 @@ class CorrectionProvider:
         if not scored:
             for target_len in range(word_len - 2, word_len + 3):
                 for vocab_norm, vocab_word in self._vocab_by_length.get(target_len, []):
-                    # Relaxed: No initial character check
                     if vocab_norm == word_norm:
                         continue
                         
-                    dist = _levenshtein(word_norm, vocab_norm)
+                    dist = _damerau_levenshtein(word_norm, vocab_norm)
                     if 0 < dist <= max_dist:
                         scored.append((dist, vocab_word))
             
@@ -228,28 +238,52 @@ class CorrectionProvider:
         return [w for _, w in scored[: self._max_candidates]]
 
 
-def _levenshtein(a: str, b: str) -> int:
-    """Compute the Levenshtein edit distance between two strings.
+def _damerau_levenshtein(a: str, b: str) -> int:
+    """Compute Damerau-Levenshtein distance (supports transpositions of adjacent characters)."""
+    if a == b:
+        return 0
+    len_a = len(a)
+    len_b = len(b)
+    if not len_a:
+        return len_b
+    if not len_b:
+        return len_a
 
-    Uses the standard dynamic-programming algorithm with O(min(m, n)) space.
-    """
-    if len(a) < len(b):
-        return _levenshtein(b, a)
-    if not b:
-        return len(a)
-    previous = list(range(len(b) + 1))
-    for char_a in a:
-        current = [previous[0] + 1]
-        for j, char_b in enumerate(b):
-            current.append(
-                min(
-                    current[j] + 1,
-                    previous[j + 1] + 1,
-                    previous[j] + (char_a != char_b),
-                )
+    d: dict[tuple[int, int], int] = {}
+    for i in range(-1, len_a + 1):
+        d[(i, -1)] = i + 1
+    for j in range(-1, len_b + 1):
+        d[(-1, j)] = j + 1
+
+    for i in range(len_a):
+        for j in range(len_b):
+            cost = 0 if a[i] == b[j] else 1
+            d[(i, j)] = min(
+                d[(i - 1, j)] + 1,        # deletion
+                d[(i, j - 1)] + 1,        # insertion
+                d[(i - 1, j - 1)] + cost,  # substitution
             )
-        previous = current
-    return previous[-1]
+            if i > 0 and j > 0 and a[i] == b[j - 1] and a[i - 1] == b[j]:
+                d[(i, j)] = min(d[(i, j)], d[(i - 2, j - 2)] + cost)  # transposition
+
+    return d[(len_a - 1, len_b - 1)]
+
+
+def _levenshtein(a: str, b: str) -> int:
+    """Backward compatibility alias for Levenshtein distance."""
+    return _damerau_levenshtein(a, b)
+
+
+_TIBETAN_VOWELS = {"\u0f72", "\u0f74", "\u0f7a", "\u0f7c"}
+
+
+def _canonical_tibetan_syllable(word: str) -> str:
+    """Fix misplaced vowel signs (e.g. བ+ད+ོ -> བ+ོ+ད)."""
+    chars = list(word)
+    if len(chars) >= 3 and chars[-1] in _TIBETAN_VOWELS and chars[-2] not in _TIBETAN_VOWELS:
+        chars[-1], chars[-2] = chars[-2], chars[-1]
+        return "".join(chars)
+    return word
 
 
 __all__ = ["CorrectionProvider", "ScoringFn"]

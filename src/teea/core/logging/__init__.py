@@ -41,7 +41,13 @@ class _CurrentStderr:
     """
 
     def write(self, text: str) -> None:
-        sys.stderr.write(text)
+        try:
+            sys.stderr.write(text)
+        except UnicodeEncodeError:
+            if hasattr(sys.stderr, "buffer"):
+                sys.stderr.buffer.write(text.encode("utf-8", errors="replace"))
+            else:
+                sys.stderr.write(text.encode("ascii", errors="replace").decode("ascii"))
 
     def flush(self) -> None:
         sys.stderr.flush()
