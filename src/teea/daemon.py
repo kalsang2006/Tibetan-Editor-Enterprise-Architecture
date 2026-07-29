@@ -24,6 +24,12 @@ from teea.ipc.models import Session
 from teea.nlp.snapshot import DocumentSnapshot, LanguageServerSnapshotBuilder
 from teea.plagiarism import PlagiarismEngine
 from teea.plugins import SupervisedPluginRuntime
+from teea.plugins.builtin import (
+    DocumentDiagnosticsPlugin,
+    GrammarCheckerPlugin,
+    PlagiarismDetectorPlugin,
+    SpellCheckerPlugin,
+)
 from teea.plugins.interfaces import FeaturePlugin
 
 _logger = get_logger(__name__)
@@ -70,10 +76,6 @@ class TEEADaemon:
         _logger.info("daemon_initializing", version=_version())
 
         self._builder = builder or LanguageServerSnapshotBuilder()
-        self._plugins = SupervisedPluginRuntime(
-            plugins=plugins or [],
-            executor=plugin_executor,
-        )
         self._fusion = fusion_engine or PriorityRankedFusionEngine()
         self._ai_runtime = LocalAIRuntime(ai_engine) if ai_engine else None
 
@@ -107,7 +109,24 @@ class TEEADaemon:
             )
 
         self._server = IpcServer()
+
+        # Build plugin runtime (after plagiarism engine is available for default plugins)
+        if plugins is not None:
+            plugin_list = plugins
+        else:
+            plugin_list = [
+                DocumentDiagnosticsPlugin(),
+                GrammarCheckerPlugin(),
+                SpellCheckerPlugin(),
+                PlagiarismDetectorPlugin(self._plagiarism),
+            ]
+        self._plugins = SupervisedPluginRuntime(
+            plugins=plugin_list,
+            executor=plugin_executor,
+        )
+
         self._register_handlers()
+
         self._transport = transport
         self._shutdown_event = threading.Event()
 

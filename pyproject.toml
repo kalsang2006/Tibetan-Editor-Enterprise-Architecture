@@ -35,6 +35,10 @@ dependencies = [
 teea = "teea.cli:main"
 
 [project.optional-dependencies]
+ai = [
+    "torch>=2.0.0",
+    "safetensors>=0.4.0",
+]
 dev = [
     "pytest>=8.3.3,<10",
     "pytest-cov>=6.0.0,<8",

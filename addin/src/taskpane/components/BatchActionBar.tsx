@@ -12,12 +12,9 @@ import {
   Button,
   Text,
   Toolbar,
-  Tooltip,
   makeStyles,
   tokens,
 } from '@fluentui/react-components';
-
-import { AUTO_APPLY_CONFIDENCE } from '../hooks/useSuggestionEngine';
 
 const useStyles = makeStyles({
   bar: {
@@ -79,22 +76,13 @@ function BatchActionBarComponent({
         ) : null}
       </span>
 
-      <Tooltip
-        relationship="description"
-        content={
-          `Applies suggestions that are not critical and at least ` +
-          `${AUTO_APPLY_CONFIDENCE.toFixed(2)} confident. Reversible as one step.`
-        }
-      >
-        <Button
-          appearance="primary"
-          onClick={onApplyBatch}
-          disabled={busy || autoApplicableCount === 0}
-        >
-          {batchLabel}
-        </Button>
-      </Tooltip>
-
+      <Button
+  appearance="primary"
+  onClick={onApplyBatch}
+  disabled={busy || autoApplicableCount === 0}
+>
+  {batchLabel}
+</Button>
       <Button onClick={onUndo} disabled={busy || !canUndo} title="Ctrl+Z">
         Undo
       </Button>

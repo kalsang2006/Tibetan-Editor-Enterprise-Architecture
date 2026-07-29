@@ -51,11 +51,11 @@ What ships here today
 ----------------------
 :mod:`analysis_server` bridges the document-analysis pipeline (the ``analyze``
 / ``plugins`` / ``fuse`` handlers :class:`~teea.daemon.TEEADaemon` already
-registers on its ``IpcServer``) to one HTTP endpoint. An AI-assistant bridge
-analogous to it is deferred: it needs a concrete inference engine, and
-ADR-019 records that no such engine exists yet. The add-in's assistant tab
-degrades cleanly when no such bridge answers -- see
-``addin/src/taskpane/hooks/useDaemonTransport.ts``.
+registers on its ``IpcServer``) to one HTTP endpoint.
+
+:mod:`http_server` extends this with AI streaming endpoints (rewrite, explain,
+summarize, cancel) served over SSE (Server-Sent Events), combining both
+analysis and AI behind a single loopback HTTP server on a single port.
 """
 
 from __future__ import annotations
@@ -68,12 +68,24 @@ from teea.transport.analysis_server import (
     NotLoopbackError,
     serve_analysis_http,
 )
+from teea.transport.http_server import (
+    AI_PATHS,
+    ANALYSIS_METHOD,
+    ANALYSIS_PATH,
+    TEEAHttpServer,
+    serve_http,
+)
 
 __all__ = [
+    "AI_PATHS",
+    "ANALYSIS_METHOD",
+    "ANALYSIS_PATH",
     "DEFAULT_HOST",
     "DEFAULT_PORT",
     "LOOPBACK_HOSTS",
     "AnalysisHttpServer",
     "NotLoopbackError",
+    "TEEAHttpServer",
     "serve_analysis_http",
+    "serve_http",
 ]

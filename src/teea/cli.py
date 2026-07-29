@@ -8,12 +8,15 @@ from __future__ import annotations
 
 import argparse
 import json
+import signal
 import sys
+import threading
 from typing import Any
 
 from teea.core.config import load_settings
 from teea.core.logging import configure_logging, get_logger
 from teea.daemon import create_daemon
+from teea.transport import serve_http
 from teea.workflow import (
     analyze_text,
     full_workflow,
@@ -50,8 +53,21 @@ def _build_parser() -> argparse.ArgumentParser:
     _add_format_parser(subparsers)
     _add_config_parser(subparsers)
     _add_health_parser(subparsers)
+    _add_serve_parser(subparsers)
 
     return parser
+
+
+def _add_serve_parser(subparsers: argparse._SubParsersAction[Any]) -> None:
+    p = subparsers.add_parser("serve", help="Start the HTTP bridge daemon")
+    p.add_argument(
+        "--host", default="127.0.0.1",
+        help="Bind address (must be loopback, default: 127.0.0.1)",
+    )
+    p.add_argument(
+        "--port", type=int, default=50505,
+        help="Bind port (default: 50505)",
+    )
 
 
 def _add_analyze_parser(subparsers: argparse._SubParsersAction[Any]) -> None:
@@ -163,12 +179,46 @@ def _cmd_health(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_serve(args: argparse.Namespace) -> int:
+    """Start the combined HTTP+SSE bridge, then wait for SIGINT/SIGTERM."""
+    daemon = create_daemon()
+
+    server = serve_http(
+        builder=daemon.builder,
+        plugins=daemon.plugins,
+        fusion=daemon.fusion,
+        host=args.host,
+        port=args.port,
+    )
+    print(f"TEEA daemon listening on {server.base_url}", flush=True)
+
+    shutdown_event = threading.Event()
+
+    def _handle_signal(signum: int, _frame: object) -> None:
+        print(f"\nReceived signal {signum}, shutting down...")
+        shutdown_event.set()
+
+    signal.signal(signal.SIGINT, _handle_signal)
+    signal.signal(signal.SIGTERM, _handle_signal)
+
+    try:
+        shutdown_event.wait()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        server.shutdown()
+        daemon.stop()
+        print("TEEA daemon stopped.")
+    return 0
+
+
 _COMMANDS: dict[str, object] = {
     "analyze": _cmd_analyze,
     "workflow": _cmd_workflow,
     "format": _cmd_format,
     "config": _cmd_config,
     "health": _cmd_health,
+    "serve": _cmd_serve,
 }
 
 

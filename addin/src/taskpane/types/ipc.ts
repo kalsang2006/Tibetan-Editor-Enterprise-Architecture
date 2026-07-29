@@ -32,6 +32,9 @@ export const AI_METHOD_PATHS: Readonly<Record<string, string>> = {
   'ai.explain': '/api/ai/explain',
   'ai.summarize': '/api/ai/summarize',
   'ai.cancel': '/api/ai/cancel',
+  'ai.translate': '/api/ai/translate',
+  'ai.ocr': '/api/ai/ocr',
+  'ai.stt': '/api/ai/stt',
 };
 
 /**

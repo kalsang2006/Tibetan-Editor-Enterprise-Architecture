@@ -599,7 +599,7 @@ def test_default_loader_returns_the_backend_and_requests_a_fast_tokenizer(
     assert source == settings.model_id
     # Native offset mappings require the fast (Rust) tokenizer.
     assert kwargs["use_fast"] is True
-    assert kwargs["trust_remote_code"] is settings.trust_remote_code
+    assert kwargs["trust_remote_code"] is False
     assert kwargs["cache_dir"] == str(settings.model_cache_dir)
 
 

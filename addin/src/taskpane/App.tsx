@@ -44,34 +44,40 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     rowGap: tokens.spacingVerticalM,
     padding: tokens.spacingHorizontalM,
-    minHeight: '100vh',
+    width: '100%',
+    height: '100%',
+    overflowY: 'auto',
     boxSizing: 'border-box',
   },
+
   header: {
     display: 'flex',
     alignItems: 'center',
     columnGap: tokens.spacingHorizontalS,
   },
+
   spacer: {
     marginInlineStart: 'auto',
   },
+
   groups: {
     display: 'flex',
     flexDirection: 'column',
     rowGap: tokens.spacingVerticalM,
   },
+
   empty: {
     padding: tokens.spacingVerticalXXL,
     textAlign: 'center',
     color: tokens.colorNeutralForeground3,
   },
+
   analysisBar: {
     display: 'flex',
     alignItems: 'center',
     columnGap: tokens.spacingHorizontalS,
   },
 });
-
 export interface AppProps {
   /** The current analysis, already adapted to the pane's view model. */
   suggestions: readonly Suggestion[];
@@ -251,7 +257,7 @@ export function App({
                 Refresh analysis
               </Button>
               {analysisStatus === 'loading' ? (
-                <Spinner size="tiny" label="Analyzing" />
+                <Spinner size="tiny" label="AI checking Tibetan spelling..." />
               ) : null}
             </div>
           ) : null}
@@ -298,6 +304,7 @@ export function App({
               ))}
             </div>
           )}
+	
         </>
       ) : (
         <AIPanel

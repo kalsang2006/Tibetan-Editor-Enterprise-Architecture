@@ -127,6 +127,10 @@ class DatabaseManager:
         Always runs ``CREATE TABLE IF NOT EXISTS`` so that a database with
         an existing schema version but missing tables (e.g. from a crash
         during initial creation) is fully recovered.
+
+        Raises:
+            ConfigurationError: If the database schema version is newer
+                than what this code knows about (downgrade protection).
         """
         with self._lock:
             self._conn.executescript("""
@@ -213,6 +217,17 @@ class DatabaseManager:
 
             cur = self._conn.execute("PRAGMA user_version")
             (current_version,) = cur.fetchone()
+            if current_version > _SCHEMA_VERSION:
+                raise ConfigurationError(
+                    "The TEEA database was created by a newer version of the "
+                    "application and cannot be opened by this version. "
+                    "Please upgrade the application.",
+                    context={
+                        "database_version": current_version,
+                        "expected_version": _SCHEMA_VERSION,
+                        "path": str(self._path),
+                    },
+                )
             if current_version < _SCHEMA_VERSION:
                 self._conn.execute(
                     f"PRAGMA user_version = {_SCHEMA_VERSION}"

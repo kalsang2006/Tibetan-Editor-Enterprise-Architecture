@@ -13,9 +13,16 @@ env/
 .coverage
 htmlcov/
 
+# Mypy
+.mypy_cache/
+
+# Ruff
+.ruff_cache/
+
 # IDE
 .vscode/
 .idea/
+.claude/
 
 # OS
 .DS_Store
@@ -27,3 +34,13 @@ addin/node_modules/
 dist/
 *.egg-info/
 *.whl
+
+# Visual Studio (System Design Diagram artifacts)
+docs/System Design Diagram/.vs/
+
+# Shell redirection artifacts
+cls
+tree
+
+# Duplicate repo copy
+repo/

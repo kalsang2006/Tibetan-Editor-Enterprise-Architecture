@@ -65,7 +65,7 @@ export function useDocumentAnalysis(options: {
     void (async () => {
       let text: string;
       try {
-        text = await getText();
+        text = (await getText()).replace(/^\uFEFF/, "");
       } catch (caught) {
         if (attempt !== generation.current) {
           return;
@@ -82,6 +82,9 @@ export function useDocumentAnalysis(options: {
           fetchImpl: doFetch,
           signal: controller.signal,
         });
+	console.log("Document text:", JSON.stringify(text));
+	  console.log("Raw daemon response:", raw);
+
         if (attempt !== generation.current) {
           return;
         }

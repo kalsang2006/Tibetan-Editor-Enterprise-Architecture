@@ -82,6 +82,7 @@ from teea.ai.models import (
 )
 from teea.ai.registry import InMemoryCapabilityRegistry, InMemoryModelRegistry
 from teea.ai.runtime import LocalAIRuntime
+from teea.ai.tibert_engine import TiBERTInferenceEngine
 
 __all__ = [
     "AIRuntimeError",
@@ -109,5 +110,6 @@ __all__ = [
     "ResourceExhaustedError",
     "RuntimeState",
     "RuntimeStateError",
+    "TiBERTInferenceEngine",
     "load_ai_settings",
 ]

@@ -127,6 +127,11 @@ class InMemoryDictionaryRepository:
         return self._tag_counts
 
     @property
+    def vocabulary(self) -> frozenset[str]:
+        """Every distinct surface form known to the lexicon."""
+        return frozenset(self._emissions)
+
+    @property
     def vocabulary_size(self) -> int:
         """Number of distinct surface forms in the lexicon."""
         return len(self._emissions)

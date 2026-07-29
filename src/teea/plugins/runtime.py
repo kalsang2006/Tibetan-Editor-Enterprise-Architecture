@@ -38,7 +38,7 @@ cannot change what the user sees.
 from __future__ import annotations
 
 from collections.abc import Iterable
-from concurrent.futures import Executor
+from concurrent.futures import Executor, Future, ThreadPoolExecutor
 
 from teea.core.errors import ConfigurationError, ErrorCode, TEEAError
 from teea.nlp.snapshot import DocumentSnapshot
@@ -78,7 +78,29 @@ class SupervisedPluginRuntime:
         plugins: Iterable[FeaturePlugin] = (),
         *,
         executor: Executor | None = None,
+        timeout: float | None = None,
     ) -> None:
+        """Initialise the runtime with plugins and optional concurrency settings.
+
+        Args:
+            plugins: The features to execute. Their names are read once, here, and
+                used for the rest of their life, so a plugin cannot change identity
+                between registration and dispatch.
+            executor: Where to run them. ``None``, the default, runs them one after
+                another on the calling thread. Supplying a thread pool satisfies
+                Figure 5's concurrent consumption of the shared snapshot.
+            timeout: Maximum seconds each plugin is allowed to run before being
+                treated as a failure. ``None`` (the default) disables the timeout.
+                When ``timeout`` is set but ``executor`` is ``None``, a temporary
+                single-thread executor is created internally so the timeout can be
+                enforced; the runtime's :attr:`is_concurrent` property still
+                reports ``False``.
+
+        Raises:
+            ConfigurationError: If a plugin has no name, if two plugins share one, or
+                if reading a plugin's name raises. A runtime that started with an
+                ambiguous registry would misattribute both suggestions and faults.
+        """
         registered: list[tuple[str, FeaturePlugin]] = []
         seen: set[str] = set()
 
@@ -106,6 +128,7 @@ class SupervisedPluginRuntime:
 
         self._registered: tuple[tuple[str, FeaturePlugin], ...] = tuple(registered)
         self._executor = executor
+        self._timeout = timeout
 
     @property
     def plugins(self) -> tuple[str, ...]:
@@ -136,7 +159,16 @@ class SupervisedPluginRuntime:
                 captured -- NFR 5.3 isolates plugins, not the infrastructure
                 running them.
         """
-        if self._executor is None:
+        if self._executor is None and self._timeout is not None:
+            # When a timeout is requested but no executor was supplied, create
+            # a temporary single-worker executor so the deadline is enforceable.
+            with ThreadPoolExecutor(max_workers=1) as pool:
+                futures = [
+                    pool.submit(self._supervise, name, plugin, snapshot)
+                    for name, plugin in self._registered
+                ]
+                outcomes = self._collect(futures)
+        elif self._executor is None:
             outcomes = [
                 self._supervise(name, plugin, snapshot) for name, plugin in self._registered
             ]
@@ -145,9 +177,45 @@ class SupervisedPluginRuntime:
                 self._executor.submit(self._supervise, name, plugin, snapshot)
                 for name, plugin in self._registered
             ]
-            outcomes = [future.result() for future in futures]
+            outcomes = self._collect(futures)
 
         return PluginResults(outcomes=tuple(sorted(outcomes, key=lambda outcome: outcome.plugin)))
+
+    def _collect(
+        self, futures: list[Future[PluginOutcome]]
+    ) -> list[PluginOutcome]:
+        """Collect outcomes from futures, respecting the configured timeout.
+
+        A future that times out or raises is recorded as a plugin failure
+        rather than propagated.
+        """
+        outcomes: list[PluginOutcome] = []
+        for future in futures:
+            try:
+                outcome = future.result(timeout=self._timeout)
+            except TimeoutError:
+                outcome = PluginOutcome(
+                    plugin="unknown",
+                    failure=PluginFailure(
+                        plugin="unknown",
+                        code=ErrorCode.PLUGIN_EXECUTION_FAILED,
+                        error_type="TimeoutError",
+                        message="Plugin execution timed out.",
+                    ),
+                )
+                future.cancel()
+            except Exception as exc:  # noqa: BLE001 - sandbox boundary
+                outcome = PluginOutcome(
+                    plugin="unknown",
+                    failure=PluginFailure(
+                        plugin="unknown",
+                        code=ErrorCode.PLUGIN_EXECUTION_FAILED,
+                        error_type=type(exc).__name__,
+                        message=str(exc),
+                    ),
+                )
+            outcomes.append(outcome)
+        return outcomes
 
     # -- Internals -----------------------------------------------------------
     @staticmethod

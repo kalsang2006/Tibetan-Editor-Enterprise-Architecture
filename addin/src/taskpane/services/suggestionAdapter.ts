@@ -26,6 +26,7 @@ const SOURCE_CATEGORIES: Record<string, SuggestionCategory> = {
   spell: 'Spelling',
   spelling: 'Spelling',
   spellcheck: 'Spelling',
+  'teea.spelling': 'Spelling',
   grammar: 'Grammar',
   syntax: 'Grammar',
   terminology: 'Terminology',
@@ -34,6 +35,7 @@ const SOURCE_CATEGORIES: Record<string, SuggestionCategory> = {
   punctuation: 'Typography',
   style: 'Style',
   clarity: 'Style',
+  'teea.plagiarism': 'Style',
 };
 
 /** Where an unrecognised plugin's output is filed. */
@@ -67,11 +69,9 @@ export function toSuggestion(
   raw: DaemonSuggestion,
   documentText: string,
 ): Suggestion | null {
-  if (raw.replacement === null) {
-    // An advisory annotates a range and recommends nothing. The review list is
-    // for decisions; something with no replacement has none to offer.
-    return null;
-  }
+  if (raw.replacement == null) {
+  return null;
+}
   const start = raw.span.char_start;
   const length = raw.span.char_end - raw.span.char_start;
   return {

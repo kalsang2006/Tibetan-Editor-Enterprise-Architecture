@@ -745,11 +745,13 @@ class TestDaemonComposition:
         assert diag["version"] == "1.0.0"
 
     def test_daemon_diagnose_plugins_empty_by_default(self) -> None:
-        """Daemon with default settings has no plugins registered."""
+        """Daemon with default settings has builtin plugins registered."""
         daemon = TEEADaemon()
         diag = daemon.diagnose()
-        assert diag["plugins"]["count"] == 0
-        assert diag["plugins"]["names"] == []
+        assert diag["plugins"]["count"] == 4
+        assert diag["plugins"]["names"] == [
+            "teea.diagnostics", "teea.grammar", "teea.spelling", "teea.plagiarism",
+        ]
 
     def test_daemon_wired_with_plagiarism_has_index(self) -> None:
         """Daemon plagiarism engine starts with an empty index."""

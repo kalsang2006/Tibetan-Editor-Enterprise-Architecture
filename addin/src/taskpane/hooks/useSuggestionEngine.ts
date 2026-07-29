@@ -142,6 +142,7 @@ export function useSuggestionEngine(
       setIsApplying(true);
       try {
         const report = await apply(operations);
+        console.log("Apply report:", report);
         setLastReport(report);
         if (report.applied.length === 0) {
           return null;

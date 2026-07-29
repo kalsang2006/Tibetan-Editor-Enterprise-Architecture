@@ -88,6 +88,11 @@ _EXPECTED_DISCONNECT_ERRORS: Final = (
     TimeoutError,
 )
 
+#: Maximum HTTP request body this server will accept (10 MiB). Requests with
+#: a ``Content-Length`` exceeding this limit receive a 413 response before any
+#: body bytes are read, protecting the server from memory exhaustion.
+_MAX_BODY_SIZE: Final = 10 * 1024 * 1024
+
 
 class NotLoopbackError(ConfigurationError):
     """Raised when asked to bind anywhere but a loopback address."""
@@ -222,6 +227,12 @@ class _AnalysisRequestHandler(BaseHTTPRequestHandler):
         # start of a new request line. An unknown path or a mismatched method
         # still needs the body consumed before its own error reply goes out.
         length = int(self.headers.get("Content-Length") or "0")
+        if length > _MAX_BODY_SIZE:
+            self._send_json(
+                HTTPStatus.REQUEST_ENTITY_TOO_LARGE,
+                {"error": {"code": "PAYLOAD_TOO_LARGE", "max_bytes": _MAX_BODY_SIZE}},
+            )
+            return
         raw = self.rfile.read(length) if length > 0 else b"{}"
 
         if self.path != ANALYSIS_PATH:

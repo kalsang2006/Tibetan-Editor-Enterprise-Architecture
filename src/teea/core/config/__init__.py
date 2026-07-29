@@ -60,6 +60,10 @@ class TokenizationSettings(BaseSettings):
         model_id: Hugging Face repo id for TiBERT. Overriding this to a
             different model is a deliberate, logged act; the default is the
             authoritative TiBERT.
+        model_revision: Specific commit hash to pin the model download to.
+            When set, ``from_pretrained`` fetches exactly this revision,
+            protecting against silent upstream model changes. ``None``
+            (default) uses the repository's default branch HEAD.
         model_local_path: Optional path to a pre-provisioned model directory.
             When set, the loader uses it instead of downloading. Useful for
             air-gapped Windows deployments.
@@ -73,9 +77,6 @@ class TokenizationSettings(BaseSettings):
             this defaults to ``False`` and should almost never be enabled.
         add_special_tokens: Whether encoding adds ``[CLS]``/``[SEP]`` by
             default. Callers may override per call.
-        trust_remote_code: Passed to Hugging Face. Defaults to ``False`` for
-            security; enable only if a specific model requires it and you have
-            reviewed that code.
     """
 
     model_config = SettingsConfigDict(
@@ -86,13 +87,13 @@ class TokenizationSettings(BaseSettings):
     )
 
     model_id: str = DEFAULT_TIBERT_MODEL_ID
+    model_revision: str | None = None
     model_local_path: Path | None = None
     model_cache_dir: Path = Field(default_factory=_default_cache_dir)
     max_sequence_length: int = Field(default=DEFAULT_MAX_SEQUENCE_LENGTH, gt=0, le=4096)
     normalization_form: NormalizationForm = "NFC"
     do_lower_case: bool = False
     add_special_tokens: bool = True
-    trust_remote_code: bool = False
 
     @field_validator("model_id")
     @classmethod

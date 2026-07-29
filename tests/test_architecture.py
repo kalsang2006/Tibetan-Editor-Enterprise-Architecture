@@ -271,16 +271,15 @@ def test_the_transport_layer_never_imports_persistence() -> None:
 def test_nothing_imports_the_transport_layer() -> None:
     """Nothing the transport bridges to may depend on the bridge itself.
 
-    No daemon entry point composes ``teea.transport`` yet -- building one is a
-    separate decision (host, port and lifecycle conventions nobody has signed
-    off on). Until it exists, every collaborator a bridge serves must stay
-    testable, and constructible, with no HTTP server ever started, exactly as
-    the existing handler tests do.
+    Every collaborator a bridge serves must stay testable and constructible
+    with no HTTP server ever started.  The one exception is ``teea.cli``,
+    which is the daemon entry point that composes the transport for the
+    ``serve`` subcommand.
     """
     violations = {
         name: sorted(t for t in targets if t.startswith("teea.transport"))
         for name, targets in IMPORTS.items()
-        if not name.startswith("teea.transport")
+        if not name.startswith("teea.transport") and name != "teea.cli"
     }
     assert not any(violations.values()), violations
 
@@ -354,6 +353,7 @@ def test_nothing_below_the_plugin_runtime_imports_it() -> None:
         "teea.workflow",
         "teea.__main__",
         "teea.transport.analysis_server",
+        "teea.transport.http_server",
     }
     violations = {
         name: sorted(target for target in targets if target.startswith("teea.plugins"))

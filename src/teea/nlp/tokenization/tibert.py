@@ -132,7 +132,8 @@ def default_tibert_loader(settings: TokenizationSettings) -> BackendTokenizer:
             source,
             cache_dir=str(settings.model_cache_dir),
             use_fast=True,
-            trust_remote_code=settings.trust_remote_code,
+            revision=settings.model_revision,
+            trust_remote_code=False,
             # TiBERT's published tokenizer_config.json sets do_lower_case=True,
             # which switches on BERT's basic-tokenizer accent stripping. That
             # routine deletes every Unicode Mn character -- and in Tibetan the Mn

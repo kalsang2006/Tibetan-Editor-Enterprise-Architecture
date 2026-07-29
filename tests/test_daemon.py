@@ -39,8 +39,10 @@ def test_daemon_diagnose() -> None:
 def test_daemon_diagnose_plugin_count() -> None:
     daemon = create_daemon()
     diag = daemon.diagnose()
-    assert diag["plugins"]["count"] == 0
-    assert diag["plugins"]["names"] == []
+    assert diag["plugins"]["count"] == 4
+    assert diag["plugins"]["names"] == [
+        "teea.diagnostics", "teea.grammar", "teea.spelling", "teea.plagiarism",
+    ]
     assert not diag["plugins"]["concurrent"]
 
 
