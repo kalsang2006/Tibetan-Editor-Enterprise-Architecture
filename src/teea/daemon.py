@@ -114,10 +114,36 @@ class TEEADaemon:
         if plugins is not None:
             plugin_list = plugins
         else:
+            spell_checker = SpellCheckerPlugin()
+            if self._ai_runtime is not None:
+                from teea.ai.models import CapabilityKind, InferenceRequest, ModelDescriptor
+                from teea.persistence import default_dictionary
+                from teea.plugins.builtin.correction import CorrectionProvider
+
+                tibert_descriptor = ModelDescriptor(
+                    name="tibert", version="1", provides=frozenset({CapabilityKind.SPELLING})
+                )
+                self._ai_runtime.register(tibert_descriptor)
+
+                def _score_candidates(sentence: str, ws: int, we: int, cands: list[str]) -> list[float]:
+                    req = InferenceRequest(
+                        capability=CapabilityKind.SPELLING,
+                        inputs={"sentence": sentence, "word_start": ws, "word_end": we, "candidates": cands},
+                    )
+                    res = self._ai_runtime.infer(req)
+                    return res.outputs["scores"]
+
+                provider = CorrectionProvider(
+                    score_candidates=_score_candidates,
+                    vocabulary=default_dictionary().vocabulary,
+                    confidence_threshold=0.0,
+                )
+                spell_checker = SpellCheckerPlugin(correction_provider=provider)
+
             plugin_list = [
                 DocumentDiagnosticsPlugin(),
                 GrammarCheckerPlugin(),
-                SpellCheckerPlugin(),
+                spell_checker,
                 PlagiarismDetectorPlugin(self._plagiarism),
             ]
         self._plugins = SupervisedPluginRuntime(
@@ -301,7 +327,8 @@ def create_daemon(settings: TEEASettings | None = None) -> TEEADaemon:
     Returns:
         A ready-to-use daemon instance.
     """
-    return TEEADaemon(settings=settings)
+    from teea.ai.tibert_engine import TiBERTInferenceEngine
+    return TEEADaemon(settings=settings, ai_engine=TiBERTInferenceEngine())
 
 
 __all__ = ["TEEADaemon", "create_daemon"]

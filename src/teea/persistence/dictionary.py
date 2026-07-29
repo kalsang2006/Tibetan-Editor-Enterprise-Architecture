@@ -68,6 +68,20 @@ class InMemoryDictionaryRepository:
             tag: dict(counts) for tag, counts in payload["transitions"].items()
         }
         self._tags = frozenset(payload["tags"])
+        
+        # HACKATHON FEATURE: Dynamically load all words from Data/ text files
+        extended = set(self._emissions.keys())
+        data_dir = Path("Data")
+        if data_dir.exists() and data_dir.is_dir():
+            for txt_file in data_dir.rglob("*.txt"):
+                try:
+                    for line in txt_file.read_text(encoding="utf-8").splitlines():
+                        word = line.split("\t")[0].strip()
+                        if word and not word.startswith("#"):
+                            extended.add(word)
+                except Exception:
+                    pass
+        self._extended_vocabulary = frozenset(extended)
 
     @staticmethod
     def _load(source: Path) -> dict[str, Any]:
@@ -128,13 +142,13 @@ class InMemoryDictionaryRepository:
 
     @property
     def vocabulary(self) -> frozenset[str]:
-        """Every distinct surface form known to the lexicon."""
-        return frozenset(self._emissions)
+        """Every distinct surface form known to the lexicon, including Data files."""
+        return self._extended_vocabulary
 
     @property
     def vocabulary_size(self) -> int:
-        """Number of distinct surface forms in the lexicon."""
-        return len(self._emissions)
+        """Number of distinct surface forms in the extended lexicon."""
+        return len(self._extended_vocabulary)
 
     # -- Lookups -------------------------------------------------------------
     def lookup(self, surface: str) -> Mapping[str, int] | None:

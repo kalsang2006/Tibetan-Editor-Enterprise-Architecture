@@ -1,3 +1,7 @@
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
+sys.stderr.reconfigure(encoding='utf-8')
+
 import time
 from teea.persistence import default_dictionary
 from teea.plugins.builtin.correction import CorrectionProvider
@@ -5,8 +9,17 @@ from teea.ai.tibert_engine import TiBERTInferenceEngine
 from teea.ai.models import ModelDescriptor, ExecutionContext, CapabilityKind, InferenceRequest
 
 def run_benchmark():
+    print("Before:")
+    print("Vocabulary:\n2085\n")
+
     print("Loading dictionary...")
+    t0_dict = time.perf_counter()
     dictionary = default_dictionary()
+    t1_dict = time.perf_counter()
+    
+    print("After:")
+    print(f"Vocabulary:\n{len(dictionary.vocabulary)}\n")
+    print(f"[Metric] Dictionary loading time: {((t1_dict-t0_dict)*1000):.2f} ms\n")
     
     print("Loading TiBERT engine...")
     engine = TiBERTInferenceEngine()

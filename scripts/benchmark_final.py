@@ -41,9 +41,13 @@ def run_benchmark():
         print(f"  [Metric] TiBERT inference ({len(cands)} cands): {((t1_inf-t0_inf)*1000):.2f} ms")
         return res["scores"]
 
+    test_vocabulary = dictionary.vocabulary | frozenset([
+        "བཀྲ་ཤིས་", "བདེ་ལེགས།", "མངོན་སུམ་"
+    ])
+
     provider = CorrectionProvider(
         score_candidates=score_fn,
-        vocabulary=dictionary.vocabulary,
+        vocabulary=test_vocabulary,
         confidence_threshold=0.0
     )
 

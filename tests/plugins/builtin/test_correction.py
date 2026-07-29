@@ -114,6 +114,62 @@ class TestCandidateGeneration:
         assert provider._find_candidates("same") == []
 
 
+# -- Candidate validation tests (Tsheg boundaries) -----------------------------
+
+
+class TestCandidateValidation:
+    def test_prevents_duplicate_tsheg(self) -> None:
+        provider = CorrectionProvider(always_high_scorer, frozenset())
+        word = "ཤིམ"  # no tsheg
+        sentence = "ང་བཀྲ་ཤིམ་ཟེར།"
+        word_end = sentence.find(word) + len(word)
+        # next_char is "་" (tsheg)
+        
+        candidates = ["ཤིས", "ཤི་", "ཤིས་"]
+        # "ཤིས" (no tsheg) should pass
+        # "ཤི་" (has tsheg) should be rejected (Rule 1 & 2)
+        # "ཤིས་" (has tsheg) should be rejected (Rule 1 & 2)
+        valid = provider._validate_candidates(word, sentence, word_end, candidates)
+        assert valid == ["ཤིས"]
+
+    def test_prevents_missing_tsheg_introduction(self) -> None:
+        provider = CorrectionProvider(always_high_scorer, frozenset())
+        word = "ཤིམ"  # no tsheg
+        sentence = "ཤིམ"
+        word_end = 3
+        # next_char is ""
+        
+        candidates = ["ཤིས", "ཤི་"]
+        # "ཤི་" has tsheg, but word doesn't. Rule 2 should reject it.
+        valid = provider._validate_candidates(word, sentence, word_end, candidates)
+        assert valid == ["ཤིས"]
+
+    def test_prevents_tsheg_drop(self) -> None:
+        provider = CorrectionProvider(always_high_scorer, frozenset())
+        word = "བཀྲ་"  # has tsheg
+        sentence = "བཀྲ་ཤིས"
+        word_end = 4
+        # next_char is "ཤ" (not tsheg)
+        
+        candidates = ["བཀྲ", "བཀྲ་"]
+        # "བཀྲ" (no tsheg) drops the tsheg, Rule 3 should reject it.
+        valid = provider._validate_candidates(word, sentence, word_end, candidates)
+        assert valid == ["བཀྲ་"]
+
+    def test_allows_tsheg_drop_if_next_char_is_tsheg(self) -> None:
+        provider = CorrectionProvider(always_high_scorer, frozenset())
+        word = "བཀྲ་"  # has tsheg
+        sentence = "བཀྲ་་" # Double tsheg situation in doc
+        word_end = 4
+        # next_char is "་" (tsheg)
+        
+        candidates = ["བཀྲ", "བཀྲ་"]
+        # "བཀྲ" (no tsheg) drops the tsheg, but next_char is tsheg. So it's allowed!
+        # "བཀྲ་" (has tsheg) would create double tsheg! Rule 1 rejects it.
+        valid = provider._validate_candidates(word, sentence, word_end, candidates)
+        assert valid == ["བཀྲ"]
+
+
 # -- Correction tests ----------------------------------------------------------
 
 

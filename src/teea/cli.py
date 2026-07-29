@@ -182,6 +182,7 @@ def _cmd_health(args: argparse.Namespace) -> int:
 def _cmd_serve(args: argparse.Namespace) -> int:
     """Start the combined HTTP+SSE bridge, then wait for SIGINT/SIGTERM."""
     daemon = create_daemon()
+    daemon.start()
 
     server = serve_http(
         builder=daemon.builder,

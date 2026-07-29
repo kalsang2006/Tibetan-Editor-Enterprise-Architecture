@@ -206,6 +206,7 @@ class TiBERTInferenceEngine:
             )
             batch_logits = outputs.logits
 
+        unk_token = self._tokenizer.unk_token_id
         scores: dict[str, float] = {}
         for i, candidate in enumerate(candidates):
             candidate_positions = batch_candidate_positions[i]
@@ -216,6 +217,10 @@ class TiBERTInferenceEngine:
             total_log_prob = 0.0
             for pos in candidate_positions:
                 actual_token = input_ids[i, pos].item()
+                if actual_token == unk_token:
+                    # Heavily penalize UNK tokens so OOV candidates don't steal the high P([UNK]) mass
+                    total_log_prob += -100.0
+                    continue
                 logits = batch_logits[i, pos]
                 log_probs = torch.log_softmax(logits, dim=-1)
                 total_log_prob += log_probs[actual_token].item()

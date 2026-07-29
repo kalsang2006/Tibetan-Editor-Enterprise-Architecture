@@ -142,7 +142,9 @@ export function useSuggestionEngine(
       setIsApplying(true);
       try {
         const report = await apply(operations);
-        console.log("Apply report:", report);
+        console.log("Apply report:", JSON.stringify(report, null, 2));
+        console.log("Applied:", report.applied);
+        console.log("Skipped:", report.skipped);
         setLastReport(report);
         if (report.applied.length === 0) {
           return null;

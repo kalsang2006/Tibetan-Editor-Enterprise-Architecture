@@ -99,7 +99,6 @@ class SpellCheckerPlugin:
                     DependencyRelation.CASE,
                     DependencyRelation.AUX,
                     DependencyRelation.MARK,
-                    DependencyRelation.NEG,
                 ):
                     continue
 

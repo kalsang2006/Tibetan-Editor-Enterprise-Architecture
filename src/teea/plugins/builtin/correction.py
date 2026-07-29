@@ -25,6 +25,7 @@ Design notes
 
 from __future__ import annotations
 
+import unicodedata
 from collections.abc import Callable
 
 from teea.core.logging import get_logger
@@ -63,8 +64,16 @@ class CorrectionProvider:
     ) -> None:
         self._score = score_candidates
         self._vocabulary = vocabulary
+        self._confidence_threshold = confidence_threshold
         self._max_edit_distance = max_edit_distance
         self._max_candidates = max_candidates
+        
+        # Pre-bucket vocabulary by length to optimize candidate generation
+        import unicodedata
+        self._vocab_by_length: dict[int, list[tuple[str, str]]] = {}
+        for w in self._vocabulary:
+            w_norm = unicodedata.normalize('NFC', w)
+            self._vocab_by_length.setdefault(len(w_norm), []).append((w_norm, w))
         self._threshold = confidence_threshold
 
     def correct(
@@ -86,6 +95,9 @@ class CorrectionProvider:
         if not candidates:
             return None
 
+        candidates = self._validate_candidates(word, sentence, word_end, candidates)
+        if not candidates:
+            return None
         try:
             scores = self._score(sentence, word_start, word_end, candidates)
         except Exception as exc:  # noqa: BLE001 — correction must never crash the plugin
@@ -97,12 +109,21 @@ class CorrectionProvider:
             )
             return None
 
-        if not scores:
+        # Incorporate edit distance to balance language model and error model
+        word_norm = unicodedata.normalize("NFC", word)
+        final_scores = {}
+        for c in candidates:
+            if c in scores:
+                dist = _levenshtein(word_norm, unicodedata.normalize("NFC", c))
+                # Penalize each edit distance step heavily to prevent wildly different words from winning
+                final_scores[c] = scores[c] - (dist * 0.2)
+
+        if not final_scores:
             return None
 
-        best_word = max(scores, key=lambda k: scores[k])
-        best_score = scores[best_word]
-
+        # Select candidate with the highest combined confidence
+        best_word = max(final_scores, key=lambda k: final_scores[k])
+        best_score = scores[best_word]  # Keep original TiBERT score for the threshold check
         if best_score >= self._threshold:
             _logger.debug(
                 "correction_found",
@@ -121,34 +142,87 @@ class CorrectionProvider:
         )
         return None
 
+    def _validate_candidates(
+        self, word: str, sentence: str, word_end: int, candidates: list[str]
+    ) -> list[str]:
+        """Validate candidates against Tibetan orthographic rules."""
+        TSHEG = "\u0f0b"
+        valid = []
+
+        word_has_tsheg = word.endswith(TSHEG)
+        next_char = sentence[word_end] if word_end < len(sentence) else ""
+
+        for cand in candidates:
+            cand_has_tsheg = cand.endswith(TSHEG)
+
+            # Rule 1: Prevent duplicate adjacent tshegs.
+            if cand_has_tsheg and next_char == TSHEG:
+                continue
+
+            # Rule 2: Do not introduce a trailing tsheg if the source token lacked one.
+            if cand_has_tsheg and not word_has_tsheg:
+                continue
+
+            # Rule 3: Do not drop a trailing tsheg if the source token had one,
+            # unless the right context already provides a tsheg.
+            if word_has_tsheg and not cand_has_tsheg and next_char != TSHEG:
+                continue
+
+            valid.append(cand)
+
+        return valid
+
     def _find_candidates(self, word: str) -> list[str]:
         """Find dictionary words within ``max_edit_distance`` of ``word``."""
+        import unicodedata
+        
         scored: list[tuple[int, str]] = []
         max_dist = self._max_edit_distance
 
         if not word:
             return []
 
-        word_initial = word[0]
+        word_norm = unicodedata.normalize('NFC', word)
+        word_initial = word_norm[0]
+        word_len = len(word_norm)
 
-        for vocab_word in self._vocabulary:
-            # Quick length filter: edit distance is at least the length
-            # difference. HACKATHON OPTIMIZATION: max diff 2.
-            if abs(len(vocab_word) - len(word)) > 2:
-                continue
+        # Fast path
+        for target_len in range(word_len - 2, word_len + 3):
+            for vocab_norm, vocab_word in self._vocab_by_length.get(target_len, []):
+                # HACKATHON OPTIMIZATION: Require same initial character to drastically
+                # reduce the search space from O(N) to a small fraction.
+                if not vocab_norm or vocab_norm[0] != word_initial:
+                    continue
+
+                # Skip exact matches
+                if vocab_norm == word_norm:
+                    continue
+                    
+                dist = _levenshtein(word_norm, vocab_norm)
+                if 0 < dist <= max_dist:
+                    scored.append((dist, vocab_word))
+
+        fast_candidates = len(scored)
+
+        # Fallback path if fast path returns 0 candidates
+        if not scored:
+            for target_len in range(word_len - 2, word_len + 3):
+                for vocab_norm, vocab_word in self._vocab_by_length.get(target_len, []):
+                    # Relaxed: No initial character check
+                    if vocab_norm == word_norm:
+                        continue
+                        
+                    dist = _levenshtein(word_norm, vocab_norm)
+                    if 0 < dist <= max_dist:
+                        scored.append((dist, vocab_word))
             
-            # HACKATHON OPTIMIZATION: Require same initial character to drastically
-            # reduce the search space from O(N) to a small fraction.
-            if not vocab_word or vocab_word[0] != word_initial:
-                continue
-
-            # Skip exact matches — the word is unknown, so it won't be in the
-            # vocabulary, but guard against it anyway.
-            if vocab_word == word:
-                continue
-            dist = _levenshtein(word, vocab_word)
-            if 0 < dist <= max_dist:
-                scored.append((dist, vocab_word))
+            _logger.info(
+                "correction_candidate_fallback",
+                word=word,
+                vocab_size=len(self._vocabulary),
+                fast_candidates=fast_candidates,
+                fallback_candidates=len(scored)
+            )
 
         scored.sort()
         return [w for _, w in scored[: self._max_candidates]]

@@ -120,12 +120,27 @@ export async function applyOperations(
   await Word.run(async (context) => {
     for (const operation of ordered) {
       try {
-        // Paragraphs are re-loaded per operation because the previous edit
-        // invalidated the proxy objects. The cost is one sync per operation,
-        // which is the price of applying a batch correctly rather than quickly.
         const range = await resolveRange(context, operation);
-        range.insertText(operation.newText, Word.InsertLocation.replace);
+        
+        range.load('text');
         await context.sync();
+        console.log(`[INSTRUMENTATION 1] BEFORE INSERT: range.text='${range.text}'`);
+        
+        range.insertText(operation.newText, Word.InsertLocation.replace);
+        console.log(`[INSTRUMENTATION 2] AFTER insertText CALLED`);
+        
+        await context.sync();
+        console.log(`[INSTRUMENTATION 3] AFTER context.sync()`);
+        
+        range.load('text');
+        await context.sync();
+        console.log(`[INSTRUMENTATION 4] RE-LOADED RANGE: range.text='${range.text}'`);
+        
+        const body = context.document.body;
+        body.load('text');
+        await context.sync();
+        console.log(`[INSTRUMENTATION 5] BODY TEXT AFTER SYNC: ${body.text}`);
+        
         report.applied.push(operation);
       } catch (error) {
         report.skipped.push({
