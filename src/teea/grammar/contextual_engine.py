@@ -65,11 +65,30 @@ SAFE_WORDS: Final[frozenset[str]] = frozenset({
 class ContextualGrammarEngine:
     """Rule-based Contextual Grammar and Semantic Engine for Tibetan text."""
 
-    def __init__(self, dictionary: Any = None) -> None:
+    def __init__(self, dictionary: Any = None, confusion_sets_path: Any = None) -> None:
         if dictionary is None:
             from teea.persistence.dictionary import default_dictionary
             dictionary = default_dictionary()
         self._dictionary = dictionary
+        self._confusion_map: dict[str, str] = {}
+        self._load_confusion_sets(confusion_sets_path)
+
+    def _load_confusion_sets(self, path: Any = None) -> None:
+        from pathlib import Path
+        import json
+        p = Path(path) if path else Path(__file__).resolve().parents[3] / "Data" / "Processed" / "confusion_sets.json"
+        if p.exists():
+            try:
+                with open(p, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    c_dict = data.get("confusion_dict", {})
+                    for k, v in c_dict.items():
+                        norm_k = k.strip("་ །\u0f0b\u0f0d ")
+                        sug = v[0] if isinstance(v, list) and len(v) > 0 else (v if isinstance(v, str) else "")
+                        if norm_k and sug:
+                            self._confusion_map[norm_k] = sug
+            except Exception:
+                pass
 
     def _spelling_fallbacks(
         self, words_with_spans: list[tuple[str, int, int]], i: int, sentence_text: str
@@ -78,11 +97,33 @@ class ContextualGrammarEngine:
         w_raw, s_start, s_end = words_with_spans[i]
         w = w_raw.strip("་ །\u0f0b\u0f0d ")
 
-        # Multi-token compound fallback checks
+        # Multi-token compound fallback checks (up to 3 tokens) against dynamic confusion map
+        for span_len in (3, 2):
+            if i + span_len <= len(words_with_spans):
+                sub_tokens = [words_with_spans[k][0].strip("་ །\u0f0b\u0f0d ") for k in range(i, i + span_len)]
+                compound_candidates = [
+                    "་".join(sub_tokens),
+                    " ".join(sub_tokens),
+                    "".join(sub_tokens),
+                ]
+                for key in compound_candidates:
+                    if key in self._confusion_map:
+                        s_end_span = words_with_spans[i + span_len - 1][2]
+                        sug = self._confusion_map[key]
+                        span_text = sentence_text[s_start:s_end_span] if sentence_text else key
+                        return ContextualError(
+                            word=span_text,
+                            char_start=s_start,
+                            char_end=s_end_span,
+                            error_code="SPELLING_FALLBACK_COMPOUND",
+                            error_type="SPELLING",
+                            message=f"Spelling error: '{span_text}', expected '{sug}'.",
+                            suggestion=sug,
+                        )
+
         if i + 1 < len(words_with_spans):
             w_next_raw, s_next_start, s_next_end = words_with_spans[i + 1]
             w_next = w_next_raw.strip("་ །\u0f0b\u0f0d ")
-
             if w == "བཅང" and w_next == "པོ":
                 span_text = sentence_text[s_start:s_next_end] if sentence_text else "བཅང་པོ"
                 return ContextualError(
@@ -117,22 +158,23 @@ class ContextualGrammarEngine:
                     suggestion="ཧ་ཅང",
                 )
 
-        # Single-token fallback check
+        # Single-token fallback check against dynamic confusion map & hardcoded fallbacks
         fallbacks = {
             "བཅང་པོ": "ཆང་པོ",
             "ཆེན་ཕོ": "ཆེན་པོ",
             "ཧ་བཅང": "ཧ་ཅང",
             "བཅང": "ཅང",
         }
-        if w in fallbacks:
+        sug = self._confusion_map.get(w) or fallbacks.get(w)
+        if sug:
             return ContextualError(
                 word=w_raw,
                 char_start=s_start,
                 char_end=s_end,
                 error_code="SPELLING_FALLBACK",
                 error_type="SPELLING",
-                message=f"Spelling error: '{w}', expected '{fallbacks[w]}'.",
-                suggestion=fallbacks[w],
+                message=f"Spelling error: '{w}', expected '{sug}'.",
+                suggestion=sug,
             )
         return None
 
@@ -317,20 +359,17 @@ class ContextualGrammarEngine:
 
             w = w_raw.strip("་ །\u0f0b\u0f0d ")
 
-            # FIRST: Check safe words
-            if w in SAFE_WORDS:
-                continue
-
-            # Spelling Fallback rules
+            # Spelling Fallback rules (check fallbacks first so multi-token compounds match even if 1st token is in SAFE_WORDS)
             fallback_err = self._spelling_fallbacks(words_with_spans, i, sentence_text)
             if fallback_err:
                 errors.append(fallback_err)
-                if fallback_err.error_code in (
-                    "SPELLING_FALLBACK_BCANG_PO",
-                    "SPELLING_FALLBACK_CHEN_PHO",
-                    "SPELLING_FALLBACK_HA_BCANG",
-                ):
-                    skip_indices.add(i + 1)
+                for k in range(i + 1, len(words_with_spans)):
+                    if words_with_spans[k][1] < fallback_err.char_end:
+                        skip_indices.add(k)
+                continue
+
+            # FIRST: Check safe words for single tokens
+            if w in SAFE_WORDS:
                 continue
 
             # Verb Form rules (e.g. བྱས་ནི -> བྱེད་པ, བྱས་ཆེད -> བྱེད་ཆེད)
