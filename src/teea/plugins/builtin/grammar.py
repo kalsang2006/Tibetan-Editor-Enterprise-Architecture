@@ -65,7 +65,7 @@ def _get_tibetan_final_consonant(word: str) -> str:
         return "open"
 
     last_char = word[-1]
-    if "\u0f71" <= last_char <= "\u0f87" or last_char in ("འ", "\u0f60"):
+    if "\u0f71" <= last_char <= "\u0f87" or "\u0f90" <= last_char <= "\u0fbc" or last_char in ("འ", "\u0f60"):
         return "open"
 
     last_c = inline_consonants[-1]
@@ -191,16 +191,21 @@ class GrammarCheckerPlugin:
             if not prev_word or not curr_word:
                 continue
 
-            # GUARD 1: Only check if node is actually a particle or case relation in POS analysis
-            if curr_node.morpheme.category not in (PosCategory.PARTICLE, PosCategory.PUNCTUATION) and curr_node.relation not in (DependencyRelation.CASE, DependencyRelation.MARK, DependencyRelation.AUX):
+            ALL_PARTICLES = ALL_GENITIVE | ALL_ERGATIVE | ALL_INTERROGATIVE | ALL_FINAL
+
+            # GUARD 1: Only check if node is actually a particle or case relation in POS analysis (or in recognized particle set)
+            if curr_node.morpheme.category not in (PosCategory.PARTICLE, PosCategory.PUNCTUATION) and curr_node.relation not in (DependencyRelation.CASE, DependencyRelation.MARK, DependencyRelation.AUX) and curr_word not in ALL_PARTICLES:
                 continue
 
             # GUARD 2: Do not treat valid compounds or non-particle dictionary words as particles
             from teea.persistence import default_dictionary
             dict_repo = default_dictionary()
-            if dict_repo.is_valid_word_or_compound(prev_word + curr_word) or dict_repo.is_valid_word_or_compound(prev_word + "\u0f0b" + curr_word):
+            if curr_word not in ALL_PARTICLES and (dict_repo.is_valid_word_or_compound(prev_word + curr_word) or dict_repo.is_valid_word_or_compound(prev_word + "\u0f0b" + curr_word)):
                 continue
-            if curr_node.morpheme.category in (PosCategory.NOUN, PosCategory.VERB, PosCategory.ADJECTIVE, PosCategory.PRONOUN, PosCategory.ADVERB) and dict_repo.is_valid_word_or_compound(curr_word):
+            is_at_sentence_end = (i == len(nodes) - 1) or (i < len(nodes) - 1 and nodes[i + 1].morpheme.category == PosCategory.PUNCTUATION)
+            ACTIVE_PARTICLES = ALL_GENITIVE | ALL_ERGATIVE | ((ALL_FINAL | ALL_INTERROGATIVE) if is_at_sentence_end else set())
+
+            if curr_node.morpheme.category in (PosCategory.NOUN, PosCategory.VERB, PosCategory.ADJECTIVE, PosCategory.PRONOUN, PosCategory.ADVERB) and dict_repo.is_valid_word_or_compound(curr_word) and curr_word not in ACTIVE_PARTICLES:
                 continue
 
             final_c = _get_tibetan_final_consonant(prev_word)

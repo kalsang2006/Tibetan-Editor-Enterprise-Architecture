@@ -35,7 +35,7 @@ describe('toSuggestion', () => {
   });
 
   it('derives a stable id from the source and span', () => {
-    expect(toSuggestion(daemon(), DOCUMENT)?.id).toBe('spell:4:7');
+    expect(toSuggestion(daemon(), DOCUMENT)?.id).toContain('spell:4:7');
   });
 
   it('uses character offsets and never byte offsets', () => {

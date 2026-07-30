@@ -62,20 +62,30 @@ const PRIORITY_SEVERITY: Record<
 };
 
 /**
- * Convert one daemon suggestion.
- *
- * @param raw What the Fusion Engine emitted.
- * @param documentText The text the offsets address, for `originalText`.
- * @returns The view model, or `null` for an advisory that recommends no edit.
+ * Map error_type or source to UI category cleanly.
  */
 export function categoryOf(source: string, errorType?: string): SuggestionCategory {
-  if (errorType === 'CONTEXTUAL_SEMANTIC') {
-    return 'Terminology';
-  }
-  if (errorType === 'TENSE_MISMATCH') {
+  const normType = (errorType || '').toUpperCase();
+  if (
+    normType.includes('GRAMMAR') ||
+    normType.includes('TENSE') ||
+    normType.includes('VERB') ||
+    normType.includes('ADJ')
+  ) {
     return 'Grammar';
   }
-  if (errorType === 'STRUCTURAL' || errorType === 'SPELLING') {
+  if (
+    normType.includes('CONTEXT') ||
+    normType.includes('SEMANTIC') ||
+    normType.includes('TERM')
+  ) {
+    return 'Terminology';
+  }
+  if (
+    normType.includes('STRUCTURAL') ||
+    normType.includes('SPELL') ||
+    normType.includes('TYPO')
+  ) {
     return 'Spelling';
   }
   return SOURCE_CATEGORIES[source.toLowerCase()] ?? FALLBACK_CATEGORY;
@@ -92,7 +102,7 @@ export function toSuggestion(
   raw: DaemonSuggestion,
   documentText: string,
 ): Suggestion | null {
-  if (raw.replacement == null) {
+  if (raw.replacement == null || raw.replacement === undefined) {
     return null;
   }
   const span = raw.span || (raw as any).range;
@@ -101,16 +111,19 @@ export function toSuggestion(
   }
   const start = span.char_start;
   const length = span.char_end - span.char_start;
+  const originalText = documentText.slice(start, start + length);
+  const ruleId = raw.error_type || raw.source || 'teea';
+
   return {
-    id: `${raw.source || 'teea'}:${start}:${span.char_end}`,
+    id: `${raw.source || 'teea'}:${start}:${span.char_end}:${raw.replacement}`,
     start,
     length,
-    originalText: documentText.slice(start, start + length),
+    originalText,
     suggestedText: raw.replacement,
     category: categoryOf(raw.source || 'teea', raw.error_type),
     severity: (raw.priority && PRIORITY_SEVERITY[raw.priority]) ?? 'suggestion',
     explanation: raw.message || '',
-    ruleId: raw.source || 'teea',
+    ruleId,
     confidence: clampConfidence(raw.score ?? 0.8),
   };
 }
@@ -132,7 +145,25 @@ export function toSuggestions(
     list = (raw as any).suggestions;
   } else if (raw && typeof raw === 'object' && (raw as any).result && Array.isArray((raw as any).result.suggestions)) {
     list = (raw as any).result.suggestions;
+  } else if (
+    raw &&
+    typeof raw === 'object' &&
+    (raw as any).result &&
+    (raw as any).result.patch &&
+    Array.isArray((raw as any).result.patch.operations)
+  ) {
+    const ops = (raw as any).result.patch.operations;
+    list = ops.map((op: any) => ({
+      source: (op.sources && op.sources[0]) || 'teea.grammar',
+      span: op.span,
+      replacement: op.replacement,
+      score: 0.9,
+      priority: 'high',
+      message: `Suggestion: replace with ${op.replacement}`,
+      error_type: 'GRAMMAR',
+    }));
   }
+
   const converted: Suggestion[] = [];
   for (const item of list) {
     if (item && typeof item === 'object') {
@@ -147,14 +178,10 @@ export function toSuggestions(
 
 /**
  * Hold a confidence inside `[0, 1]`.
- *
- * The daemon validates the range on its own models, but a suggestion that
- * crossed the boundary from a future component with a looser contract would
- * otherwise render a progress bar past its own track.
  */
-export function clampConfidence(score: number): number {
-  if (!Number.isFinite(score)) {
+export function clampConfidence(value: number): number {
+  if (Number.isNaN(value)) {
     return 0;
   }
-  return Math.min(1, Math.max(0, score));
+  return Math.max(0, Math.min(1, value));
 }
