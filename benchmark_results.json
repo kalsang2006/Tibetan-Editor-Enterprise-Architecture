@@ -1,0 +1,687 @@
+{
+  "config_load": {
+    "name": "config_load",
+    "unit": "ms",
+    "samples": 15,
+    "mean": 1.0054,
+    "median": 0.9873,
+    "min": 0.7845,
+    "max": 1.3375,
+    "p95": 1.3375,
+    "p99": 1.3375,
+    "stdev": 0.1381,
+    "metadata": {
+      "file_source": "environment + defaults"
+    }
+  },
+  "file_load_small_text": {
+    "name": "file_load_small_text",
+    "unit": "ms",
+    "samples": 20,
+    "mean": 0.0471,
+    "median": 0.0377,
+    "min": 0.033,
+    "max": 0.146,
+    "p95": 0.146,
+    "p99": 0.146,
+    "stdev": 0.0273,
+    "metadata": {
+      "path": "test.txt",
+      "size_bytes": 42,
+      "type": "text"
+    }
+  },
+  "file_load_mila_sentences": {
+    "name": "file_load_mila_sentences",
+    "unit": "ms",
+    "samples": 20,
+    "mean": 0.0791,
+    "median": 0.0785,
+    "min": 0.0723,
+    "max": 0.091,
+    "p95": 0.091,
+    "p99": 0.091,
+    "stdev": 0.0044,
+    "metadata": {
+      "path": "tests/data/mila_sentences.txt",
+      "size_bytes": 10059,
+      "type": "text"
+    }
+  },
+  "file_load_lexicon_sample": {
+    "name": "file_load_lexicon_sample",
+    "unit": "ms",
+    "samples": 20,
+    "mean": 0.0841,
+    "median": 0.0829,
+    "min": 0.0806,
+    "max": 0.108,
+    "p95": 0.108,
+    "p99": 0.108,
+    "stdev": 0.0057,
+    "metadata": {
+      "path": "tests/data/lexicon_sample.json",
+      "size_bytes": 2688,
+      "type": "json"
+    }
+  },
+  "file_load_lexicon_sample_parse": {
+    "name": "file_load_lexicon_sample_parse",
+    "unit": "ms",
+    "samples": 20,
+    "mean": 0.1241,
+    "median": 0.1189,
+    "min": 0.1132,
+    "max": 0.1794,
+    "p95": 0.1794,
+    "p99": 0.1794,
+    "stdev": 0.0153,
+    "metadata": {
+      "path": "tests/data/lexicon_sample.json",
+      "size_bytes": 2688
+    }
+  },
+  "import_teea": {
+    "name": "import_teea",
+    "unit": "ms",
+    "samples": 5,
+    "mean": 0.0026,
+    "median": 0.0015,
+    "min": 0.0011,
+    "max": 0.0074,
+    "p95": 0.0074,
+    "p99": 0.0074,
+    "stdev": 0.0027,
+    "metadata": {
+      "module": "teea"
+    }
+  },
+  "import_teea_core_config": {
+    "name": "import_teea_core_config",
+    "unit": "ms",
+    "samples": 5,
+    "mean": 0.0025,
+    "median": 0.0013,
+    "min": 0.0011,
+    "max": 0.0067,
+    "p95": 0.0067,
+    "p99": 0.0067,
+    "stdev": 0.0024,
+    "metadata": {
+      "module": "teea.core.config"
+    }
+  },
+  "import_teea_core_logging": {
+    "name": "import_teea_core_logging",
+    "unit": "ms",
+    "samples": 5,
+    "mean": 0.0024,
+    "median": 0.0012,
+    "min": 0.0011,
+    "max": 0.0069,
+    "p95": 0.0069,
+    "p99": 0.0069,
+    "stdev": 0.0025,
+    "metadata": {
+      "module": "teea.core.logging"
+    }
+  },
+  "import_teea_nlp_snapshot": {
+    "name": "import_teea_nlp_snapshot",
+    "unit": "ms",
+    "samples": 5,
+    "mean": 0.0011,
+    "median": 0.0005,
+    "min": 0.0004,
+    "max": 0.003,
+    "p95": 0.003,
+    "p99": 0.003,
+    "stdev": 0.0011,
+    "metadata": {
+      "module": "teea.nlp.snapshot"
+    }
+  },
+  "import_teea_nlp_tokenization": {
+    "name": "import_teea_nlp_tokenization",
+    "unit": "ms",
+    "samples": 5,
+    "mean": 0.0008,
+    "median": 0.0005,
+    "min": 0.0004,
+    "max": 0.002,
+    "p95": 0.002,
+    "p99": 0.002,
+    "stdev": 0.0007,
+    "metadata": {
+      "module": "teea.nlp.tokenization"
+    }
+  },
+  "import_teea_nlp_segmentation": {
+    "name": "import_teea_nlp_segmentation",
+    "unit": "ms",
+    "samples": 5,
+    "mean": 0.0009,
+    "median": 0.0005,
+    "min": 0.0005,
+    "max": 0.0023,
+    "p95": 0.0023,
+    "p99": 0.0023,
+    "stdev": 0.0008,
+    "metadata": {
+      "module": "teea.nlp.segmentation"
+    }
+  },
+  "import_teea_nlp_postagging": {
+    "name": "import_teea_nlp_postagging",
+    "unit": "ms",
+    "samples": 5,
+    "mean": 0.0008,
+    "median": 0.0005,
+    "min": 0.0004,
+    "max": 0.0021,
+    "p95": 0.0021,
+    "p99": 0.0021,
+    "stdev": 0.0007,
+    "metadata": {
+      "module": "teea.nlp.postagging"
+    }
+  },
+  "import_teea_plugins": {
+    "name": "import_teea_plugins",
+    "unit": "ms",
+    "samples": 5,
+    "mean": 0.0012,
+    "median": 0.0006,
+    "min": 0.0004,
+    "max": 0.0038,
+    "p95": 0.0038,
+    "p99": 0.0038,
+    "stdev": 0.0014,
+    "metadata": {
+      "module": "teea.plugins"
+    }
+  },
+  "import_teea_persistence": {
+    "name": "import_teea_persistence",
+    "unit": "ms",
+    "samples": 5,
+    "mean": 0.0011,
+    "median": 0.0005,
+    "min": 0.0005,
+    "max": 0.0035,
+    "p95": 0.0035,
+    "p99": 0.0035,
+    "stdev": 0.0013,
+    "metadata": {
+      "module": "teea.persistence"
+    }
+  },
+  "import_teea_fusion": {
+    "name": "import_teea_fusion",
+    "unit": "ms",
+    "samples": 5,
+    "mean": 0.001,
+    "median": 0.0006,
+    "min": 0.0004,
+    "max": 0.0028,
+    "p95": 0.0028,
+    "p99": 0.0028,
+    "stdev": 0.001,
+    "metadata": {
+      "module": "teea.fusion"
+    }
+  },
+  "memory_idle": {
+    "unit": "MB",
+    "samples": 1,
+    "idle_rss_mb": 81.2,
+    "idle_vms_mb": 676.16
+  },
+  "gc_stats": {
+    "unit": "count",
+    "total_collections": 241,
+    "total_collected": 1460,
+    "generation_0_collections": 220,
+    "generation_1_collections": 19,
+    "generation_2_collections": 2
+  },
+  "cpu_idle": {
+    "unit": "percent",
+    "value": 0.0
+  },
+  "thread_count": {
+    "unit": "threads",
+    "value": 23
+  },
+  "handle_count": {
+    "unit": "handles",
+    "value": 350
+  },
+  "startup_latency": {
+    "unit": "ms",
+    "value": 285.46,
+    "description": "Python startup + teea.core.config import + load_settings()"
+  },
+  "profiling_top20_cumulative": {
+    "unit": "calls",
+    "output": "         931501 function calls in 1.372 seconds\n\n   Ordered by: cumulative time\n   List reduced from 145 to 20 due to restriction <20>\n\n   ncalls  tottime  percall  cumtime  percall filename:lineno(function)\n       50    0.001    0.000    1.372    0.027 C:\\Users\\kalsa\\Desktop\\Tibetan Editor Enterprise Architecture\\src\\teea\\nlp\\snapshot\\builder.py:98(analyze)\n      100    0.000    0.000    1.356    0.014 C:\\Users\\kalsa\\Desktop\\Tibetan Editor Enterprise Architecture\\src\\teea\\nlp\\snapshot\\builder.py:112(<genexpr>)\n       50    0.002    0.000    1.356    0.027 C:\\Users\\kalsa\\Desktop\\Tibetan Editor Enterprise Architecture\\src\\teea\\nlp\\snapshot\\builder.py:141(_analyze)\n       50    0.002    0.000    1.115    0.022 C:\\Users\\kalsa\\Desktop\\Tibetan Editor Enterprise Architecture\\src\\teea\\nlp\\postagging\\tagger.py:185(tag)\n       50    0.501    0.010    1.082    0.022 C:\\Users\\kalsa\\Desktop\\Tibetan Editor Enterprise Architecture\\src\\teea\\nlp\\postagging\\tagger.py:263(_viterbi)\n   382650    0.411    0.000    0.531    0.000 C:\\Users\\kalsa\\Desktop\\Tibetan Editor Enterprise Architecture\\src\\teea\\nlp\\postagging\\tagger.py:249(_transition_logp)\n     3550    0.006    0.000    0.143    0.000 C:\\Users\\kalsa\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\pydantic\\main.py:253(__init__)\n     3550    0.060    0.000    0.136    0.000 {method 'validate_python' of 'pydantic_core._pydantic_core.SchemaValidator' objects}\n   402950    0.128    0.000    0.129    0.000 {method 'get' of 'dict' objects}\n       50    0.004    0.000    0.076    0.002 C:\\Users\\kalsa\\Desktop\\Tibetan Editor Enterprise Architecture\\src\\teea\\nlp\\semantics\\analyzer.py:229(analyze)\n       50    0.002    0.000    0.058    0.001 C:\\Users\\kalsa\\Desktop\\Tibetan Editor Enterprise Architecture\\src\\teea\\nlp\\morphology\\analyzer.py:84(analyze)\n    12550    0.025    0.000    0.045    0.000 C:\\Users\\kalsa\\Desktop\\Tibetan Editor Enterprise Architecture\\src\\teea\\nlp\\postagging\\tagger.py:238(_emission_logp)\n       50    0.003    0.000    0.039    0.001 C:\\Users\\kalsa\\Desktop\\Tibetan Editor Enterprise Architecture\\src\\teea\\nlp\\dependency\\parser.py:171(parse)\n      350    0.001    0.000    0.037    0.000 C:\\Users\\kalsa\\Desktop\\Tibetan Editor Enterprise Architecture\\src\\teea\\nlp\\semantics\\analyzer.py:282(<genexpr>)\n      300    0.008    0.000    0.036    0.000 C:\\Users\\kalsa\\Desktop\\Tibetan Editor Enterprise Architecture\\src\\teea\\nlp\\semantics\\analyzer.py:293(_build_node)\n       50    0.003    0.000    0.027    0.001 C:\\Users\\kalsa\\Desktop\\Tibetan Editor Enterprise Architecture\\src\\teea\\nlp\\ner\\recognizer.py:88(recognize)\n      350    0.003    0.000    0.025    0.000 C:\\Users\\kalsa\\Desktop\\Tibetan Editor Enterprise Architecture\\src\\teea\\nlp\\morphology\\analyzer.py:113(_analyze_syllable)\n       50    0.003    0.000    0.022    0.000 C:\\Users\\kalsa\\Desktop\\Tibetan Editor Enterprise Architecture\\src\\teea\\nlp\\tokenization\\syllable.py:55(segment)\n      350    0.010    0.000    0.022    0.000 C:\\Users\\kalsa\\Desktop\\Tibet"
+  },
+  "profiling_top20_bytime": {
+    "unit": "calls",
+    "output": "         931501 function calls in 1.372 seconds\n\n   Ordered by: internal time\n   List reduced from 145 to 20 due to restriction <20>\n\n   ncalls  tottime  percall  cumtime  percall filename:lineno(function)\n       50    0.501    0.010    1.082    0.022 C:\\Users\\kalsa\\Desktop\\Tibetan Editor Enterprise Architecture\\src\\teea\\nlp\\postagging\\tagger.py:263(_viterbi)\n   382650    0.411    0.000    0.531    0.000 C:\\Users\\kalsa\\Desktop\\Tibetan Editor Enterprise Architecture\\src\\teea\\nlp\\postagging\\tagger.py:249(_transition_logp)\n   402950    0.128    0.000    0.129    0.000 {method 'get' of 'dict' objects}\n     3550    0.060    0.000    0.136    0.000 {method 'validate_python' of 'pydantic_core._pydantic_core.SchemaValidator' objects}\n    12550    0.025    0.000    0.045    0.000 C:\\Users\\kalsa\\Desktop\\Tibetan Editor Enterprise Architecture\\src\\teea\\nlp\\postagging\\tagger.py:238(_emission_logp)\n    12900    0.012    0.000    0.017    0.000 C:\\Users\\kalsa\\Desktop\\Tibetan Editor Enterprise Architecture\\src\\teea\\persistence\\dictionary.py:140(lookup)\n     1700    0.011    0.000    0.016    0.000 C:\\Users\\kalsa\\Desktop\\Tibetan Editor Enterprise Architecture\\src\\teea\\nlp\\postagging\\models.py:83(coarse_category)\n      350    0.010    0.000    0.022    0.000 C:\\Users\\kalsa\\Desktop\\Tibetan Editor Enterprise Architecture\\src\\teea\\nlp\\ner\\recognizer.py:135(_longest_gazetteer_match)\n     1050    0.009    0.000    0.013    0.000 C:\\Users\\kalsa\\Desktop\\Tibetan Editor Enterprise Architecture\\src\\teea\\nlp\\morphology\\models.py:114(_validate_consistency)\n      300    0.008    0.000    0.036    0.000 C:\\Users\\kalsa\\Desktop\\Tibetan Editor Enterprise Architecture\\src\\teea\\nlp\\semantics\\analyzer.py:293(_build_node)\n      100    0.006    0.000    0.009    0.000 C:\\Users\\kalsa\\Desktop\\Tibetan Editor Enterprise Architecture\\src\\teea\\nlp\\semantics\\models.py:376(_reject_cycles)\n      100    0.006    0.000    0.010    0.000 C:\\Users\\kalsa\\Desktop\\Tibetan Editor Enterprise Architecture\\src\\teea\\nlp\\dependency\\models.py:151(_validate_tree)\n     3550    0.006    0.000    0.143    0.000 C:\\Users\\kalsa\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\pydantic\\main.py:253(__init__)\n      350    0.006    0.000    0.014    0.000 C:\\Users\\kalsa\\Desktop\\Tibetan Editor Enterprise Architecture\\src\\teea\\nlp\\terminology\\recognizer.py:91(_longest_match)\n     8850    0.006    0.000    0.006    0.000 C:\\Users\\kalsa\\Desktop\\Tibetan Editor Enterprise Architecture\\src\\teea\\nlp\\postagging\\models.py:134(text)\n     5600    0.005    0.000    0.009    0.000 C:\\Users\\kalsa\\Desktop\\Tibetan Editor Enterprise Architecture\\src\\teea\\nlp\\ner\\recognizer.py:152(<genexpr>)\n      450    0.005    0.000    0.006    0.000 C:\\Users\\kalsa\\Desktop\\Tibetan Editor Enterprise Architecture\\src\\teea\\nlp\\dependency\\parser.py:114(_is_nominal)\n    14050    0.005    0.000    0.005    0.000 {built-in method builtins.len}\n      100    0.005    0.000    0.007    0.000 C:\\Users\\kalsa\\Desktop\\Tibetan Editor Enterprise Architectur"
+  },
+  "profiling_total_calls": {
+    "unit": "calls",
+    "value": 931501,
+    "per_analysis": 18630.0
+  },
+  "allocation_trace": {
+    "unit": "bytes",
+    "current": 310160,
+    "peak": 311401,
+    "peak_mb": 0.3
+  },
+  "nlp_builder_creation": {
+    "name": "nlp_builder_creation",
+    "unit": "ms",
+    "samples": 10,
+    "mean": 4.0876,
+    "median": 4.0233,
+    "min": 2.7773,
+    "max": 5.6029,
+    "p95": 5.6029,
+    "p99": 5.6029,
+    "stdev": 1.217,
+    "metadata": {}
+  },
+  "nlp_sentence_0": {
+    "name": "nlp_sentence_0",
+    "unit": "ms",
+    "samples": 50,
+    "mean": 1.5824,
+    "median": 1.4499,
+    "min": 1.2144,
+    "max": 3.3253,
+    "p95": 2.332,
+    "p99": 3.3253,
+    "stdev": 0.3604,
+    "metadata": {
+      "text": "བཀྲ་ཤིས་བདེ་ལེགས།",
+      "chars": 17,
+      "text_length": 17
+    }
+  },
+  "nlp_sentence_1": {
+    "name": "nlp_sentence_1",
+    "unit": "ms",
+    "samples": 50,
+    "mean": 2.0531,
+    "median": 1.9963,
+    "min": 1.8795,
+    "max": 2.7829,
+    "p95": 2.5362,
+    "p99": 2.7829,
+    "stdev": 0.1824,
+    "metadata": {
+      "text": "ང་བཀྲ་ཤིམ་ཟེར།",
+      "chars": 14,
+      "text_length": 14
+    }
+  },
+  "nlp_sentence_2": {
+    "name": "nlp_sentence_2",
+    "unit": "ms",
+    "samples": 50,
+    "mean": 1.254,
+    "median": 1.2036,
+    "min": 0.977,
+    "max": 2.0813,
+    "p95": 1.5877,
+    "p99": 2.0813,
+    "stdev": 0.1677,
+    "metadata": {
+      "text": "ཕྱིན་ནས་ཕྱིན་ནས།",
+      "chars": 16,
+      "text_length": 16
+    }
+  },
+  "nlp_sentence_3": {
+    "name": "nlp_sentence_3",
+    "unit": "ms",
+    "samples": 50,
+    "mean": 1.6001,
+    "median": 1.5257,
+    "min": 0.9164,
+    "max": 2.8559,
+    "p95": 2.0074,
+    "p99": 2.8559,
+    "stdev": 0.2513,
+    "metadata": {
+      "text": "མངོན་སུམ་དུ་གྱུར་ཏོ།",
+      "chars": 20,
+      "text_length": 20
+    }
+  },
+  "nlp_sentence_4": {
+    "name": "nlp_sentence_4",
+    "unit": "ms",
+    "samples": 50,
+    "mean": 2.3526,
+    "median": 2.1917,
+    "min": 2.0849,
+    "max": 3.5556,
+    "p95": 3.0896,
+    "p99": 3.5556,
+    "stdev": 0.3525,
+    "metadata": {
+      "text": "རྒྱལ་པོ་ཆེན་པོ་དེ་དག་གིས།",
+      "chars": 25,
+      "text_length": 25
+    }
+  },
+  "nlp_multi_sentence_10": {
+    "name": "nlp_multi_sentence_10",
+    "unit": "ms",
+    "samples": 30,
+    "mean": 36.2781,
+    "median": 37.0977,
+    "min": 21.4781,
+    "max": 42.6442,
+    "p95": 39.0997,
+    "p99": 42.6442,
+    "stdev": 3.7511,
+    "metadata": {
+      "sentence_count": 10,
+      "char_count": 406
+    }
+  },
+  "nlp_large_text": {
+    "name": "nlp_large_text",
+    "unit": "ms",
+    "samples": 5,
+    "mean": 330.2679,
+    "median": 319.0527,
+    "min": 305.4426,
+    "max": 387.0461,
+    "p95": 387.0461,
+    "p99": 387.0461,
+    "stdev": 32.4598,
+    "metadata": {
+      "char_count": 3393
+    }
+  },
+  "nlp_memory_analysis": {
+    "unit": "MB",
+    "memory_before": 97.35,
+    "memory_after": 126.02,
+    "delta_mb": 28.67,
+    "text_char_count": 25678
+  },
+  "dict_loading": {
+    "name": "dict_loading",
+    "unit": "ms",
+    "samples": 15,
+    "mean": 0.0008,
+    "median": 0.0007,
+    "min": 0.0005,
+    "max": 0.002,
+    "p95": 0.002,
+    "p99": 0.002,
+    "stdev": 0.0004,
+    "metadata": {
+      "vocabulary_size": 2085
+    }
+  },
+  "dict_lookup_100": {
+    "name": "dict_lookup_100",
+    "unit": "ms",
+    "samples": 20,
+    "mean": 19.2729,
+    "median": 19.1275,
+    "min": 17.3979,
+    "max": 20.8759,
+    "p95": 20.8759,
+    "p99": 20.8759,
+    "stdev": 0.8832,
+    "metadata": {
+      "words_tested": 100
+    }
+  },
+  "lexicon_classical_lexicon": {
+    "name": "lexicon_classical_lexicon",
+    "unit": "ms",
+    "samples": 10,
+    "mean": 9.6966,
+    "median": 9.7406,
+    "min": 8.8759,
+    "max": 10.5849,
+    "p95": 10.5849,
+    "p99": 10.5849,
+    "stdev": 0.5191,
+    "metadata": {
+      "path": "Data/Lexicons/classical-lexicon.txt"
+    }
+  },
+  "vocabulary_loading": {
+    "name": "vocabulary_loading",
+    "unit": "ms",
+    "samples": 10,
+    "mean": 227.1288,
+    "median": 279.2142,
+    "min": 99.6264,
+    "max": 310.6017,
+    "p95": 310.6017,
+    "p99": 310.6017,
+    "stdev": 86.0878,
+    "metadata": {
+      "path": "Data/Processed/bocorpus_vocabulary.json",
+      "vocabulary_entries": 3
+    }
+  },
+  "json_load_bocorpus_ngrams": {
+    "name": "json_load_bocorpus_ngrams",
+    "unit": "ms",
+    "samples": 10,
+    "mean": 150.2511,
+    "median": 152.5547,
+    "min": 140.4433,
+    "max": 160.9602,
+    "p95": 160.9602,
+    "p99": 160.9602,
+    "stdev": 6.9779,
+    "metadata": {
+      "path": "Data/Processed/bocorpus_ngrams.json",
+      "size_bytes": 3665944
+    }
+  },
+  "json_load_collocations": {
+    "name": "json_load_collocations",
+    "unit": "ms",
+    "samples": 10,
+    "mean": 0.4298,
+    "median": 0.4282,
+    "min": 0.3936,
+    "max": 0.4659,
+    "p95": 0.4659,
+    "p99": 0.4659,
+    "stdev": 0.0191,
+    "metadata": {
+      "path": "Data/Processed/collocations.json",
+      "size_bytes": 854
+    }
+  },
+  "json_load_confusion_sets": {
+    "name": "json_load_confusion_sets",
+    "unit": "ms",
+    "samples": 10,
+    "mean": 0.3904,
+    "median": 0.3827,
+    "min": 0.3461,
+    "max": 0.4877,
+    "p95": 0.4877,
+    "p99": 0.4877,
+    "stdev": 0.0438,
+    "metadata": {
+      "path": "Data/Processed/confusion_sets.json",
+      "size_bytes": 240
+    }
+  },
+  "json_load_corpus_stats": {
+    "name": "json_load_corpus_stats",
+    "unit": "ms",
+    "samples": 10,
+    "mean": 0.7259,
+    "median": 0.7352,
+    "min": 0.6114,
+    "max": 0.7605,
+    "p95": 0.7605,
+    "p99": 0.7605,
+    "stdev": 0.0433,
+    "metadata": {
+      "path": "Data/Processed/corpus_stats.json",
+      "size_bytes": 17069
+    }
+  },
+  "json_load_synthetic_errors": {
+    "error": "File not found: C:\\Users\\kalsa\\Desktop\\Tibetan Editor Enterprise Architecture\\Data\\Data\\SyntheticErrors\\synthetic_errors.json",
+    "unit": "N/A"
+  },
+  "json_load_verb_lexicon": {
+    "name": "json_load_verb_lexicon",
+    "unit": "ms",
+    "samples": 10,
+    "mean": 0.464,
+    "median": 0.458,
+    "min": 0.4031,
+    "max": 0.5515,
+    "p95": 0.5515,
+    "p99": 0.5515,
+    "stdev": 0.0464,
+    "metadata": {
+      "path": "Data/Processed/verb_lexicon.json",
+      "size_bytes": 1137
+    }
+  },
+  "json_load_sanskrit_words": {
+    "name": "json_load_sanskrit_words",
+    "unit": "ms",
+    "samples": 10,
+    "mean": 0.3533,
+    "median": 0.3511,
+    "min": 0.3461,
+    "max": 0.3735,
+    "p95": 0.3735,
+    "p99": 0.3735,
+    "stdev": 0.0083,
+    "metadata": {
+      "path": "Data/Processed/sanskrit_words.json",
+      "size_bytes": 269
+    }
+  },
+  "plugin_spell_checker": {
+    "error": "'SpellCheckerPlugin' object has no attribute 'analyze'",
+    "unit": "N/A"
+  },
+  "plugin_grammar_checker": {
+    "error": "'GrammarCheckerPlugin' object has no attribute 'analyze'",
+    "unit": "N/A"
+  },
+  "plugin_diagnostics": {
+    "error": "'DocumentDiagnosticsPlugin' object has no attribute 'analyze'",
+    "unit": "N/A"
+  },
+  "plugin_typography": {
+    "error": "'TypographyPlugin' object has no attribute 'analyze'",
+    "unit": "N/A"
+  },
+  "plugin_runtime_all": {
+    "name": "plugin_runtime_all",
+    "unit": "ms",
+    "samples": 20,
+    "mean": 1.8073,
+    "median": 1.7468,
+    "min": 1.5041,
+    "max": 2.3938,
+    "p95": 2.3938,
+    "p99": 2.3938,
+    "stdev": 0.1954,
+    "metadata": {
+      "plugin_count": 4
+    }
+  },
+  "correction_candidates_བཀྲ་ཤིམ": {
+    "name": "correction_candidates_བཀྲ་ཤིམ",
+    "unit": "ms",
+    "samples": 20,
+    "mean": 41.4741,
+    "median": 41.4289,
+    "min": 38.8076,
+    "max": 43.2704,
+    "p95": 43.2704,
+    "p99": 43.2704,
+    "stdev": 1.0208,
+    "metadata": {
+      "word": "བཀྲ་ཤིམ"
+    }
+  },
+  "correction_candidates_བདེ་ལེག": {
+    "name": "correction_candidates_བདེ་ལེག",
+    "unit": "ms",
+    "samples": 20,
+    "mean": 42.2207,
+    "median": 41.5572,
+    "min": 39.9704,
+    "max": 47.7359,
+    "p95": 47.7359,
+    "p99": 47.7359,
+    "stdev": 1.8942,
+    "metadata": {
+      "word": "བདེ་ལེག"
+    }
+  },
+  "correction_candidates_མངོན་སུམ": {
+    "name": "correction_candidates_མངོན་སུམ",
+    "unit": "ms",
+    "samples": 20,
+    "mean": 6.7984,
+    "median": 6.6419,
+    "min": 6.0555,
+    "max": 8.6721,
+    "p95": 8.6721,
+    "p99": 8.6721,
+    "stdev": 0.7517,
+    "metadata": {
+      "word": "མངོན་སུམ"
+    }
+  },
+  "correction_candidates_རྒྱལ་པོ་": {
+    "name": "correction_candidates_རྒྱལ་པོ་",
+    "unit": "ms",
+    "samples": 20,
+    "mean": 5.4974,
+    "median": 6.103,
+    "min": 3.4748,
+    "max": 7.0778,
+    "p95": 7.0778,
+    "p99": 7.0778,
+    "stdev": 1.328,
+    "metadata": {
+      "word": "རྒྱལ་པོ་"
+    }
+  },
+  "correction_candidates_ཆོས་ཀྱི།": {
+    "name": "correction_candidates_ཆོས་ཀྱི།",
+    "unit": "ms",
+    "samples": 20,
+    "mean": 6.3861,
+    "median": 6.3089,
+    "min": 5.8042,
+    "max": 8.5908,
+    "p95": 8.5908,
+    "p99": 8.5908,
+    "stdev": 0.6085,
+    "metadata": {
+      "word": "ཆོས་ཀྱི།"
+    }
+  }
+}

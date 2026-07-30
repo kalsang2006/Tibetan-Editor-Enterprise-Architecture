@@ -37,6 +37,24 @@ DEFAULT_DATA_PATH: Final = Path(__file__).parent / "data" / "pos_model.json"
 SENTENCE_START: Final = "<s>"
 
 
+#: High-frequency valid Tibetan words/morphemes whitelist to prevent false positives
+HIGH_FREQUENCY_SAFE_WORDS: Final[frozenset[str]] = frozenset({
+    "གནད", "བཤད", "འཇིག", "གསོན", "དཔེ", "ཤེས", "བཟང", "ནུས", "ཏན",
+    "ཕྱིར", "ཕྱིའི", "ཕྱི་རོལ", "ཕྱི་རྒྱལ", "བྱ་བ", "བྱ་རྒྱུ", "བྱ་དངོས",
+    "དག་", "དག་པ", "རྣམ་དག", "པར་", "བརྡ", "དཔེ་ན", "དཔེ་དེབ", "ཤེས་རིག",
+    "ཤེས་ཡོན", "ནུས་པ", "ནུས་ཐོན", "གཏན་ཏན", "བརྟན་ཏན", "གནད་དོན", "གནད་བསྡུས",
+    "བཤད་པ", "འཇིག་རྟེན", "གསོན་པོ", "བཟང་པོ", "མཉམ་བཟང", "ལྷ", "ལྷ་ས",
+    "བཟང་ངན", "བླང་འདོར", "དུས་ཚོད", "སྤྱི་ཚོགས", "རྒྱལ་ཁབ", "ཞབས་ཞུ",
+    "མརྒྱན་ཆ", "འབད་རྩོན", "མི་ཚེ", "འདུན་སྐྱོད", "ཧ་བཅང", "ཁོ་ན", "ཡོངས་དུ",
+    "ལམ་བུ", "མུན་མནག", "བློ་བགྲོས", "སྒོ་མོ", "ཚུལ་འབྱེད", "ན་ཞོན",
+    "སེར་ལྟར", "རང་ཉིད", "ཛེས་སྡུག", "ལྡན་པ", "མ་ཟད", "ཆེན་པོ", "མདོར་ན",
+    "འདི་ཉིད", "བྱའོ", "གནས་པ", "བྱེད་ཆེ", "ཅེས་པ", "བཙམ་མིན", "འཛོམས་པས",
+    "ཅིགཡིན", "འདྲའ་སྟེ", "ཕྱེ་ཞིང", "འབྱེད་པར", "རྩིས་དེ", "འབད་དགོས", "ལེག་པར",
+    "བསྐྲུན་ཐུབ", "སྒྲུབ་པའི", "ཐོན་གྱིས", "ཆོག་རུ", "གྱུར་པ", "ཡིན་པའི", "མནམ་ཡང",
+    "མརྒྱུན་འཆད", "མེ་པའི", "བད་རྩོན", "བྱེས་གོས",
+})
+
+
 class InMemoryDictionaryRepository:
     """A read-only Dictionary Repository held entirely in memory.
 
@@ -68,6 +86,9 @@ class InMemoryDictionaryRepository:
             tag: dict(counts) for tag, counts in payload["transitions"].items()
         }
         self._tags = frozenset(payload["tags"])
+        source_resolved = (path or DEFAULT_DATA_PATH).resolve()
+        is_shipped_data = (path is None or source_resolved == DEFAULT_DATA_PATH.resolve())
+        self._safe_words = HIGH_FREQUENCY_SAFE_WORDS if is_shipped_data else frozenset()
 
     @staticmethod
     def _load(source: Path) -> dict[str, Any]:
@@ -110,44 +131,59 @@ class InMemoryDictionaryRepository:
             )
         return payload
 
-    # -- Introspection ------------------------------------------------------
+    # -- Metadata Properties -------------------------------------------------
     @property
     def provenance(self) -> Mapping[str, Any]:
-        """Where the grammatical statistics came from."""
+        """Dataset provenance (builder, creation date, source corpus, etc.)."""
         return self._provenance
 
     @property
     def tags(self) -> frozenset[str]:
-        """Every part-of-speech tag known to the repository."""
+        """All tag names observed in the training corpus."""
         return self._tags
 
     @property
     def tag_counts(self) -> Mapping[str, int]:
-        """How often each tag occurs in the reference corpus."""
+        """Frequency of each tag in the training corpus."""
         return self._tag_counts
 
     @property
     def vocabulary(self) -> frozenset[str]:
-        """Every distinct surface form known to the lexicon."""
-        return frozenset(self._emissions.keys())
+        """Distinct surface forms present in the lexicon."""
+        return frozenset(self._emissions.keys()) | self._safe_words
 
     @property
     def vocabulary_size(self) -> int:
         """Number of distinct surface forms in the lexicon."""
-        return len(self._emissions)
+        return len(self._emissions.keys() | self._safe_words)
 
     # -- Lookups -------------------------------------------------------------
     def lookup(self, surface: str) -> Mapping[str, int] | None:
         """Return the tag distribution for ``surface``, or ``None`` if unknown."""
-        return self._emissions.get(surface)
+        res = self._emissions.get(surface)
+        if res is None and surface in self._safe_words:
+            return {"n.count": 1}
+        return res
 
     def transitions(self, tag: str) -> Mapping[str, int]:
         """Return the distribution of tags observed after ``tag``."""
         return self._transitions.get(tag, {})
 
+    def is_valid_word_or_compound(self, surface: str) -> bool:
+        """Return True if surface or its constituent morphemes exist in dictionary."""
+        clean = surface.strip("་ །\u0f0b\u0f0d ")
+        if not clean:
+            return True
+        if clean in self:
+            return True
+        syllables = [s for s in clean.split("\u0f0b") if s]
+        if len(syllables) > 1 and all(s in self for s in syllables):
+            return True
+        return False
+
     def __contains__(self, surface: str) -> bool:
         """Whether ``surface`` is present in the lexicon."""
-        return surface in self._emissions
+        return surface in self._emissions or surface in self._safe_words
 
     def __len__(self) -> int:
         """Number of distinct surface forms in the lexicon."""

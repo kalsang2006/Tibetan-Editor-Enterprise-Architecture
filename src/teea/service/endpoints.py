@@ -56,6 +56,7 @@ class SuggestionModel(BaseModel):
     score: float
     priority: str
     message: str
+    error_type: str = "SPELLING"
     context_before: str = ""
     context_after: str = ""
 
@@ -179,6 +180,7 @@ def analyze_text(payload: AnalysisRequest, request: Request) -> AnalysisResponse
                 score=s.score,
                 priority=p_str,
                 message=s.message,
+                error_type=s.error_type,
                 context_before=ctx_before,
                 context_after=ctx_after,
             )
@@ -224,6 +226,7 @@ def run_legacy_analysis(payload: LegacyIpcRequest, request: Request) -> LegacyIp
                     if isinstance(s.priority, SuggestionPriority)
                     else str(s.priority)
                 ),
+                "error_type": s.error_type,
                 "message": s.message,
             }
         )

@@ -52,25 +52,32 @@ ALL_FINAL = {"གོ", "ངོ", "དོ", "ནོ", "བོ", "མོ", "འོ
 
 def _get_tibetan_final_consonant(word: str) -> str:
     """Extract the primary suffix consonant (rjes-'jug) of a Tibetan morpheme."""
-    word = word.rstrip("་ ། ཿ")
+    word = word.rstrip("་ ། ཿ\u0f0b\u0f0d ")
     if not word:
         return "open"
-    base_chars = [c for c in word if c not in ("\u0f72", "\u0f74", "\u0f7a", "\u0f7c", "\u0f71")]
-    if not base_chars:
-        return "open"
-    if len(base_chars) >= 2 and base_chars[-1] == "\u0f66":
-        c = base_chars[-2]
-    else:
-        c = base_chars[-1]
+    if "\u0f0b" in word:
+        syllables = [s for s in word.split("\u0f0b") if s]
+        if syllables:
+            word = syllables[-1]
 
-    if c in ("ག", "ང", "ད", "ན", "བ", "མ", "ར", "ལ", "ས"):
-        return c
+    inline_consonants = [c for c in word if "\u0f40" <= c <= "\u0f6a"]
+    if not inline_consonants:
+        return "open"
+
+    last_char = word[-1]
+    if "\u0f71" <= last_char <= "\u0f87" or last_char in ("འ", "\u0f60"):
+        return "open"
+
+    last_c = inline_consonants[-1]
+    if last_c in ("ག", "ང", "ད", "ན", "བ", "མ", "ར", "ལ", "ས"):
+        return last_c
     return "open"
 
 
 from teea.nlp.collocation import CollocationDatabase
 from teea.nlp.sanskrit import SanskritTransliterationValidator
 from teea.nlp.verb_lexicon import VerbLexicon, Transitivity
+from teea.grammar.contextual_engine import ContextualGrammarEngine
 
 
 class GrammarCheckerPlugin:
@@ -87,13 +94,15 @@ class GrammarCheckerPlugin:
       - Unresolved Dependency Tree Nodes
       - Question Mood Mismatch
       - Logical Consistency Checking
+      - Real-word Contextual & Semantic Mismatches
     """
 
     def __init__(self, name: str = "teea.grammar") -> None:
         self._name = name
         self._collocation_db = CollocationDatabase()
         self._verb_lexicon = VerbLexicon()
-        self._sanskrit_validator = SanskritTransliterationValidator()
+        from teea.persistence.dictionary import default_dictionary
+        self._contextual_engine = ContextualGrammarEngine(dictionary=default_dictionary())
 
     @property
     def name(self) -> str:
@@ -121,6 +130,33 @@ class GrammarCheckerPlugin:
             yield from self._check_double_negation(tree, sentence_text, sent_start, byte_table)
             yield from self._check_unresolved(tree, sentence_text, sent_start, byte_table)
             yield from self._check_question_mood(tree, analysis, sentence_text, sent_start, byte_table)
+            yield from self._check_contextual_semantics(sentence_text, sent_start, byte_table)
+
+    def _check_contextual_semantics(
+        self,
+        sentence_text: str,
+        sent_start: int,
+        byte_table: list[int],
+    ) -> Iterable[Suggestion]:
+        errors = self._contextual_engine.analyze_sentence(sentence_text, sent_start)
+        for err in errors:
+            b_start = byte_table[err.char_start] if err.char_start < len(byte_table) else err.char_start
+            b_end = byte_table[err.char_end] if err.char_end < len(byte_table) else err.char_end
+            span = TextSpan(
+                char_start=err.char_start,
+                char_end=err.char_end,
+                byte_start=b_start,
+                byte_end=b_end,
+            )
+            yield Suggestion(
+                source=self._name,
+                span=span,
+                replacement=err.suggestion,
+                score=0.90,
+                priority=SuggestionPriority.MEDIUM,
+                message=f"[{err.error_code}] {err.message}",
+                error_type=err.error_type,
+            )
 
     def _doc_span(
         self,
@@ -149,10 +185,22 @@ class GrammarCheckerPlugin:
             prev_node = nodes[i - 1]
             curr_node = nodes[i]
 
-            prev_word = prev_node.text.strip("་ །")
-            curr_word = curr_node.text.strip("་ །")
+            prev_word = prev_node.text.strip("་ །\u0f0b\u0f0d ")
+            curr_word = curr_node.text.strip("་ །\u0f0b\u0f0d ")
 
             if not prev_word or not curr_word:
+                continue
+
+            # GUARD 1: Only check if node is actually a particle or case relation in POS analysis
+            if curr_node.morpheme.category not in (PosCategory.PARTICLE, PosCategory.PUNCTUATION) and curr_node.relation not in (DependencyRelation.CASE, DependencyRelation.MARK, DependencyRelation.AUX):
+                continue
+
+            # GUARD 2: Do not treat valid compounds or non-particle dictionary words as particles
+            from teea.persistence import default_dictionary
+            dict_repo = default_dictionary()
+            if dict_repo.is_valid_word_or_compound(prev_word + curr_word) or dict_repo.is_valid_word_or_compound(prev_word + "\u0f0b" + curr_word):
+                continue
+            if curr_node.morpheme.category in (PosCategory.NOUN, PosCategory.VERB, PosCategory.ADJECTIVE, PosCategory.PRONOUN, PosCategory.ADVERB) and dict_repo.is_valid_word_or_compound(curr_word):
                 continue
 
             final_c = _get_tibetan_final_consonant(prev_word)
@@ -545,14 +593,55 @@ class GrammarCheckerPlugin:
         """Check verb transitivity, valency, and tense consistency."""
         nodes = tree.nodes
         for node in nodes:
-            word = node.text.strip("་ །")
+            word = node.text.strip("་ །\u0f0b\u0f0d ")
             v_info = self._verb_lexicon.get_verb_info(word)
             if v_info is not None:
-                # Transitive verb check
-                if v_info.transitivity == Transitivity.TRANS:
-                    pass
-        return
-        yield  # Make function a generator
+                children = tree.children_of(node.index)
+
+                has_object = False
+                for c in children:
+                    if hasattr(DependencyRelation, "OBJ") and c.relation == getattr(DependencyRelation, "OBJ"):
+                        has_object = True
+                        break
+                    if c.relation == DependencyRelation.ARG2 or c.relation.value in ("obj", "arg2", "dobj", "object"):
+                        has_object = True
+                        break
+
+                if not has_object:
+                    non_agentive_nominals = []
+                    for c in children:
+                        cw = c.text.strip("་ །\u0f0b\u0f0d ")
+                        is_agentive = any(cw.endswith(s) for s in ("གིས", "ཀྱིས", "བྱིས", "ཏིས", "ས")) and c.relation in (DependencyRelation.ARG1, DependencyRelation.MARK, DependencyRelation.DEP)
+                        if not is_agentive and (c.morpheme.category in (PosCategory.NOUN, PosCategory.PRONOUN) or c.relation in (DependencyRelation.ARG1, DependencyRelation.ARG2, DependencyRelation.DEP)):
+                            non_agentive_nominals.append(c)
+                    if non_agentive_nominals:
+                        has_object = True
+
+                span = self._doc_span(
+                    sent_start,
+                    node.span.char_start,
+                    node.span.char_end,
+                    byte_table,
+                )
+
+                if v_info.transitivity == Transitivity.TRANS and not has_object:
+                    yield Suggestion(
+                        source=self._name,
+                        span=span,
+                        replacement=None,
+                        score=0.90,
+                        priority=SuggestionPriority.HIGH,
+                        message=f"Transitive verb '{word}' requires a direct object.",
+                    )
+                elif v_info.transitivity == Transitivity.INTRANS and has_object:
+                    yield Suggestion(
+                        source=self._name,
+                        span=span,
+                        replacement=None,
+                        score=0.90,
+                        priority=SuggestionPriority.HIGH,
+                        message=f"Intransitive verb '{word}' cannot take a direct object.",
+                    )
 
     def _check_logical_consistency(
         self,

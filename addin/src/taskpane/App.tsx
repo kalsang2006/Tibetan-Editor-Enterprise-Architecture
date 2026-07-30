@@ -213,6 +213,20 @@ export function App({
 
   const busy = undo.isBusy || engine.isApplying;
 
+  const handleInsertSample = React.useCallback(async () => {
+    const sampleText = "དེ་རིང་ང་བོད་སྐད་སློབ་ཚན་ལ་ཕྱི། དགེ་གིས་བརྡ་སྤྲོད་སླབས། ཀློ་བོང་བྱས།";
+    try {
+      if (documentApi?.replaceSelection) {
+        await documentApi.replaceSelection(sampleText);
+      } else {
+        await replaceSelection(sampleText);
+      }
+      onRefreshAnalysis?.();
+    } catch {
+      // Ignored outside active Word host
+    }
+  }, [documentApi, onRefreshAnalysis]);
+
   return (
     <FluentProvider theme={theme} className={styles.root}>
       <header className={styles.header}>
@@ -224,6 +238,14 @@ export function App({
           aria-label={daemonStatus === 'connected' ? "Daemon connected" : "Daemon disconnected"}
           title={daemonStatus === 'connected' ? "Daemon connected" : "Daemon disconnected"}
         />
+        <Button
+          appearance="subtle"
+          size="small"
+          onClick={handleInsertSample}
+          title="Insert Tibetan Demo Sample Paragraph"
+        >
+          Demo Sample
+        </Button>
         <Switch
           className={styles.spacer}
           checked={themeName === 'dark'}

@@ -120,6 +120,36 @@ def test_valid_smra(validator: StructuralValidator) -> None:
     assert res.is_valid
 
 
+def test_user_target_case_phyiw(validator: StructuralValidator) -> None:
+    res = validator.validate_syllable("ཕྱིཝ")
+    assert not res.is_valid
+    assert res.error_type == StructuralErrorType.INVALID_SUFFIX
+
+
+def test_user_target_case_dgag(validator: StructuralValidator) -> None:
+    res = validator.validate_syllable("དགག")
+    assert not res.is_valid
+    assert res.error_type == StructuralErrorType.INVALID_POST_SUFFIX
+
+
+def test_user_target_case_parh(validator: StructuralValidator) -> None:
+    res = validator.validate_syllable("པརྷ")
+    assert not res.is_valid
+    assert res.error_type == StructuralErrorType.INVALID_SUBFIX
+
+
+def test_user_target_case_klok(validator: StructuralValidator) -> None:
+    res = validator.validate_syllable("ཀློཀ")
+    assert not res.is_valid
+    assert res.error_type == StructuralErrorType.INVALID_SUFFIX
+
+
+def test_user_target_case_bongbya(validator: StructuralValidator) -> None:
+    res = validator.validate_syllable("བོངབྱ")
+    assert not res.is_valid
+    assert res.error_type == StructuralErrorType.INVALID_POST_SUFFIX
+
+
 # -----------------------------------------------------------------------------
 # INTEGRATION TEST IN SPELL CHECKER PLUGIN
 # -----------------------------------------------------------------------------

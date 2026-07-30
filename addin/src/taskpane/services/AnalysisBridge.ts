@@ -77,18 +77,35 @@ export async function fetchAnalysis(options: {
   }
 
   const body = (await response.json()) as {
-    ok: boolean;
-    request_id: string;
+    ok?: boolean;
+    request_id?: string;
     result?: Record<string, unknown> | null;
     error?: IpcFault | null;
+    suggestions?: DaemonSuggestion[];
   };
-  const result = unwrap({
-    protocol_version: '1.0',
-    request_id: body.request_id,
-    ok: body.ok,
-    result: body.result ?? null,
-    error: body.error ?? null,
-  });
-  const suggestions = result.suggestions;
-  return Array.isArray(suggestions) ? (suggestions as DaemonSuggestion[]) : [];
+
+  if (body.ok === false || body.error) {
+    const result = unwrap({
+      protocol_version: '1.0',
+      request_id: body.request_id ?? 'req',
+      ok: body.ok ?? false,
+      result: body.result ?? null,
+      error: body.error ?? null,
+    });
+    const suggestions = result.suggestions;
+    return Array.isArray(suggestions) ? (suggestions as DaemonSuggestion[]) : [];
+  }
+
+  let suggestionsList: unknown = null;
+  if (body && typeof body === 'object') {
+    if (body.result && typeof body.result === 'object' && Array.isArray((body.result as any).suggestions)) {
+      suggestionsList = (body.result as any).suggestions;
+    } else if (Array.isArray(body.suggestions)) {
+      suggestionsList = body.suggestions;
+    } else if (Array.isArray(body)) {
+      suggestionsList = body;
+    }
+  }
+
+  return Array.isArray(suggestionsList) ? (suggestionsList as DaemonSuggestion[]) : [];
 }

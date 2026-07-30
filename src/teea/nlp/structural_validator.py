@@ -67,7 +67,7 @@ SUBJOINED_BASE_MAP: Final[dict[str, str]] = {
     "\u0fa4": "ཙ", "\u0fa5": "ཚ", "\u0fa6": "ཛ", "\u0fa8": "ཞ",
     "\u0fa9": "ཟ", "\u0faa": "འ", "\u0fac": "ར", "\u0fad": "ལ",
     "\u0fae": "ཤ", "\u0faf": "ཥ", "\u0fb0": "ས", "\u0fb4": "ཧ",
-    "\u0fb5": "ཨ"
+    "\u0fb7": "ཧ", "\u0fb5": "ཨ"
 }
 
 #: Tibetan Vowel Signs (དབྱངས)
@@ -116,7 +116,7 @@ class StructuralValidator:
 
         vowels = [ch for ch in clean if ch in VOWEL_SIGNS]
         inline_consonants: list[str] = [ch for ch in clean if ch in BASE_CONSONANTS]
-        subjoined_chars: list[str] = [ch for ch in clean if ch in SUBJOINED_BASE_MAP or ch in SUBFIX_CHAR_MAP]
+        subjoined_chars: list[str] = [ch for ch in clean if ch in SUBJOINED_BASE_MAP or ch in SUBFIX_CHAR_MAP or ("\u0f90" <= ch <= "\u0fbc")]
 
         comp = SyllableComponents(
             vowels=vowels,
@@ -129,14 +129,15 @@ class StructuralValidator:
 
         num_c = len(inline_consonants)
 
-        # Check for subfixes (yata ྱ \u0fb1, rata ྲ \u0fb2, lata ླ \u0fb3, wazur ྭ \u0f99/\u0fba)
+        # Check for subfixes (yata ྱ \u0fb1, rata ྲ \u0fb2, lata ླ \u0fb3, wazur ྭ \u0f99/\u0fba, plus subjoined HA \u0fb4/\u0fb7)
         for sub_ch in subjoined_chars:
             if sub_ch in SUBFIX_CHAR_MAP:
                 comp.subfix = SUBFIX_CHAR_MAP[sub_ch]
+            elif sub_ch in ("\u0fb4", "\u0fb7") and not comp.subfix:
+                comp.subfix = SUBJOINED_BASE_MAP[sub_ch]
 
         # Check for superfix (head consonant ར, ལ, ས followed by a subjoined base consonant)
         if subjoined_chars:
-            # If the first inline consonant is R/L/S and followed by a subjoined base consonant (e.g. རྒྱུ, སྒྲུབ, བསྒྲུབས)
             has_sub_base = any(ch in SUBJOINED_BASE_MAP for ch in subjoined_chars)
             if inline_consonants[0] in SUPERFIX_CONSONANTS and has_sub_base:
                 comp.superfix = inline_consonants[0]
@@ -151,31 +152,44 @@ class StructuralValidator:
                 comp.base = inline_consonants[0]
             return comp
 
-        # Two Inline Consonants (e.g. བད, ཡིན, དང, བཀྲ, ཞཀ)
+        # Two Inline Consonants (e.g. བད, ཡིན, དང, བཀྲ, ཞཀ, ཕྱིཝ, ཀློཀ, པརྷ, དཔེ, དགེ)
         if num_c == 2:
-            if inline_consonants[0] in PREFIX_CONSONANTS and subjoined_chars:
-                # e.g. བཀྲ -> prefix=བ, base=ཀ, subfix=ྲ
+            if vowels or subjoined_chars:
+                if inline_consonants[0] in PREFIX_CONSONANTS and subjoined_chars:
+                    # e.g. བཀྲ, འགྲོ -> prefix=བ/འ, base=ཀ/ག, subfix=ྲ
+                    comp.prefix = inline_consonants[0]
+                    comp.base = inline_consonants[1]
+                elif inline_consonants[0] in PREFIX_CONSONANTS and vowels and not subjoined_chars:
+                    v_idx = clean.find(vowels[0])
+                    c2_idx = clean.find(inline_consonants[1])
+                    if v_idx != -1 and c2_idx != -1 and v_idx >= c2_idx:
+                        # e.g. དཔེ, དགེ, བདེ, མཛེ -> prefix=ད, base=པ (vowel attached to base)
+                        comp.prefix = inline_consonants[0]
+                        comp.base = inline_consonants[1]
+                    else:
+                        comp.base = inline_consonants[0]
+                        comp.suffix = inline_consonants[1]
+                else:
+                    # e.g. ཕྱིཝ -> base=ཕ, subfix=ྱ, suffix=ཝ
+                    # e.g. ཀློཀ -> base=ཀ, subfix=ླ, suffix=ཀ
+                    # e.g. པརྷ -> base=པ, subfix=ཧ, suffix=ར
+                    comp.base = inline_consonants[0]
+                    comp.suffix = inline_consonants[1]
+            elif inline_consonants[1] not in SUFFIX_CONSONANTS:
+                # e.g. ཞཀ -> ཞ is treated as invalid prefix because ཀ is not a valid suffix
                 comp.prefix = inline_consonants[0]
                 comp.base = inline_consonants[1]
-                for sub_ch in subjoined_chars:
-                    if sub_ch in SUBFIX_CHAR_MAP:
-                        comp.subfix = SUBFIX_CHAR_MAP[sub_ch]
-                    elif sub_ch in SUBJOINED_BASE_MAP:
-                        comp.superfix = inline_consonants[1]
-                        comp.base = SUBJOINED_BASE_MAP[sub_ch]
-            elif inline_consonants[1] not in SUFFIX_CONSONANTS or (inline_consonants[0] in PREFIX_CONSONANTS and not vowels):
-                # e.g. ཞཀ -> ཞ is invalid prefix because ཀ is not a valid suffix
-                # e.g. དང -> prefix=ད, base=ང
-                comp.prefix = inline_consonants[0]
-                comp.base = inline_consonants[1]
+            elif inline_consonants[1] in SUFFIX_CONSONANTS:
+                comp.base = inline_consonants[0]
+                comp.suffix = inline_consonants[1]
             else:
+                # Fallback: flag non-suffix second consonant as invalid suffix
                 comp.base = inline_consonants[0]
                 comp.suffix = inline_consonants[1]
             return comp
 
-        # Three Inline Consonants (e.g. བདག, གསལ, བོདག)
+        # Three Inline Consonants (e.g. བདག, གསལ, བོདག, དགག, བོངབྱ)
         if num_c == 3:
-            # Check if the vowel attaches to the FIRST consonant (e.g. བོདག -> བ=base+vowel ོ, ད=suffix, ག=post-suffix)
             first_char_idx = clean.find(inline_consonants[0])
             first_has_vowel = False
             if first_char_idx != -1 and first_char_idx + 1 < len(clean):
@@ -195,7 +209,11 @@ class StructuralValidator:
                     comp.suffix = inline_consonants[2]
                 else:
                     comp.base = inline_consonants[1]
-                    comp.suffix = inline_consonants[2]
+                    if inline_consonants[2] == inline_consonants[1]:
+                        # e.g. དགག -> prefix=ད, base=ག, post_suffix=ག (double suffix)
+                        comp.post_suffix = inline_consonants[2]
+                    else:
+                        comp.suffix = inline_consonants[2]
             else:
                 comp.base = inline_consonants[0]
                 comp.suffix = inline_consonants[1]
@@ -318,16 +336,34 @@ class StructuralValidator:
             )
 
         # Rule 6: Check Subfix Validity (HARD FAIL)
-        if comp.subfix is not None and comp.subfix not in SUBFIX_CHAR_MAP.values():
-            suggestions = self.suggest_structural_correction(syllable, StructuralErrorType.INVALID_SUBFIX)
-            return StructuralValidationResult(
-                syllable=syllable,
-                is_valid=False,
-                error_type=StructuralErrorType.INVALID_SUBFIX,
-                error_description=f"Illegal subjoined consonant '{comp.subfix}' (must be in ཡ, ར, ལ, ཝ) in syllable: '{syllable}'",
-                suggested_corrections=suggestions,
-                components=comp,
-            )
+        valid_subfixes = set(SUBFIX_CHAR_MAP.values()) | {"ཧ"}
+        if comp.subfix is not None:
+            # Subjoined char attached after suffix consonant is illegal (e.g. པརྷ)
+            if comp.suffix is not None and comp.subjoined_chars:
+                first_sub = comp.subjoined_chars[0]
+                suf_idx = clean.rfind(comp.suffix)
+                sub_idx = clean.find(first_sub)
+                if suf_idx != -1 and sub_idx != -1 and sub_idx > suf_idx:
+                    suggestions = self.suggest_structural_correction(syllable, StructuralErrorType.INVALID_SUBFIX)
+                    return StructuralValidationResult(
+                        syllable=syllable,
+                        is_valid=False,
+                        error_type=StructuralErrorType.INVALID_SUBFIX,
+                        error_description=f"Illegal subjoined consonant '{first_sub}' attached to suffix consonant in syllable: '{syllable}'",
+                        suggested_corrections=suggestions,
+                        components=comp,
+                    )
+
+            if comp.subfix not in valid_subfixes:
+                suggestions = self.suggest_structural_correction(syllable, StructuralErrorType.INVALID_SUBFIX)
+                return StructuralValidationResult(
+                    syllable=syllable,
+                    is_valid=False,
+                    error_type=StructuralErrorType.INVALID_SUBFIX,
+                    error_description=f"Illegal subjoined consonant '{comp.subfix}' (must be in ཡ, ར, ལ, ཝ, ཧ) in syllable: '{syllable}'",
+                    suggested_corrections=suggestions,
+                    components=comp,
+                )
 
         # Rule 7: Check Suffix Validity (HARD FAIL)
         if comp.suffix is not None and comp.suffix not in SUFFIX_CONSONANTS:

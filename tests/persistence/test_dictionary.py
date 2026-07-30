@@ -204,7 +204,7 @@ def test_tag_counts_covers_exactly_the_tag_inventory(
 def test_vocabulary_size_agrees_with_len_and_is_substantial(
     dictionary: InMemoryDictionaryRepository,
 ) -> None:
-    assert dictionary.vocabulary_size == len(dictionary)
+    assert dictionary.vocabulary_size == len(dictionary.vocabulary)
     assert dictionary.vocabulary_size > 2000
 
 
@@ -274,7 +274,7 @@ def test_repeated_lookups_agree(dictionary: InMemoryDictionaryRepository) -> Non
     first = dictionary.lookup(LAS)
     second = dictionary.lookup(LAS)
     assert first == second
-    assert dictionary.vocabulary_size == len(dictionary)
+    assert dictionary.vocabulary_size == len(dictionary.vocabulary)
 
 
 # -- transitions(): the morphological rules catalog ---------------------------

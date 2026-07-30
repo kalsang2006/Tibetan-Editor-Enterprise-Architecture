@@ -188,6 +188,7 @@ export interface DaemonSuggestion {
   score: number;
   priority: 'critical' | 'high' | 'medium' | 'low';
   message: string;
+  error_type?: string;
 }
 
 /** One frame of an SSE token stream, already parsed. */

@@ -56,6 +56,8 @@ class VerbLexicon:
             "འཐུང": VerbInfo(transitivity=Transitivity.TRANS, honorific="NEUT", valency=2, tense="present"),
             "བསྐོལ": VerbInfo(transitivity=Transitivity.TRANS, honorific="NEUT", valency=2, tense="past"),
             "གཟིགས": VerbInfo(transitivity=Transitivity.TRANS, honorific="HON", valency=2, tense="present"),
+            "བཟོས": VerbInfo(transitivity=Transitivity.TRANS, honorific="NEUT", valency=2, tense="past"),
+            "བཟོ": VerbInfo(transitivity=Transitivity.TRANS, honorific="NEUT", valency=2, tense="present"),
         }
         self._verbs.update(defaults)
 

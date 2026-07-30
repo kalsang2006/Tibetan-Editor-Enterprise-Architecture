@@ -68,52 +68,81 @@ const PRIORITY_SEVERITY: Record<
  * @param documentText The text the offsets address, for `originalText`.
  * @returns The view model, or `null` for an advisory that recommends no edit.
  */
+export function categoryOf(source: string, errorType?: string): SuggestionCategory {
+  if (errorType === 'CONTEXTUAL_SEMANTIC') {
+    return 'Terminology';
+  }
+  if (errorType === 'TENSE_MISMATCH') {
+    return 'Grammar';
+  }
+  if (errorType === 'STRUCTURAL' || errorType === 'SPELLING') {
+    return 'Spelling';
+  }
+  return SOURCE_CATEGORIES[source.toLowerCase()] ?? FALLBACK_CATEGORY;
+}
+
+/**
+ * Convert one daemon suggestion.
+ *
+ * @param raw What the Fusion Engine emitted.
+ * @param documentText The text the offsets address, for `originalText`.
+ * @returns The view model, or `null` for an advisory that recommends no edit.
+ */
 export function toSuggestion(
   raw: DaemonSuggestion,
   documentText: string,
 ): Suggestion | null {
   if (raw.replacement == null) {
-  return null;
-}
-  const start = raw.span.char_start;
-  const length = raw.span.char_end - raw.span.char_start;
+    return null;
+  }
+  const span = raw.span || (raw as any).range;
+  if (!span || span.char_start == null || span.char_end == null) {
+    return null;
+  }
+  const start = span.char_start;
+  const length = span.char_end - span.char_start;
   return {
-    id: `${raw.source}:${raw.span.char_start}:${raw.span.char_end}`,
+    id: `${raw.source || 'teea'}:${start}:${span.char_end}`,
     start,
     length,
     originalText: documentText.slice(start, start + length),
     suggestedText: raw.replacement,
-    category: categoryOf(raw.source),
-    severity: PRIORITY_SEVERITY[raw.priority] ?? 'suggestion',
-    explanation: raw.message,
-    ruleId: raw.source,
-    confidence: clampConfidence(raw.score),
+    category: categoryOf(raw.source || 'teea', raw.error_type),
+    severity: (raw.priority && PRIORITY_SEVERITY[raw.priority]) ?? 'suggestion',
+    explanation: raw.message || '',
+    ruleId: raw.source || 'teea',
+    confidence: clampConfidence(raw.score ?? 0.8),
   };
 }
 
 /**
  * Convert a batch, discarding advisories.
  *
- * @param raw What the Fusion Engine emitted.
+ * @param raw What the Fusion Engine emitted (array or wrapper object).
  * @param documentText The text the offsets address.
  */
 export function toSuggestions(
-  raw: readonly DaemonSuggestion[],
+  raw: unknown,
   documentText: string,
 ): Suggestion[] {
+  let list: DaemonSuggestion[] = [];
+  if (Array.isArray(raw)) {
+    list = raw as DaemonSuggestion[];
+  } else if (raw && typeof raw === 'object' && Array.isArray((raw as any).suggestions)) {
+    list = (raw as any).suggestions;
+  } else if (raw && typeof raw === 'object' && (raw as any).result && Array.isArray((raw as any).result.suggestions)) {
+    list = (raw as any).result.suggestions;
+  }
   const converted: Suggestion[] = [];
-  for (const item of raw) {
-    const suggestion = toSuggestion(item, documentText);
-    if (suggestion !== null) {
-      converted.push(suggestion);
+  for (const item of list) {
+    if (item && typeof item === 'object') {
+      const suggestion = toSuggestion(item, documentText);
+      if (suggestion !== null) {
+        converted.push(suggestion);
+      }
     }
   }
   return converted;
-}
-
-/** Which category a plugin's output is filed under. */
-export function categoryOf(source: string): SuggestionCategory {
-  return SOURCE_CATEGORIES[source.toLowerCase()] ?? FALLBACK_CATEGORY;
 }
 
 /**

@@ -397,6 +397,12 @@ def test_every_top_level_package_is_a_known_architectural_layer() -> None:
         "teea.workflow",
         "teea.engine",
         "teea.service",
+        "teea.suggestion_fusion",
+        "teea.grammar",
+        "teea.fusion",
+        "teea.ai",
+        "teea.ipc",
+        "teea.plugins",
     }
     packages = {".".join(name.split(".")[:2]) for name in MODULES if name.count(".") >= 1}
     assert packages - {"teea"} == known, packages

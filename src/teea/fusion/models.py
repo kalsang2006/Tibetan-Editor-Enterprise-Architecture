@@ -118,6 +118,7 @@ class Suggestion(BaseModel):
     score: float = Field(ge=0.0, le=1.0)
     priority: SuggestionPriority
     message: str = ""
+    error_type: str = "SPELLING"
 
     @model_validator(mode="after")
     def _validate_consistency(self) -> Suggestion:

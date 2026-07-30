@@ -26,6 +26,7 @@ Design notes
 from __future__ import annotations
 
 import unicodedata
+from typing import Any
 from collections.abc import Callable
 
 from teea.core.logging import get_logger

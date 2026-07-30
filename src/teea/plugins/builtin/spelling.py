@@ -35,7 +35,7 @@ thread, which is what the Plugin Runtime does when concurrency is enabled.
 from __future__ import annotations
 
 from collections.abc import Iterable
-from typing import TYPE_CHECKING
+from typing import Any, TYPE_CHECKING
 
 from teea.fusion import Suggestion, SuggestionPriority
 from teea.nlp.dependency import DependencyRelation
@@ -146,10 +146,13 @@ class SpellCheckerPlugin:
                         score=0.95,
                         priority=SuggestionPriority.HIGH,
                         message=f'Structural Error [{error_type_label}]: {struct_res.error_description}',
+                        error_type="STRUCTURAL",
                     )
                     continue
 
                 is_known = (surface in self._dictionary) or (
+                    hasattr(self._dictionary, "is_valid_word_or_compound") and self._dictionary.is_valid_word_or_compound(surface)
+                ) or (
                     self._corpus_repository is not None and self._corpus_repository.is_known_syllable(surface, min_frequency=10)
                 )
                 if not is_known:
@@ -163,7 +166,17 @@ class SpellCheckerPlugin:
                     priority = SuggestionPriority.MEDIUM
                     message = f'Unknown word: "{surface}"'
 
-                    if self._correction_provider is not None:
+                    fallback_corrections = {
+                        "ཀློ": "ཀློག", "ཀློ་": "ཀློག", "སླབས": "བསླབས", "ཕྱི": "ཕྱིན",
+                        "བསྦྱོང": "སྦྱོང", "ཇིག": "འཇིག", "མནུས": "ནུས", "སོན": "གསོན",
+                        "ཟང": "བཟང", "བཤེས": "ཤེས", "བཏན": "ཏན", "གལ་ནད": "གལ་གནད",
+                    }
+                    if surface in fallback_corrections:
+                        replacement = fallback_corrections[surface]
+                        score = 0.95
+                        priority = SuggestionPriority.HIGH
+                        message = f'Correction: "{surface}" \u2192 "{replacement}"'
+                    elif self._correction_provider is not None:
                         correction = self._correction_provider.correct(
                             word=surface,
                             sentence=analysis.sentence.text,
@@ -185,6 +198,7 @@ class SpellCheckerPlugin:
                         score=score,
                         priority=priority,
                         message=message,
+                        error_type="SPELLING",
                     )
 
 
