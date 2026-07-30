@@ -42,33 +42,38 @@ from teea.nlp.dependency import DependencyRelation
 from teea.nlp.snapshot import DocumentSnapshot
 from teea.persistence import DictionaryRepository, default_dictionary
 
+from teea.nlp.structural_validator import StructuralValidator, StructuralErrorType
+
 if TYPE_CHECKING:
     from teea.plugins.builtin.correction import CorrectionProvider
 
 
-class SpellCheckerPlugin:
-    """Flags Tibetan morphemes unknown to the corpus-derived dictionary.
+def _is_tibetan(text: str) -> bool:
+    return any("\u0f00" <= ch <= "\u0fff" for ch in text)
 
-    The plugin examines every morpheme in the analysed document.  A morpheme
-    whose surface form is not present in the dictionary is flagged as a
-    potential misspelling.  Grammatical affixes (particles, case markers) are
-    *not* checked -- the dictionary rarely lists them, and an unknown particle
-    is likelier to be a parsing gap than a spelling error.
+
+class SpellCheckerPlugin:
+    """Flags Tibetan morphemes unknown to the corpus-derived dictionary or structurally invalid.
 
     Args:
-        dictionary: The lexicon to check against.  Defaults to the process-wide
-            shared :func:`~teea.persistence.dictionary.default_dictionary`.
-        correction_provider: Optional AI-backed correction provider.  When set,
-            the plugin attempts to find a replacement for each unknown word.
+        dictionary: The lexicon to check against.
+        correction_provider: Optional AI-backed correction provider.
+        corpus_repository: Optional BoCorpusRepository for corpus frequency checks.
+        validator: Optional StructuralValidator instance.
     """
 
     def __init__(
         self,
         dictionary: DictionaryRepository | None = None,
         correction_provider: CorrectionProvider | None = None,
+        *,
+        corpus_repository: Any = None,
+        validator: StructuralValidator | None = None,
     ) -> None:
         self._dictionary = dictionary if dictionary is not None else default_dictionary()
+        self._corpus_repository = corpus_repository
         self._correction_provider = correction_provider
+        self._validator = validator or StructuralValidator()
         self._name = "teea.spelling"
 
     @property
@@ -77,14 +82,13 @@ class SpellCheckerPlugin:
         return self._name
 
     def examine(self, snapshot: DocumentSnapshot) -> Iterable[Suggestion]:
-        """Check every morpheme in the document against the dictionary.
+        """Check every morpheme in the document against structural rules and dictionary.
 
         Args:
             snapshot: The immutable analysis of the whole document.
 
         Yields:
-            One advisory :class:`Suggestion` per unknown morpheme, with
-            ``replacement=None``.
+            One Suggestion per unknown or structurally invalid morpheme.
         """
         for analysis in snapshot.analyses:
             tree = analysis.tree
@@ -92,20 +96,63 @@ class SpellCheckerPlugin:
                 continue
 
             for node in tree.nodes:
+                if node.relation == DependencyRelation.PUNCT or not node.text.strip("། ཿ"):
+                    continue
+
                 if node.relation in (
-                    DependencyRelation.PUNCT,
                     DependencyRelation.CASE,
                     DependencyRelation.AUX,
                     DependencyRelation.MARK,
                     DependencyRelation.NEG,
-                ) or not node.text.strip("། ཿ"):
+                ) and not _is_tibetan(node.text):
                     continue
 
                 surface = node.text
                 if not surface:
                     continue
 
-                if surface not in self._dictionary:
+                # 1. Structural Validation Layer (HARD FAIL BEFORE DICTIONARY LOOKUP)
+                struct_res = self._validator.validate_syllable(surface)
+                if not struct_res.is_valid:
+                    import structlog
+                    structlog.get_logger(__name__).debug(
+                        "structural_error_detected",
+                        surface=surface,
+                        error_type=str(struct_res.error_type),
+                        description=struct_res.error_description,
+                    )
+                    doc_span = analysis.document_span(node.span)
+                    replacement = struct_res.suggested_corrections[0] if struct_res.suggested_corrections else None
+                    if not replacement and self._correction_provider is not None:
+                        replacement = self._correction_provider.correct(
+                            word=surface,
+                            sentence=analysis.sentence.text,
+                            word_start=node.span.char_start,
+                            word_end=node.span.char_end,
+                        )
+                    # FIX: If the character immediately following this span in the
+                    # source text is already a tsheg (\u0f0b), strip any trailing
+                    # tsheg from the replacement to avoid creating a double tsheg.
+                    if replacement and replacement.endswith("\u0f0b"):
+                        src = snapshot.source
+                        next_char_pos = doc_span.char_end
+                        if next_char_pos < len(src) and src[next_char_pos] == "\u0f0b":
+                            replacement = replacement.rstrip("\u0f0b")
+                    error_type_label = getattr(struct_res.error_type, "value", str(struct_res.error_type))
+                    yield Suggestion(
+                        source=self._name,
+                        span=doc_span,
+                        replacement=replacement,
+                        score=0.95,
+                        priority=SuggestionPriority.HIGH,
+                        message=f'Structural Error [{error_type_label}]: {struct_res.error_description}',
+                    )
+                    continue
+
+                is_known = (surface in self._dictionary) or (
+                    self._corpus_repository is not None and self._corpus_repository.is_known_syllable(surface, min_frequency=10)
+                )
+                if not is_known:
                     doc_span = analysis.document_span(node.span)
 
                     # Attempt AI-assisted correction when a provider is

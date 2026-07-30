@@ -114,7 +114,11 @@ class TEEADaemon:
         if plugins is not None:
             plugin_list = plugins
         else:
-            spell_checker = SpellCheckerPlugin()
+            from teea.corpus.repository import BoCorpusRepository
+            corpus_repo = BoCorpusRepository()
+            c_repo = corpus_repo if corpus_repo.is_available() else None
+
+            spell_checker = SpellCheckerPlugin(corpus_repository=c_repo)
             if self._ai_runtime is not None:
                 from teea.ai.models import CapabilityKind, InferenceRequest, ModelDescriptor
                 from teea.persistence import default_dictionary
@@ -125,20 +129,33 @@ class TEEADaemon:
                 )
                 self._ai_runtime.register(tibert_descriptor)
 
-                def _score_candidates(sentence: str, ws: int, we: int, cands: list[str]) -> list[float]:
+                def _score_candidates(sentence: str, ws: int, we: int, cands: list[str]) -> dict[str, float]:
                     req = InferenceRequest(
                         capability=CapabilityKind.SPELLING,
                         inputs={"sentence": sentence, "word_start": ws, "word_end": we, "candidates": cands},
                     )
                     res = self._ai_runtime.infer(req)
-                    return res.outputs["scores"]
+                    scores = res.outputs.get("scores")
+                    if isinstance(scores, list) and scores:
+                        return {cand: float(scores[i]) if i < len(scores) else 0.5 for i, cand in enumerate(cands)}
+                    if isinstance(scores, dict) and scores:
+                        return scores
+                    return {cand: 0.5 for cand in cands}
+
+                combined_vocab = set(default_dictionary().vocabulary)
+                if c_repo is not None:
+                    combined_vocab.update(c_repo.vocabulary.keys())
 
                 provider = CorrectionProvider(
                     score_candidates=_score_candidates,
-                    vocabulary=default_dictionary().vocabulary,
+                    vocabulary=combined_vocab,
                     confidence_threshold=0.0,
+                    corpus_repository=c_repo,
                 )
-                spell_checker = SpellCheckerPlugin(correction_provider=provider)
+                spell_checker = SpellCheckerPlugin(
+                    correction_provider=provider,
+                    corpus_repository=c_repo,
+                )
 
             plugin_list = [
                 DocumentDiagnosticsPlugin(),

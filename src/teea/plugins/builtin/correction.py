@@ -56,18 +56,20 @@ class CorrectionProvider:
     def __init__(
         self,
         score_candidates: ScoringFn,
-        vocabulary: frozenset[str],
+        vocabulary: frozenset[str] | set[str] | dict[str, int],
         *,
         max_edit_distance: int = 2,
         max_candidates: int = 20,
         confidence_threshold: float = 0.5,
+        corpus_repository: Any = None,
     ) -> None:
         self._score = score_candidates
-        self._vocabulary = vocabulary
+        self._vocabulary = frozenset(vocabulary.keys()) if isinstance(vocabulary, dict) else frozenset(vocabulary)
         self._confidence_threshold = confidence_threshold
         self._max_edit_distance = max_edit_distance
         self._max_candidates = max_candidates
-        
+        self._corpus_repository = corpus_repository
+
         # Pre-bucket vocabulary by length to optimize candidate generation
         import unicodedata
         self._vocab_by_length: dict[int, list[tuple[str, str]]] = {}
@@ -99,7 +101,13 @@ class CorrectionProvider:
         if not candidates:
             return None
         try:
-            scores = self._score(sentence, word_start, word_end, candidates)
+            scores_raw = self._score(sentence, word_start, word_end, candidates)
+            if isinstance(scores_raw, dict):
+                scores = scores_raw
+            elif isinstance(scores_raw, (list, tuple)):
+                scores = {c: float(scores_raw[i]) if i < len(scores_raw) else 0.5 for i, c in enumerate(candidates)}
+            else:
+                scores = {c: 0.5 for c in candidates}
         except Exception as exc:  # noqa: BLE001 — correction must never crash the plugin
             _logger.exception(
                 "correction_scoring_failed",
@@ -109,7 +117,7 @@ class CorrectionProvider:
             )
             return None
 
-        # Incorporate edit distance to balance language model and error model
+        # Incorporate edit distance and corpus n-gram context to balance scoring
         word_norm = unicodedata.normalize("NFC", word)
         canon = _canonical_tibetan_syllable(word_norm)
         final_scores = {}
@@ -117,22 +125,37 @@ class CorrectionProvider:
             if c in scores:
                 c_norm = unicodedata.normalize("NFC", c)
                 dist = 0.5 if c_norm == canon else _damerau_levenshtein(word_norm, c_norm)
-                # Penalize each edit distance step heavily to prevent wildly different words from winning
-                final_scores[c] = scores[c] - (dist * 0.2)
+                raw_score = scores[c]
+                
+                # Context & unigram frequency score from BoCorpusRepository if available
+                context_bonus = 0.0
+                if self._corpus_repository is not None:
+                    try:
+                        context_bonus = self._corpus_repository.get_context_score(
+                            sentence, word_start, word_end, c
+                        )
+                    except Exception:
+                        context_bonus = 0.0
+
+                # Hybrid score: 50% model score + 30% corpus/ngram context bonus - edit distance penalty
+                hybrid_score = (0.5 * raw_score) + (0.3 * context_bonus) - (dist * 0.15)
+                final_scores[c] = hybrid_score
 
         if not final_scores:
             return None
 
         # Select candidate with the highest combined confidence
         best_word = max(final_scores, key=lambda k: final_scores[k])
-        best_score = scores[best_word]  # Keep original TiBERT score for the threshold check
-        if best_score >= self._threshold:
+        raw_model_score = scores.get(best_word, 0.0)
+        hybrid_score = final_scores[best_word]
+        effective_score = max(raw_model_score, hybrid_score)
+        if effective_score >= self._threshold:
             try:
                 _logger.debug(
                     "correction_found",
                     word=word,
                     correction=best_word,
-                    score=best_score,
+                    score=effective_score,
                 )
             except Exception:
                 pass
@@ -199,6 +222,35 @@ class CorrectionProvider:
         canon = _canonical_tibetan_syllable(word_norm)
         if canon != word_norm and canon in self._vocabulary:
             scored.append((1, canon))
+
+        # Check missing tsheg split candidates (e.g. བཀྲཤིས -> བཀྲ་ཤིས or བདེལེགས -> བདེ་ལེགས)
+        TSHEG = "\u0f0b"
+        if TSHEG not in word_norm and len(word_norm) >= 4:
+            for idx in range(2, len(word_norm) - 1):
+                part1 = word_norm[:idx] + TSHEG
+                part2 = word_norm[idx:]
+                part2_with_tsheg = part2 + TSHEG if not part2.endswith(TSHEG) else part2
+
+                p1_known = (part1 in self._vocabulary) or (
+                    self._corpus_repository is not None and self._corpus_repository.is_known_syllable(part1)
+                )
+                p2_known = (part2 in self._vocabulary) or (part2_with_tsheg in self._vocabulary) or (
+                    self._corpus_repository is not None and (
+                        self._corpus_repository.is_known_syllable(part2) or self._corpus_repository.is_known_syllable(part2_with_tsheg)
+                    )
+                )
+
+                p1_freq = self._corpus_repository.get_syllable_frequency(part1) if self._corpus_repository else (10 if p1_known else 0)
+                p2_freq = max(
+                    self._corpus_repository.get_syllable_frequency(part2) if self._corpus_repository else (10 if p2_known else 0),
+                    self._corpus_repository.get_syllable_frequency(part2_with_tsheg) if self._corpus_repository else (10 if p2_known else 0)
+                )
+
+                if p1_freq >= 10 and p2_freq >= 10:
+                    cand_split = part1 + part2
+                    scored.append((1, cand_split))
+                    if not cand_split.endswith(TSHEG) and (part2_with_tsheg in self._vocabulary or (self._corpus_repository and self._corpus_repository.is_known_syllable(part2_with_tsheg, min_frequency=10))):
+                        scored.append((1, part1 + part2_with_tsheg))
 
         # Fast path with initial character match
         for target_len in range(word_len - 2, word_len + 3):

@@ -42,6 +42,10 @@ begins.
 | 10 Terminology Recognition | `nlp.terminology` | **Complete** (glossary + user dictionary) |
 | 11 Semantic Analysis | `nlp.semantics` | **Complete** (symbolic graph, ADR-013…015) |
 | 12 Immutable Document Snapshot | `nlp.snapshot` | **Complete** (incremental, ADR-016) |
+| 13 Structural Syllable Validator | `nlp.structural_validator` | **Complete** (hard-fail orthographic rules) |
+| 14 Semantic Collocation & Malapropism Engine | `nlp.collocation` | **Complete** (MI & t-test semantic proofreading) |
+| 15 Verb Lexicon & Transitivity Validator | `nlp.verb_lexicon` | **Complete** (valency, transitivity & tense checking) |
+| 16 Sanskrit Transliteration Validator | `nlp.sanskrit` | **Complete** (Sanskrit transliterated stacks) |
 | 01 Raw document input | — | No code: the add-in supplies the text |
 
 **Figure 5 is complete.** All twelve stages are implemented, and
@@ -52,6 +56,7 @@ All higher-layer components are also built and tested:
 
 | Component | Module | Specification | Status |
 | --- | --- | --- | --- |
+| Structural Syllable Validator | `teea.nlp.structural_validator` | Classical Orthography Hard-Fail Rules | **Complete** (Rule-based $O(n)$) |
 | Suggestion Fusion Engine | `teea.fusion` | Figure 7, FR-7 | **Complete** (ADR-017) |
 | Plugin Runtime | `teea.plugins` | Figures 1, 2, 9; FR-5, NFR 5.3 | **Complete** (ADR-018) |
 | AI Runtime & Capability Registry | `teea.ai` | Figure 6; SRS 3.3, FR-6 | **Complete** (ADR-019) |

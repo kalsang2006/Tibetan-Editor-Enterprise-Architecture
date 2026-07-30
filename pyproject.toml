@@ -41,6 +41,9 @@ ai = [
     "torch>=2.0.0",
     "safetensors>=0.4.0",
 ]
+data = [
+    "pyarrow>=15.0.0",
+]
 dev = [
     "pytest>=8.3.3,<10",
     "pytest-cov>=6.0.0,<8",
@@ -80,7 +83,7 @@ no_implicit_reexport = true
 plugins = ["pydantic.mypy"]
 
 [[tool.mypy.overrides]]
-module = ["transformers.*", "sentencepiece.*"]
+module = ["transformers.*", "sentencepiece.*", "pyarrow.*"]
 ignore_missing_imports = true
 
 [tool.ruff]

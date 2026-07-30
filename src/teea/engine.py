@@ -62,6 +62,16 @@ class TEEAEngine:
         self._fusion = PriorityRankedFusionEngine()
         self._dict_repo = dictionary or default_dictionary()
 
+        # Wire BoCorpusRepository if processed dataset is available
+        from teea.corpus.repository import BoCorpusRepository
+        corpus_repo = BoCorpusRepository()
+        self._corpus_repo = corpus_repo if corpus_repo.is_available() else None
+
+        # Combine vocabularies if corpus repository is available
+        combined_vocab: set[str] = set(self._dict_repo.vocabulary)
+        if self._corpus_repo is not None:
+            combined_vocab.update(self._corpus_repo.vocabulary.keys())
+
         # Initialize AI Runtime
         engine_instance = ai_engine or TiBERTInferenceEngine()
         self._ai_runtime = LocalAIRuntime(engine_instance)
@@ -78,7 +88,7 @@ class TEEAEngine:
         # Create candidate scoring function backed by TiBERT
         def _score_candidates(
             sentence: str, word_start: int, word_end: int, candidates: list[str]
-        ) -> list[float]:
+        ) -> dict[str, float]:
             req = InferenceRequest(
                 capability=CapabilityKind.SPELLING,
                 inputs={
@@ -89,13 +99,19 @@ class TEEAEngine:
                 },
             )
             res = self._ai_runtime.infer(req)
-            return res.outputs.get("scores", [0.5] * len(candidates))
+            scores = res.outputs.get("scores")
+            if isinstance(scores, list) and scores:
+                return {cand: float(scores[i]) if i < len(scores) else 0.5 for i, cand in enumerate(candidates)}
+            if isinstance(scores, dict) and scores:
+                return scores
+            return {cand: 0.5 for cand in candidates}
 
-        # Build correction provider
+        # Build correction provider with combined vocabulary and corpus repository
         self._correction_provider = CorrectionProvider(
             score_candidates=_score_candidates,
-            vocabulary=self._dict_repo.vocabulary,
+            vocabulary=combined_vocab,
             confidence_threshold=0.0,
+            corpus_repository=self._corpus_repo,
         )
 
         # Configure Plugins
@@ -105,6 +121,7 @@ class TEEAEngine:
             spell_checker = SpellCheckerPlugin(
                 dictionary=self._dict_repo,
                 correction_provider=self._correction_provider,
+                corpus_repository=self._corpus_repo,
             )
             grammar_checker = GrammarCheckerPlugin()
             typography_plugin = TypographyPlugin()

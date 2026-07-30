@@ -207,34 +207,90 @@ export async function resolveRange(
     expected: originalText,
   };
 
+  if (originalText.includes('\r') || originalText.includes('\n')) {
+    throw new RangeResolutionError(
+      'the range crosses a paragraph boundary',
+      detail,
+    );
+  }
+
   const paragraphs = context.document.body.paragraphs;
   paragraphs.load('items/text');
   await context.sync();
+
+  let bestParagraph: Word.Paragraph | null = null;
+  let bestParagraphText = '';
+  let bestLocal = -1;
+  let minDistance = Infinity;
 
   let offset = 0;
   for (const paragraph of paragraphs.items) {
     const text = paragraph.text ?? '';
     const end = offset + text.length;
-    if (rangeStart < end || (rangeStart === end && rangeLength === 0)) {
-      const local = rangeStart - offset;
-      if (local + rangeLength > text.length) {
-        throw new RangeResolutionError(
-          'the range crosses a paragraph boundary',
-          detail,
-        );
-      }
-      if (text.slice(local, local + rangeLength) !== originalText) {
-        throw new RangeResolutionError(
-          'the document no longer holds the expected text at that offset',
-          detail,
-        );
-      }
-      return findOccurrence(context, paragraph, text, local, originalText, detail);
+
+    const candidateLocal = rangeStart - offset;
+
+    // Check exact match first at candidateLocal
+    if (
+      candidateLocal >= 0 &&
+      candidateLocal + rangeLength <= text.length &&
+      text.slice(candidateLocal, candidateLocal + rangeLength) === originalText
+    ) {
+      bestParagraph = paragraph;
+      bestParagraphText = text;
+      bestLocal = candidateLocal;
+      minDistance = 0;
+      break;
     }
+
+    // If exact match at candidateLocal failed, search for originalText within this paragraph
+    if (originalText.length > 0) {
+      const idx = findBestLocalIndex(text, originalText, candidateLocal);
+      if (idx !== -1) {
+        const dist = Math.abs(offset + idx - rangeStart);
+        if (dist < minDistance) {
+          minDistance = dist;
+          bestParagraph = paragraph;
+          bestParagraphText = text;
+          bestLocal = idx;
+        }
+      }
+    }
+
     offset = end + PARAGRAPH_SEPARATOR.length;
   }
 
-  throw new RangeResolutionError('the offset is past the end of the document', detail);
+  if (bestParagraph !== null && bestLocal !== -1) {
+    return findOccurrence(context, bestParagraph, bestParagraphText, bestLocal, originalText, detail);
+  }
+
+  const totalLength = offset > 0 ? offset - PARAGRAPH_SEPARATOR.length : 0;
+  if (rangeStart >= totalLength) {
+    throw new RangeResolutionError(
+      'the offset is past the end of the document',
+      detail,
+    );
+  }
+
+  throw new RangeResolutionError(
+    'the document no longer holds the expected text at that offset',
+    detail,
+  );
+}
+
+function findBestLocalIndex(text: string, needle: string, targetLocal: number): number {
+  let bestIdx = -1;
+  let minDiff = Infinity;
+  let idx = text.indexOf(needle);
+  while (idx !== -1) {
+    const diff = Math.abs(idx - targetLocal);
+    if (diff < minDiff) {
+      minDiff = diff;
+      bestIdx = idx;
+    }
+    idx = text.indexOf(needle, idx + 1);
+  }
+  return bestIdx;
 }
 
 async function findOccurrence(

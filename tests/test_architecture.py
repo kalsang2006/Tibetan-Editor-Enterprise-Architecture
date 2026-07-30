@@ -386,6 +386,7 @@ def test_every_top_level_package_is_a_known_architectural_layer() -> None:
     """Guard the layering tests against a new package that escapes them all."""
     known = {
         "teea.core",
+        "teea.corpus",
         "teea.persistence",
         "teea.plagiarism",
         "teea.transport",

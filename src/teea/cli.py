@@ -13,8 +13,6 @@ from typing import Any
 
 from teea.core.config import load_settings
 from teea.core.logging import configure_logging, get_logger
-from teea.daemon import create_daemon
-from teea.service.server import run_service
 from teea.workflow import (
     analyze_text,
     full_workflow,
@@ -52,8 +50,19 @@ def _build_parser() -> argparse.ArgumentParser:
     _add_config_parser(subparsers)
     _add_health_parser(subparsers)
     _add_serve_parser(subparsers)
+    _add_build_dataset_parser(subparsers)
 
     return parser
+
+
+def _add_build_dataset_parser(subparsers: argparse._SubParsersAction[Any]) -> None:
+    p = subparsers.add_parser("build-dataset", help="Download openpecha/BoCorpus and build vocabulary/n-gram dataset artifacts")
+    p.add_argument("--corpus-dir", default="Data/Corpus/BoCorpus", help="Directory for BoCorpus raw files")
+    p.add_argument("--output-dir", default="Data/Processed", help="Output directory for processed vocabulary/n-grams")
+    p.add_argument("--synthetic-dir", default="Data/SyntheticErrors", help="Output directory for synthetic errors")
+    p.add_argument("--synthetic-count", type=int, default=10000, help="Number of synthetic error records to generate")
+    p.add_argument("--max-rows", type=int, default=None, help="Maximum corpus rows to process (for testing/quick runs)")
+    p.add_argument("--skip-download", action="store_true", help="Skip downloading parquet and process existing local file")
 
 
 def _add_serve_parser(subparsers: argparse._SubParsersAction[Any]) -> None:
@@ -162,6 +171,8 @@ def _cmd_config(args: argparse.Namespace) -> int:
 
 
 def _cmd_health(args: argparse.Namespace) -> int:
+    from teea.daemon import create_daemon  # noqa: PLC0415
+
     daemon = create_daemon()
     diag = daemon.diagnose()
     if args.json:
@@ -179,8 +190,43 @@ def _cmd_health(args: argparse.Namespace) -> int:
 
 def _cmd_serve(args: argparse.Namespace) -> int:
     """Start the TEEA Local FastAPI service on specified host and port."""
+    from teea.service.server import run_service  # noqa: PLC0415
+
     print(f"Starting TEEA Local Service on http://{args.host}:{args.port}", flush=True)
     run_service(host=args.host, port=args.port)
+    return 0
+
+
+def _cmd_build_dataset(args: argparse.Namespace) -> int:
+    """Download BoCorpus, process vocabulary/n-grams, and build synthetic dataset."""
+    from teea.corpus.builder import BoCorpusPipeline
+
+    print("Building Tibetan Dataset from openpecha/BoCorpus...", flush=True)
+    pipeline = BoCorpusPipeline(
+        corpus_dir=args.corpus_dir,
+        processed_dir=args.output_dir,
+        synthetic_dir=args.synthetic_dir,
+    )
+    result = pipeline.process(
+        max_rows=args.max_rows,
+        synthetic_count=args.synthetic_count,
+        skip_download=args.skip_download,
+    )
+
+    print("\nDataset Artifacts Generated Successfully:")
+    print(f"  Vocabulary: {result['vocab_path']}")
+    print(f"  N-Grams:    {result['ngram_path']}")
+    print(f"  Statistics: {result['stats_path']}")
+    print(f"  Synthetic:  {result['synthetic_path']}")
+
+    stats = result["stats"]
+    print("\nCorpus Summary:")
+    print(f"  Documents:       {stats['total_documents']}")
+    print(f"  Characters:      {stats['total_characters']}")
+    print(f"  Sentences:       {stats['total_sentences']}")
+    print(f"  Total Syllables: {stats['total_syllables']}")
+    print(f"  Unique Syllables:{stats['unique_syllables']}")
+    print(f"  Type-Token Ratio:{stats['type_token_ratio']}")
     return 0
 
 
@@ -191,6 +237,7 @@ _COMMANDS: dict[str, object] = {
     "config": _cmd_config,
     "health": _cmd_health,
     "serve": _cmd_serve,
+    "build-dataset": _cmd_build_dataset,
 }
 
 
@@ -220,8 +267,16 @@ def main(argv: list[str] | None = None) -> int:
     try:
         return handler(args)  # type: ignore[operator, no-any-return]
     except FileNotFoundError as exc:
-        print(f"Error: file not found — {exc.filename}", file=sys.stderr)
+        filename_str = f" — {exc.filename}" if exc.filename else ""
+        print(f"Error: {exc}{filename_str}", file=sys.stderr)
         return 1
+    except Exception as exc:
+        from teea.core.errors import TEEAError  # noqa: PLC0415
+
+        if isinstance(exc, TEEAError):
+            print(f"Error: [{exc.code}] {exc}", file=sys.stderr)
+            return 1
+        raise
 
 
 if __name__ == "__main__":

@@ -1,0 +1,15 @@
+{
+  "verbs": {
+    "ཡིན": {"transitivity": "COPULA", "honorific": "NEUT", "valency": 1, "tense": "present"},
+    "ཡོད": {"transitivity": "EXISTENTIAL", "honorific": "NEUT", "valency": 1, "tense": "present"},
+    "འགྱུར": {"transitivity": "INTRANS", "honorific": "NEUT", "valency": 1, "tense": "future"},
+    "བལྟས": {"transitivity": "TRANS", "honorific": "NEUT", "valency": 2, "tense": "past"},
+    "ཕྱིན": {"transitivity": "INTRANS", "honorific": "NEUT", "valency": 1, "tense": "past"},
+    "བཀོལ": {"transitivity": "TRANS", "honorific": "NEUT", "valency": 2, "tense": "past"},
+    "འཁོར": {"transitivity": "INTRANS", "honorific": "NEUT", "valency": 1, "tense": "present"},
+    "ཞུས": {"transitivity": "TRANS", "honorific": "HON", "valency": 2, "tense": "past"},
+    "འཐུང": {"transitivity": "TRANS", "honorific": "NEUT", "valency": 2, "tense": "present"},
+    "བསྐོལ": {"transitivity": "TRANS", "honorific": "NEUT", "valency": 2, "tense": "past"},
+    "གཟིགས": {"transitivity": "TRANS", "honorific": "HON", "valency": 2, "tense": "present"}
+  }
+}

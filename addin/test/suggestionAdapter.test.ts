@@ -92,10 +92,15 @@ describe('categoryOf', () => {
   it.each([
     ['spell', 'Spelling'],
     ['spelling', 'Spelling'],
+    ['teea.spelling', 'Spelling'],
     ['grammar', 'Grammar'],
+    ['teea.grammar', 'Grammar'],
     ['terminology', 'Terminology'],
     ['typography', 'Typography'],
+    ['teea.typography', 'Typography'],
     ['style', 'Style'],
+    ['teea.plagiarism', 'Style'],
+    ['teea.diagnostics', 'Style'],
   ] as const)('files %s under %s', (source, category) => {
     expect(categoryOf(source)).toBe(category);
   });

@@ -29,13 +29,16 @@ const SOURCE_CATEGORIES: Record<string, SuggestionCategory> = {
   'teea.spelling': 'Spelling',
   grammar: 'Grammar',
   syntax: 'Grammar',
+  'teea.grammar': 'Grammar',
   terminology: 'Terminology',
   glossary: 'Terminology',
   typography: 'Typography',
   punctuation: 'Typography',
+  'teea.typography': 'Typography',
   style: 'Style',
   clarity: 'Style',
   'teea.plagiarism': 'Style',
+  'teea.diagnostics': 'Style',
 };
 
 /** Where an unrecognised plugin's output is filed. */
