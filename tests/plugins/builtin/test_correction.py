@@ -11,7 +11,6 @@ import pytest
 
 from teea.plugins.builtin.correction import CorrectionProvider, _levenshtein
 
-
 # -- Levenshtein distance tests ------------------------------------------------
 
 

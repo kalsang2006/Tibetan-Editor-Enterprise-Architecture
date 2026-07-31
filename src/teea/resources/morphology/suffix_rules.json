@@ -1,0 +1,87 @@
+[
+  {
+    "suffix": "པ",
+    "category": "nominalizer",
+    "priority": 100,
+    "applies_to": ["verb", "adjective"],
+    "confidence": 0.90
+  },
+  {
+    "suffix": "བ",
+    "category": "nominalizer",
+    "priority": 99,
+    "applies_to": ["verb", "adjective"],
+    "confidence": 0.90
+  },
+  {
+    "suffix": "གི་ཡོད",
+    "category": "progressive",
+    "priority": 90,
+    "applies_to": ["verb"],
+    "confidence": 0.85
+  },
+  {
+    "suffix": "བཞིན",
+    "category": "progressive",
+    "priority": 89,
+    "applies_to": ["verb"],
+    "confidence": 0.85
+  },
+  {
+    "suffix": "ཡོད་པ",
+    "category": "perfective",
+    "priority": 85,
+    "applies_to": ["verb"],
+    "confidence": 0.82
+  },
+  {
+    "suffix": "སོང",
+    "category": "past",
+    "priority": 80,
+    "applies_to": ["verb"],
+    "confidence": 0.75,
+    "note": "May also be irregular — check irregular_verbs.json first"
+  },
+  {
+    "suffix": "པའི",
+    "category": "genitive_nominalizer",
+    "priority": 95,
+    "applies_to": ["verb"],
+    "confidence": 0.92
+  },
+  {
+    "suffix": "བའི",
+    "category": "genitive_nominalizer",
+    "priority": 94,
+    "applies_to": ["verb"],
+    "confidence": 0.92
+  },
+  {
+    "suffix": "རྒྱུ",
+    "category": "future",
+    "priority": 75,
+    "applies_to": ["verb"],
+    "confidence": 0.78
+  },
+  {
+    "suffix": "ཤིང",
+    "category": "conjunctive",
+    "priority": 70,
+    "applies_to": ["verb"],
+    "confidence": 0.70
+  },
+  {
+    "suffix": "ཅིང",
+    "category": "conjunctive",
+    "priority": 69,
+    "applies_to": ["verb"],
+    "confidence": 0.70
+  },
+  {
+    "suffix": "ན",
+    "category": "conditional",
+    "priority": 65,
+    "applies_to": ["verb"],
+    "confidence": 0.65
+  }
+]

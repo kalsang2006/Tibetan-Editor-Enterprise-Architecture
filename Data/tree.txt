@@ -1,0 +1,43 @@
+Folder PATH listing for volume Windows-SSD
+Volume serial number is 000000D5 8E16:7BDD
+C:.
+¦   tree.txt
+¦   
++---BDRC
+¦   +---DharmaDownload
+¦           .DS_Store
+¦           
++---Corpus
+¦   +---BoCorpus
+¦       ¦   bo_corpus.parquet
+¦       ¦   
+¦       +---.cache
+¦           +---huggingface
+¦               ¦   .gitignore
+¦               ¦   CACHEDIR.TAG
+¦               ¦   
+¦               +---download
+¦                       bo_corpus.parquet.metadata
+¦                       
++---Lexicons
+¦       classical-lexicon.txt
+¦       
++---Processed
+¦       bocorpus_ngrams.json
+¦       bocorpus_vocabulary.json
+¦       collocations.json
+¦       confusion_sets.json
+¦       corpus_stats.json
+¦       sanskrit_words.json
+¦       teea.db
+¦       teea.db-shm
+¦       teea.db-wal
+¦       verb_lexicon.json
+¦       
++---SyntheticErrors
+¦       synthetic_errors.json
+¦       
++---Verbs
+        lemmas.txt
+        verbs-final.txt
+        

@@ -51,7 +51,7 @@ HIGH_FREQUENCY_SAFE_WORDS: Final[frozenset[str]] = frozenset({
     "འདི་ཉིད", "བྱའོ", "གནས་པ", "བྱེད་ཆེ", "ཅེས་པ", "བཙམ་མིན", "འཛོམས་པས",
     "ཅིགཡིན", "འདྲའ་སྟེ", "ཕྱེ་ཞིང", "འབྱེད་པར", "རྩིས་དེ", "འབད་དགོས", "ལེག་པར",
     "བསྐྲུན་ཐུབ", "སྒྲུབ་པའི", "ཐོན་གྱིས", "ཆོག་རུ", "གྱུར་པ", "ཡིན་པའི", "མནམ་ཡང",
-    "མརྒྱུན་འཆད", "མེ་པའི", "བད་རྩོན", "བྱེས་གོས",
+    "མརྒྱུན་འཆད", "མེ་པའི", "བད་རྩོན", "བྱེས་གོས", "བླང", "དོར", "བསྐྲུན",
 })
 
 
@@ -176,8 +176,9 @@ class InMemoryDictionaryRepository:
             return True
         if clean in self:
             return True
-        syllables = [s for s in clean.split("\u0f0b") if s]
-        if len(syllables) > 1 and all(s in self for s in syllables):
+        if clean.endswith("ར") and clean[:-1] in self:
+            return True
+        if clean.endswith("ས") and clean[:-1] in self:
             return True
         return False
 

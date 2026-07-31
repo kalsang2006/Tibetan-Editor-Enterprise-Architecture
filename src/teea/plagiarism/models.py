@@ -19,6 +19,8 @@ from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
+from teea.core.types import TextSpan
+
 
 class Fingerprint(BaseModel):
     """One winnowed fingerprint hash.
@@ -42,8 +44,13 @@ class SourceDocument(BaseModel):
     Attributes:
         document_id: Unique identifier (e.g. a filename or UUID).
         source: The original text of the document.
-        fingerprints: The fingerprint hash set for this document, used for
-            efficient similarity computation.
+        fingerprints: The fingerprint hash set for this document.
+        collection: Optional corpus collection name (e.g. 'Bon Kangyur').
+        filename: Optional source filename (e.g. 'I4PD3972').
+        parent_doc_id: Optional parent document ID if chunked.
+        chunk_index: Optional chunk index within parent document.
+        char_start: Character offset start in parent document.
+        char_end: Character offset end in parent document.
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
@@ -51,6 +58,12 @@ class SourceDocument(BaseModel):
     document_id: str
     source: str
     fingerprints: frozenset[int] = frozenset()
+    collection: str | None = None
+    filename: str | None = None
+    parent_doc_id: str | None = None
+    chunk_index: int | None = None
+    char_start: int | None = None
+    char_end: int | None = None
 
     @model_validator(mode="after")
     def _validate_consistency(self) -> SourceDocument:
@@ -64,16 +77,14 @@ class FingerprintMatch(BaseModel):
 
     Attributes:
         document_id: The matched corpus document.
-        similarity: Asymmetric containment similarity in ``[0, 1]``.  This is
-            the fraction of query fingerprints that matched the corpus
-            document.  ``1.0`` means every query fingerprint was found in
-            this document (the document may be much longer).
-        coverage: Fraction of the corpus document's fingerprints that were
-            matched.  ``1.0`` means every fingerprint of the corpus document
-            was found in the query (the query may be a superset).
+        similarity: Asymmetric containment similarity in ``[0, 1]``.
+        coverage: Fraction of the corpus document's fingerprints matched.
         overlap_count: Number of matching fingerprints.
         query_fingerprint_count: Total fingerprints in the query.
         doc_fingerprint_count: Total fingerprints in the corpus document.
+        source_span: Precise location span of matching content in query text.
+        collection: Corpus collection name (if available).
+        filename: Source filename (if available).
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
@@ -84,6 +95,9 @@ class FingerprintMatch(BaseModel):
     overlap_count: int = Field(ge=0)
     query_fingerprint_count: int = Field(ge=1)
     doc_fingerprint_count: int = Field(ge=0)
+    source_span: TextSpan | None = None
+    collection: str | None = None
+    filename: str | None = None
 
     @model_validator(mode="after")
     def _validate_consistency(self) -> FingerprintMatch:

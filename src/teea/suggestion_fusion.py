@@ -9,7 +9,12 @@ from __future__ import annotations
 from typing import Any
 
 from teea.engine import TEEAEngine
-from teea.fusion import PriorityRankedFusionEngine, Suggestion, SuggestionPriority, UnifiedSuggestions
+from teea.fusion import (
+    PriorityRankedFusionEngine,
+    Suggestion,
+    SuggestionPriority,
+    UnifiedSuggestions,
+)
 
 
 class SuggestionFusionEngine:

@@ -62,9 +62,9 @@ All higher-layer components are also built and tested:
 | AI Runtime & Capability Registry | `teea.ai` | Figure 6; SRS 3.3, FR-6 | **Complete** (ADR-019) |
 | Local IPC layer | — | Figures 1, 3; SRS 2.1, FR-1/2/8 | **Complete** (147 tests, 100% coverage) |
 | Plagiarism subsystem | — | Figure 8; SRS 3.4, FR-9 | **Complete** (Robust Winnowing, 9+9 test files) |
-| Office.js add-in | — | Figures 1, 2 | **Complete** (React/TypeScript, 263 tests) |
-| Daemon Entrypoint | — | SRS 2.1 | **Complete** (CLI, daemon, workflow) |
-| SQLite Persistence | — | ADR-006 | **Complete** (5 repos, 63 tests) |
+| Office.js add-in | — | Figures 1, 2 | **Complete** (React/TypeScript, 263 tests, local office.js) |
+| Daemon Entrypoint | — | SRS 2.1 | **Complete** (CLI, daemon, workflow, serve_http) |
+| Core Test Suite | `tests/` | Pipeline & Subsystem Verification | **Complete** (2,265 passing tests) |
 
 The Persistence layer (`teea.persistence`) holds four facets of Figure 2's
 **Dictionary Repository**, stated as separate protocols for Interface Segregation:

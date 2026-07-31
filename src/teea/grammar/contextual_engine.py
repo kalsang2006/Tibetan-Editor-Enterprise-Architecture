@@ -71,13 +71,22 @@ class ContextualGrammarEngine:
             dictionary = default_dictionary()
         self._dictionary = dictionary
         self._confusion_map: dict[str, str] = {}
+        self._collocations: dict[str, Any] = {}
         self._load_confusion_sets(confusion_sets_path)
+        self._load_collocations()
 
     def _load_confusion_sets(self, path: Any = None) -> None:
-        from pathlib import Path
         import json
-        p = Path(path) if path else Path(__file__).resolve().parents[3] / "Data" / "Processed" / "confusion_sets.json"
-        if p.exists():
+        from pathlib import Path
+        candidates = [
+            Path(path) if path else None,
+            Path(__file__).resolve().parents[3] / "Data" / "Processed" / "confusion_sets_expanded.json",
+            Path(__file__).resolve().parents[3] / "Data" / "Processed" / "confusion_sets.json",
+            Path(__file__).resolve().parents[3] / "Processed" / "confusion_sets_expanded.json",
+            Path(__file__).resolve().parents[3] / "Processed" / "confusion_sets.json",
+        ]
+        p = next((c for c in candidates if c and c.exists()), None)
+        if p:
             try:
                 with open(p, "r", encoding="utf-8") as f:
                     data = json.load(f)
@@ -89,6 +98,41 @@ class ContextualGrammarEngine:
                             self._confusion_map[norm_k] = sug
             except Exception:
                 pass
+
+    def _load_collocations(self, path: Any = None) -> None:
+        import json
+        from pathlib import Path
+        candidates = [
+            Path(path) if path else None,
+            Path(__file__).resolve().parents[3] / "Data" / "Processed" / "collocations_expanded.json",
+            Path(__file__).resolve().parents[3] / "Data" / "Processed" / "collocations.json",
+            Path(__file__).resolve().parents[3] / "Processed" / "collocations_expanded.json",
+            Path(__file__).resolve().parents[3] / "Processed" / "collocations.json",
+        ]
+        p = next((c for c in candidates if c and c.exists()), None)
+        if p:
+            try:
+                with open(p, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    self._collocations = data.get("collocations", {}) if isinstance(data, dict) else {}
+            except Exception:
+                pass
+
+    def get_collocation_score(self, word1: str, word2: str) -> float:
+        """Return collocation strength score for a word pair."""
+        w1_clean = word1.strip("་ །\u0f0b\u0f0d ")
+        w2_clean = word2.strip("་ །\u0f0b\u0f0d ")
+        keys = [
+            f"{w1_clean}:{w2_clean}",
+            f"{w1_clean}་:{w2_clean}",
+            f"{w1_clean}:{w2_clean}་",
+            f"{w1_clean}་:{w2_clean}་",
+        ]
+        for key in keys:
+            info = self._collocations.get(key)
+            if isinstance(info, dict):
+                return float(info.get("t", info.get("mi", 0.0)))
+        return 0.0
 
     def _spelling_fallbacks(
         self, words_with_spans: list[tuple[str, int, int]], i: int, sentence_text: str
@@ -165,16 +209,16 @@ class ContextualGrammarEngine:
             "ཧ་བཅང": "ཧ་ཅང",
             "བཅང": "ཅང",
         }
-        sug = self._confusion_map.get(w) or fallbacks.get(w)
-        if sug:
+        sug_val = self._confusion_map.get(w) or fallbacks.get(w)
+        if isinstance(sug_val, str) and sug_val:
             return ContextualError(
                 word=w_raw,
                 char_start=s_start,
                 char_end=s_end,
                 error_code="SPELLING_FALLBACK",
                 error_type="SPELLING",
-                message=f"Spelling error: '{w}', expected '{sug}'.",
-                suggestion=sug,
+                message=f"Spelling error: '{w}', expected '{sug_val}'.",
+                suggestion=sug_val,
             )
         return None
 
@@ -368,7 +412,21 @@ class ContextualGrammarEngine:
                         skip_indices.add(k)
                 continue
 
-            # FIRST: Check safe words for single tokens
+            elif w == "ཇིག" and i + 1 < len(words_with_spans) and words_with_spans[i + 1][0].strip("་ །\u0f0b\u0f0d ").startswith("བརྟེན"):
+                errors.append(
+                    ContextualError(
+                        word=w,
+                        char_start=s_start,
+                        char_end=s_end,
+                        error_code="CONTEXT_JIG_JIGTEN",
+                        error_type="CONTEXTUAL_SEMANTIC",
+                        message="Contextual error: 'ཇིག' used in place of 'འཇིག་རྟེན'.",
+                        suggestion="འཇིག་རྟེན",
+                    )
+                )
+                continue
+
+            # Check safe words for remaining single tokens
             if w in SAFE_WORDS:
                 continue
 

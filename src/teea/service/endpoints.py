@@ -238,6 +238,74 @@ def run_legacy_analysis(payload: LegacyIpcRequest, request: Request) -> LegacyIp
     )
 
 
+@router.post("/api/plagiarism/check")
+@router.post("/api/plagiarism/check/")
+@router.post("/api/plagiarism")
+@router.post("/plagiarism/check")
+@router.post("/plagiarism")
+def run_legacy_plagiarism(payload: dict[str, Any], request: Request) -> dict[str, Any]:
+    """Flexible JSON endpoint for plagiarism check (supports raw REST & IPC envelope)."""
+    params = payload.get("params") if isinstance(payload.get("params"), dict) else payload
+    text = str(params.get("text") or payload.get("text") or "")
+    min_similarity = float(params.get("min_similarity") or payload.get("min_similarity") or 0.05)
+    req_id = str(payload.get("request_id") or "req-1")
+    is_ipc = "method" in payload or "params" in payload
+
+    engine = _get_engine(request)
+    plag_engine = getattr(engine, "plagiarism_engine", None)
+    if plag_engine is not None and text.strip():
+        check_fn = getattr(plag_engine, "detect", None) or getattr(plag_engine, "check", None)
+        match_result = check_fn(text, min_similarity=min_similarity)
+        top_sim = getattr(match_result, "max_similarity", 0.0)
+        orig_score = max(0.0, round((1.0 - top_sim) * 100.0, 1))
+        res_dict = {
+            "originality_score": orig_score,
+            "matches": [
+                {
+                    "document_id": m.document_id,
+                    "collection": getattr(m, "collection", None),
+                    "filename": getattr(m, "filename", None),
+                    "similarity": m.similarity,
+                    "coverage": m.coverage,
+                    "overlap_count": m.overlap_count,
+                    "query_fingerprint_count": m.query_fingerprint_count,
+                    "doc_fingerprint_count": m.doc_fingerprint_count,
+                    "source_span": (
+                        {
+                            "char_start": m.source_span.char_start,
+                            "char_end": m.source_span.char_end,
+                            "byte_start": m.source_span.byte_start,
+                            "byte_end": m.source_span.byte_end,
+                        }
+                        if m.source_span
+                        else None
+                    ),
+                }
+                for m in match_result.matches
+            ],
+            "query_fingerprint_count": match_result.query_fingerprint_count,
+            "total_corpus_documents": match_result.total_corpus_documents,
+            "elapsed_ms": match_result.elapsed_ms,
+        }
+    else:
+        res_dict = {
+            "originality_score": 100.0,
+            "matches": [],
+            "query_fingerprint_count": 0,
+            "total_corpus_documents": getattr(plag_engine, "size", 0) if plag_engine else 0,
+            "elapsed_ms": 0.0,
+        }
+
+    if is_ipc:
+        return {
+            "ok": True,
+            "request_id": req_id,
+            "result": res_dict,
+            "error": None,
+        }
+    return res_dict
+
+
 @router.post("/ai/rewrite", response_model=AIRewriteResponse)
 def ai_rewrite(payload: AIRewriteRequest, request: Request) -> AIRewriteResponse:
     """AI text rewriting endpoint."""

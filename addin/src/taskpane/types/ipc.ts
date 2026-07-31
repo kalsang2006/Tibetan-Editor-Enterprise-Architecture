@@ -54,6 +54,8 @@ export const DEFAULT_AI_DAEMON_PORT = 50505;
  */
 export const ANALYSIS_METHOD = 'analysis.run';
 export const ANALYSIS_PATH = '/api/analysis/run';
+export const PLAGIARISM_METHOD = 'plagiarism.check';
+export const PLAGIARISM_PATH = '/api/plagiarism/check';
 
 /**
  * The port `teea.transport.analysis_server`'s daemon-side entry point binds by
@@ -197,3 +199,31 @@ export type StreamFrame =
   | { kind: 'cancelled' }
   | { kind: 'error'; code: string; message: string }
   | { kind: 'done' };
+
+/** A match reported by the plagiarism engine. */
+export interface PlagiarismMatch {
+  document_id: string;
+  collection?: string | null;
+  filename?: string | null;
+  similarity: number;
+  coverage: number;
+  overlap_count: number;
+  query_fingerprint_count: number;
+  doc_fingerprint_count: number;
+  source_span: {
+    char_start: number;
+    char_end: number;
+    byte_start: number;
+    byte_end: number;
+  } | null;
+}
+
+/** Result payload returned by the plagiarism check endpoint. */
+export interface PlagiarismCheckResult {
+  originality_score: number;
+  matches: PlagiarismMatch[];
+  query_text?: string;
+  query_fingerprint_count: number;
+  total_corpus_documents: number;
+  elapsed_ms: number;
+}

@@ -53,6 +53,12 @@ def test_health_direct() -> None:
     assert "version" in diag
 
 
+def test_plagiarism_cli_missing_corpus(tmp_path: Path) -> None:
+    """Plagiarism CLI handles missing corpus file gracefully."""
+    result = main(["plagiarism", "build-index", "--corpus-path", str(tmp_path / "nonexistent.parquet")])
+    assert result == 1
+
+
 def test_analyze_file_not_found(capsys: pytest.CaptureFixture[str]) -> None:
     result = main(["analyze", "nonexistent.txt"])
     assert result == 1

@@ -24,10 +24,6 @@ from teea.nlp.snapshot import DocumentSnapshot
 from teea.plagiarism.engine import PlagiarismEngine
 from teea.plagiarism.models import FingerprintMatch
 
-#: A plagiarism warning spans the full document (char 0 → end).
-#: Individual source spans are available in the match message.
-_DOCUMENT_SPAN = TextSpan(char_start=0, char_end=0, byte_start=0, byte_end=0)
-
 
 class PlagiarismDetectorPlugin:
     """Feature plugin that detects plagiarism in the analysed document.
@@ -67,16 +63,16 @@ class PlagiarismDetectorPlugin:
         if not result.matches:
             return
 
-        # Use the document's actual length for the span
         doc_end = len(snapshot.source)
         doc_bytes = len(snapshot.source.encode("utf-8"))
-        span = TextSpan(char_start=0, char_end=doc_end, byte_start=0, byte_end=doc_bytes)
+        default_span = TextSpan(char_start=0, char_end=doc_end, byte_start=0, byte_end=doc_bytes)
 
         for match in result.matches[:10]:  # limit to top 10 matches
             priority = _priority_for(match.similarity)
+            target_span = match.source_span if match.source_span is not None else default_span
             yield Suggestion(
                 source=self.name,
-                span=span,
+                span=target_span,
                 replacement=None,
                 score=match.similarity,
                 priority=priority,

@@ -78,6 +78,9 @@ export async function readDocumentText(): Promise<string> {
  * @returns The selected text, or `''` when nothing is selected.
  */
 export async function readSelectionText(): Promise<string> {
+  if (typeof Word === 'undefined' || typeof Word.run !== 'function') {
+    return '';
+  }
   return Word.run(async (context) => {
     const selection = context.document.getSelection();
     selection.load('text');
@@ -113,7 +116,7 @@ export async function applyOperations(
 ): Promise<ApplyReport> {
   const ordered = sortForApplication(operations);
   const report: ApplyReport = { applied: [], skipped: [] };
-  if (ordered.length === 0) {
+  if (ordered.length === 0 || typeof Word === 'undefined' || typeof Word.run !== 'function') {
     return report;
   }
 
@@ -160,6 +163,9 @@ export async function applyOperations(
  * @param text The replacement.
  */
 export async function replaceSelection(text: string): Promise<void> {
+  if (typeof Word === 'undefined' || typeof Word.run !== 'function') {
+    return;
+  }
   await Word.run(async (context) => {
     const selection = context.document.getSelection();
     selection.insertText(text, Word.InsertLocation.replace);
@@ -173,6 +179,9 @@ export async function replaceSelection(text: string): Promise<void> {
  * @param text The text to insert.
  */
 export async function insertAfterSelection(text: string): Promise<void> {
+  if (typeof Word === 'undefined' || typeof Word.run !== 'function') {
+    return;
+  }
   await Word.run(async (context) => {
     const selection = context.document.getSelection();
     selection.insertText(text, Word.InsertLocation.after);
@@ -349,6 +358,9 @@ export function countOccurrencesBefore(
 }
 
 async function readBodyText(): Promise<string> {
+  if (typeof Word === 'undefined' || typeof Word.run !== 'function') {
+    return '';
+  }
   return Word.run(async (context) => {
     const body = context.document.body;
     body.load('text');
@@ -409,4 +421,91 @@ function decodeBytes(data: unknown): string {
     return new TextDecoder('utf-8').decode(Uint8Array.from(data as number[]));
   }
   return String(data ?? '');
+}
+
+/**
+ * Highlight plagiarism match spans in the Word document.
+ *
+ * @param matches Array of plagiarism matches with start, length, and text.
+ * @param color Highlight color (default `#FFF200` / yellow).
+ */
+export async function highlightPlagiarismMatches(
+  matches: Array<{ start: number; length: number; originalText: string }>,
+  color = '#FFF200',
+): Promise<void> {
+  if (typeof Word === 'undefined' || typeof Word.run !== 'function') {
+    return;
+  }
+  return Word.run(async (context) => {
+    let firstRange: Word.Range | null = null;
+    for (const match of matches) {
+      if (match.length <= 0) continue;
+      try {
+        const range = await resolveRange(context, {
+          rangeStart: match.start,
+          rangeLength: match.length,
+          originalText: match.originalText,
+          newText: match.originalText,
+        });
+        range.font.highlightColor = color;
+        if (!firstRange) {
+          firstRange = range;
+        }
+      } catch {
+        // Ignore range resolution failure gracefully
+      }
+    }
+    if (firstRange) {
+      firstRange.select();
+    }
+    await context.sync();
+  });
+}
+
+/**
+ * Reset highlight color on plagiarism match spans in the Word document.
+ */
+export async function clearPlagiarismHighlights(
+  matches: Array<{ start: number; length: number; originalText: string }>,
+): Promise<void> {
+  if (typeof Word === 'undefined' || typeof Word.run !== 'function') {
+    return;
+  }
+  return Word.run(async (context) => {
+    for (const match of matches) {
+      if (match.length <= 0) continue;
+      try {
+        const range = await resolveRange(context, {
+          rangeStart: match.start,
+          rangeLength: match.length,
+          originalText: match.originalText,
+          newText: match.originalText,
+        });
+        range.font.highlightColor = null as unknown as string;
+      } catch {
+        // Ignore range resolution failure
+      }
+    }
+    await context.sync();
+  });
+}
+
+/**
+ * Insert an academic footnote citation into the current Word selection.
+ *
+ * @param citation Text of the footnote citation.
+ */
+export async function insertFootnoteCitation(citation: string): Promise<void> {
+  if (typeof Word === 'undefined' || typeof Word.run !== 'function') {
+    return;
+  }
+  return Word.run(async (context) => {
+    const selection = context.document.getSelection();
+    if (typeof selection.insertFootnote === 'function') {
+      selection.insertFootnote(citation);
+    } else {
+      context.document.body.insertParagraph(`[Citation] ${citation}`, Word.InsertLocation.end);
+    }
+    await context.sync();
+  });
 }

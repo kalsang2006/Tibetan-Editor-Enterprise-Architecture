@@ -13,9 +13,10 @@ structural rules before dictionary or corpus lookup. Enforces hard-fail rules on
 
 from __future__ import annotations
 
-from enum import Enum
 import unicodedata
+from enum import Enum
 from typing import Final
+
 from pydantic import BaseModel, Field
 
 

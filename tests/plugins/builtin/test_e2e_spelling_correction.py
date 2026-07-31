@@ -34,7 +34,6 @@ from teea.plugins import SupervisedPluginRuntime
 from teea.plugins.builtin.correction import CorrectionProvider
 from teea.plugins.builtin.spelling import SpellCheckerPlugin
 
-
 # -- Helpers -------------------------------------------------------------------
 
 

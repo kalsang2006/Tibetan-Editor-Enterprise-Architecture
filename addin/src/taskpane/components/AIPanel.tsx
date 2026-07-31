@@ -30,8 +30,9 @@ import {
 /** The rewrite templates the pane offers, matching `REWRITE_TEMPLATES`. */
 export const REWRITE_TEMPLATES: ReadonlyArray<{ value: string; label: string }> = [
   { value: 'rewrite_fluent', label: 'Improve fluency' },
-  { value: 'tone_formal', label: 'Make it formal' },
+  { value: 'tone_formal', label: 'Transform to Formal Honorific (zhe-sa)' },
   { value: 'improve_clarity', label: 'Improve clarity' },
+  { value: 'translate_english', label: 'Translate to English' },
   { value: 'continue_text', label: 'Continue writing' },
 ];
 

@@ -25,20 +25,25 @@ import {
 
 import { AIPanel } from './components/AIPanel';
 import { BatchActionBar } from './components/BatchActionBar';
+import { PlagiarismPanel } from './components/PlagiarismPanel';
 import { SuggestionGroup } from './components/SuggestionGroup';
 import { useAIAssistant } from './hooks/useAIAssistant';
 import type { AnalysisStatus } from './hooks/useDocumentAnalysis';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 import { useOfficeTheme } from './hooks/useOfficeTheme';
+import { usePlagiarism } from './hooks/usePlagiarism';
 import { useSuggestionEngine } from './hooks/useSuggestionEngine';
 import { useUndoStack } from './hooks/useUndoStack';
 import type { StreamTransport } from './services/IpcBridge';
 import {
   applyOperations,
+  clearPlagiarismHighlights,
+  highlightPlagiarismMatches,
   insertAfterSelection,
+  insertFootnoteCitation,
   replaceSelection,
 } from './services/WordDocument';
-import type { Suggestion } from './types/ipc';
+import type { PlagiarismMatch, Suggestion } from './types/ipc';
 
 const useStyles = makeStyles({
   root: {
@@ -140,7 +145,7 @@ export interface AppProps {
   isOnline?: boolean;
 }
 
-type PaneTab = 'review' | 'assistant';
+type PaneTab = 'review' | 'assistant' | 'plagiarism';
 
 export function App({
   suggestions,
@@ -165,6 +170,10 @@ export function App({
   const undo = useUndoStack({ apply });
   const engine = useSuggestionEngine(suggestions, { apply });
   const assistant = useAIAssistant({ transport, sessionId });
+  const plagiarism = usePlagiarism({
+    getText: async () => sourceText,
+    ...(daemonBaseUrl !== undefined ? { baseUrl: daemonBaseUrl } : {}),
+  });
 
   const write = documentApi ?? {
     replaceSelection,
@@ -289,6 +298,7 @@ export function App({
       >
         <Tab value="review">Suggestions</Tab>
         <Tab value="assistant">Assistant</Tab>
+        <Tab value="plagiarism">Plagiarism</Tab>
       </TabList>
 
       {tab === 'review' ? (
@@ -377,12 +387,48 @@ export function App({
           )}
 	
         </>
-      ) : (
+      ) : tab === 'assistant' ? (
         <AIPanel
           assistant={assistant}
           sourceText={sourceText}
           onReplaceSelection={write.replaceSelection}
           onInsertBelow={write.insertAfterSelection}
+        />
+      ) : (
+        <PlagiarismPanel
+          result={plagiarism.result}
+          status={plagiarism.status}
+          error={plagiarism.error}
+          onCheck={plagiarism.check}
+          onClearHighlights={async () => {
+            if (plagiarism.result?.matches) {
+              const ranges = plagiarism.result.matches
+                .filter((m) => m.source_span !== null)
+                .map((m) => {
+                  const s = m.source_span!;
+                  return {
+                    start: s.char_start,
+                    length: s.char_end - s.char_start,
+                    originalText: sourceText.slice(s.char_start, s.char_end),
+                  };
+                });
+              await clearPlagiarismHighlights(ranges);
+            }
+          }}
+          onHighlightMatch={async (m: PlagiarismMatch) => {
+            if (m.source_span) {
+              const s = m.source_span;
+              await highlightPlagiarismMatches([
+                {
+                  start: s.char_start,
+                  length: s.char_end - s.char_start,
+                  originalText: sourceText.slice(s.char_start, s.char_end),
+                },
+              ]);
+            }
+          }}
+          onInsertCitation={insertFootnoteCitation}
+          documentText={sourceText}
         />
       )}
     </FluentProvider>

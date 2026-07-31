@@ -26,8 +26,8 @@ Design notes
 from __future__ import annotations
 
 import unicodedata
-from typing import Any
 from collections.abc import Callable
+from typing import Any
 
 from teea.core.logging import get_logger
 
@@ -167,7 +167,7 @@ class CorrectionProvider:
                 "correction_below_threshold",
                 word=word,
                 best=best_word,
-                score=best_score,
+                score=effective_score,
                 threshold=self._threshold,
             )
         except Exception:

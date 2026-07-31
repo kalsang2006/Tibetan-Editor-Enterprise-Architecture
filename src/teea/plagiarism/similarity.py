@@ -42,6 +42,8 @@ def jaccard_containment(
     *,
     query_total: int | None = None,
     doc_total: int | None = None,
+    collection: str | None = None,
+    filename: str | None = None,
 ) -> FingerprintMatch | None:
     """Compute the asymmetric containment of *query* within *doc*.
 
@@ -49,11 +51,10 @@ def jaccard_containment(
         query_hashes: Fingerprint hash set of the query document.
         doc_hashes: Fingerprint hash set of the corpus document.
         doc_id: Identifier of the corpus document.
-        query_total: Total fingerprints the query produced (may differ from
-            ``len(query_hashes)`` after deduplication).  Defaults to
-            ``len(query_hashes)``.
-        doc_total: Total fingerprints the doc produced.  Defaults to
-            ``len(doc_hashes)``.
+        query_total: Total fingerprints the query produced.
+        doc_total: Total fingerprints the doc produced.
+        collection: Optional corpus collection name.
+        filename: Optional source filename.
 
     Returns:
         A :class:`FingerprintMatch` or ``None`` if there is no overlap.
@@ -73,6 +74,8 @@ def jaccard_containment(
         overlap_count=len(overlap),
         query_fingerprint_count=q_total,
         doc_fingerprint_count=d_total,
+        collection=collection,
+        filename=filename,
     )
 
 

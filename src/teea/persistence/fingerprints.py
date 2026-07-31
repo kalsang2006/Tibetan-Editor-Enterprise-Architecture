@@ -36,8 +36,16 @@ class FingerprintRepository(Protocol):
         """
         ...
 
+    def save_batch(self, documents: Sequence[SourceDocument]) -> None:
+        """Persist a batch of documents and their fingerprints."""
+        ...
+
     def load(self, document_id: str) -> SourceDocument | None:
         """Retrieve a document by id, or ``None`` if not found."""
+        ...
+
+    def exists(self, document_id: str) -> bool:
+        """Return True if document or chunk exists in repository."""
         ...
 
     def delete(self, document_id: str) -> bool:
@@ -67,9 +75,23 @@ class InMemoryFingerprintRepository:
         """Persist a document and its fingerprints."""
         self._store[document.document_id] = document
 
+    def save_batch(self, documents: Sequence[SourceDocument]) -> None:
+        """Persist a batch of documents and their fingerprints."""
+        for doc in documents:
+            self._store[doc.document_id] = doc
+
     def load(self, document_id: str) -> SourceDocument | None:
         """Retrieve a document by id."""
         return self._store.get(document_id)
+
+    def exists(self, document_id: str) -> bool:
+        """Return True if document exists."""
+        if document_id in self._store:
+            return True
+        return any(
+            doc.parent_doc_id == document_id or doc.document_id == document_id
+            for doc in self._store.values()
+        )
 
     def delete(self, document_id: str) -> bool:
         """Remove a document. Returns True if it existed."""

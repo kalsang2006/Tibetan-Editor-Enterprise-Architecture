@@ -3,6 +3,7 @@ repeated words, and typography checking.
 """
 
 import pytest
+
 from teea.engine import TEEAEngine
 from teea.plugins.builtin.grammar import GrammarCheckerPlugin
 from teea.plugins.builtin.typography import TypographyPlugin

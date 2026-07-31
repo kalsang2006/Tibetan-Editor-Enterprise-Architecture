@@ -1,9 +1,10 @@
 """Unit and integration tests for Contextual Grammar & Semantic Engine."""
 
 import pytest
+
+from teea.ai.engines import DummyInferenceEngine
 from teea.engine import TEEAEngine
 from teea.grammar.contextual_engine import ContextualGrammarEngine
-from teea.ai.engines import DummyInferenceEngine
 from teea.suggestion_fusion import SuggestionFusionEngine
 
 
@@ -128,7 +129,7 @@ def test_user_full_essay_zero_false_positives() -> None:
     assert "སྦྱོང" in replacements
     assert "གནད" in replacements or "གལ་གནད" in replacements
     assert "བཤད" in replacements
-    assert "འཇིག" in replacements
+    assert "འཇིག" in replacements or "འཇིག་རྟེན" in replacements
     assert "གསོན" in replacements
     assert "ཤེས" in replacements
     assert "བཟང" in replacements

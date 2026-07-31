@@ -1,12 +1,13 @@
 """Unit and integration tests for TEEA Structural Syllable Validator."""
 
 import pytest
-from teea.nlp.structural_validator import (
-    StructuralValidator,
-    StructuralErrorType,
-)
-from teea.engine import TEEAEngine
+
 from teea.ai.engines import DummyInferenceEngine
+from teea.engine import TEEAEngine
+from teea.nlp.structural_validator import (
+    StructuralErrorType,
+    StructuralValidator,
+)
 
 
 @pytest.fixture

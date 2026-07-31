@@ -7,7 +7,8 @@ echo.
 echo 1. Starting Python Daemon Backend on http://127.0.0.1:50505...
 start "TEEA Daemon Server" cmd /k ".venv\Scripts\python start_daemon.py"
 
-timeout /t 2 /nobreak > NUL
+echo Waiting for TEEA Daemon readiness...
+.venv\Scripts\python scripts\wait_for_daemon.py
 
 echo 2. Starting Microsoft Word Add-in TaskPane Server...
 cd addin

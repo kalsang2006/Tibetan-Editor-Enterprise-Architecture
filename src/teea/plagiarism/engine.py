@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import time
 
+from teea.core.types import TextSpan
 from teea.plagiarism.config import PlagiarismSettings
 from teea.plagiarism.fingerprinting import hash_set, normalize_and_fingerprint
 from teea.plagiarism.index import InMemoryFingerprintIndex
@@ -57,6 +58,11 @@ class PlagiarismEngine:
     def settings(self) -> PlagiarismSettings:
         """Current detection settings."""
         return self._settings
+
+    @property
+    def size(self) -> int:
+        """Number of indexed documents/chunks in the engine."""
+        return self._index.size
 
     def detect(self, text: str, *, min_similarity: float | None = None) -> MatchResult:
         """Detect plagiarism in ``text`` against the indexed corpus.
@@ -134,8 +140,23 @@ class PlagiarismEngine:
                 doc_id,
                 query_total=q_total,
                 doc_total=d_total,
+                collection=doc.collection,
+                filename=doc.filename,
             )
             if match is not None and match.similarity >= threshold:
+                matching_fps = [fp for fp in fingerprints if fp.hash_value in doc_hashes]
+                if matching_fps:
+                    min_char = min(fp.char_start for fp in matching_fps)
+                    max_char = max(fp.char_end for fp in matching_fps)
+                    byte_start = len(text[:min_char].encode("utf-8"))
+                    byte_end = len(text[:max_char].encode("utf-8"))
+                    span = TextSpan(
+                        char_start=min_char,
+                        char_end=max_char,
+                        byte_start=byte_start,
+                        byte_end=byte_end,
+                    )
+                    match = match.model_copy(update={"source_span": span})
                 matches.append(match)
 
         elapsed = (time.perf_counter() - start) * 1000

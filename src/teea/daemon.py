@@ -108,6 +108,17 @@ class TEEADaemon:
                 settings=self._settings.plagiarism,
             )
 
+        if self._plagiarism.size == 0:
+            _logger.warning(
+                "no_plagiarism_index_found",
+                message="No plagiarism index found. Run 'teea plagiarism build-index'.",
+            )
+        else:
+            _logger.info(
+                "plagiarism_index_loaded",
+                document_count=self._plagiarism.size,
+            )
+
         self._server = IpcServer()
 
         # Build plugin runtime (after plagiarism engine is available for default plugins)
@@ -120,6 +131,7 @@ class TEEADaemon:
 
             spell_checker = SpellCheckerPlugin(corpus_repository=c_repo)
             if self._ai_runtime is not None:
+                ai_runtime = self._ai_runtime
                 from teea.ai.models import CapabilityKind, InferenceRequest, ModelDescriptor
                 from teea.persistence import default_dictionary
                 from teea.plugins.builtin.correction import CorrectionProvider
@@ -127,14 +139,14 @@ class TEEADaemon:
                 tibert_descriptor = ModelDescriptor(
                     name="tibert", version="1", provides=frozenset({CapabilityKind.SPELLING})
                 )
-                self._ai_runtime.register(tibert_descriptor)
+                ai_runtime.register(tibert_descriptor)
 
                 def _score_candidates(sentence: str, ws: int, we: int, cands: list[str]) -> dict[str, float]:
                     req = InferenceRequest(
                         capability=CapabilityKind.SPELLING,
                         inputs={"sentence": sentence, "word_start": ws, "word_end": we, "candidates": cands},
                     )
-                    res = self._ai_runtime.infer(req)
+                    res = ai_runtime.infer(req)
                     scores = res.outputs.get("scores")
                     if isinstance(scores, list) and scores:
                         return {cand: float(scores[i]) if i < len(scores) else 0.5 for i, cand in enumerate(cands)}
@@ -213,9 +225,9 @@ class TEEADaemon:
                 self._engine = engine
 
             def handle(self, params: Mapping[str, Any], session: Session) -> Mapping[str, Any]:
-                text = params.get("text", "")
+                text = params.get("text") or params.get("content", "")
                 if not isinstance(text, str):
-                    return {"error": "text must be a string"}
+                    return {"error": "text or content must be a string"}
                 threshold = params.get("min_similarity")
                 kwargs = {}
                 if threshold is not None:
@@ -223,10 +235,12 @@ class TEEADaemon:
                 result = self._engine.detect(text, **kwargs)
                 return result.model_dump(mode="json")
 
+        plag_handler = PlagiarismHandler(self._plagiarism)
         self._server.register("analyze", AnalyzeHandler(self._builder))
         self._server.register("plugins", PluginHandler(self._plugins))
         self._server.register("fuse", FusionHandler(self._fusion))
-        self._server.register("plagiarism", PlagiarismHandler(self._plagiarism))
+        self._server.register("plagiarism", plag_handler)
+        self._server.register("plagiarism.check", plag_handler)
 
     @property
     def settings(self) -> TEEASettings:

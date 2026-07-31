@@ -106,6 +106,11 @@ def _winnow(hashes: Sequence[int], window_size: int) -> list[tuple[int, int]]:
         return [(h, i) for i, h in enumerate(hashes)]
 
     n = len(hashes)
+    if n < window_size:
+        min_h = min(hashes)
+        min_idx = hashes.index(min_h)
+        return [(min_h, min_idx)]
+
     fingerprints: list[tuple[int, int]] = []
     min_pos: int = -1  # position of the current window's minimum
 
@@ -146,22 +151,24 @@ def normalize_and_fingerprint(
     """
     # 1. Normalize
     normalized = unicodedata.normalize(normalization_form, text.strip())
-
-    if len(normalized) < kgram_size:
+    if not normalized or len(normalized) < kgram_size:
         return normalized, frozenset()
 
+    effective_k = min(kgram_size, max(1, len(normalized)))
+    effective_w = min(winnow_window, max(1, len(normalized) - effective_k + 1))
+
     # 2. K-gram rolling hashes
-    hashes = _kgrams(normalized, kgram_size)
+    hashes = _kgrams(normalized, effective_k)
 
     if not hashes:
         return normalized, frozenset()
 
     # 3. Winnow
-    winnowed = _winnow(hashes, winnow_window)
+    winnowed = _winnow(hashes, effective_w)
 
     # 4. Build fingerprint objects
     fingerprints = frozenset(
-        Fingerprint(hash_value=hv, char_start=pos, char_end=pos + kgram_size)
+        Fingerprint(hash_value=hv, char_start=pos, char_end=pos + effective_k)
         for hv, pos in winnowed
     )
 

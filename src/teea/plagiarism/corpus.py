@@ -6,6 +6,8 @@ and index them into a :class:`~teea.plagiarism.interfaces.FingerprintIndex`.
 
 from __future__ import annotations
 
+from collections.abc import Iterator
+from pathlib import Path
 from typing import Literal
 
 from teea.plagiarism.fingerprinting import hash_set, normalize_and_fingerprint
@@ -92,4 +94,56 @@ class DocumentCorpus:
         return self._index.remove(document_id)
 
 
-__all__ = ["DocumentCorpus"]
+class BoCorpusLoader:
+    """Streams documents from BoCorpus Parquet files.
+
+    Args:
+        parquet_path: Path to the BoCorpus Parquet file.
+        batch_size: Number of rows per read batch.
+    """
+
+    def __init__(
+        self,
+        parquet_path: str | Path = "Data/Corpus/BoCorpus/bo_corpus.parquet",
+        batch_size: int = 50,
+    ) -> None:
+        self._parquet_path = Path(parquet_path)
+        self._batch_size = batch_size
+
+    def __iter__(self) -> Iterator[SourceDocument]:
+        """Stream SourceDocument instances from the Parquet file."""
+        if not self._parquet_path.exists():
+            raise FileNotFoundError(f"BoCorpus Parquet file not found at {self._parquet_path}")
+
+        import pyarrow.parquet as pq  # noqa: PLC0415
+
+        pf = pq.ParquetFile(str(self._parquet_path))
+        for batch in pf.iter_batches(batch_size=self._batch_size):
+            pydict = batch.to_pydict()
+            ids = pydict.get("id", [])
+            collections = pydict.get("collection", [])
+            filenames = pydict.get("filename", [])
+            texts = pydict.get("text", [])
+
+            for doc_id, collection, filename, text in zip(ids, collections, filenames, texts, strict=False):
+                if not text or not isinstance(text, str):
+                    continue
+                yield SourceDocument(
+                    document_id=str(doc_id),
+                    source=text,
+                    collection=str(collection) if collection else None,
+                    filename=str(filename) if filename else None,
+                )
+
+    def total_count(self) -> int:
+        """Return total row count in the Parquet file."""
+        if not self._parquet_path.exists():
+            return 0
+
+        import pyarrow.parquet as pq  # noqa: PLC0415
+
+        pf = pq.ParquetFile(str(self._parquet_path))
+        return int(pf.metadata.num_rows)
+
+
+__all__ = ["DocumentCorpus", "BoCorpusLoader"]

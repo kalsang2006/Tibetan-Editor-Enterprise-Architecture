@@ -46,3 +46,4 @@ tree
 repo/
 # Large corpus files
 Data/Corpus/BoCorpus/*.parquet
+Data/Processed/teea.db

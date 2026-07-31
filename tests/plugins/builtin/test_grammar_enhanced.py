@@ -1,12 +1,13 @@
 """Enhanced unit and integration tests for Enterprise Tibetan Grammar Checker."""
 
 import pytest
+
+from teea.ai.engines import DummyInferenceEngine
+from teea.engine import TEEAEngine
 from teea.nlp.collocation import CollocationDatabase
 from teea.nlp.sanskrit import SanskritTransliterationValidator
-from teea.nlp.verb_lexicon import VerbLexicon, Transitivity
+from teea.nlp.verb_lexicon import Transitivity, VerbLexicon
 from teea.plugins.builtin.grammar import GrammarCheckerPlugin
-from teea.engine import TEEAEngine
-from teea.ai.engines import DummyInferenceEngine
 
 
 @pytest.fixture

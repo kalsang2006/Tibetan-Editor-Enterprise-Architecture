@@ -10,6 +10,7 @@ import json
 from enum import Enum
 from pathlib import Path
 from typing import Any, Final
+
 from pydantic import BaseModel, Field
 
 DEFAULT_VERB_LEXICON_PATH: Final[Path] = Path("Data/Processed/verb_lexicon.json")

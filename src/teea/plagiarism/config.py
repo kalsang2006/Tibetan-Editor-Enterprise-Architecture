@@ -46,6 +46,8 @@ class PlagiarismSettings(BaseSettings):
     min_document_length: int = Field(default=20, ge=0)
     ignore_trivial_matches: bool = True
     normalization_form: Literal["NFC", "NFD", "NFKC", "NFKD"] = "NFC"
+    corpus_parquet_path: str = Field(default="Data/Corpus/BoCorpus/bo_corpus.parquet")
+    max_chunk_chars: int = Field(default=100000, gt=100)
 
 
 __all__ = ["PlagiarismSettings"]

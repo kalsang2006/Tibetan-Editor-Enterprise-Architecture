@@ -51,8 +51,21 @@ def _build_parser() -> argparse.ArgumentParser:
     _add_health_parser(subparsers)
     _add_serve_parser(subparsers)
     _add_build_dataset_parser(subparsers)
+    _add_plagiarism_parser(subparsers)
 
     return parser
+
+
+def _add_plagiarism_parser(subparsers: argparse._SubParsersAction[Any]) -> None:
+    p = subparsers.add_parser("plagiarism", help="Plagiarism detection and corpus index management")
+    plag_sub = p.add_subparsers(dest="plagiarism_subcommand", help="Plagiarism subcommands")
+
+    build_p = plag_sub.add_parser("build-index", help="Build BoCorpus plagiarism fingerprint index")
+    build_p.add_argument("--corpus-path", default="Data/Corpus/BoCorpus/bo_corpus.parquet", help="Path to BoCorpus Parquet file")
+    build_p.add_argument("--db-path", default="Data/Processed/teea.db", help="Path to target SQLite database")
+    build_p.add_argument("--force", action="store_true", help="Rebuild everything from scratch, ignoring existing indexed documents")
+    build_p.add_argument("--max-chunk-chars", type=int, default=100000, help="Maximum characters per chunk")
+    build_p.add_argument("--batch-size", type=int, default=50, help="Batch size for SQLite writes")
 
 
 def _add_build_dataset_parser(subparsers: argparse._SubParsersAction[Any]) -> None:
@@ -230,6 +243,57 @@ def _cmd_build_dataset(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_plagiarism(args: argparse.Namespace) -> int:
+    sub = getattr(args, "plagiarism_subcommand", None)
+    if sub != "build-index":
+        print("Usage: teea plagiarism build-index [options]", file=sys.stderr)
+        return 1
+
+    from pathlib import Path  # noqa: PLC0415
+
+    from teea.persistence import DatabaseManager, SqliteFingerprintRepository  # noqa: PLC0415
+    from teea.plagiarism.corpus import BoCorpusLoader  # noqa: PLC0415
+    from teea.plagiarism.index_builder import IndexBuilder  # noqa: PLC0415
+
+    corpus_path = Path(args.corpus_path)
+    if not corpus_path.exists():
+        print(f"Error: Corpus Parquet file not found at '{corpus_path}'", file=sys.stderr)
+        return 1
+
+    db_path = Path(args.db_path)
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+
+    print(f"Loading BoCorpus from {corpus_path}...")
+    loader = BoCorpusLoader(parquet_path=corpus_path, batch_size=args.batch_size)
+    total_docs = loader.total_count()
+    print(f"Indexing {total_docs:,} documents into {db_path}...")
+
+    db = DatabaseManager(db_path)
+    repo = SqliteFingerprintRepository(db)
+    builder = IndexBuilder(loader=loader, repository=repo, batch_size=args.batch_size)
+
+    def print_progress(current: int, total: int) -> None:
+        if total > 0 and (current % 50 == 0 or current == total):
+            pct = (current / total) * 100
+            bar = "#" * int(pct // 2.5)
+            print(f"\rIndexing... [{bar:<40}] {current}/{total} ({pct:.1f}%)", end="", flush=True)
+
+    stats = builder.build(
+        force=args.force,
+        max_chunk_chars=args.max_chunk_chars,
+        progress_callback=print_progress,
+    )
+
+    print("\nDone.")
+    print(f"Indexed:              {stats.indexed_documents:,}")
+    print(f"Skipped:              {stats.skipped_documents:,}")
+    print(f"Failed:               {stats.failed_documents:,}")
+    print(f"Fingerprints:         {stats.total_fingerprints:,}")
+    print(f"Elapsed time:         {stats.elapsed_seconds:.2f}s")
+    print(f"Average speed:        {stats.docs_per_second:.1f} docs/s")
+    return 0
+
+
 _COMMANDS: dict[str, object] = {
     "analyze": _cmd_analyze,
     "workflow": _cmd_workflow,
@@ -238,6 +302,7 @@ _COMMANDS: dict[str, object] = {
     "health": _cmd_health,
     "serve": _cmd_serve,
     "build-dataset": _cmd_build_dataset,
+    "plagiarism": _cmd_plagiarism,
 }
 
 

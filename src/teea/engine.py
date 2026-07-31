@@ -72,8 +72,12 @@ class TEEAEngine:
         if self._corpus_repo is not None:
             combined_vocab.update(self._corpus_repo.vocabulary.keys())
 
-        # Initialize AI Runtime
-        engine_instance = ai_engine or TiBERTInferenceEngine()
+        # Initialize AI Runtime with local TiBERT checkpoint detection if available
+        from pathlib import Path
+        tibert_dir = Path("TiBERT")
+        local_path = tibert_dir if (tibert_dir.exists() and (tibert_dir / "model.safetensors").exists()) else None
+
+        engine_instance = ai_engine or TiBERTInferenceEngine(local_path=local_path)
         self._ai_runtime = LocalAIRuntime(engine_instance)
 
         # Register and start TiBERT descriptor
@@ -84,6 +88,21 @@ class TEEAEngine:
         )
         self._ai_runtime.register(tibert_descriptor)
         self._ai_runtime.start()
+
+        # Warmup TiBERT inference engine on startup if loaded
+        try:
+            warmup_req = InferenceRequest(
+                capability=CapabilityKind.SPELLING,
+                inputs={
+                    "sentence": "བཀྲ་ཤིས་བདེ་ལེགས།",
+                    "word_start": 0,
+                    "word_end": 4,
+                    "candidates": ["བཀྲ་ཤིས", "བཀྲིས་"],
+                },
+            )
+            self._ai_runtime.infer(warmup_req)
+        except Exception:  # noqa: BLE001 - optional warmup when torch is uninstalled or mock backend
+            pass
 
         # Create candidate scoring function backed by TiBERT
         def _score_candidates(
@@ -127,10 +146,16 @@ class TEEAEngine:
             typography_plugin = TypographyPlugin()
             diagnostics = DocumentDiagnosticsPlugin()
             plagiarism_engine = PlagiarismEngine(settings=self._settings.plagiarism)
+            self._plagiarism_engine = plagiarism_engine
             plagiarism_plugin = PlagiarismDetectorPlugin(engine=plagiarism_engine)
             self._plugins = [diagnostics, typography_plugin, grammar_checker, spell_checker, plagiarism_plugin]
 
         self._plugin_runtime = SupervisedPluginRuntime(self._plugins)
+
+    @property
+    def plagiarism_engine(self) -> PlagiarismEngine | None:
+        """The active plagiarism engine instance."""
+        return getattr(self, "_plagiarism_engine", None)
 
     @property
     def version(self) -> str:

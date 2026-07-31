@@ -1,5 +1,7 @@
 const path = require("path");
 const fs = require("fs");
+const os = require("os");
+const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 /**
@@ -10,6 +12,19 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
  */
 module.exports = (_env, argv) => {
   const isProduction = argv.mode === "production";
+
+  // Dynamic cross-platform dev cert resolution (ADR-002)
+  const certDir = process.env.OFFICE_ADDIN_DEV_CERTS_DIR || path.join(os.homedir(), ".office-addin-dev-certs");
+  const keyPath = path.join(certDir, "localhost.key");
+  const certPath = path.join(certDir, "localhost.crt");
+
+  let httpsOptions = undefined;
+  if (fs.existsSync(keyPath) && fs.existsSync(certPath)) {
+    httpsOptions = {
+      key: fs.readFileSync(keyPath),
+      cert: fs.readFileSync(certPath),
+    };
+  }
 
   return {
     entry: {
@@ -64,6 +79,29 @@ module.exports = (_env, argv) => {
         filename: "taskpane.html",
         chunks: ["taskpane"],
       }),
+      {
+        apply: (compiler) => {
+          compiler.hooks.thisCompilation.tap("CopyOfficeJsPlugin", (compilation) => {
+            const officeJsPath = path.resolve(__dirname, "src/taskpane/office.js");
+            if (fs.existsSync(officeJsPath)) {
+              const content = fs.readFileSync(officeJsPath);
+              compilation.emitAsset("office.js", new webpack.sources.RawSource(content));
+            }
+          });
+          compiler.hooks.thisCompilation.tap("CopyAssetsPlugin", (compilation) => {
+            const assetsDir = path.resolve(__dirname, "assets");
+            if (fs.existsSync(assetsDir)) {
+              for (const file of fs.readdirSync(assetsDir)) {
+                const filePath = path.join(assetsDir, file);
+                if (fs.statSync(filePath).isFile()) {
+                  const content = fs.readFileSync(filePath);
+                  compilation.emitAsset(`assets/${file}`, new webpack.sources.RawSource(content));
+                }
+              }
+            }
+          });
+        },
+      },
     ],
 
     devtool: isProduction ? false : "inline-source-map",
@@ -77,14 +115,7 @@ module.exports = (_env, argv) => {
       hot: false,
       server: {
         type: "https",
-        options: {
-          key: fs.readFileSync(
-            "C:/Users/kalsa/.office-addin-dev-certs/localhost.key"
-          ),
-          cert: fs.readFileSync(
-            "C:/Users/kalsa/.office-addin-dev-certs/localhost.crt"
-          ),
-        },
+        options: httpsOptions,
       },
     },
 

@@ -10,6 +10,7 @@ import json
 import math
 from pathlib import Path
 from typing import Any, Final
+
 from pydantic import BaseModel, Field
 
 DEFAULT_COLLOCATIONS_PATH: Final[Path] = Path("Data/Processed/collocations.json")

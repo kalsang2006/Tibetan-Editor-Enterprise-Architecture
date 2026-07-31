@@ -63,6 +63,8 @@ DEFAULT_SESSION_ID: Final = "http-loopback"
 
 ANALYSIS_METHOD: Final = "analysis.run"
 ANALYSIS_PATH: Final = "/api/analysis/run"
+PLAGIARISM_METHOD: Final = "plagiarism.check"
+PLAGIARISM_PATH: Final = "/api/plagiarism/check"
 
 AI_PATHS: Final = frozenset({
     "/api/ai/rewrite",
@@ -141,6 +143,7 @@ class _BridgeHTTPServer(ThreadingHTTPServer):
     builder: LanguageServerSnapshotBuilder
     plugins: SupervisedPluginRuntime
     fusion: PriorityRankedFusionEngine
+    plagiarism: Any = None
 
     def handle_error(self, request: object, client_address: tuple[str, int]) -> None:
         _exc_type, exc, _tb = sys.exc_info()
@@ -193,6 +196,8 @@ class _BridgeRequestHandler(BaseHTTPRequestHandler):
 
         if self.path == ANALYSIS_PATH:
             self._handle_analysis(raw)
+        elif self.path == PLAGIARISM_PATH:
+            self._handle_plagiarism(raw)
         elif self.path in AI_PATHS:
             self._handle_ai_stream(raw)
         else:
@@ -248,6 +253,65 @@ class _BridgeRequestHandler(BaseHTTPRequestHandler):
             return
         self._send_ipc_response(
             IpcResponse.success(request.request_id, result), HTTPStatus.OK,
+        )
+
+    # ── Plagiarism detection ────────────────────────────────────────────────
+
+    def _handle_plagiarism(self, raw: bytes) -> None:
+        try:
+            request = IpcRequest.model_validate_json(raw)
+        except ValidationError as exc:
+            self._send_json(
+                HTTPStatus.BAD_REQUEST,
+                {"error": {"code": ErrorCode.IPC_MALFORMED_MESSAGE.value,
+                           "message": "invalid IpcRequest",
+                           "detail": exc.errors(include_url=False)}},
+            )
+            return
+        if request.method not in (PLAGIARISM_METHOD, "plagiarism"):
+            self._send_json(
+                HTTPStatus.BAD_REQUEST,
+                {"error": {"code": ErrorCode.IPC_MALFORMED_MESSAGE.value,
+                           "message": "method mismatch"}},
+            )
+            return
+
+        text = request.params.get("text") or request.params.get("content", "")
+        if not isinstance(text, str):
+            self._send_ipc_response(
+                IpcResponse.failure(
+                    request.request_id,
+                    IpcFault(code=ErrorCode.INPUT_INVALID.value,
+                             error_type="InputValidationError",
+                             message="text or content must be a string"),
+                ),
+                HTTPStatus.OK,
+            )
+            return
+
+        threshold_val = request.params.get("threshold") or request.params.get("min_similarity")
+        min_sim = float(threshold_val) if threshold_val is not None else None
+
+        plag_engine = getattr(self.server, "plagiarism", None)
+        if plag_engine is None:
+            from teea.plagiarism import PlagiarismEngine  # noqa: PLC0415
+            plag_engine = PlagiarismEngine()
+
+        try:
+            kwargs = {}
+            if min_sim is not None:
+                kwargs["min_similarity"] = min_sim
+            detection_result = plag_engine.detect(text, **kwargs)
+            res_dict = detection_result.model_dump(mode="json")
+            res_dict["originality_score"] = round((1.0 - detection_result.max_similarity) * 100, 1)
+        except Exception as exc:  # noqa: BLE001
+            self._send_ipc_response(
+                IpcResponse.failure(request.request_id, _fault_from(exc)),
+                HTTPStatus.OK,
+            )
+            return
+        self._send_ipc_response(
+            IpcResponse.success(request.request_id, res_dict), HTTPStatus.OK,
         )
 
     # ── AI streaming ──────────────────────────────────────────────────────

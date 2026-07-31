@@ -90,3 +90,23 @@ def test_ui_static_route() -> None:
     response = client.get("/ui")
     assert response.status_code == 200
     assert "<title>TEEA — Tibetan AI Engine Test Workbench</title>" in response.text
+
+
+def test_legacy_plagiarism_endpoint() -> None:
+    engine = TEEAEngine()
+    app = create_app(engine=engine)
+    client = TestClient(app)
+
+    payload = {
+        "method": "plagiarism.check",
+        "params": {"text": "༄༅། ཀྱི་ཁྱི་བྱི་གྱི་དགའ་བ།", "min_similarity": 0.05},
+        "request_id": "test-plag-1",
+    }
+    response = client.post("/api/plagiarism/check", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["ok"] is True
+    assert data["request_id"] == "test-plag-1"
+    assert "originality_score" in data["result"]
+    assert "matches" in data["result"]
+

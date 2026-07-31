@@ -48,6 +48,16 @@ class DictionaryRepository(Protocol):
         """How often each tag occurs in the reference corpus."""
         ...
 
+    @property
+    def vocabulary(self) -> frozenset[str]:
+        """Set of all surfaces in the vocabulary."""
+        ...
+
+    @property
+    def vocabulary_size(self) -> int:
+        """Total number of surfaces in the vocabulary."""
+        ...
+
     def lookup(self, surface: str) -> Mapping[str, int] | None:
         """Return the tag distribution for a surface form.
 

@@ -180,7 +180,7 @@ export function toSuggestions(
  * Hold a confidence inside `[0, 1]`.
  */
 export function clampConfidence(value: number): number {
-  if (Number.isNaN(value)) {
+  if (!Number.isFinite(value)) {
     return 0;
   }
   return Math.max(0, Math.min(1, value));

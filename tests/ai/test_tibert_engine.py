@@ -24,7 +24,6 @@ from teea.ai.models import (
 )
 from teea.ai.tibert_engine import TiBERTInferenceEngine
 
-
 # -- Fixtures ------------------------------------------------------------------
 
 DESCRIPTOR = ModelDescriptor(
@@ -69,6 +68,8 @@ def _make_mock_tokenizer() -> MagicMock:
 
 def _make_mock_model() -> MagicMock:
     """Create a mock model that returns predictable logits."""
+    import pytest
+    pytest.importorskip("torch")
     import torch
 
     model = MagicMock()

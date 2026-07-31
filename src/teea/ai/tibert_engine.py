@@ -69,7 +69,7 @@ class TiBERTInferenceEngine:
 
     def __init__(
         self,
-        model_id: str = "CMLI-NLP/TiBERT",
+        model_id: str = "./TiBERT",
         *,
         local_path: Path | None = None,
     ) -> None:
@@ -108,13 +108,18 @@ class TiBERTInferenceEngine:
             device=context.device.value,
         )
 
+        extra_kwargs: dict[str, Any] = {}
+        if self._local_path:
+            extra_kwargs["local_files_only"] = True
+
         self._tokenizer = AutoTokenizer.from_pretrained(
             source,
             do_lower_case=False,
             strip_accents=False,
             use_fast=True,
+            **extra_kwargs,
         )
-        self._model = AutoModelForMaskedLM.from_pretrained(source)
+        self._model = AutoModelForMaskedLM.from_pretrained(source, **extra_kwargs)
 
         # Resolve device.
         device_str = context.device.value

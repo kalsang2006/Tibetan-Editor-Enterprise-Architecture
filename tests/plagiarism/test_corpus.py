@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
-from teea.plagiarism.corpus import DocumentCorpus
+from teea.plagiarism.corpus import BoCorpusLoader, DocumentCorpus
 from teea.plagiarism.index import InMemoryFingerprintIndex
+import pytest
 
 
 class TestDocumentCorpus:
@@ -41,3 +42,9 @@ class TestDocumentCorpus:
         index = InMemoryFingerprintIndex()
         corpus = DocumentCorpus(index)
         assert corpus.index is index
+
+    def test_bocorpus_loader_file_not_found(self) -> None:
+        loader = BoCorpusLoader(parquet_path="nonexistent.parquet")
+        assert loader.total_count() == 0
+        with pytest.raises(FileNotFoundError):
+            list(loader)

@@ -94,11 +94,11 @@ class DatabaseManager:
             self._conn = sqlite3.connect(
                 str(self._path),
                 check_same_thread=False,
-                timeout=5.0,
+                timeout=60.0,
             )
             self._conn.execute("PRAGMA journal_mode=WAL")
             self._conn.execute("PRAGMA foreign_keys=ON")
-            self._conn.execute("PRAGMA busy_timeout=5000")
+            self._conn.execute("PRAGMA busy_timeout=60000")
         except sqlite3.Error as exc:
             raise ConfigurationError(
                 "Could not open the TEEA database.",
@@ -196,7 +196,13 @@ class DatabaseManager:
                 CREATE TABLE IF NOT EXISTS fingerprint_documents (
                     document_id TEXT NOT NULL PRIMARY KEY,
                     source TEXT NOT NULL,
-                    fingerprint_count INTEGER NOT NULL DEFAULT 0
+                    fingerprint_count INTEGER NOT NULL DEFAULT 0,
+                    collection TEXT,
+                    filename TEXT,
+                    parent_doc_id TEXT,
+                    chunk_index INTEGER,
+                    char_start INTEGER,
+                    char_end INTEGER
                 );
 
                 CREATE TABLE IF NOT EXISTS fingerprint_hashes (
@@ -213,7 +219,24 @@ class DatabaseManager:
 
                 CREATE INDEX IF NOT EXISTS idx_fp_hashes_doc
                     ON fingerprint_hashes(document_id);
+
+                CREATE INDEX IF NOT EXISTS idx_fp_docs_parent
+                    ON fingerprint_documents(parent_doc_id);
             """)
+
+            # Ensure columns exist on legacy tables
+            for col, col_type in [
+                ("collection", "TEXT"),
+                ("filename", "TEXT"),
+                ("parent_doc_id", "TEXT"),
+                ("chunk_index", "INTEGER"),
+                ("char_start", "INTEGER"),
+                ("char_end", "INTEGER"),
+            ]:
+                try:
+                    self._conn.execute(f"ALTER TABLE fingerprint_documents ADD COLUMN {col} {col_type}")
+                except Exception:  # noqa: BLE001
+                    pass
 
             cur = self._conn.execute("PRAGMA user_version")
             (current_version,) = cur.fetchone()
@@ -921,32 +944,51 @@ class SqliteFingerprintRepository:
 
         Idempotent: saving the same document twice is a no-op.
         """
+        self.save_batch([document])
+
+    def save_batch(self, documents: Sequence[Any]) -> None:
+        """Batch save multiple documents/chunks efficiently inside one transaction."""
+        if not documents:
+            return
+        with self._db._lock:
+            doc_rows = []
+            hash_rows = []
+            for doc in documents:
+                doc_rows.append((
+                    doc.document_id,
+                    doc.source,
+                    len(doc.fingerprints),
+                    getattr(doc, "collection", None),
+                    getattr(doc, "filename", None),
+                    getattr(doc, "parent_doc_id", None),
+                    getattr(doc, "chunk_index", None),
+                    getattr(doc, "char_start", None),
+                    getattr(doc, "char_end", None),
+                ))
+                for h in doc.fingerprints:
+                    hash_rows.append((int(h), doc.document_id))
+
+            self._db._conn.executemany(
+                "INSERT OR REPLACE INTO fingerprint_documents "
+                "(document_id, source, fingerprint_count, collection, filename, "
+                "parent_doc_id, chunk_index, char_start, char_end) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                doc_rows,
+            )
+            self._db._conn.executemany(
+                "INSERT OR IGNORE INTO fingerprint_hashes (hash_value, document_id) VALUES (?, ?)",
+                hash_rows,
+            )
+            self._db._conn.commit()
+
+    def exists(self, document_id: str) -> bool:
+        """Return True if document or any of its chunks exist in repository."""
         with self._db._lock:
             cur = self._db._conn.execute(
-                "SELECT 1 FROM fingerprint_documents WHERE document_id = ?",
-                (document.document_id,),
+                "SELECT 1 FROM fingerprint_documents WHERE document_id = ? OR parent_doc_id = ? LIMIT 1",
+                (document_id, document_id),
             )
-            if cur.fetchone() is not None:
-                return
-
-            self._db._conn.execute(
-                "INSERT INTO fingerprint_documents "
-                "(document_id, source, fingerprint_count) VALUES (?, ?, ?)",
-                (
-                    document.document_id,
-                    document.source,
-                    len(document.fingerprints),
-                ),
-            )
-
-            for h in document.fingerprints:
-                self._db._conn.execute(
-                    "INSERT OR IGNORE INTO fingerprint_hashes "
-                    "(hash_value, document_id) VALUES (?, ?)",
-                    (int(h), document.document_id),
-                )
-
-            self._db._conn.commit()
+            return cur.fetchone() is not None
 
     def load(self, document_id: str) -> Any | None:
         """Retrieve a document by id, or ``None`` if not found."""
@@ -954,27 +996,33 @@ class SqliteFingerprintRepository:
 
         with self._db._lock:
             cur = self._db._conn.execute(
-                "SELECT source, fingerprint_count FROM fingerprint_documents "
-                "WHERE document_id = ?",
+                "SELECT source, fingerprint_count, collection, filename, parent_doc_id, chunk_index, char_start, char_end "
+                "FROM fingerprint_documents WHERE document_id = ?",
                 (document_id,),
             )
             row = cur.fetchone()
             if row is None:
                 return None
 
-            source = row[0]
+            source, _fp_count, collection, filename, parent_doc_id, chunk_index, char_start, char_end = row
 
             cur = self._db._conn.execute(
                 "SELECT hash_value FROM fingerprint_hashes "
                 "WHERE document_id = ? ORDER BY hash_value",
                 (document_id,),
             )
-            fingerprints = frozenset(int(row[0]) for row in cur.fetchall())
+            fingerprints = frozenset(int(r[0]) for r in cur.fetchall())
 
             return SourceDocument(
                 document_id=document_id,
                 source=source,
                 fingerprints=fingerprints,
+                collection=collection,
+                filename=filename,
+                parent_doc_id=parent_doc_id,
+                chunk_index=chunk_index,
+                char_start=char_start,
+                char_end=char_end,
             )
 
     def delete(self, document_id: str) -> bool:
