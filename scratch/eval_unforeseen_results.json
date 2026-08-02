@@ -8,71 +8,71 @@
     "engine_faults": 0
   },
   "detection": {
-    "tp": 222,
-    "fp": 18,
-    "fn": 103,
-    "tn": 132,
-    "accuracy": 0.7452631578947368,
-    "precision": 0.925,
-    "recall": 0.683076923076923,
-    "f1": 0.7858407079646018,
-    "specificity": 0.88,
-    "fpr": 0.12,
-    "fnr": 0.3169230769230769,
-    "mcc": 0.5234985544369202
+    "tp": 227,
+    "fp": 29,
+    "fn": 98,
+    "tn": 121,
+    "accuracy": 0.7326315789473684,
+    "precision": 0.88671875,
+    "recall": 0.6984615384615385,
+    "f1": 0.7814113597246127,
+    "specificity": 0.8066666666666666,
+    "fpr": 0.19333333333333333,
+    "fnr": 0.30153846153846153,
+    "mcc": 0.47102817872168257
   },
   "word_level": {
-    "tp": 43,
-    "fp": 290,
-    "fn": 389,
-    "precision": 0.12912912912912913,
-    "recall": 0.09953703703703703,
-    "f1": 0.11241830065359476
+    "tp": 30,
+    "fp": 357,
+    "fn": 402,
+    "precision": 0.07751937984496124,
+    "recall": 0.06944444444444445,
+    "f1": 0.07326007326007326
   },
   "correction": {
-    "exact_match": 155,
-    "exact_match_rate": 0.3263157894736842
+    "exact_match": 139,
+    "exact_match_rate": 0.2926315789473684
   },
   "latency_ms": {
-    "mean": 903.0689728420111,
-    "median": 501.75389999640174,
-    "p95": 3400.5662999989,
-    "p99": 5845.425700004853
+    "mean": 809.7139621049466,
+    "median": 481.7970999938552,
+    "p95": 2752.337699996133,
+    "p99": 5460.960999997042
   },
   "per_kind": {
     "clean": {
       "total": 150,
-      "emitted": 18,
+      "emitted": 29,
       "gold_error": 0,
-      "exact": 132
+      "exact": 121
     },
     "grammar": {
       "total": 150,
-      "emitted": 96,
+      "emitted": 90,
       "gold_error": 150,
-      "exact": 10
+      "exact": 6
     },
     "syn:CASE_PARTICLE_SUBSTITUTION": {
       "total": 25,
-      "emitted": 12,
-      "gold_error": 25,
-      "exact": 1
-    },
-    "syn:CHARACTER_CONFUSION": {
-      "total": 25,
-      "emitted": 14,
-      "gold_error": 25,
-      "exact": 2
-    },
-    "syn:PARTICLE_OMISSION": {
-      "total": 25,
-      "emitted": 10,
+      "emitted": 15,
       "gold_error": 25,
       "exact": 0
     },
+    "syn:CHARACTER_CONFUSION": {
+      "total": 25,
+      "emitted": 17,
+      "gold_error": 25,
+      "exact": 0
+    },
+    "syn:PARTICLE_OMISSION": {
+      "total": 25,
+      "emitted": 16,
+      "gold_error": 25,
+      "exact": 2
+    },
     "syn:SYLLABLE_SWAP": {
       "total": 25,
-      "emitted": 20,
+      "emitted": 19,
       "gold_error": 25,
       "exact": 0
     },
@@ -84,13 +84,13 @@
     },
     "syn:VOWEL_MUTATION": {
       "total": 25,
-      "emitted": 22,
+      "emitted": 23,
       "gold_error": 25,
       "exact": 10
     },
     "syn:WORD_DUPLICATION": {
       "total": 25,
-      "emitted": 24,
+      "emitted": 23,
       "gold_error": 25,
       "exact": 0
     }

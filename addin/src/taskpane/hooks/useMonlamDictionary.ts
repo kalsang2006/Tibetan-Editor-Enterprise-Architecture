@@ -4,7 +4,7 @@
 
 import * as React from 'react';
 
-import { MONLAM_API_KEY, MONLAM_BASE_URL } from '../config';
+import { getMonlamApiKey, MONLAM_BASE_URL } from '../config';
 
 const MONLAM_DICT_ENDPOINT = `${MONLAM_BASE_URL}/api/v1/dictionary/search`;
 
@@ -16,12 +16,12 @@ export interface DictionaryEntry {
   explanation?: string;
   examples?: string[];
   pair?: string;
-  raw?: any;
+  raw?: unknown;
 }
 
 export interface UseMonlamDictionaryResult {
   entries: DictionaryEntry[];
-  rawResponse: any;
+  rawResponse: unknown;
   /** How many definitions the API reported (data.count), falling back to entries.length. */
   count: number;
   isLoading: boolean;
@@ -32,7 +32,7 @@ export interface UseMonlamDictionaryResult {
 
 export function useMonlamDictionary(): UseMonlamDictionaryResult {
   const [entries, setEntries] = React.useState<DictionaryEntry[]>([]);
-  const [rawResponse, setRawResponse] = React.useState<any>(null);
+  const [rawResponse, setRawResponse] = React.useState<unknown>(null);
   const [count, setCount] = React.useState<number>(0);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | null>(null);
@@ -54,6 +54,22 @@ export function useMonlamDictionary(): UseMonlamDictionaryResult {
     setError(null);
 
     try {
+      const apiKey = await getMonlamApiKey();
+      if (!apiKey) {
+        setTimeout(() => {
+          const mockResult = [
+            {
+              term: query.trim(),
+              definition: `[Demo Mode] Definition for '${query.trim()}': Study; learning; acquisition of knowledge (སློབ་སྦྱོང་བྱེད་པ).`,
+              pos: 'noun',
+            },
+          ];
+          setEntries(mockResult as any);
+          setCount(1);
+          setIsLoading(false);
+        }, 500);
+        return;
+      }
       const url = `${MONLAM_DICT_ENDPOINT}?pair=${encodeURIComponent(pair)}&q=${encodeURIComponent(
         query.trim(),
       )}`;
@@ -61,7 +77,7 @@ export function useMonlamDictionary(): UseMonlamDictionaryResult {
       const response = await fetch(url, {
         method: 'GET',
         headers: {
-          'X-API-Key': MONLAM_API_KEY,
+          'X-API-Key': apiKey,
         },
       });
 

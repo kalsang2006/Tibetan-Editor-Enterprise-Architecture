@@ -78,7 +78,7 @@ class BoCorpusRepository:
             return 0
         freq = self.vocabulary.get(syllable, 0)
         if freq == 0:
-            clean = syllable.rstrip("\u0f0b །")
+            clean = syllable.rstrip("\u0f0b à¼")
             freq = self.vocabulary.get(clean, 0)
             if freq == 0 and not syllable.endswith("\u0f0b") and len(clean) <= 4:
                 freq = self.vocabulary.get(clean + "\u0f0b", 0)
@@ -98,8 +98,8 @@ class BoCorpusRepository:
         """Return normalized score in [0.0, 1.0] for bigram (prev_syl, curr_syl)."""
         if not prev_syl or not curr_syl:
             return 0.0
-        p_clean = prev_syl.rstrip("\u0f0b །")
-        c_clean = curr_syl.rstrip("\u0f0b །")
+        p_clean = prev_syl.rstrip("\u0f0b à¼")
+        c_clean = curr_syl.rstrip("\u0f0b à¼")
         
         bg_key = f"{prev_syl} {curr_syl}"
         count = self.bigrams.get(bg_key, 0)
@@ -140,14 +140,14 @@ class BoCorpusRepository:
 
         Combines left/right bigram and trigram conditional probabilities.
         """
-        TSHEG = "\u0f0b"
+        tsheg = "\u0f0b"
         # Segment sentence into left context, candidate, and right context syllables
         left_text = sentence[:word_start]
         right_text = sentence[word_end:]
 
-        left_syls = [s.strip() for s in left_text.split(TSHEG) if s.strip()]
-        right_syls = [s.strip() for s in right_text.split(TSHEG) if s.strip()]
-        cand_syls = [s.strip() for s in candidate.split(TSHEG) if s.strip()]
+        left_syls = [s.strip() for s in left_text.split(tsheg) if s.strip()]
+        right_syls = [s.strip() for s in right_text.split(tsheg) if s.strip()]
+        cand_syls = [s.strip() for s in candidate.split(tsheg) if s.strip()]
 
         if not cand_syls:
             return 0.0

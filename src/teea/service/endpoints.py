@@ -245,7 +245,8 @@ def run_legacy_analysis(payload: LegacyIpcRequest, request: Request) -> LegacyIp
 @router.post("/plagiarism")
 def run_legacy_plagiarism(payload: dict[str, Any], request: Request) -> dict[str, Any]:
     """Flexible JSON endpoint for plagiarism check (supports raw REST & IPC envelope)."""
-    params = payload.get("params") if isinstance(payload.get("params"), dict) else payload
+    raw_params = payload.get("params")
+    params = raw_params if isinstance(raw_params, dict) else payload
     text = str(params.get("text") or payload.get("text") or "")
     min_similarity = float(params.get("min_similarity") or payload.get("min_similarity") or 0.05)
     req_id = str(payload.get("request_id") or "req-1")
@@ -253,8 +254,10 @@ def run_legacy_plagiarism(payload: dict[str, Any], request: Request) -> dict[str
 
     engine = _get_engine(request)
     plag_engine = getattr(engine, "plagiarism_engine", None)
-    if plag_engine is not None and text.strip():
-        check_fn = getattr(plag_engine, "detect", None) or getattr(plag_engine, "check", None)
+    check_fn = getattr(plag_engine, "detect", None) if plag_engine is not None else None
+    if check_fn is None and plag_engine is not None:
+        check_fn = getattr(plag_engine, "check", None)
+    if plag_engine is not None and text.strip() and check_fn is not None:
         match_result = check_fn(text, min_similarity=min_similarity)
         top_sim = getattr(match_result, "max_similarity", 0.0)
         orig_score = max(0.0, round((1.0 - top_sim) * 100.0, 1))

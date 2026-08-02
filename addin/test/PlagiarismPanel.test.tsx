@@ -52,7 +52,7 @@ describe('PlagiarismPanel', () => {
     );
 
     expect(screen.getByText('100%')).toBeInTheDocument();
-    expect(screen.getByText('✨ Clean Document')).toBeInTheDocument();
+    expect(screen.getByText('Clean Document')).toBeInTheDocument();
   });
 
   it('renders matches list when plagiarism detected', () => {
@@ -91,10 +91,10 @@ describe('PlagiarismPanel', () => {
     );
 
     expect(screen.getByText('75%')).toBeInTheDocument();
-    expect(screen.getByText('⚠️ 1 Match(es) Found')).toBeInTheDocument();
-    expect(screen.getByText('📖 Manuscript corpus_d')).toBeInTheDocument();
+    expect(screen.getByText('1 Match(es) Found')).toBeInTheDocument();
+    expect(screen.getByText('Manuscript corpus_d')).toBeInTheDocument();
 
-    const card = screen.getByText('📖 Manuscript corpus_d');
+    const card = screen.getByText('Manuscript corpus_d');
     fireEvent.click(card);
     expect(onHighlight).toHaveBeenCalledTimes(1);
   });

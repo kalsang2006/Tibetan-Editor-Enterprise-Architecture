@@ -40,10 +40,15 @@ import pstats
 import platform
 import sys
 import time
+import io
 import concurrent.futures
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple, Sequence
+
+# Force UTF-8 for Windows console
+if sys.platform == "win32":
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
 # Environment & System Metrics
 import psutil

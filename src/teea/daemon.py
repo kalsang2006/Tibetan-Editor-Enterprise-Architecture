@@ -152,7 +152,7 @@ class TEEADaemon:
                         return {cand: float(scores[i]) if i < len(scores) else 0.5 for i, cand in enumerate(cands)}
                     if isinstance(scores, dict) and scores:
                         return scores
-                    return {cand: 0.5 for cand in cands}
+                    return dict.fromkeys(cands, 0.5)
 
                 combined_vocab = set(default_dictionary().vocabulary)
                 if c_repo is not None:

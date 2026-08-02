@@ -7,6 +7,7 @@ large Tibetan documents.
 from __future__ import annotations
 
 from dataclasses import dataclass
+
 from teea.plagiarism.models import SourceDocument
 
 

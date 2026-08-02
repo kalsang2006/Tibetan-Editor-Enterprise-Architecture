@@ -1,0 +1,146 @@
+[
+  {
+    "input": "བཀྲ་ཤེས་བདེ་ལེགས།",
+    "patch_operations": [
+      {
+        "span": {
+          "start": 4,
+          "end": 7
+        },
+        "original_slice": "ཤེས",
+        "replacement": "ཤིས"
+      }
+    ],
+    "suggestions": [
+      {
+        "source": "teea.diagnostics",
+        "rule_id": "",
+        "word": "",
+        "suggestion": "",
+        "message": "sentence_count=1; token_count=4; entity_count=0; term_count=0; unresolved_dependency_count=0; unresolved_ratio=0.0; semantic_graph_nodes=4; semantic_density=4.0",
+        "error_type": "SPELLING"
+      },
+      {
+        "source": "teea.spelling",
+        "rule_id": "",
+        "word": "",
+        "suggestion": "",
+        "message": "[SPELL-CTX-001] Known word 'ཤེས' appears in an implausible context — did you mean 'ཤིས'?",
+        "error_type": "CONTEXT"
+      },
+      {
+        "source": "teea.spelling",
+        "rule_id": "",
+        "word": "",
+        "suggestion": "",
+        "message": "[SPELL-CTX-002] Known word 'བཀྲ' appears in an implausible context.",
+        "error_type": "CONTEXT"
+      }
+    ]
+  },
+  {
+    "input": "བོདསྐད",
+    "patch_operations": [
+      {
+        "span": {
+          "start": 0,
+          "end": 6
+        },
+        "original_slice": "བོདསྐད",
+        "replacement": "བོད་སྐད"
+      }
+    ],
+    "suggestions": [
+      {
+        "source": "teea.spelling",
+        "rule_id": "",
+        "word": "",
+        "suggestion": "",
+        "message": "[SPELL-DICT-001] Correction available: Unknown word 'བོདསྐད' — Did you mean 'བོད་སྐད'? (confidence: 0.92)",
+        "error_type": "SPELLING"
+      },
+      {
+        "source": "teea.diagnostics",
+        "rule_id": "",
+        "word": "",
+        "suggestion": "",
+        "message": "sentence_count=1; token_count=1; entity_count=0; term_count=0; unresolved_dependency_count=0; unresolved_ratio=0.0; semantic_graph_nodes=0; semantic_density=0.0",
+        "error_type": "SPELLING"
+      }
+    ]
+  },
+  {
+    "input": "ང་ཡི་ཕ་ཡུལ",
+    "patch_operations": [],
+    "suggestions": [
+      {
+        "source": "teea.diagnostics",
+        "rule_id": "",
+        "word": "",
+        "suggestion": "",
+        "message": "sentence_count=1; token_count=4; entity_count=0; term_count=0; unresolved_dependency_count=0; unresolved_ratio=0.0; semantic_graph_nodes=3; semantic_density=3.0",
+        "error_type": "SPELLING"
+      },
+      {
+        "source": "teea.spelling",
+        "rule_id": "",
+        "word": "",
+        "suggestion": "",
+        "message": "[SPELL-CTX-002] Known word 'ང' appears in an implausible context.",
+        "error_type": "CONTEXT"
+      },
+      {
+        "source": "teea.spelling",
+        "rule_id": "",
+        "word": "",
+        "suggestion": "",
+        "message": "[SPELL-CTX-002] Known word 'ཕ' appears in an implausible context.",
+        "error_type": "CONTEXT"
+      }
+    ]
+  },
+  {
+    "input": "སློབ་སྦྱང",
+    "patch_operations": [],
+    "suggestions": [
+      {
+        "source": "teea.diagnostics",
+        "rule_id": "",
+        "word": "",
+        "suggestion": "",
+        "message": "sentence_count=1; token_count=2; entity_count=0; term_count=0; unresolved_dependency_count=0; unresolved_ratio=0.0; semantic_graph_nodes=2; semantic_density=2.0",
+        "error_type": "SPELLING"
+      },
+      {
+        "source": "teea.spelling",
+        "rule_id": "",
+        "word": "",
+        "suggestion": "",
+        "message": "[SPELL-CTX-002] Known word 'སློབ' appears in an implausible context.",
+        "error_type": "CONTEXT"
+      },
+      {
+        "source": "teea.spelling",
+        "rule_id": "",
+        "word": "",
+        "suggestion": "",
+        "message": "[SPELL-CTX-002] Known word 'སྦྱང' appears in an implausible context.",
+        "error_type": "CONTEXT"
+      }
+    ]
+  },
+  {
+    "input": "བོད་སྐད་ནི་སྐད་ཡིག་རྙིང་པ་ཞིག་རེད།",
+    "patch_operations": [],
+    "suggestions": [
+      {
+        "source": "teea.diagnostics",
+        "rule_id": "",
+        "word": "",
+        "suggestion": "",
+        "message": "sentence_count=1; token_count=9; entity_count=1; term_count=0; unresolved_dependency_count=1; unresolved_ratio=0.1111; semantic_graph_nodes=7; semantic_density=7.0",
+        "error_type": "SPELLING"
+      }
+    ]
+  }
+]

@@ -5,7 +5,7 @@
 
 import * as React from 'react';
 
-import { MONLAM_API_KEY, MONLAM_BASE_URL } from '../config';
+import { getMonlamApiKey, MONLAM_BASE_URL } from '../config';
 
 const MONLAM_TTS_ENDPOINT = `${MONLAM_BASE_URL}/api/v1/text-to-speech/`;
 
@@ -28,7 +28,7 @@ export function useMonlamTTS(options?: UseMonlamTTSOptions): UseMonlamTTSResult 
   const [error, setError] = React.useState<string | null>(null);
 
   const endpoint = options?.baseUrl || MONLAM_TTS_ENDPOINT;
-  const apiKey = options?.apiKey || MONLAM_API_KEY;
+  const configuredApiKey = options?.apiKey;
 
   const clear = React.useCallback(() => {
     if (audioUrl && audioUrl.startsWith('blob:')) {
@@ -49,6 +49,13 @@ export function useMonlamTTS(options?: UseMonlamTTSOptions): UseMonlamTTSResult 
       setError(null);
 
       try {
+        const apiKey = configuredApiKey || (await getMonlamApiKey());
+        if (!apiKey) {
+          setTimeout(() => {
+            setIsLoading(false);
+          }, 800);
+          return;
+        }
         const response = await fetch(endpoint, {
           method: 'POST',
           headers: {
@@ -97,7 +104,7 @@ export function useMonlamTTS(options?: UseMonlamTTSOptions): UseMonlamTTSResult 
         setIsLoading(false);
       }
     },
-    [apiKey, endpoint],
+    [endpoint, configuredApiKey],
   );
 
   return {

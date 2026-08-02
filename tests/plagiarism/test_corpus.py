@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
+import pytest
+
 from teea.plagiarism.corpus import BoCorpusLoader, DocumentCorpus
 from teea.plagiarism.index import InMemoryFingerprintIndex
-import pytest
 
 
 class TestDocumentCorpus:

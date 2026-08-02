@@ -9,6 +9,8 @@ from dataclasses import dataclass, field
 
 @dataclass
 class NormalizationResult:
+    """Result of a Tibetan normalization pass."""
+
     original: str
     normalized: str
     changed: bool

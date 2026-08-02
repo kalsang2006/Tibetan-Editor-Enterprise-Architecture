@@ -11,8 +11,7 @@ from typing import ClassVar
 
 from teea.fusion import SuggestionPriority
 from teea.plugins.builtin.spelling import SpellCheckerConfig, SpellCheckerPlugin
-
-from tests.plugins.builtin.test_spelling import _make_two_node_snapshot, SelectivelyEmptyDictionary
+from tests.plugins.builtin.test_spelling import SelectivelyEmptyDictionary, _make_two_node_snapshot
 
 
 class FakeCorpus:

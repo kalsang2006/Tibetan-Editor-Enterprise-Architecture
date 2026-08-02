@@ -2,10 +2,8 @@
 
 import pytest
 
-from teea.ai.engines import DummyInferenceEngine
 from teea.engine import TEEAEngine
 from teea.grammar.contextual_engine import ContextualGrammarEngine
-from teea.suggestion_fusion import SuggestionFusionEngine
 
 
 @pytest.fixture
@@ -16,7 +14,7 @@ def contextual_engine() -> ContextualGrammarEngine:
 def test_tense_mismatch_mi_byas(contextual_engine: ContextualGrammarEngine) -> None:
     errors = contextual_engine.analyze_sentence("ང་མི་བྱས།")
     assert len(errors) >= 1
-    tense_err = [e for e in errors if e.error_code == "TENSE_MI_MA"][0]
+    tense_err = next(e for e in errors if e.error_code == "TENSE_MI_MA")
     assert tense_err.error_type == "TENSE_MISMATCH"
     assert tense_err.suggestion in ("མ་བྱས", "མི་བྱ")
 
@@ -24,7 +22,7 @@ def test_tense_mismatch_mi_byas(contextual_engine: ContextualGrammarEngine) -> N
 def test_user_contextual_case_dag(contextual_engine: ContextualGrammarEngine) -> None:
     text = "དག་གིས་པར་སྤྲོ་གསར་པ་སླབས།"
     errors = contextual_engine.analyze_sentence(text)
-    dag_err = [e for e in errors if e.word in ("དག", "དག་")][0]
+    dag_err = next(e for e in errors if e.word in ("དག", "དག་"))
     assert dag_err.error_type == "CONTEXTUAL_SEMANTIC"
     assert dag_err.suggestion == "དགེ"
 
@@ -32,11 +30,11 @@ def test_user_contextual_case_dag(contextual_engine: ContextualGrammarEngine) ->
 def test_user_contextual_case_par_spro(contextual_engine: ContextualGrammarEngine) -> None:
     text = "དག་གིས་པར་སྤྲོ་གསར་པ་སླབས།"
     errors = contextual_engine.analyze_sentence(text)
-    par_err = [e for e in errors if e.word in ("པར", "པར་")][0]
+    par_err = next(e for e in errors if e.word in ("པར", "པར་"))
     assert par_err.error_type == "CONTEXTUAL_SEMANTIC"
     assert par_err.suggestion == "བརྡ"
 
-    spro_err = [e for e in errors if e.word in ("སྤྲོ", "སྤྲོ་")][0]
+    spro_err = next(e for e in errors if e.word in ("སྤྲོ", "སྤྲོ་"))
     assert spro_err.error_type == "CONTEXTUAL_SEMANTIC"
     assert spro_err.suggestion == "སྤྲོད"
 
@@ -44,11 +42,11 @@ def test_user_contextual_case_par_spro(contextual_engine: ContextualGrammarEngin
 def test_user_contextual_case_bong_bya(contextual_engine: ContextualGrammarEngine) -> None:
     text = "ང་ཚོས་ཡིག་ཆ་ཀློ་ཅིང་ཡི་གེ་བོང་བྱ།"
     errors = contextual_engine.analyze_sentence(text)
-    bong_err = [e for e in errors if e.word in ("བོང", "བོང་")][0]
+    bong_err = next(e for e in errors if e.word in ("བོང", "བོང་"))
     assert bong_err.error_type == "CONTEXTUAL_SEMANTIC"
     assert bong_err.suggestion == "སྦྱོང"
 
-    bya_err = [e for e in errors if e.word in ("བྱ", "བྱ།")][0]
+    bya_err = next(e for e in errors if e.word in ("བྱ", "བྱ།"))
     assert bya_err.error_type in ("TENSE_MISMATCH", "CONTEXTUAL_SEMANTIC")
     assert bya_err.suggestion == "བྱས"
 
@@ -57,15 +55,15 @@ def test_user_target_sentence_4_errors(contextual_engine: ContextualGrammarEngin
     text = "དེ་རིང་ང་བོད་སྐད་སློབ་ཚན་ལ་ཕྱི། དགེ་གིས་བརྡ་སྤྲོད་བསླབས། ཀློ་བོང་བྱས།"
     errors = contextual_engine.analyze_sentence(text)
 
-    phyi_err = [e for e in errors if e.word in ("ཕྱི", "ཕྱི།")][0]
+    phyi_err = next(e for e in errors if e.word in ("ཕྱི", "ཕྱི།"))
     assert phyi_err.error_type == "TENSE_MISMATCH"
     assert phyi_err.suggestion == "ཕྱིན"
 
-    klo_err = [e for e in errors if e.word in ("ཀློ", "ཀློ་")][0]
+    klo_err = next(e for e in errors if e.word in ("ཀློ", "ཀློ་"))
     assert klo_err.error_type == "SPELLING"
     assert klo_err.suggestion == "ཀློག"
 
-    bong_err = [e for e in errors if e.word in ("བོང", "བོང་")][0]
+    bong_err = next(e for e in errors if e.word in ("བོང", "བོང་"))
     assert bong_err.error_type == "CONTEXTUAL_SEMANTIC"
     assert bong_err.suggestion == "སྦྱོང"
 
@@ -73,7 +71,7 @@ def test_user_target_sentence_4_errors(contextual_engine: ContextualGrammarEngin
 def test_slabs_structural_prefix(contextual_engine: ContextualGrammarEngine) -> None:
     text = "དགེ་གིས་བརྡ་སྤྲོད་སླབས།"
     errors = contextual_engine.analyze_sentence(text)
-    slabs_err = [e for e in errors if e.word in ("སླབས", "སླབས།")][0]
+    slabs_err = next(e for e in errors if e.word in ("སླབས", "སླབས།"))
     assert slabs_err.error_type == "STRUCTURAL"
     assert slabs_err.suggestion == "བསླབས"
 

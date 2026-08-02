@@ -2,12 +2,17 @@
 
 This plugin integrates the grammar correction model into the TEEA pipeline.
 """
+from __future__ import annotations
 
-from typing import Iterable, Optional
+from collections.abc import Iterable
+from typing import TYPE_CHECKING
 
 from teea.core.logging import get_logger
 from teea.fusion import Suggestion, SuggestionPriority
 from teea.nlp.snapshot import DocumentSnapshot
+
+if TYPE_CHECKING:
+    from teea.ai.grammar_correction_engine import GrammarCorrectionEngine
 
 logger = get_logger(__name__)
 
@@ -23,16 +28,18 @@ class GrammarCorrectionPlugin:
         self._name = "teea.grammar_correction"
         self._model_path = model_path
         self._base_model_path = base_model_path
-        self._engine = None
+        self._engine: GrammarCorrectionEngine | None = None
         self._enabled = True
 
     @property
     def name(self) -> str:
+        """Return the plugin name."""
         return self._name
 
-    def _get_engine(self):
+    def _get_engine(self) -> GrammarCorrectionEngine | None:
         """Lazy-load the grammar correction engine."""
         import os
+
         import torch
 
         # Avoid freezing CPU RAM / segfaulting PyTorch CPU embeddings during standard tests
@@ -54,7 +61,7 @@ class GrammarCorrectionPlugin:
                 else:
                     self._enabled = False
                     logger.info("grammar_correction_plugin_disabled_model_not_ready")
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 logger.warning("grammar_correction_engine_init_failed", error=str(e))
                 self._enabled = False
                 self._engine = None
@@ -87,7 +94,7 @@ class GrammarCorrectionPlugin:
 
             try:
                 corrected = engine.correct(original)
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 logger.warning("grammar_correction_failed", sentence=original, error=str(e))
                 continue
 

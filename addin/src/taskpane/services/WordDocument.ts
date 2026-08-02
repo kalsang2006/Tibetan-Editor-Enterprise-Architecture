@@ -33,6 +33,39 @@ export interface ApplyReport {
 }
 
 /**
+ * Minimal structural typing for the Office.js host object. The real Office.js
+ * global carries a deep, version-dependent API surface; this file only relies
+ * on a handful of getFileAsync/getSelectedDataAsync members, so it describes
+ * exactly those instead of depending on the host's runtime shape.
+ */
+interface OfficeHost {
+  context?: {
+    document?: {
+      getFileAsync(
+        format: string,
+        options: { sliceSize: number },
+        callback: (result: OfficeAsyncResult) => void,
+      ): void;
+      getSelectedDataAsync(
+        format: string,
+        callback: (result: OfficeAsyncResult) => void,
+      ): void;
+    };
+  };
+}
+
+interface OfficeAsyncResult {
+  status: string;
+  error?: { message?: string };
+  value?: {
+    data?: string;
+    sliceCount?: number;
+    getSliceAsync(index: number, callback: (result: OfficeAsyncResult) => void): void;
+    closeAsync(): void;
+  };
+}
+
+/**
  * Read the entire document text using the Word JavaScript API.
  *
  * Five-tier fallback chain, so a document that reads empty on one code path
@@ -53,13 +86,16 @@ export interface ApplyReport {
  * Returns empty string only after all five tiers have been exhausted.
  */
 export async function readDocumentText(options?: { sliceSize?: number }): Promise<string> {
-  const office = (window as any).Office || (globalThis as any).Office;
+  const office: OfficeHost | undefined =
+    (window as unknown as { Office?: OfficeHost }).Office ||
+    (globalThis as unknown as { Office?: OfficeHost }).Office;
   // Collected per-tier failure reasons, reported together only if every tier
   // fails, so an exhausted read is distinguishable from a truly empty document.
   const reasons: string[] = [];
 
   // ---- Tier 1: Office.js getFileAsync (opportunistic) ---------------------
-  if (office?.context?.document && typeof office.context.document.getFileAsync === 'function') {
+  const documentApi = office?.context?.document;
+  if (documentApi && typeof documentApi.getFileAsync === 'function') {
     // Tracks whether a specific failure was already recorded, so the generic
     // "returned empty text" reason below is not pushed twice on partial failure.
     let tier1SpecificFailure = false;
@@ -79,7 +115,7 @@ export async function readDocumentText(options?: { sliceSize?: number }): Promis
           clearTimeout(timeoutId);
           resolve(value);
         };
-        office.context.document.getFileAsync('text', { sliceSize }, (result: any) => {
+        documentApi.getFileAsync('text', { sliceSize }, (result: OfficeAsyncResult) => {
           if (result.status !== 'succeeded') {
             tier1SpecificFailure = true;
             reasons.push(`getFileAsync failed: ${result.error?.message ?? 'unknown error'}`);
@@ -88,10 +124,17 @@ export async function readDocumentText(options?: { sliceSize?: number }): Promis
             return;
           }
           const file = result.value;
+          if (!file) {
+            tier1SpecificFailure = true;
+            reasons.push('getFileAsync returned no file handle');
+            console.warn('[TEEA] readDocumentText: getFileAsync returned no file handle');
+            settle('');
+            return;
+          }
           let fullText = '';
           let received = 0;
           const processSlice = (index: number) => {
-            file.getSliceAsync(index, (sliceResult: any) => {
+            file.getSliceAsync(index, (sliceResult: OfficeAsyncResult) => {
               if (sliceResult.status !== 'succeeded') {
                 tier1SpecificFailure = true;
                 file.closeAsync();
@@ -100,10 +143,10 @@ export async function readDocumentText(options?: { sliceSize?: number }): Promis
                 settle('');
                 return;
               }
-              const sliceData = sliceResult.value.data;
+              const sliceData = sliceResult.value?.data ?? '';
               fullText += sliceData;
               received++;
-              if (received < file.sliceCount) {
+              if (received < (file.sliceCount ?? received + 1)) {
                 processSlice(received);
               } else {
                 file.closeAsync();
@@ -224,7 +267,7 @@ export async function readDocumentText(options?: { sliceSize?: number }): Promis
     // ---- Tier 4: story extensions (text boxes, headers/footers, notes) ----
     try {
       const text = await Word.run(async (context) => {
-        const body = context.document.body as any;
+        const body = context.document.body;
         const parts: string[] = [];
         const push = (value: string | undefined) => {
           if (value && value.trim().length > 0) {
@@ -233,11 +276,28 @@ export async function readDocumentText(options?: { sliceSize?: number }): Promis
         };
 
         // 4a. Text boxes / shapes (WordApi 1.5+)
-        if (body.shapes && typeof body.shapes.load === 'function') {
+        const bodyWithExtensions = body as unknown as {
+          shapes?: {
+            load(props: string): unknown;
+            items?: Array<{
+              textFrame?: {
+                body?: { load(props: string): unknown; text?: string };
+              };
+            }>;
+          };
+          sections?: {
+            load(props: string): unknown;
+            items?: Array<{
+              getHeader(type: Word.HeaderFooterType): { load(props: string): unknown; text?: string };
+              getFooter(type: Word.HeaderFooterType): { load(props: string): unknown; text?: string };
+            }>;
+          };
+        };
+        if (bodyWithExtensions.shapes && typeof bodyWithExtensions.shapes.load === 'function') {
           try {
-            body.shapes.load('items');
+            bodyWithExtensions.shapes.load('items');
             await context.sync();
-            for (const shape of body.shapes.items || []) {
+            for (const shape of bodyWithExtensions.shapes.items || []) {
               try {
                 const frame = shape.textFrame;
                 if (frame && frame.body) {
@@ -255,13 +315,16 @@ export async function readDocumentText(options?: { sliceSize?: number }): Promis
         }
 
         // 4b. Headers and footers
-        if (body.sections && typeof body.sections.load === 'function') {
+        if (
+          bodyWithExtensions.sections &&
+          typeof bodyWithExtensions.sections.load === 'function'
+        ) {
           try {
-            const HeaderFooterType = (Word as any).HeaderFooterType || {};
-            const primaryType = HeaderFooterType.primary || 'primary';
-            body.sections.load('items');
+            const HeaderFooterType = Word.HeaderFooterType;
+            const primaryType = HeaderFooterType.primary || ('primary' as Word.HeaderFooterType);
+            bodyWithExtensions.sections.load('items');
             await context.sync();
-            for (const section of body.sections.items || []) {
+            for (const section of bodyWithExtensions.sections.items || []) {
               try {
                 if (typeof section.getHeader === 'function') {
                   const header = section.getHeader(primaryType);
@@ -372,13 +435,14 @@ export function canonicalizeDocumentText(text: string): string {
  */
 export async function readSelectionText(): Promise<string> {
   return new Promise((resolve, reject) => {
-    const office = (window as any).Office;
-    if (!office?.context?.document) {
+    const office: OfficeHost | undefined = (window as unknown as { Office?: OfficeHost }).Office;
+    const documentApi = office?.context?.document;
+    if (!documentApi) {
       reject(new Error('Office.context.document not available'));
       return;
     }
-    office.context.document.getSelectedDataAsync('text', (result: any) => {
-      if (result.status === 'succeeded') resolve(result.value || '');
+    documentApi.getSelectedDataAsync('text', (result: OfficeAsyncResult) => {
+      if (result.status === 'succeeded') resolve(typeof result.value === 'string' ? result.value : '');
       else reject(new Error(result.error?.message || 'Failed to read selection'));
     });
   });
@@ -462,7 +526,7 @@ export async function applyOperations(operations: Operation[]): Promise<ApplyRep
           await context.sync();
 
           let totalDocLength = 0;
-          const pOffsets: Array<{ pIndex: number; start: number; end: number; pNode: any }> = [];
+          const pOffsets: Array<{ pIndex: number; start: number; end: number; pNode: Word.Paragraph }> = [];
 
           for (let i = 0; i < paragraphs.items.length; i++) {
             const p = paragraphs.items[i];
@@ -552,8 +616,13 @@ export async function applyOperations(operations: Operation[]): Promise<ApplyRep
             searchResults.items[occIndex].insertText(op.newText, Word.InsertLocation.replace);
             applied.push(op);
           } else if (searchResults.items && searchResults.items.length > 0) {
-            searchResults.items[0].insertText(op.newText, Word.InsertLocation.replace);
-            applied.push(op);
+            const firstMatch = searchResults.items[0];
+            if (firstMatch) {
+              firstMatch.insertText(op.newText, Word.InsertLocation.replace);
+              applied.push(op);
+            } else {
+              skipped.push({ ...op, reason: 'Original text search failed in paragraph' });
+            }
           } else {
             skipped.push({ ...op, reason: 'Original text search failed in paragraph' });
           }

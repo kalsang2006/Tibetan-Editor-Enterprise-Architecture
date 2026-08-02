@@ -3,10 +3,10 @@ import urllib.parse
 import json
 import time
 
-API_KEY = "ml-y4K0RI88kQDXWbU8FboYc1tZ50NeXVXjbBNorbYG0gg"
+API_KEY = "REPLACE_WITH_MONLAM_API_KEY"
 BASE = "https://api-v1.monlamai.studio/api/v1/dictionary/search"
 
-q = "སློབ་སྦྱང"
+q = "à½¦à¾³à½¼à½–à¼‹à½¦à¾¦à¾±à½„"
 url = f"{BASE}?pair=bo-en&q={urllib.parse.quote(q)}"
 print("URL:", url)
 req = urllib.request.Request(url, headers={

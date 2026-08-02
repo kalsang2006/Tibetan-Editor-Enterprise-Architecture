@@ -4,7 +4,7 @@
 
 import * as React from 'react';
 
-import { MONLAM_API_KEY, MONLAM_BASE_URL } from '../config';
+import { getMonlamApiKey, MONLAM_BASE_URL } from '../config';
 
 /**
  * Monlam AI Studio Chat endpoints.
@@ -79,13 +79,18 @@ export function useCloudAI(): UseCloudAIResult {
         { role: 'user', content: promptText },
       ];
 
-      if (!MONLAM_API_KEY) {
-        setError(
-          'Monlam Cloud AI is not configured. Add REACT_APP_MONLAM_API_KEY to ' +
-            'addin/.env and restart the dev server.',
-        );
-        setIsLoading(false);
-        setIsStreaming(false);
+      const apiKey = await getMonlamApiKey();
+
+      if (!apiKey) {
+        setTimeout(() => {
+          setOutput(
+            `[Demo AI Assistant Response]\n\n` +
+              `This feature is running in Demo Mode. Your prompt was:\n"${promptText}"\n\n` +
+              `TEEA Cloud AI offers real-time Tibetan LLM translation, grammar polishing, and text generation.`,
+          );
+          setIsLoading(false);
+          setIsStreaming(false);
+        }, 800);
         return;
       }
 
@@ -100,7 +105,7 @@ export function useCloudAI(): UseCloudAIResult {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'X-API-Key': MONLAM_API_KEY,
+            'X-API-Key': apiKey,
           },
           body: JSON.stringify(requestPayload),
           signal: controller.signal,
@@ -113,7 +118,7 @@ export function useCloudAI(): UseCloudAIResult {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
-                'X-API-Key': MONLAM_API_KEY,
+                'X-API-Key': apiKey,
               },
               body: JSON.stringify(requestPayload),
               signal: controller.signal,
@@ -141,7 +146,7 @@ export function useCloudAI(): UseCloudAIResult {
           if (response.status === 401 || response.status === 402) {
             throw new Error(
               'Monlam Cloud AI rejected the API key (HTTP ' +
-                `${response.status}). Check REACT_APP_MONLAM_API_KEY in addin/.env.`,
+                `${response.status}). Check monlamApiKey in config.json.`,
             );
           }
 

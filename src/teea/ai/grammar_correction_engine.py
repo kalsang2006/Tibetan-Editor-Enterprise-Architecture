@@ -4,9 +4,8 @@ Loads Tibetan-Llama2-7B base model and optional QLoRA adapter (models/llama2_gec
 to provide fluent grammatical error correction for Tibetan sentences.
 """
 
-from functools import lru_cache
 from pathlib import Path
-from typing import List, Optional
+from typing import Any, cast
 
 from teea.core.logging import get_logger
 
@@ -23,20 +22,26 @@ class GrammarCorrectionEngine:
     ):
         self.model_path = Path(model_path)
         self.base_model_path = Path(base_model_path)
-        self._model = None
-        self._tokenizer = None
+        # transformers is largely untyped at runtime; Any keeps the interop
+        # surface (AutoModel variants, PeftModel, EncoderDecoderModel) explicit
+        # without lying about a concrete type.
+        self._model: Any = None
+        self._tokenizer: Any = None
         self._available = False
-        self._device = None
+        self._device: Any = None
         self._is_causal = True
+        self._cache: dict[tuple[str, int], str] = {}
+        self._cache_maxsize = 1000
 
         target_base = self.base_model_path if self.base_model_path.exists() else Path("./models/tibert-grammar-correction-final")
 
         if target_base.exists() or self.model_path.exists():
             try:
                 import os
+
                 import torch
                 from transformers import AutoModelForCausalLM, AutoTokenizer
-                torch.set_num_threads(os.cpu_count())
+                torch.set_num_threads(os.cpu_count() or 1)
                 self._device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
                 load_dir = str(self.base_model_path) if self.base_model_path.exists() else str(self.model_path)
 
@@ -45,7 +50,7 @@ class GrammarCorrectionEngine:
                 # Check model architecture
                 if (Path(load_dir) / "config.json").exists():
                     import json
-                    with open(Path(load_dir) / "config.json", "r", encoding="utf-8") as f:
+                    with open(Path(load_dir) / "config.json", encoding="utf-8") as f:
                         cfg = json.load(f)
                         if cfg.get("model_type") == "encoder-decoder":
                             self._is_causal = False
@@ -60,7 +65,7 @@ class GrammarCorrectionEngine:
                     offload_dir.mkdir(parents=True, exist_ok=True)
                     try:
                         from transformers import BitsAndBytesConfig
-                        bnb_config = BitsAndBytesConfig(
+                        bnb_config = cast(Any, BitsAndBytesConfig)(
                             load_in_4bit=True,
                             bnb_4bit_quant_type="nf4",
                             bnb_4bit_compute_dtype=torch.float16,
@@ -73,7 +78,7 @@ class GrammarCorrectionEngine:
                             offload_folder=str(offload_dir),
                             trust_remote_code=True,
                         )
-                    except Exception as quant_err:
+                    except Exception as quant_err:  # noqa: BLE001
                         logger.info("quantization_load_fallback", error=str(quant_err))
                         self._model = AutoModelForCausalLM.from_pretrained(
                             load_dir,
@@ -90,7 +95,7 @@ class GrammarCorrectionEngine:
                             print(f"[*] Loading QLoRA adapter from: {self.model_path}")
                             self._model = PeftModel.from_pretrained(self._model, str(self.model_path))
                             logger.info("llama2_lora_adapter_loaded", path=str(self.model_path))
-                        except Exception as peft_err:
+                        except Exception as peft_err:  # noqa: BLE001
                             logger.warning("failed_loading_llama2_lora_adapter", error=str(peft_err))
                     else:
                         print(f"[!] Warning: QLoRA adapter not found at {self.model_path}. Falling back to base model.")
@@ -108,7 +113,7 @@ class GrammarCorrectionEngine:
                     self._available = True
                     logger.info("grammar_correction_encoder_decoder_loaded", path=load_dir)
 
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 logger.warning("failed_loading_grammar_correction_model", error=str(e))
                 self._available = False
         else:
@@ -118,7 +123,6 @@ class GrammarCorrectionEngine:
         """Check if the grammar correction model is loaded and ready."""
         return self._available
 
-    @lru_cache(maxsize=1000)
     def correct(self, sentence: str, max_length: int = 128) -> str:
         """Correct a single Tibetan sentence.
 
@@ -129,6 +133,16 @@ class GrammarCorrectionEngine:
         Returns:
             Corrected Tibetan sentence string.
         """
+        key = (sentence, max_length)
+        if key in self._cache:
+            return self._cache[key]
+        result = self._correct_uncached(sentence, max_length)
+        self._cache[key] = result
+        if len(self._cache) > self._cache_maxsize:
+            self._cache.pop(next(iter(self._cache)))
+        return result
+
+    def _correct_uncached(self, sentence: str, max_length: int = 128) -> str:
         if not sentence or not sentence.strip():
             return sentence
 
@@ -151,7 +165,7 @@ class GrammarCorrectionEngine:
                     eos_token_id=self._tokenizer.eos_token_id,
                 )
 
-                decoded = self._tokenizer.decode(outputs[0], skip_special_tokens=True)
+                decoded = str(self._tokenizer.decode(outputs[0], skip_special_tokens=True))
                 
                 # Extract portion after prompt target marker
                 if "དག་ཆ:" in decoded:
@@ -183,13 +197,13 @@ class GrammarCorrectionEngine:
                     eos_token_id=self._tokenizer.eos_token_id,
                 )
 
-                return self._tokenizer.decode(outputs[0], skip_special_tokens=True)
+                return str(self._tokenizer.decode(outputs[0], skip_special_tokens=True))
 
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             logger.warning("grammar_correction_inference_failed", sentence=sentence, error=str(e))
             return sentence
 
-    def correct_batch(self, sentences: List[str], max_length: int = 128) -> List[str]:
+    def correct_batch(self, sentences: list[str], max_length: int = 128) -> list[str]:
         """Correct multiple Tibetan sentences."""
         if not sentences:
             return []

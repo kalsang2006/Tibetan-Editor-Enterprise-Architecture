@@ -22,9 +22,11 @@ class TypographyPlugin:
 
     @property
     def name(self) -> str:
+        """Return the plugin name."""
         return self._name
 
     def examine(self, snapshot: DocumentSnapshot) -> Iterable[Suggestion]:
+        """Check typography, tsheg spacing, and punctuation rules."""
         text = snapshot.source
         if not text:
             return

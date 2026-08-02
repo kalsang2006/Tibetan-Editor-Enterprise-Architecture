@@ -2,9 +2,7 @@
 
 from __future__ import annotations
 
-import pytest
-
-from teea.grammar.rule_registry import GrammarRule, RuleRegistry
+from teea.grammar.rule_registry import RuleRegistry
 from teea.nlp.snapshot import LanguageServerSnapshotBuilder
 from teea.plugins.builtin.grammar import GrammarCheckerPlugin
 

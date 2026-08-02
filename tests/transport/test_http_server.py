@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from teea.plagiarism.engine import PlagiarismEngine
 from teea.plagiarism.config import PlagiarismSettings
+from teea.plagiarism.engine import PlagiarismEngine
 from teea.transport.http_server import PLAGIARISM_METHOD, PLAGIARISM_PATH
 
 

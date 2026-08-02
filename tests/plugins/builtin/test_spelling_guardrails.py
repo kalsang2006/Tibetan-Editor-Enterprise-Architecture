@@ -12,9 +12,7 @@ Covers the safety checks that prevent destructive edits:
 from __future__ import annotations
 
 from teea.plugins.builtin.spelling import SpellCheckerConfig, SpellCheckerPlugin
-
 from tests.plugins.builtin.test_spelling import (
-    SelectivelyEmptyDictionary,
     _make_single_node_snapshot,
 )
 

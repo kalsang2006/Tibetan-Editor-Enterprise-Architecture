@@ -39,15 +39,13 @@ class SanskritTransliterationValidator:
                 data = json.load(f)
                 self._valid_words.update(data.get("valid_words", []))
                 self._invalid_words.update(data.get("invalid_stacks", []))
-        except Exception:
+        except (OSError, ValueError):
             pass
 
     def is_valid_sanskrit(self, word: str) -> bool:
         """Check if a Sanskrit-origin word is valid."""
         clean = word.rstrip("་ །")
-        if clean in self._invalid_words:
-            return False
-        return True
+        return clean not in self._invalid_words
 
     def get_final_consonant_sanskrit(self, word: str) -> str:
         """Extract Sanskrit-aware final consonant for case particle agreement rules.

@@ -314,7 +314,7 @@ def test_pipeline_artifacts_are_skipped(relation: DependencyRelation) -> None:
 def test_content_relations_are_checked() -> None:
     """Root relations should be checked."""
     plugin = SpellCheckerPlugin(dictionary=AlwaysEmptyDictionary())
-    snapshot = _make_single_node_snapshot("text")
+    snapshot = _make_single_node_snapshot("\u0f56\u0f66\u0f58\u0f66")
     suggestions = list(plugin.examine(snapshot))
     assert len(suggestions) == 1
 
@@ -391,7 +391,7 @@ def test_empty_tree_sentence_flags_each_unknown_token() -> None:
 
 def test_multiple_sentences_are_checked() -> None:
     plugin = SpellCheckerPlugin(dictionary=AlwaysEmptyDictionary())
-    text = "word1aword1bword2a"
+    text = "\u0f56\u0f66\u0f58\u0f66\u0f0b\u0f42\u0f53\u0f66\u0f0b\u0f56\u0f66\u0f58\u0f66\u0f56\u0f66\u0f40\u0f74\u0f62"
 
     def make_analysis(
         sent_text: str, node_texts: list[str], idx: int, start: int
@@ -442,8 +442,8 @@ def test_multiple_sentences_are_checked() -> None:
     snapshot = DocumentSnapshot(
         source=text,
         analyses=(
-            make_analysis("word1aword1b", ["word1a", "word1b"], 0, 0),
-            make_analysis("word2a", ["word2a"], 1, 12),
+            make_analysis("\u0f56\u0f66\u0f58\u0f66\u0f0b\u0f42\u0f53\u0f66\u0f0b\u0f56\u0f66\u0f58\u0f66", ["\u0f56\u0f66\u0f58\u0f66\u0f0b\u0f42\u0f53\u0f66", "\u0f0b\u0f56\u0f66\u0f58\u0f66"], 0, 0),
+            make_analysis("\u0f56\u0f66\u0f40\u0f74\u0f62", ["\u0f56\u0f66\u0f40\u0f74\u0f62"], 1, len("\u0f56\u0f66\u0f58\u0f66\u0f0b\u0f42\u0f53\u0f66\u0f0b\u0f56\u0f66\u0f58\u0f66")),
         ),
     )
     suggestions = list(plugin.examine(snapshot))
@@ -460,11 +460,11 @@ def test_the_default_dictionary_is_used() -> None:
 
 
 def test_injected_dictionary_is_respected() -> None:
-    plugin = SpellCheckerPlugin(dictionary=SelectivelyEmptyDictionary(known={"foo"}))
-    snapshot = _make_two_node_snapshot("foobar", "foo", "bar")
+    plugin = SpellCheckerPlugin(dictionary=SelectivelyEmptyDictionary(known={"\u0f56\u0f66\u0f58\u0f66"}))
+    snapshot = _make_two_node_snapshot("\u0f56\u0f66\u0f58\u0f66\u0f42\u0f53\u0f66", "\u0f56\u0f66\u0f58\u0f66", "\u0f42\u0f53\u0f66")
     suggestions = list(plugin.examine(snapshot))
     assert len(suggestions) == 1
-    assert "bar" in suggestions[0].message
+    assert "\u0f42\u0f53\u0f66" in suggestions[0].message
 
 
 # -- Integration with PluginRuntime --------------------------------------------
@@ -474,7 +474,7 @@ def test_plugin_runs_under_supervision() -> None:
     plugin = SpellCheckerPlugin(dictionary=AlwaysEmptyDictionary())
     runtime = SupervisedPluginRuntime([plugin])
 
-    snapshot = _make_single_node_snapshot("text")
+    snapshot = _make_single_node_snapshot("\u0f56\u0f66\u0f58\u0f66")
     results = runtime.dispatch(snapshot)
 
     assert results.is_healthy is True
@@ -496,7 +496,7 @@ def test_plugin_fault_isolation() -> None:
             raise RuntimeError("dictionary broke")
 
     plugin = SpellCheckerPlugin(dictionary=BrokenDictionary())  # type: ignore[arg-type]
-    snapshot = _make_single_node_snapshot("text")
+    snapshot = _make_single_node_snapshot("\u0f56\u0f66\u0f58\u0f66")
 
     runtime = SupervisedPluginRuntime([plugin])
     results = runtime.dispatch(snapshot)
@@ -514,7 +514,7 @@ def test_concurrent_dispatch_is_safe() -> None:
     plugin = SpellCheckerPlugin(dictionary=AlwaysEmptyDictionary())
     runtime = SupervisedPluginRuntime([plugin], executor=ThreadPoolExecutor(max_workers=4))
 
-    snapshot = _make_single_node_snapshot("text")
+    snapshot = _make_single_node_snapshot("\u0f56\u0f66\u0f58\u0f66")
     results = [runtime.dispatch(snapshot) for _ in range(10)]
 
     for r in results:
@@ -527,7 +527,7 @@ def test_concurrent_dispatch_is_safe() -> None:
 
 def test_suggestions_flow_through_fusion() -> None:
     plugin = SpellCheckerPlugin(dictionary=AlwaysEmptyDictionary())
-    snapshot = _make_single_node_snapshot("text")
+    snapshot = _make_single_node_snapshot("\u0f56\u0f66\u0f58\u0f66")
     results = SupervisedPluginRuntime([plugin]).dispatch(snapshot)
 
     engine = PriorityRankedFusionEngine()
@@ -568,7 +568,7 @@ def test_spell_checker_plugin_works_with_daemon() -> None:
     daemon = TEEADaemon(plugins=[plugin])
     daemon.start()
 
-    snapshot = _make_single_node_snapshot("text")
+    snapshot = _make_single_node_snapshot("\u0f56\u0f66\u0f58\u0f66")
     results = daemon.plugins.dispatch(snapshot)
 
     assert results.is_healthy is True

@@ -16,7 +16,7 @@ from test_ocr import run_ocr_tests
 from test_dictionary import run_dictionary_tests
 
 def main():
-    api_key = os.environ.get("REACT_APP_MONLAM_API_KEY", "ml-y4K0RI88kQDXWbU8FboYc1tZ50NeXVXjbBNorbYG0gg")
+    api_key = os.environ.get("REACT_APP_MONLAM_API_KEY", "REPLACE_WITH_MONLAM_API_KEY")
     key_preview = f"{api_key[:10]}...{api_key[-4:]}" if len(api_key) > 14 else "*****"
 
     print("===============================================================")

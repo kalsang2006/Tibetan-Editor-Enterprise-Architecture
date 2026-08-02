@@ -5,10 +5,13 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any, cast
 
 
 @dataclass
 class StemCandidate:
+    """A candidate stem with confidence and provenance."""
+
     stem: str
     confidence: float          # 0.0-1.0
     rule_id: str               # e.g., "PAST_IRREGULAR", "SUFFIX_NOMINALIZER"
@@ -29,12 +32,12 @@ class TibetanMorphologyAnalyzer:
         self._irregular_verbs = self._load_json("irregular_verbs.json")
         self._suffix_rules = self._load_json("suffix_rules.json")
 
-    def _load_json(self, filename: str) -> dict | list:
+    def _load_json(self, filename: str) -> dict[str, Any] | list[Any]:
         file_path = self._resource_path / filename
         if not file_path.exists():
             return {} if filename.endswith(".json") and "verbs" in filename else []
-        with open(file_path, "r", encoding="utf-8") as f:
-            return json.load(f)
+        with open(file_path, encoding="utf-8") as f:
+            return cast("dict[str, Any] | list[Any]", json.load(f))
 
     def analyze(self, word: str) -> list[StemCandidate]:
         """Return multiple possible stem analyses, ranked by confidence."""

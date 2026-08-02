@@ -13,14 +13,13 @@ structural rules before dictionary or corpus lookup. Enforces hard-fail rules on
 
 from __future__ import annotations
 
-import unicodedata
-from enum import Enum
+from enum import StrEnum
 from typing import Final
 
 from pydantic import BaseModel, Field
 
 
-class StructuralErrorType(str, Enum):
+class StructuralErrorType(StrEnum):
     """Categories of Tibetan structural orthographic violations."""
 
     DOUBLE_VOWEL = "DOUBLE_VOWEL"
@@ -193,9 +192,8 @@ class StructuralValidator:
         if num_c == 3:
             first_char_idx = clean.find(inline_consonants[0])
             first_has_vowel = False
-            if first_char_idx != -1 and first_char_idx + 1 < len(clean):
-                if clean[first_char_idx + 1] in VOWEL_SIGNS:
-                    first_has_vowel = True
+            if first_char_idx != -1 and first_char_idx + 1 < len(clean) and clean[first_char_idx + 1] in VOWEL_SIGNS:
+                first_has_vowel = True
 
             if first_has_vowel:
                 comp.base = inline_consonants[0]
@@ -246,9 +244,9 @@ class StructuralValidator:
 
     def validate_syllable(self, syllable: str) -> StructuralValidationResult:
         """Validate a single Tibetan syllable against orthographic hard-fail rules."""
-        TSHEG = "\u0f0b"
-        if TSHEG in syllable:
-            parts = [p.strip() for p in syllable.split(TSHEG) if p.strip()]
+        tsheg = "\u0f0b"
+        if tsheg in syllable:
+            parts = [p.strip() for p in syllable.split(tsheg) if p.strip()]
             for part in parts:
                 res = self.validate_syllable(part)
                 if not res.is_valid:
@@ -299,8 +297,7 @@ class StructuralValidator:
             )
 
         # Rule 3: Check Post-Suffix (Second Suffix) Validity (HARD FAIL)
-        if comp.post_suffix is not None:
-            if comp.post_suffix not in POST_SUFFIX_CONSONANTS:
+        if comp.post_suffix is not None and comp.post_suffix not in POST_SUFFIX_CONSONANTS:
                 suggestions = self.suggest_structural_correction(syllable, StructuralErrorType.INVALID_POST_SUFFIX)
                 return StructuralValidationResult(
                     syllable=syllable,
@@ -312,8 +309,7 @@ class StructuralValidator:
                 )
 
         # Rule 4: Check Prefix Validity (HARD FAIL)
-        if comp.prefix is not None:
-            if comp.prefix not in PREFIX_CONSONANTS:
+        if comp.prefix is not None and comp.prefix not in PREFIX_CONSONANTS:
                 suggestions = self.suggest_structural_correction(syllable, StructuralErrorType.INVALID_PREFIX)
                 return StructuralValidationResult(
                     syllable=syllable,
@@ -382,8 +378,8 @@ class StructuralValidator:
 
     def validate_text(self, text: str) -> list[StructuralValidationResult]:
         """Validate all syllables in a Tibetan text string."""
-        TSHEG = "\u0f0b"
-        syllables = [s.strip() for s in text.split(TSHEG) if s.strip()]
+        tsheg = "\u0f0b"
+        syllables = [s.strip() for s in text.split(tsheg) if s.strip()]
         results: list[StructuralValidationResult] = []
         for syl in syllables:
             res = self.validate_syllable(syl)

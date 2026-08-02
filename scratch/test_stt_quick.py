@@ -1,7 +1,7 @@
 import urllib.request
 import json
 
-API_KEY = "ml-y4K0RI88kQDXWbU8FboYc1tZ50NeXVXjbBNorbYG0gg"
+API_KEY = "REPLACE_WITH_MONLAM_API_KEY"
 
 def test_stt():
     boundary = "----WebKitFormBoundary7MA4YWxkTrZu0gW"

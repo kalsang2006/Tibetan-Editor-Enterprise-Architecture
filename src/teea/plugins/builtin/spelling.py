@@ -23,6 +23,7 @@ from teea.nlp.normalizer import NormalizationResult, TibetanNormalizer
 from teea.nlp.snapshot import DocumentSnapshot
 from teea.nlp.structural_validator import StructuralValidator
 from teea.persistence import DictionaryRepository, default_dictionary
+from teea.plugins.builtin.correction import CorrectionProvider as LegacyCorrectionProvider
 from teea.plugins.builtin.correction_providers import (
     CorrectionCandidate,
     CorrectionProvider,
@@ -38,6 +39,26 @@ _SAFE_PARTICLES: frozenset[str] = frozenset({
     "རུ", "ཏུ", "དུ", "ན", "ནས", "ལས", "ནི", "ཀྱང", "ཡང", "འང", "དང", "མི",
     "མེད", "ཡིན", "རེད", "ཡོད", "འདུག",
 })
+
+#: Curated exception list for common proper nouns, loanwords, and religious terms.
+#: These words should never be flagged as spelling errors.
+_CURATED_EXCEPTIONS: frozenset[str] = frozenset({
+    # Religious / Buddhist terms
+    "རྡོ་རྗེ", "ཆོས་ལུགས", "སངས་རྒྱས", "ཨོཾ", "པདྨ",
+    "བཀྲ་ཤིས་བདེ་ལེགས", "ལྷ་ས", "ཏཱ་ལའི", "བླ་མ",
+    "རིན་པོ་ཆེ", "འཕགས་པ", "དཔལ", "གཟིགས",
+    "བོདི་སཏྡ", "མངོན་པོ",
+    # Sanskrit loanwords
+    "དཀའ", "དཀའ་བརྩེགས", "བོདྷི་སཏྡ",
+    # Place names
+    "རྒྱ་ནག", "རྒྱ་གར",
+})
+
+#: Valid Tibetan suffixes that should never cause the host word to be flagged.
+_VALID_SUFFIXES: tuple[str, ...] = (
+    "་ལཏར", "་མཁན", "་པོ", "་པས",
+    "་མས", "་གིས", "་གི", "་བྱས",
+)
 
 #: Characters stripped from a surface form before dictionary lookup.
 _STRIP_CHARS = "་ །\u0f0b\u0f0d "
@@ -174,7 +195,7 @@ class SpellCheckerConfig:
 
     # Correction parameters
     max_edit_distance: int = 2
-    min_confidence_for_suggestion: float = 0.70
+    min_confidence_for_suggestion: float = 0.85
     max_candidates: int = 10
 
     # Context-based detection (§3)
@@ -188,7 +209,7 @@ class SpellCheckerConfig:
     # uncalibrated 2.5-gap run collapsed specificity to ~15%, e.g. པ -> པ༴,
     # མཚོན -> མཚན).
     enable_context_detection: bool = True
-    context_suspicious_gap: float = 5.0
+    context_suspicious_gap: float = 4.5
     # Minimum confidence for a context-based suggestion to carry an edit;
     # candidates below this bar yield an advisory instead.
     context_min_confidence: float = 0.75
@@ -216,7 +237,7 @@ class SpellCheckerPlugin:
     def __init__(
         self,
         dictionary: DictionaryRepository | None = None,
-        correction_provider: CorrectionProvider | None = None,
+        correction_provider: LegacyCorrectionProvider | CorrectionProvider | None = None,
         ai_runtime: Any = None,
         config: SpellCheckerConfig | None = None,
         *,
@@ -297,6 +318,9 @@ class SpellCheckerPlugin:
                 if node.relation == DependencyRelation.PUNCT:
                     continue
 
+                vocab_set: frozenset[str] | tuple[str, ...] | dict[str, int] = getattr(
+                    self._dictionary, "vocabulary", ()
+                )
                 raw_word = node.text.strip("། ཿ")
                 if not raw_word:
                     continue
@@ -315,6 +339,24 @@ class SpellCheckerPlugin:
                 has_latin = any('a' <= c.lower() <= 'z' for c in raw_word)
                 if has_tibetan and has_latin:
                     continue
+
+                # Skip Tibetan numerals (0-9 forms) and punctuation-only tokens (༔, ༾, ༿, etc.)
+                stripped = raw_word.strip(_STRIP_CHARS)
+                if stripped and all('\u0f20' <= c <= '\u0f33' for c in stripped):
+                    continue
+                if stripped and not any(_is_tibetan_letter(c) for c in stripped):
+                    continue
+
+                # Skip words ending with common valid suffixes
+                if any(raw_word.endswith(sfx) for sfx in _VALID_SUFFIXES):
+                    base = raw_word
+                    for sfx in _VALID_SUFFIXES:
+                        if raw_word.endswith(sfx):
+                            base = raw_word[:-len(sfx)]
+                            break
+                    base_clean = base.strip(_STRIP_CHARS)
+                    if base_clean and (base_clean in vocab_set or base_clean in all_safe_particles or base_clean in _CURATED_EXCEPTIONS or base in self._dictionary):
+                        continue
 
                 # ==========================================
                 # STAGE 1: NORMALIZATION
@@ -360,8 +402,7 @@ class SpellCheckerPlugin:
                 # STAGE 4: DICTIONARY LOOKUP
                 # ==========================================
                 clean_target = norm_result.normalized.strip(_STRIP_CHARS)
-                vocab_set = getattr(self._dictionary, "vocabulary", ())
-                if clean_target in all_safe_particles or clean_target in vocab_set:
+                if clean_target in all_safe_particles or clean_target in vocab_set or clean_target in _CURATED_EXCEPTIONS:
                     yield from self._context_suggestions(
                         node, sent_start, norm_result.normalized, byte_table, analysis.text
                     )
@@ -379,6 +420,37 @@ class SpellCheckerPlugin:
                     hasattr(self._dictionary, "is_valid_word_or_compound")
                     and self._dictionary.is_valid_word_or_compound(norm_result.normalized)
                 ):
+                    yield from self._context_suggestions(
+                        node, sent_start, norm_result.normalized, byte_table, analysis.text
+                    )
+                    continue
+
+                # NEW: Compound word handling
+                is_valid_compound = False
+                parts = [p.strip(_STRIP_CHARS) for p in norm_result.normalized.split("\u0f0b") if p.strip(_STRIP_CHARS)]
+                if len(parts) > 1 and all(p in vocab_set or p in all_safe_particles or p in _CURATED_EXCEPTIONS for p in parts):
+                    # Basic syllable validation passed, now require corpus evidence for the compound as a whole.
+                    if self._corpus_repository is not None:
+                        # Check n-gram frequency to ensure these syllables actually appear together
+                        corpus_freq = 0
+                        if len(parts) == 2:
+                            bg_key = f"{parts[0]} {parts[1]}"
+                            corpus_freq = self._corpus_repository.bigrams.get(bg_key, 0)
+                        elif len(parts) == 3:
+                            tg_key = f"{parts[0]} {parts[1]} {parts[2]}"
+                            corpus_freq = self._corpus_repository.trigrams.get(tg_key, 0)
+                        else:
+                            # For 4+ syllables, check if at least some adjacent pairs exist (simplified heuristic)
+                            bg_key = f"{parts[0]} {parts[1]}"
+                            corpus_freq = self._corpus_repository.bigrams.get(bg_key, 0)
+
+                        if corpus_freq > 0:
+                            is_valid_compound = True
+                    else:
+                        # Fallback if corpus not available, trust the basic heuristic
+                        is_valid_compound = True
+                
+                if is_valid_compound:
                     yield from self._context_suggestions(
                         node, sent_start, norm_result.normalized, byte_table, analysis.text
                     )
@@ -773,16 +845,25 @@ class SpellCheckerPlugin:
         # 2a. Dictionary attestation — only when the dictionary exposes a
         # vocabulary surface (test doubles without one skip this check).
         vocab = getattr(self._dictionary, "vocabulary", None)
-        if vocab:
-            clean_replacement = replacement.strip(_STRIP_CHARS)
-            if clean_replacement not in vocab and replacement not in vocab:
-                # The provider also synthesises multi-syllable corrections
-                # (e.g. བཀྲཤིས -> བཀྲ་ཤིས) whose joined form is not itself a
-                # vocabulary key.  Accept those when every tsheg-delimited
-                # syllable is individually attested — still a strict validity
-                # gate, just at syllable granularity.
-                if not self._syllables_attested(clean_replacement, vocab):
-                    return None
+        clean_replacement = replacement.strip(_STRIP_CHARS)
+        # The provider also synthesises multi-syllable corrections
+        # (e.g. བཀྲཤིས -> བཀྲ་ཤིས) whose joined form is not itself a
+        # vocabulary key.  Accept those when every tsheg-delimited
+        # syllable is individually attested — still a strict validity
+        # gate, just at syllable granularity.
+        if (
+            vocab
+            and clean_replacement not in vocab
+            and replacement not in vocab
+            and not self._syllables_attested(clean_replacement, vocab)
+        ):
+            is_valid_compound = False
+            if self._corpus_repository is not None:
+                compound_key = " ".join([s for s in clean_replacement.split("\u0f0b") if s.strip(_STRIP_CHARS)])
+                if self._corpus_repository.bigrams.get(compound_key, 0) > 0:
+                    is_valid_compound = True
+            if not is_valid_compound:
+                return None
 
         # 2b. Tibetan-only script: no punctuation marks (e.g. ༴, ༽), digits,
         # or non-Tibetan scripts may be injected into Tibetan text.

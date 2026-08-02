@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button, Textarea, Text, MessageBar, MessageBarBody, Spinner, makeStyles, tokens } from '@fluentui/react-components';
 
-import { MONLAM_API_KEY, MONLAM_BASE_URL } from '../config';
+import { getMonlamApiKey, MONLAM_BASE_URL } from '../config';
 
 const MONLAM_STT_ENDPOINT = `${MONLAM_BASE_URL}/api/v1/speech-to-text/`;
 
@@ -42,6 +42,14 @@ export function SpeechToTextPanel({ onInsertText }: SpeechToTextPanelProps): JSX
     setError(null);
 
     try {
+      const apiKey = await getMonlamApiKey();
+      if (!apiKey) {
+        setTimeout(() => {
+          setTranscript('བཀྲ་ཤིས་བདེ་ལེགས་ཞུའོ། (Demo STT Transcript)');
+          setIsUploading(false);
+        }, 1000);
+        return;
+      }
       const formData = new FormData();
       formData.append('file', audioBlob, 'audio.wav');
       formData.append('language', 'bo');
@@ -50,7 +58,7 @@ export function SpeechToTextPanel({ onInsertText }: SpeechToTextPanelProps): JSX
       const response = await fetch(MONLAM_STT_ENDPOINT, {
         method: 'POST',
         headers: {
-          'X-API-Key': MONLAM_API_KEY,
+          'X-API-Key': apiKey,
         },
         body: formData,
       });

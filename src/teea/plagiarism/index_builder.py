@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 import time
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Callable
 
 from teea.core.logging import get_logger
 from teea.persistence.fingerprints import FingerprintRepository
@@ -145,4 +145,4 @@ class IndexBuilder:
         return stats
 
 
-__all__ = ["IndexBuilder", "IndexBuildStats"]
+__all__ = ["IndexBuildStats", "IndexBuilder"]

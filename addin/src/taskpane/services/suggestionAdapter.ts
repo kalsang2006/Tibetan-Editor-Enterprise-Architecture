@@ -106,7 +106,9 @@ export function toSuggestion(
   if (raw.replacement == null || raw.replacement === undefined) {
     return null;
   }
-  const span = raw.span || (raw as any).range;
+  const span =
+    raw.span ||
+    (raw as typeof raw & { range?: typeof raw.span }).range;
   if (!span || span.char_start == null || span.char_end == null) {
     return null;
   }
@@ -142,27 +144,41 @@ export function toSuggestions(
   let list: DaemonSuggestion[] = [];
   if (Array.isArray(raw)) {
     list = raw as DaemonSuggestion[];
-  } else if (raw && typeof raw === 'object' && Array.isArray((raw as any).suggestions)) {
-    list = (raw as any).suggestions;
-  } else if (raw && typeof raw === 'object' && (raw as any).result && Array.isArray((raw as any).result.suggestions)) {
-    list = (raw as any).result.suggestions;
-  } else if (
-    raw &&
-    typeof raw === 'object' &&
-    (raw as any).result &&
-    (raw as any).result.patch &&
-    Array.isArray((raw as any).result.patch.operations)
-  ) {
-    const ops = (raw as any).result.patch.operations;
-    list = ops.map((op: any) => ({
-      source: (op.sources && op.sources[0]) || 'teea.grammar',
-      span: op.span,
-      replacement: op.replacement,
-      score: 0.9,
-      priority: 'high',
-      message: `Suggestion: replace with ${op.replacement}`,
-      error_type: 'GRAMMAR',
-    }));
+  } else if (raw && typeof raw === 'object') {
+    const record = raw as Record<string, unknown>;
+    const result = record.result;
+    if (Array.isArray(record.suggestions)) {
+      list = record.suggestions as DaemonSuggestion[];
+    } else if (result && typeof result === 'object') {
+      const resultRecord = result as Record<string, unknown>;
+      if (Array.isArray(resultRecord.suggestions)) {
+        list = resultRecord.suggestions as DaemonSuggestion[];
+      } else if (
+        resultRecord.patch &&
+        typeof resultRecord.patch === 'object' &&
+        Array.isArray((resultRecord.patch as Record<string, unknown>).operations)
+      ) {
+        const ops = (resultRecord.patch as Record<string, unknown>).operations as Array<
+          Record<string, unknown>
+        >;
+        list = ops.map((op) => {
+          const sources = op.sources;
+          const span = op.span;
+          const replacement = op.replacement;
+          return {
+            source:
+              (Array.isArray(sources) && typeof sources[0] === 'string' ? sources[0] : null) ??
+              'teea.grammar',
+            span: (span ?? undefined) as DaemonSuggestion['span'],
+            replacement: typeof replacement === 'string' ? replacement : null,
+            score: 0.9,
+            priority: 'high',
+            message: `Suggestion: replace with ${replacement}`,
+            error_type: 'GRAMMAR',
+          } as DaemonSuggestion;
+        });
+      }
+    }
   }
 
   const converted: Suggestion[] = [];

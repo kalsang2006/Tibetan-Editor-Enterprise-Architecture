@@ -1,37 +1,39 @@
-"""Send the same analysis request as the user's PowerShell verification command.
-
-Equivalent to:
-    $text = "ང་ཚོས་སློབ་སྦྱངབྱེད།"
-    $body = @{ request_id = "test-fix"; method = "analysis.run"; params = @{ text = $text } } |
-        ConvertTo-Json -Compress
-    Invoke-RestMethod -Uri "http://127.0.0.1:50505/api/analysis/run" -Method Post ...
-"""
-
-from __future__ import annotations
-
+import urllib.request
 import json
 import sys
-import urllib.request
 
-sys.stdout.reconfigure(encoding="utf-8")
+BASE_URL = "http://127.0.0.1:50505"
 
-TEXT = "ང་ཚོས་སློབ་སྦྱངབྱེད།"
+def send_request(path, payload):
+    req = urllib.request.Request(f"{BASE_URL}{path}", method="POST")
+    req.add_header("Content-Type", "application/json")
+    try:
+        with urllib.request.urlopen(req, data=json.dumps(payload).encode('utf-8')) as res:
+            return res.read().decode('utf-8'), res.status
+    except Exception as e:
+        return str(e), 500
 
-
-def main() -> None:
-    body = json.dumps(
-        {"request_id": "test-fix", "method": "analysis.run", "params": {"text": TEXT}},
-        ensure_ascii=False,
-    ).encode("utf-8")
-    req = urllib.request.Request(
-        "http://127.0.0.1:50505/api/analysis/run",
-        data=body,
-        headers={"Content-Type": "application/json"},
-    )
-    with urllib.request.urlopen(req, timeout=120) as resp:
-        payload = json.loads(resp.read().decode("utf-8"))
-    print(json.dumps(payload, ensure_ascii=False, indent=2))
-
+def test():
+    print("Testing Daemon Endpoints...")
+    
+    # 1. Health
+    print("1. Health Check")
+    try:
+        res = urllib.request.urlopen(f"{BASE_URL}/health")
+        print(f"Health status: {res.status}")
+    except Exception as e:
+        print(f"Health check failed: {e}")
+        
+    # 2. Dictionary Lookup
+    print("\n2. Dictionary Lookup")
+    payload = {
+        "protocol_version": "1.0",
+        "request_id": "test-1",
+        "method": "dictionary.lookup",
+        "params": {"query": "བཀྲ་ཤིས་བདེ་ལེགས", "language": "bo-en"}
+    }
+    body, status = send_request("/api/dictionary/lookup", payload)
+    print(f"Status: {status}\nResponse: {body[:200]}")
 
 if __name__ == "__main__":
-    main()
+    test()

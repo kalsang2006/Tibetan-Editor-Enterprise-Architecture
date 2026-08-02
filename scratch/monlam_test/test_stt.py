@@ -5,7 +5,7 @@ import urllib.request
 import urllib.error
 
 BASE_URL = "https://api-v1.monlamai.studio"
-API_KEY = os.environ.get("REACT_APP_MONLAM_API_KEY", "ml-y4K0RI88kQDXWbU8FboYc1tZ50NeXVXjbBNorbYG0gg")
+API_KEY = os.environ.get("REACT_APP_MONLAM_API_KEY", "REPLACE_WITH_MONLAM_API_KEY")
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) MonlamClient/1.0"
 MAX_STT_BYTES = 500000  # Max payload size bound (~30s audio)
 

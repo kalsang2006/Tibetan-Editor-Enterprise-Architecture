@@ -178,16 +178,12 @@ class InMemoryDictionaryRepository:
     def is_valid_word_or_compound(self, surface: str) -> bool:
         """Return True if surface or its constituent morphemes exist in dictionary."""
         clean = surface.strip("་ །\u0f0b\u0f0d ")
-        if not clean:
-            return True
-        if clean in self:
-            return True
-        if clean.endswith("ར") and clean[:-1] in self:
-            return True
-        if clean.endswith("ས") and clean[:-1] in self:
-            return True
-        return False
-
+        return bool(
+            not clean
+            or clean in self
+            or (clean.endswith("ར") and clean[:-1] in self)
+            or (clean.endswith("ས") and clean[:-1] in self)
+        )
     def __contains__(self, surface: str) -> bool:
         """Whether ``surface`` is present in the lexicon."""
         return surface in self._emissions or surface in self._safe_words

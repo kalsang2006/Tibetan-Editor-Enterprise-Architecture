@@ -7,16 +7,16 @@ and tense agreement (past, present, future).
 from __future__ import annotations
 
 import json
-from enum import Enum
+from enum import StrEnum
 from pathlib import Path
-from typing import Any, Final
+from typing import Final
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 DEFAULT_VERB_LEXICON_PATH: Final[Path] = Path("Data/Processed/verb_lexicon.json")
 
 
-class Transitivity(str, Enum):
+class Transitivity(StrEnum):
     """Verb transitivity classification."""
 
     TRANS = "TRANS"
@@ -77,7 +77,7 @@ class VerbLexicon:
                         valency=int(val.get("valency", 1)),
                         tense=str(val.get("tense", "present")),
                     )
-        except Exception:
+        except (OSError, ValueError):
             pass
 
     def get_verb_info(self, verb: str) -> VerbInfo | None:

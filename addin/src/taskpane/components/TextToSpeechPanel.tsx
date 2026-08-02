@@ -187,6 +187,12 @@ export function TextToSpeechPanel({ sourceText, isOnline }: TextToSpeechPanelPro
                   setSelectedVoice(voice.id);
                 }
               }}
+              onKeyDown={(event) => {
+                if (!isRestricted && (event.key === 'Enter' || event.key === ' ')) {
+                  event.preventDefault();
+                  setSelectedVoice(voice.id);
+                }
+              }}
               role="button"
               tabIndex={isRestricted ? -1 : 0}
               aria-disabled={isRestricted}
@@ -228,6 +234,7 @@ export function TextToSpeechPanel({ sourceText, isOnline }: TextToSpeechPanelPro
         <div className={styles.outputGroup}>
           <Text weight="semibold" size={300}>Generated Audio</Text>
           <audio key={audioUrl} controls className={styles.audioPlayer} src={audioUrl}>
+            <track kind="captions" />
             Your browser does not support the audio element.
           </audio>
           <a href={audioUrl} download="monlam_speech.mp3" style={{ textDecoration: 'none' }}>

@@ -146,4 +146,4 @@ class BoCorpusLoader:
         return int(pf.metadata.num_rows)
 
 
-__all__ = ["DocumentCorpus", "BoCorpusLoader"]
+__all__ = ["BoCorpusLoader", "DocumentCorpus"]

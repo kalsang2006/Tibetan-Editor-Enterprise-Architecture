@@ -7,8 +7,6 @@ model is required.
 
 from __future__ import annotations
 
-import pytest
-
 from teea.plugins.builtin.correction import CorrectionProvider, _levenshtein
 
 # -- Levenshtein distance tests ------------------------------------------------
@@ -49,14 +47,14 @@ def always_high_scorer(
     sentence: str, word_start: int, word_end: int, candidates: list[str]
 ) -> dict[str, float]:
     """Return 0.9 for every candidate."""
-    return {c: 0.9 for c in candidates}
+    return dict.fromkeys(candidates, 0.9)
 
 
 def always_low_scorer(
     sentence: str, word_start: int, word_end: int, candidates: list[str]
 ) -> dict[str, float]:
     """Return 0.1 for every candidate — below the default threshold."""
-    return {c: 0.1 for c in candidates}
+    return dict.fromkeys(candidates, 0.1)
 
 
 def ranked_scorer(

@@ -2,10 +2,7 @@
 
 from __future__ import annotations
 
-from pathlib import Path
-import pytest
-
-from teea.nlp.morphology.stemmer import StemCandidate, TibetanMorphologyAnalyzer
+from teea.nlp.morphology.stemmer import TibetanMorphologyAnalyzer
 from teea.nlp.normalizer import TibetanNormalizer
 from teea.nlp.snapshot import LanguageServerSnapshotBuilder
 from teea.plugins.builtin.spelling import SpellCheckerConfig, SpellCheckerPlugin

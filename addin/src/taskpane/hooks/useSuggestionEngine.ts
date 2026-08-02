@@ -23,7 +23,7 @@ import {
 import { applyOperations, type ApplyReport } from '../services/WordDocument';
 
 /** Below this confidence a suggestion is never applied without review. */
-export const AUTO_APPLY_CONFIDENCE = 0.8;
+export const AUTO_APPLY_CONFIDENCE = 0.95;
 
 /** One category's worth of suggestions. */
 export interface SuggestionGroupModel {

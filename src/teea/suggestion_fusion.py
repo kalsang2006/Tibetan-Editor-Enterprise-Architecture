@@ -11,7 +11,6 @@ from typing import Any
 from teea.engine import TEEAEngine
 from teea.fusion import (
     PriorityRankedFusionEngine,
-    Suggestion,
     SuggestionPriority,
     UnifiedSuggestions,
 )

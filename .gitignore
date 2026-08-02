@@ -8,6 +8,11 @@ __pycache__/
 venv/
 env/
 
+# Secrets — never commit API keys or local env files
+.env
+addin/.env
+addin/config.json
+
 # Pytest
 .pytest_cache/
 .coverage

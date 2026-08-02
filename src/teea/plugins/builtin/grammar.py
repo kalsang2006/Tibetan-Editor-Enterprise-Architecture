@@ -14,7 +14,7 @@ from typing import Any, cast
 
 from teea.core.types import TextSpan, utf8_byte_offsets
 from teea.fusion import Suggestion, SuggestionPriority
-from teea.grammar.rule_registry import GrammarRule, RuleRegistry
+from teea.grammar.rule_registry import RuleRegistry
 from teea.nlp.dependency import DependencyRelation, DependencyTree
 from teea.nlp.postagging import PosCategory
 from teea.nlp.snapshot import DocumentSnapshot, SentenceAnalysis
@@ -53,8 +53,8 @@ ALL_ERGATIVE = {"གིས", "ཀྱིས", "གྱིས", "ཡིས", "ས"}
 ALL_INTERROGATIVE = {"གམ", "ངམ", "དམ", "ནམ", "བམ", "མམ", "འམ", "རམ", "ལམ", "སམ", "ཏམ"}
 ALL_FINAL = {"གོ", "ངོ", "དོ", "ནོ", "བོ", "མོ", "འོ", "རོ", "ལོ", "སོ", "ཏོ"}
 
-#: Every particle the grammar plugin recognises (genitive ∪ ergative ∪
-#: interrogative ∪ sentence-final).  Used as a guard so the new lexical rules
+#: Every particle the grammar plugin recognises (genitive U ergative U
+#: interrogative U sentence-final).  Used as a guard so the new lexical rules
 #: never propose edits on function words.
 ALL_PARTICLES = ALL_GENITIVE | ALL_ERGATIVE | ALL_INTERROGATIVE | ALL_FINAL
 
@@ -104,11 +104,39 @@ _PRONOUNS = frozenset({
     "དེ", "འདི", "ཕྱི", "གང", "གང་ཡིན", "སུ", "སུ་ཡིན",
 })
 
+#: Curated exception list for common proper nouns, loanwords, and religious terms.
+#: Lexical rules (TIB-VOWEL-001, TIB-CHAR-001) skip these to avoid false positives.
+_CURATED_EXCEPTIONS = frozenset({
+    # Religious / Buddhist terms
+    "རྡོ་རྗེ", "ཆོས་ལུགས", "སངས་རྒྱས", "ཨོཾ", "པདྨ",
+    "བཀྲ་ཤིས་བདེ་ལེགས", "ལྷ་ས", "ཏཱ་ལའི", "བླ་མ",
+    "རིན་པོ་ཆེ", "འཕགས་པ", "དཔལ", "གཟིགས",
+    "བོདི་སཏྡ", "མངོན་པོ",
+    # Sanskrit loanwords
+    "དཀའ", "དཀའ་བརྩེགས", "བོདྷི་སཏྡ",
+    # Place names
+    "རྒྱ་ནག", "རྒྱ་གར",
+})
+
+#: Common greeting phrases whose components are also valid dictionary words
+#: (e.g. ཤིས "blessing" inside བཀྲ་ཤིས vs ཤེས "to know").  The corpus-frequency
+#: dominance gate alone cannot tell these apart, so when such a phrase appears
+#: in a sentence the lexical rules stay silent for its protected tokens.
+_GREETING_PHRASES: tuple[tuple[str, frozenset[str]], ...] = (
+    ("བཀྲ་ཤིས", frozenset({"ཤིས"})),
+)
+
+def _is_greeting_token(raw: str, sentence_text: str) -> bool:
+    """Return whether ``raw`` is a component of a known greeting phrase."""
+    return any(raw in safe for phrase, safe in _GREETING_PHRASES if phrase in sentence_text)
+
+
+
 #: A lexical-rule candidate must be this many times more frequent than the
 #: questioned token before the rule attaches an edit, so common valid forms
 #: (e.g. བདེ in clean text, at 233k vs the 11 occurrences of བདི) are never
 #: rewritten while genuinely mutated spellings are caught.
-_KNOWN_WORD_MIN_FREQ_RATIO = 10.0
+_KNOWN_WORD_MIN_FREQ_RATIO = 20.0
 #: When several known variants compete (e.g. བདི -> {བདེ, བདུ, བདོ}), the
 #: most frequent must dominate the runner-up by this factor or the rule stays
 #: silent (ambiguous mutations are not flagged).
@@ -274,13 +302,16 @@ class GrammarCheckerPlugin:
 
     @property
     def name(self) -> str:
+        """Return the plugin's rule-source name."""
         return self._name
 
     @property
     def registry(self) -> RuleRegistry:
+        """Return the shared rule registry."""
         return self._registry
 
     def examine(self, snapshot: DocumentSnapshot) -> Iterable[Suggestion]:
+        """Run all enabled grammar rules against a document snapshot."""
         byte_table = utf8_byte_offsets(snapshot.source)
 
         for analysis in snapshot.analyses:
@@ -436,22 +467,28 @@ class GrammarCheckerPlugin:
             raw = node.text.strip(_STRIP_CHARS)
             if not raw or raw in ALL_PARTICLES:
                 continue
-            if raw in _PRONOUNS or len(raw) <= 1:
+            if raw in _PRONOUNS or raw in _CURATED_EXCEPTIONS or len(raw) <= 1:
                 # Pronouns (ང) and single-letter tokens (ང/བ/ད) are never a
                 # mutated-content-word repair: mutating ང -> བ is a false
                 # positive (བ is far more frequent in the corpus, so a pure
                 # frequency gate would fire).
+                continue
+            if _is_greeting_token(raw, sentence_text):
+                # བཀྲ་ཤིས་བདེ་ལེགས must never be rewritten: ཤིས ("blessing")
+                # is a valid dictionary form, and its vowel-shifted variant
+                # ཤེས ("know") is far more frequent in the corpus, so the
+                # frequency gate alone would corrupt the greeting.
                 continue
             if not any(v in raw for v in _VOWEL_SIGNS):
                 continue
             variants: set[str] = set()
             for i, ch in enumerate(raw):
                 for alt in _VOWEL_CONFUSIONS.get(ch, ()):
-                    candidate = raw[:i] + alt + raw[i + 1:]
-                    if not candidate or candidate in ALL_PARTICLES or candidate in _DATIVE_PARTICLES:
+                    cand = raw[:i] + alt + raw[i + 1:]
+                    if not cand or cand in ALL_PARTICLES or cand in _DATIVE_PARTICLES:
                         continue
-                    if self._known_word(candidate):
-                        variants.add(candidate)
+                    if self._known_word(cand):
+                        variants.add(cand)
             # Corpus dominance decides: one unambiguous, far-more-frequent
             # variant (e.g. བདི -> བདེ) fires; ambiguous or weak cases stay
             # silent.  This is what makes the rule safe on dictionary-known
@@ -497,16 +534,18 @@ class GrammarCheckerPlugin:
             raw = node.text.strip(_STRIP_CHARS)
             if not raw or raw in ALL_PARTICLES:
                 continue
-            if raw in _PRONOUNS or len(raw) <= 1:
+            if raw in _PRONOUNS or raw in _CURATED_EXCEPTIONS or len(raw) <= 1:
+                continue
+            if _is_greeting_token(raw, sentence_text):
                 continue
             variants: set[str] = set()
             for i, ch in enumerate(raw):
                 for alt in _CHARACTER_CONFUSIONS.get(ch, ()):
-                    candidate = raw[:i] + alt + raw[i + 1:]
-                    if not candidate or candidate in ALL_PARTICLES or candidate in _DATIVE_PARTICLES:
+                    cand = raw[:i] + alt + raw[i + 1:]
+                    if not cand or cand in ALL_PARTICLES or cand in _DATIVE_PARTICLES:
                         continue
-                    if self._known_word(candidate):
-                        variants.add(candidate)
+                    if self._known_word(cand):
+                        variants.add(cand)
             # Same corpus-dominance gate as TIB-VOWEL-001 (e.g. སེས -> ཤེས
             # with 895k vs 50 occurrences fires; ambiguous cases stay silent).
             candidate = self._best_lexical_variant(raw, variants)
@@ -688,14 +727,14 @@ class GrammarCheckerPlugin:
             if not prev_word or not curr_word:
                 continue
 
-            ALL_PARTICLES = ALL_GENITIVE | ALL_ERGATIVE | ALL_INTERROGATIVE | ALL_FINAL
+            all_particles = ALL_GENITIVE | ALL_ERGATIVE | ALL_INTERROGATIVE | ALL_FINAL
 
             # GUARD 1: Only check if node is actually a particle or case relation in POS analysis
-            if curr_node.morpheme.category not in (PosCategory.PARTICLE, PosCategory.PUNCTUATION) and curr_node.relation not in (DependencyRelation.CASE, DependencyRelation.MARK, DependencyRelation.AUX) and curr_word not in ALL_PARTICLES:
+            if curr_node.morpheme.category not in (PosCategory.PARTICLE, PosCategory.PUNCTUATION) and curr_node.relation not in (DependencyRelation.CASE, DependencyRelation.MARK, DependencyRelation.AUX) and curr_word not in all_particles:
                 continue
 
             # Precise Guard: only skip if curr_node is content word and relation is NOT CASE, MARK, or AUX
-            if curr_node.morpheme.category in (PosCategory.NOUN, PosCategory.VERB, PosCategory.ADJECTIVE, PosCategory.PRONOUN, PosCategory.ADVERB) and curr_node.relation not in (DependencyRelation.CASE, DependencyRelation.MARK, DependencyRelation.AUX) and curr_word not in ALL_PARTICLES:
+            if curr_node.morpheme.category in (PosCategory.NOUN, PosCategory.VERB, PosCategory.ADJECTIVE, PosCategory.PRONOUN, PosCategory.ADVERB) and curr_node.relation not in (DependencyRelation.CASE, DependencyRelation.MARK, DependencyRelation.AUX) and curr_word not in all_particles:
                 continue
 
             is_at_sentence_end = (i == len(nodes) - 1) or (i < len(nodes) - 1 and nodes[i + 1].morpheme.category == PosCategory.PUNCTUATION)
@@ -866,8 +905,8 @@ class GrammarCheckerPlugin:
         rule = self._registry.get_rule("TIB-HONOR-001")
         score = rule.confidence_baseline if rule else 0.60
 
-        HONORIFIC_PREFIXES = ("ཁྱེད་", "ཁོང་", "སྤྱི་ཁྱབ", "སྐུ་ཞོགས")
-        PLAIN_TO_HONORIFIC = {
+        honorific_prefixes = ("ཁྱེད་", "ཁོང་", "སྤྱི་ཁྱབ", "སྐུ་ཞོགས")
+        plain_to_honorific = {
             "སྡོད": "བཞུགས",
             "ཤོད": "ཞུས",
             "བྱེད": "མཛད",
@@ -875,13 +914,13 @@ class GrammarCheckerPlugin:
             "འགྲོ": "ཕེབས",
         }
 
-        has_honorific_subject = any(hp in sentence_text for hp in HONORIFIC_PREFIXES)
+        has_honorific_subject = any(hp in sentence_text for hp in honorific_prefixes)
 
         if has_honorific_subject:
             for node in tree.nodes:
                 w = node.text.strip("་ །\u0f0b\u0f0d ")
                 matched_replacement = None
-                for plain, hon in PLAIN_TO_HONORIFIC.items():
+                for plain, hon in plain_to_honorific.items():
                     if w == plain or w.startswith(plain):
                         matched_replacement = hon
                         break
@@ -1060,24 +1099,23 @@ class GrammarCheckerPlugin:
     ) -> Iterable[Suggestion]:
         nodes = tree.nodes
         words = [n.text.strip("་ །") for n in nodes]
-        if "ང་" in words or "ང་ཚོ" in words:
-            if "བོད་" in words and "ཡིན" in words and not any("ཆོས་སྒོར" in w for w in words):
-                for node in nodes:
-                    if node.text.strip("་ །") == "བོད་":
-                        span = self._doc_span(
-                            sent_start,
-                            node.span.char_start,
-                            node.span.char_end,
-                            byte_table,
-                        )
-                        yield Suggestion(
-                            source=self._name,
-                            span=span,
-                            replacement="བོད་པ" + "\u0f0b",
-                            score=0.90,
-                            priority=SuggestionPriority.HIGH,
-                            message='Logical Mismatch: First-person subject "ང་" with "བོད་" requires demonym suffix "བོད་པ"',
-                        )
+        if ("ང་" in words or "ང་ཚོ" in words) and "བོད་" in words and "ཡིན" in words and not any("ཆོས་སྒོར" in w for w in words):
+            for node in nodes:
+                if node.text.strip("་ །") == "བོད་":
+                    span = self._doc_span(
+                        sent_start,
+                        node.span.char_start,
+                        node.span.char_end,
+                        byte_table,
+                    )
+                    yield Suggestion(
+                        source=self._name,
+                        span=span,
+                        replacement="བོད་པ" + "\u0f0b",
+                        score=0.90,
+                        priority=SuggestionPriority.HIGH,
+                        message='Logical Mismatch: First-person subject "ང་" with "བོད་" requires demonym suffix "བོད་པ"',
+                    )
 
     def _check_repeated_words(
         self,

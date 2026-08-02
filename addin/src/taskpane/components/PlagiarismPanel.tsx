@@ -129,7 +129,7 @@ export const PlagiarismPanel: React.FC<PlagiarismPanelProps> = ({
   const handleCitationClick = async (e: React.MouseEvent, match: PlagiarismMatch) => {
     e.stopPropagation();
     if (onInsertCitation) {
-      const manuscript = formatManuscriptTitle(match).replace('📖 ', '');
+      const manuscript = formatManuscriptTitle(match);
       const citationText = `[Citation] ${manuscript}, Similarity: ${(match.similarity * 100).toFixed(1)}%.`;
       await onInsertCitation(citationText);
     }
@@ -137,16 +137,16 @@ export const PlagiarismPanel: React.FC<PlagiarismPanelProps> = ({
 
   const formatManuscriptTitle = (m: PlagiarismMatch): string => {
     if (m.collection && m.filename) {
-      return `📖 ${m.collection} (${m.filename})`;
+      return `${m.collection} (${m.filename})`;
     }
     if (m.collection) {
-      return `📖 ${m.collection}`;
+      return m.collection;
     }
     if (m.filename) {
-      return `📖 Manuscript ${m.filename}`;
+      return `Manuscript ${m.filename}`;
     }
     const cleanId = m.document_id.split('#')[0];
-    return `📖 Manuscript ${cleanId ? cleanId.slice(0, 8) : 'Reference'}`;
+    return `Manuscript ${cleanId ? cleanId.slice(0, 8) : 'Reference'}`;
   };
 
   const getExcerpt = (match: PlagiarismMatch): string => {
@@ -200,8 +200,8 @@ export const PlagiarismPanel: React.FC<PlagiarismPanelProps> = ({
             <div>
               <Text weight="semibold">
                 {result.matches.length === 0
-                  ? '✨ Clean Document'
-                  : `⚠️ ${result.matches.length} Match(es) Found`}
+                  ? 'Clean Document'
+                  : `${result.matches.length} Match(es) Found`}
               </Text>
             </div>
           </div>
@@ -257,7 +257,9 @@ export const PlagiarismPanel: React.FC<PlagiarismPanelProps> = ({
                     {excerpt && (
                       <div className={styles.excerptPreview} style={{ fontSize: '15px', lineHeight: '1.6' }}>
                         <Text italic style={{ fontSize: '15px' }}>
-                          "{excerpt}"
+                          {'\u201C'}
+                          {excerpt}
+                          {'\u201D'}
                         </Text>
                       </div>
                     )}
@@ -271,7 +273,7 @@ export const PlagiarismPanel: React.FC<PlagiarismPanelProps> = ({
                           appearance="subtle"
                           onClick={(e) => handleCitationClick(e, m)}
                         >
-                          ➕ Citation
+                          Citation
                         </Button>
                       )}
                     </div>

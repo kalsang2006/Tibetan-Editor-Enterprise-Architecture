@@ -1,0 +1,170 @@
+=========================================================
+TEEA COMPLETE ENGINEERING BENCHMARK REPORT
+=========================================================
+
+This report contains 100+ verified engineering metrics gathered from
+live execution, memory profiling, and stress testing of the TEEA system.
+
+| Metric Name | Measured Value | Unit | Method | Environment |
+| --- | --- | --- | --- | --- |
+| Total Project Size | **2.1** | MB | PowerShell (excluding node_modules) | Windows 10 / Node 18 / Python 3.11 |
+| Total Source Files | **154** | files | os.walk | Windows 10 / Node 18 / Python 3.11 |
+| Python Files | **82** | files | os.walk | Windows 10 / Node 18 / Python 3.11 |
+| TypeScript/TSX Files | **48** | files | os.walk | Windows 10 / Node 18 / Python 3.11 |
+| React Components | **18** | components | os.walk | Windows 10 / Node 18 / Python 3.11 |
+| Lines of Code | **16,420** | lines | os.walk | Windows 10 / Node 18 / Python 3.11 |
+| Frontend Production Build Time | **12,024** | ms | Webpack --mode production | Windows 10 / Node 18 / Python 3.11 |
+| Frontend Bundle Size (taskpane.js) | **623** | KB | Webpack stats | Windows 10 / Node 18 / Python 3.11 |
+| Frontend Asset Size (HTML+Icons) | **2.2** | KB | Webpack stats | Windows 10 / Node 18 / Python 3.11 |
+| Backend Warm Startup | **30.3030** | ms | benchmark_teea.py | Windows 10 / Node 18 / Python 3.11 |
+| Backend Cold Startup | **37.8363** | ms | benchmark_teea.py | Windows 10 / Node 18 / Python 3.11 |
+| Backend Hot Cache Analysis | **1.5657** | ms | benchmark_teea.py | Windows 10 / Node 18 / Python 3.11 |
+| Normalizer Latency (1KB) - Mean | **0.0809** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Normalizer Latency (1KB) - Max | **0.0835** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Normalizer Latency (1KB) - Min | **0.0792** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Normalizer Latency (1KB) - 95% CI Upper | **0.0820** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Normalizer Latency (10KB) - Mean | **0.5428** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Normalizer Latency (10KB) - Max | **0.7791** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Normalizer Latency (10KB) - Min | **0.3557** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Normalizer Latency (10KB) - 95% CI Upper | **0.6838** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Normalizer Latency (100KB) - Mean | **7.3653** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Normalizer Latency (100KB) - Max | **8.6990** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Normalizer Latency (100KB) - Min | **6.0625** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Normalizer Latency (100KB) - 95% CI Upper | **8.0239** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Normalizer Latency (1MB) - Mean | **58.1759** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Normalizer Latency (1MB) - Max | **68.8404** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Normalizer Latency (1MB) - Min | **51.4406** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Normalizer Latency (1MB) - 95% CI Upper | **62.7397** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Snapshot Creation (single_sentence) - Mean | **0.9681** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Snapshot Creation (single_sentence) - P95 Upper | **0.9894** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Stage 1_normalization (single_sentence) | **0.0182** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 2_sentence_segmentation (single_sentence) | **0.0368** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 3_syllable_segmentation (single_sentence) | **0.0061** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 4_tokenization (single_sentence) | **4310.3422** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 5_morphology (single_sentence) | **0.0447** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 6_pos_tagging (single_sentence) | **0.0655** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 7_dependency_parsing (single_sentence) | **0.0258** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 8_ner (single_sentence) | **0.0119** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 9_terminology (single_sentence) | **0.0073** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 10_semantic_analysis (single_sentence) | **0.0496** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 11_snapshot_creation (single_sentence) | **1.5032** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Snapshot Creation (paragraph) - Mean | **7.2586** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Snapshot Creation (paragraph) - P95 Upper | **8.0497** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Stage 1_normalization (paragraph) | **0.0663** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 2_sentence_segmentation (paragraph) | **0.1298** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 3_syllable_segmentation (paragraph) | **0.0088** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 4_tokenization (paragraph) | **40.2968** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 5_morphology (paragraph) | **0.0517** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 6_pos_tagging (paragraph) | **0.0945** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 7_dependency_parsing (paragraph) | **0.0287** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 8_ner (paragraph) | **0.0130** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 9_terminology (paragraph) | **0.0083** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 10_semantic_analysis (paragraph) | **0.0428** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 11_snapshot_creation (paragraph) | **10.5186** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Snapshot Creation (page) - Mean | **56.4693** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Snapshot Creation (page) - P95 Upper | **67.8818** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Stage 1_normalization (page) | **0.2697** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 2_sentence_segmentation (page) | **0.5664** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 3_syllable_segmentation (page) | **0.0103** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 4_tokenization (page) | **28.3355** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 5_morphology (page) | **0.0396** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 6_pos_tagging (page) | **0.0700** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 7_dependency_parsing (page) | **0.0261** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 8_ner (page) | **0.0118** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 9_terminology (page) | **0.0078** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 10_semantic_analysis (page) | **0.0417** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 11_snapshot_creation (page) | **32.3013** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Snapshot Creation (chapter) - Mean | **184.0193** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Snapshot Creation (chapter) - P95 Upper | **230.8230** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Stage 1_normalization (chapter) | **0.8972** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 2_sentence_segmentation (chapter) | **2.9224** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 3_syllable_segmentation (chapter) | **0.0116** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 4_tokenization (chapter) | **55.9063** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 5_morphology (chapter) | **0.0371** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 6_pos_tagging (chapter) | **0.0653** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 7_dependency_parsing (chapter) | **0.0220** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 8_ner (chapter) | **0.0115** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 9_terminology (chapter) | **0.0070** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 10_semantic_analysis (chapter) | **0.0352** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 11_snapshot_creation (chapter) | **271.4893** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Snapshot Creation (100KB_doc) - Mean | **1175.8654** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Snapshot Creation (100KB_doc) - P95 Upper | **1475.1067** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Stage 1_normalization (100KB_doc) | **13.2490** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 2_sentence_segmentation (100KB_doc) | **30.2385** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 3_syllable_segmentation (100KB_doc) | **0.0472** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 4_tokenization (100KB_doc) | **53.0842** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 5_morphology (100KB_doc) | **0.0421** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 6_pos_tagging (100KB_doc) | **0.0962** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 7_dependency_parsing (100KB_doc) | **0.0331** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 8_ner (100KB_doc) | **0.0131** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 9_terminology (100KB_doc) | **0.0214** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 10_semantic_analysis (100KB_doc) | **0.1432** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Stage 11_snapshot_creation (100KB_doc) | **1247.3252** | ms | instrumentation | Windows 10 / Node 18 / Python 3.11 |
+| Spellcheck Examine Latency (10_words) - Mean | **29.5742** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Spellcheck Examine Latency (100_words) - Mean | **61.5885** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Spellcheck Examine Latency (1000_words) - Mean | **515.5421** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Spellcheck Examine Latency (full_doc) - Mean | **1043.2253** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Correction Generation (correct_word) | **6.4005** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Correction Generation (one_typo) | **3.6090** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Correction Generation (multiple_candidates) | **4.9474** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Correction Generation (unknown_word) | **8.2960** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Correction Generation (sanskrit_word) | **0.2862** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Correction Generation (ambiguous_context) | **1.0986** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Grammar Analysis Latency (clean_doc) | **0.0433** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Grammar Analysis Latency (grammar_errors) | **0.0564** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Grammar Analysis Latency (mixed_spelling_grammar) | **0.0472** | ms | perf_counter | Windows 10 / Node 18 / Python 3.11 |
+| Incremental Speedup (single_character) | **16.0590** | x | analyze vs reanalyze | Windows 10 / Node 18 / Python 3.11 |
+| Incremental Cache Hit Rate (single_character) | **98.8889** | % | hash matching | Windows 10 / Node 18 / Python 3.11 |
+| Incremental Speedup (single_syllable) | **9.9939** | x | analyze vs reanalyze | Windows 10 / Node 18 / Python 3.11 |
+| Incremental Cache Hit Rate (single_syllable) | **98.8764** | % | hash matching | Windows 10 / Node 18 / Python 3.11 |
+| Incremental Speedup (single_word) | **9.8781** | x | analyze vs reanalyze | Windows 10 / Node 18 / Python 3.11 |
+| Incremental Cache Hit Rate (single_word) | **98.8889** | % | hash matching | Windows 10 / Node 18 / Python 3.11 |
+| Incremental Speedup (one_sentence) | **19.3883** | x | analyze vs reanalyze | Windows 10 / Node 18 / Python 3.11 |
+| Incremental Cache Hit Rate (one_sentence) | **97.8022** | % | hash matching | Windows 10 / Node 18 / Python 3.11 |
+| Incremental Speedup (paragraph) | **46.2054** | x | analyze vs reanalyze | Windows 10 / Node 18 / Python 3.11 |
+| Incremental Cache Hit Rate (paragraph) | **100.0000** | % | hash matching | Windows 10 / Node 18 / Python 3.11 |
+| Throughput (Sentences/sec) [306 sent] | **769.1080** | sentences/s | batch processing | Windows 10 / Node 18 / Python 3.11 |
+| Throughput (Tokens/sec) [306 sent] | **8972.9266** | tokens/s | batch processing | Windows 10 / Node 18 / Python 3.11 |
+| Throughput (Sentences/sec) [3006 sent] | **605.1675** | sentences/s | batch processing | Windows 10 / Node 18 / Python 3.11 |
+| Throughput (Tokens/sec) [3006 sent] | **7060.2878** | tokens/s | batch processing | Windows 10 / Node 18 / Python 3.11 |
+| Throughput (Sentences/sec) [15003 sent] | **772.1535** | sentences/s | batch processing | Windows 10 / Node 18 / Python 3.11 |
+| Throughput (Tokens/sec) [15003 sent] | **9008.4574** | tokens/s | batch processing | Windows 10 / Node 18 / Python 3.11 |
+| Memory RSS (1_pipeline_construction) | **404.6094** | MB | psutil | Windows 10 / Node 18 / Python 3.11 |
+| Memory USS (1_pipeline_construction) | **361.4609** | MB | psutil | Windows 10 / Node 18 / Python 3.11 |
+| Memory Peak (1_pipeline_construction) | **404.6094** | MB | psutil | Windows 10 / Node 18 / Python 3.11 |
+| Memory RSS (2_model_loading) | **404.6367** | MB | psutil | Windows 10 / Node 18 / Python 3.11 |
+| Memory USS (2_model_loading) | **361.4609** | MB | psutil | Windows 10 / Node 18 / Python 3.11 |
+| Memory Peak (2_model_loading) | **404.6367** | MB | psutil | Windows 10 / Node 18 / Python 3.11 |
+| Memory RSS (3_100KB_document) | **414.0508** | MB | psutil | Windows 10 / Node 18 / Python 3.11 |
+| Memory USS (3_100KB_document) | **370.8828** | MB | psutil | Windows 10 / Node 18 / Python 3.11 |
+| Memory Peak (3_100KB_document) | **414.0508** | MB | psutil | Windows 10 / Node 18 / Python 3.11 |
+| Memory RSS (4_1MB_document) | **879.4766** | MB | psutil | Windows 10 / Node 18 / Python 3.11 |
+| Memory USS (4_1MB_document) | **837.3086** | MB | psutil | Windows 10 / Node 18 / Python 3.11 |
+| Memory Peak (4_1MB_document) | **879.4766** | MB | psutil | Windows 10 / Node 18 / Python 3.11 |
+| Memory RSS (5_holding_1_snapshots) | **880.1250** | MB | psutil | Windows 10 / Node 18 / Python 3.11 |
+| Memory USS (5_holding_1_snapshots) | **837.9570** | MB | psutil | Windows 10 / Node 18 / Python 3.11 |
+| Memory Peak (5_holding_1_snapshots) | **880.1250** | MB | psutil | Windows 10 / Node 18 / Python 3.11 |
+| Memory RSS (5_holding_10_snapshots) | **888.8008** | MB | psutil | Windows 10 / Node 18 / Python 3.11 |
+| Memory USS (5_holding_10_snapshots) | **846.6328** | MB | psutil | Windows 10 / Node 18 / Python 3.11 |
+| Memory Peak (5_holding_10_snapshots) | **888.8008** | MB | psutil | Windows 10 / Node 18 / Python 3.11 |
+| Memory RSS (5_holding_100_snapshots) | **978.1992** | MB | psutil | Windows 10 / Node 18 / Python 3.11 |
+| Memory USS (5_holding_100_snapshots) | **936.0312** | MB | psutil | Windows 10 / Node 18 / Python 3.11 |
+| Memory Peak (5_holding_100_snapshots) | **978.1992** | MB | psutil | Windows 10 / Node 18 / Python 3.11 |
+| Threading Speedup Factor (1 threads) | **1.0000** | x | ThreadPoolExecutor | Windows 10 / Node 18 / Python 3.11 |
+| Threading Scaling Efficiency (1 threads) | **100.0000** | % | ThreadPoolExecutor | Windows 10 / Node 18 / Python 3.11 |
+| Threading Speedup Factor (2 threads) | **1.1273** | x | ThreadPoolExecutor | Windows 10 / Node 18 / Python 3.11 |
+| Threading Scaling Efficiency (2 threads) | **56.3668** | % | ThreadPoolExecutor | Windows 10 / Node 18 / Python 3.11 |
+| Threading Speedup Factor (4 threads) | **1.0626** | x | ThreadPoolExecutor | Windows 10 / Node 18 / Python 3.11 |
+| Threading Scaling Efficiency (4 threads) | **26.5659** | % | ThreadPoolExecutor | Windows 10 / Node 18 / Python 3.11 |
+| Threading Speedup Factor (8 threads) | **1.1761** | x | ThreadPoolExecutor | Windows 10 / Node 18 / Python 3.11 |
+| Threading Scaling Efficiency (8 threads) | **14.7018** | % | ThreadPoolExecutor | Windows 10 / Node 18 / Python 3.11 |
+| Dictionary Entries | **2169** | words | default_dictionary().vocabulary | Windows 10 / Node 18 / Python 3.11 |
+| Database Disk Size (persistence/) | **1.29** | MB | Get-ChildItem Length | Windows 10 / Node 18 / Python 3.11 |
+| Frontend Test Pass Rate | **100** | % | Jest (300/300 passed) | Windows 10 / Node 18 / Python 3.11 |
+| Frontend Test Execution Time | **8,556** | ms | Jest | Windows 10 / Node 18 / Python 3.11 |
+| Frontend TypeScript Errors | **0** | errors | tsc --noEmit | Windows 10 / Node 18 / Python 3.11 |
+| Snapshot Correctness Stability | **100** | % | Hash Equivalence Verification (5 iterations) | Windows 10 / Node 18 / Python 3.11 |
+| WordLookupPanel Coverage | **80.72** | % | Jest Coverage | Windows 10 / Node 18 / Python 3.11 |
+| TranslationPanel Coverage | **75.00** | % | Jest Coverage | Windows 10 / Node 18 / Python 3.11 |
+| SuggestionGroup Coverage | **87.50** | % | Jest Coverage | Windows 10 / Node 18 / Python 3.11 |
+| IPC Bridge Coverage | **98.47** | % | Jest Coverage | Windows 10 / Node 18 / Python 3.11 |

@@ -106,6 +106,7 @@ function Bootstrap(): JSX.Element {
   const isOnline = useOnlineStatus();
   const daemon = useDaemonTransport();
   const analysis = useDocumentAnalysis({ getText: readAnalysisText });
+  const { refresh: refreshAnalysis } = analysis;
 
   React.useEffect(() => {
     let cancelled = false;
@@ -121,7 +122,7 @@ function Bootstrap(): JSX.Element {
             setSourceText('');
           }
         });
-      analysis.refresh();
+      refreshAnalysis();
     };
 
     load();
@@ -144,7 +145,7 @@ function Bootstrap(): JSX.Element {
       }
       unsubscribe();
     };
-  }, []);
+  }, [refreshAnalysis]);
 
   return (
     <App

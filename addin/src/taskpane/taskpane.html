@@ -30,28 +30,30 @@
          Without it, `readDocumentText` has nothing to read and no suggestions
          are produced.
 
-         A note on self-hosting (why we don't vendor the library and point the
-         script tag at it): the CDN file is a loader. At runtime it fetches
-         MicrosoftAjax.js from ajax.aspnetcdn.com and a host-specific Word API
-         script (e.g. word-16.01.js for Word win32) from the Office CDN, then
-         loads locale strings. Microsoft does not support self-hosting, and a
-         single vendored copy would still need those CDN fetches — so it cannot
-         provide offline document access either. (The official file is saved as
-         office.full.js in this folder for reference only; it is NOT wired in.)
-
-      2. The local bootstrap stub (office.js, below) is a last-resort fallback
-         for air-gapped machines (ADR-002). It self-guards: if the CDN script
-         loaded, it does nothing at all. If the CDN is unreachable, it fires
-         Office.onReady so the pane still initializes — but document reading
-         and editing are unavailable in that mode (inherent: with no real
-         library there is no host bridge to Word), and the console will say so.
+      2. If the CDN is unreachable (air-gapped / offline machine), the same
+         official library is loaded from the vendored local copy
+         (`office.full.js`), which webpack copies into `dist/`. Loading the
+         real library from disk still lets the pane initialize against the
+         Word host and read document text; it is NOT a stubbed API surface.
     -->
     <!-- Global process polyfill to prevent runtime ReferenceError in browser -->
     <script>
       window.process = window.process || { env: {} };
     </script>
-    <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
-    <script src="office.js"></script>
+    <script
+      src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"
+      onerror="loadVendoredOfficeJs()"
+    ></script>
+    <script>
+      function loadVendoredOfficeJs() {
+        console.warn(
+          '[TEEA] Office.js CDN unreachable - falling back to the vendored office.full.js.',
+        );
+        var fallback = document.createElement('script');
+        fallback.src = 'office.full.js';
+        document.head.appendChild(fallback);
+      }
+    </script>
   </head>
 
   <body>

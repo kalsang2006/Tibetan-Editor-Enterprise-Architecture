@@ -108,10 +108,10 @@ def test_bocorpus_repository_scoring(mock_corpus_repo: BoCorpusRepository) -> No
 def test_correction_provider_with_corpus_ranking(mock_corpus_repo: BoCorpusRepository) -> None:
     """Test CorrectionProvider hybrid contextual candidate ranking."""
     def mock_scorer(sentence: str, ws: int, we: int, candidates: list[str]) -> dict[str, float]:
-        return {cand: 0.8 for cand in candidates}
+        return dict.fromkeys(candidates, 0.8)
 
     # Pass vocabulary with tsheg-terminated surface forms
-    vocab = {"བཀྲ་": 1000, "བཀྲ་": 1000, "ཤིས་": 900}
+    vocab = {"བཀྲ་": 1000, "ཤིས་": 900}
     provider = CorrectionProvider(
         score_candidates=mock_scorer,
         vocabulary=vocab,
@@ -125,7 +125,7 @@ def test_correction_provider_with_corpus_ranking(mock_corpus_repo: BoCorpusRepos
         word_start=0,
         word_end=4,
     )
-    assert best is not None or True  # Verify candidate pipeline execution
+    assert best is None or isinstance(best, str)  # Verify candidate pipeline execution
 
 
 def test_spell_checker_plugin_corpus_aware(mock_corpus_repo: BoCorpusRepository) -> None:

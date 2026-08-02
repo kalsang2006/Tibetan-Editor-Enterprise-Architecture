@@ -88,7 +88,7 @@ class ContextualGrammarEngine:
         p = next((c for c in candidates if c and c.exists()), None)
         if p:
             try:
-                with open(p, "r", encoding="utf-8") as f:
+                with open(p, encoding="utf-8") as f:
                     data = json.load(f)
                     c_dict = data.get("confusion_dict", {})
                     for k, v in c_dict.items():
@@ -96,7 +96,7 @@ class ContextualGrammarEngine:
                         sug = v[0] if isinstance(v, list) and len(v) > 0 else (v if isinstance(v, str) else "")
                         if norm_k and sug:
                             self._confusion_map[norm_k] = sug
-            except Exception:
+            except (OSError, ValueError):
                 pass
 
     def _load_collocations(self, path: Any = None) -> None:
@@ -112,10 +112,10 @@ class ContextualGrammarEngine:
         p = next((c for c in candidates if c and c.exists()), None)
         if p:
             try:
-                with open(p, "r", encoding="utf-8") as f:
+                with open(p, encoding="utf-8") as f:
                     data = json.load(f)
                     self._collocations = data.get("collocations", {}) if isinstance(data, dict) else {}
-            except Exception:
+            except (OSError, ValueError):
                 pass
 
     def get_collocation_score(self, word1: str, word2: str) -> float:
@@ -131,7 +131,9 @@ class ContextualGrammarEngine:
         for key in keys:
             info = self._collocations.get(key)
             if isinstance(info, dict):
-                return float(info.get("t", info.get("mi", 0.0)))
+                score = info.get("t", info.get("mi"))
+                if isinstance(score, (int, float)):
+                    return float(score)
         return 0.0
 
     def _spelling_fallbacks(
@@ -166,7 +168,7 @@ class ContextualGrammarEngine:
                         )
 
         if i + 1 < len(words_with_spans):
-            w_next_raw, s_next_start, s_next_end = words_with_spans[i + 1]
+            w_next_raw, _, s_next_end = words_with_spans[i + 1]
             w_next = w_next_raw.strip("་ །\u0f0b\u0f0d ")
             if w == "བཅང" and w_next == "པོ":
                 span_text = sentence_text[s_start:s_next_end] if sentence_text else "བཅང་པོ"
@@ -247,7 +249,7 @@ class ContextualGrammarEngine:
             )
 
         if i + 1 < len(words_with_spans):
-            w_next_raw, s_next_start, s_next_end = words_with_spans[i + 1]
+            w_next_raw, _, s_next_end = words_with_spans[i + 1]
             w_next = w_next_raw.strip("་ །\u0f0b\u0f0d ")
 
             if w in ("བྱས", "བྱས་") and w_next in ("ནི", "ནི"):
@@ -304,7 +306,7 @@ class ContextualGrammarEngine:
 
         # Case 2: two tokens "གལ" + "ཆེན"
         elif w == "གལ" and i + 1 < len(words_with_spans):
-            w_next_raw, s_next_start, s_next_end = words_with_spans[i + 1]
+            w_next_raw, _, s_next_end = words_with_spans[i + 1]
             w_next = w_next_raw.strip("་ །\u0f0b\u0f0d ")
             if w_next == "ཆེན":
                 next_is_po = False
@@ -365,7 +367,7 @@ class ContextualGrammarEngine:
 
         # 1. Check Tense Agreement: མི (mi + pres) vs མ (ma + past)
         for i in range(len(words_with_spans) - 1):
-            w_curr, start_curr, end_curr = words_with_spans[i]
+            w_curr, _, _ = words_with_spans[i]
             w_next, start_next, end_next = words_with_spans[i + 1]
             c_curr = w_curr.strip("་ །\u0f0b\u0f0d ")
             c_next = w_next.strip("་ །\u0f0b\u0f0d ")

@@ -181,8 +181,8 @@ class CorrectionProvider:
             elif isinstance(scores_raw, (list, tuple)):
                 scores = {c: float(scores_raw[i]) if i < len(scores_raw) else 0.5 for i, c in enumerate(candidates)}
             else:
-                scores = {c: 0.5 for c in candidates}
-        except Exception as exc:  # noqa: BLE001 — correction must never crash the plugin
+                scores = dict.fromkeys(candidates, 0.5)
+        except Exception as exc:
             _logger.exception(
                 "correction_scoring_failed",
                 word=word,
@@ -211,11 +211,11 @@ class CorrectionProvider:
                     context_bonus = self._corpus_repository.get_context_score(
                         sentence, word_start, word_end, c
                     )
-                except Exception:
+                except Exception:  # noqa: BLE001
                     context_bonus = 0.0
 
-            # Hybrid score: 50% model score + 30% corpus/ngram context bonus - edit distance penalty
-            hybrid[c] = (0.5 * raw_score) + (0.3 * context_bonus) - (dist * 0.15)
+            # Hybrid score: 40% model score + 60% corpus/ngram context bonus - edit distance penalty
+            hybrid[c] = (0.4 * raw_score) + (0.6 * context_bonus) - (dist * 0.15)
 
         if not hybrid:
             return None, 0.0
@@ -238,17 +238,17 @@ class CorrectionProvider:
         self, word: str, sentence: str, word_end: int, candidates: list[str]
     ) -> list[str]:
         """Validate candidates against Tibetan orthographic rules."""
-        TSHEG = "\u0f0b"
+        tsheg = "\u0f0b"
         valid = []
 
-        word_has_tsheg = word.endswith(TSHEG)
+        word_has_tsheg = word.endswith(tsheg)
         next_char = sentence[word_end] if word_end < len(sentence) else ""
 
         for cand in candidates:
-            cand_has_tsheg = cand.endswith(TSHEG)
+            cand_has_tsheg = cand.endswith(tsheg)
 
             # Rule 1: Prevent duplicate adjacent tshegs.
-            if cand_has_tsheg and next_char == TSHEG:
+            if cand_has_tsheg and next_char == tsheg:
                 continue
 
             # Rule 2: Do not introduce a trailing tsheg if the source token lacked one,
@@ -258,7 +258,7 @@ class CorrectionProvider:
 
             # Rule 3: Do not drop a trailing tsheg if the source token had one,
             # unless the right context already provides a tsheg.
-            if word_has_tsheg and not cand_has_tsheg and next_char != TSHEG:
+            if word_has_tsheg and not cand_has_tsheg and next_char != tsheg:
                 continue
 
             valid.append(cand)
@@ -351,12 +351,12 @@ class CorrectionProvider:
             scored.append((1, canon))
 
         # Check missing tsheg split candidates (e.g. བཀྲཤིས -> བཀྲ་ཤིས or བདེལེགས -> བདེ་ལེགས)
-        TSHEG = "\u0f0b"
-        if TSHEG not in word_norm and len(word_norm) >= 4:
+        tsheg = "\u0f0b"
+        if tsheg not in word_norm and len(word_norm) >= 4:
             for idx in range(2, len(word_norm) - 1):
-                part1 = word_norm[:idx] + TSHEG
+                part1 = word_norm[:idx] + tsheg
                 part2 = word_norm[idx:]
-                part2_with_tsheg = part2 + TSHEG if not part2.endswith(TSHEG) else part2
+                part2_with_tsheg = part2 + tsheg if not part2.endswith(tsheg) else part2
 
                 p1_known = (part1 in self._vocabulary) or (
                     self._corpus_repository is not None and self._corpus_repository.is_known_syllable(part1)
@@ -376,7 +376,7 @@ class CorrectionProvider:
                 if p1_freq >= 10 and p2_freq >= 10:
                     cand_split = part1 + part2
                     scored.append((1, cand_split))
-                    if not cand_split.endswith(TSHEG) and (part2_with_tsheg in self._vocabulary or (self._corpus_repository and self._corpus_repository.is_known_syllable(part2_with_tsheg, min_frequency=10))):
+                    if not cand_split.endswith(tsheg) and (part2_with_tsheg in self._vocabulary or (self._corpus_repository and self._corpus_repository.is_known_syllable(part2_with_tsheg, min_frequency=10))):
                         scored.append((1, part1 + part2_with_tsheg))
 
         # 4. Fallback full scan (very short words / no bigram overlap), widened cap.
@@ -399,6 +399,67 @@ class CorrectionProvider:
                 fast_candidates=0,
                 fallback_candidates=len(scored)
             )
+
+        # Compound handling: if the unknown word contains tshegs, find candidates
+        # for each syllable independently and combine them.
+        tsheg = "\u0f0b"
+        if tsheg in word:
+            parts = word.split(tsheg)
+            part_candidates = []
+            
+            for part in parts:
+                if not part:
+                    part_candidates.append([("", 0)])
+                    continue
+                    
+                # If part is in dictionary, keep it as cost 0
+                cands_for_part = []
+                part_norm = unicodedata.normalize('NFC', part)
+                if part_norm in self._vocabulary:
+                    cands_for_part.append((part, 0))
+                
+                # Also find edits for this part
+                part_scored = []
+                ret = self._bigram_index().query(part_norm, max_results=100)
+                for cand_norm in ret:
+                    if cand_norm == part_norm:
+                        continue
+                    original = self._index_words[cand_norm]
+                    if not _acceptable(original):
+                        continue
+                    distance = tibetan_damerau(part_norm, cand_norm)
+                    if 0 < distance <= max_dist:
+                        part_scored.append((original, distance))
+                        
+                for target_len in range(len(part_norm) - 2, len(part_norm) + 3):
+                    for vocab_norm, vocab_word in self._vocab_by_length.get(target_len, []):
+                        if vocab_norm == part_norm or not vocab_norm:
+                            continue
+                        if vocab_norm[0] != part_norm[0]:
+                            continue
+                        if not _acceptable(vocab_word):
+                            continue
+                        distance = tibetan_damerau(part_norm, vocab_norm)
+                        if 0 < distance <= max_dist:
+                            part_scored.append((vocab_word, distance))
+                
+                # Take top candidates for this part
+                part_scored.sort(key=lambda x: x[1])
+                cands_for_part.extend(part_scored[:20])
+                
+                # Fallback if nothing found
+                if not cands_for_part:
+                    cands_for_part.append((part, 0))
+                
+                part_candidates.append(cands_for_part)
+                
+            # Cartesian product of part candidates
+            import itertools
+            for combo in itertools.product(*part_candidates):
+                total_dist = sum(dist for _, dist in combo)
+                if 0 < total_dist <= max_dist:
+                    combined_word = tsheg.join(w for w, _ in combo)
+                    scored.append((total_dist, combined_word))
 
         # Deduplicate (keep the minimum distance per candidate), then sort by
         # distance and return the top ``max_candidates``.

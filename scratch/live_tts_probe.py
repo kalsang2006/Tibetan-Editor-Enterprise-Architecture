@@ -2,10 +2,10 @@ import urllib.request
 import json
 import hashlib
 
-API_KEY = "ml-y4K0RI88kQDXWbU8FboYc1tZ50NeXVXjbBNorbYG0gg"
+API_KEY = "REPLACE_WITH_MONLAM_API_KEY"
 URL = "https://api-v1.monlamai.studio/api/v1/text-to-speech/"
 
-text = "བཀྲ་ཤིས་བདེ་ལེགས།"
+text = "à½–à½€à¾²à¼‹à½¤à½²à½¦à¼‹à½–à½‘à½ºà¼‹à½£à½ºà½‚à½¦à¼"
 voices = ["lhasa_female", "lhasa_male", "amdo_female", "kham_male"]
 
 for voice in voices:

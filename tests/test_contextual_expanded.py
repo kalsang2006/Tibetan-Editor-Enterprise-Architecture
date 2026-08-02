@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-import pytest
 from teea.grammar.contextual_engine import ContextualGrammarEngine
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -16,7 +15,7 @@ def test_expanded_confusion_sets_file_exists() -> None:
     p = PROJECT_ROOT / "Data" / "Processed" / "confusion_sets_expanded.json"
     assert p.exists(), "confusion_sets_expanded.json file missing"
 
-    with open(p, "r", encoding="utf-8") as f:
+    with open(p, encoding="utf-8") as f:
         data = json.load(f)
 
     c_dict = data.get("confusion_dict", {})
@@ -28,7 +27,7 @@ def test_expanded_collocations_file_exists() -> None:
     p = PROJECT_ROOT / "Data" / "Processed" / "collocations_expanded.json"
     assert p.exists(), "collocations_expanded.json file missing"
 
-    with open(p, "r", encoding="utf-8") as f:
+    with open(p, encoding="utf-8") as f:
         data = json.load(f)
 
     cols = data.get("collocations", {})

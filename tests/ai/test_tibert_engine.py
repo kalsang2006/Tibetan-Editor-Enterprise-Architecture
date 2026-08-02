@@ -9,7 +9,6 @@ The mock validates that the engine correctly:
 
 from __future__ import annotations
 
-from collections.abc import Mapping
 from typing import Any
 from unittest.mock import MagicMock, patch
 
@@ -52,7 +51,7 @@ def _make_mock_tokenizer() -> MagicMock:
 
         # Simple mock: each character is a token, plus [CLS] and [SEP].
         n = len(text)
-        ids = [101] + list(range(200, 200 + n)) + [102]
+        ids = [101, *list(range(200, 200 + n)), 102]
         offsets = [(0, 0)] + [(i, i + 1) for i in range(n)] + [(0, 0)]
         result: dict[str, Any] = {
             "input_ids": torch.tensor([ids]),
@@ -68,7 +67,6 @@ def _make_mock_tokenizer() -> MagicMock:
 
 def _make_mock_model() -> MagicMock:
     """Create a mock model that returns predictable logits."""
-    import pytest
     pytest.importorskip("torch")
     import torch
 

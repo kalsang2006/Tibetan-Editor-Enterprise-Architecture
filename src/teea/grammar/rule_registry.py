@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any
 
 
@@ -13,7 +13,7 @@ class GrammarRule:
     rule_id: str               # e.g., "TIB-EXIST-001"
     category: str              # e.g., "verb", "particle", "honorific", "word_order"
     description: str           # Human-readable summary
-    confidence_baseline: float # 0.0–1.0
+    confidence_baseline: float # 0.0-1.0
     enabled: bool = True
     example_incorrect: str = ""
     example_correct: str = ""

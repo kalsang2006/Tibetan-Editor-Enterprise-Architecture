@@ -7,11 +7,10 @@ and detects malapropisms (words that are structurally/spelling valid but semanti
 from __future__ import annotations
 
 import json
-import math
 from pathlib import Path
-from typing import Any, Final
+from typing import Final
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 DEFAULT_COLLOCATIONS_PATH: Final[Path] = Path("Data/Processed/collocations.json")
 
@@ -65,7 +64,7 @@ class CollocationDatabase:
                         t_test=float(val.get("t", 0.0)),
                         frequency=int(val.get("freq", 0)),
                     )
-        except Exception:
+        except (OSError, ValueError):
             pass
 
     def get_collocation_score(self, w1: str, w2: str) -> float:
@@ -96,13 +95,11 @@ class CollocationDatabase:
         target_clean = target_word.rstrip("་ །")
         
         # Pattern 1: ང་ ... ཆོས་སྒོར་ ... བོད་ ཡིན -> བོད་ is malapropism for བདག
-        if target_clean in ("བོད", "བོད་"):
-            if any(w.rstrip("་ །") in ("ཆོས་སྒོར", "ཆོས་སྒོ་") for w in context_words):
-                return True
+        if target_clean in ("བོད", "བོད་") and any(w.rstrip("་ །") in ("ཆོས་སྒོར", "ཆོས་སྒོ་") for w in context_words):
+            return True
         # Pattern 2: ང་ཚོས ... ཀ ... བལྟས -> ཀ is malapropism for ལག / ངོས
-        if target_clean == "ཀ":
-            if any(w.rstrip("་ །") in ("བལྟས", "ལྟོས") for w in context_words):
-                return True
+        if target_clean == "ཀ" and any(w.rstrip("་ །") in ("བལྟས", "ལྟོས") for w in context_words):
+            return True
 
         # General MI check against neighboring content words
         for cw in context_words:
@@ -136,8 +133,7 @@ class CollocationDatabase:
                 suggestions.append("ལག" + "\u0f0b")
                 suggestions.append("ངོས" + "\u0f0b")
 
-        elif target_clean == "ཆོས":
-            if any("འཐུང" in w for w in context_words):
-                suggestions.append("ཆུ" + "\u0f0b")
+        elif target_clean == "ཆོས" and any("འཐུང" in w for w in context_words):
+            suggestions.append("ཆུ" + "\u0f0b")
 
         return suggestions

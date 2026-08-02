@@ -1,0 +1,32 @@
+{
+  "analysis": {
+    "protocol_version": "1.0",
+    "request_id": "test-1",
+    "ok": true,
+    "result": {
+      "suggestions": [
+        {
+          "source": "teea.diagnostics",
+          "span": {
+            "char_start": 0,
+            "char_end": 0,
+            "byte_start": 0,
+            "byte_end": 0
+          },
+          "replacement": null,
+          "score": 1.0,
+          "priority": "low",
+          "message": "sentence_count=1; token_count=4; entity_count=0; term_count=0; unresolved_dependency_count=0; unresolved_ratio=0.0; semantic_graph_nodes=4; semantic_density=4.0",
+          "error_type": "SPELLING"
+        }
+      ],
+      "patch": {
+        "source": "བཀྲ་ཤེས་བདེ་ལེགས།",
+        "operations": []
+      },
+      "rejected": []
+    },
+    "error": null
+  },
+  "plagiarism": "{\"error\": {\"code\": \"TEEA-4002\", \"message\": \"invalid IpcRequest\", \"detail\": [{\"type\": \"extra_forbidden\", \"loc\": [\"text\"], \"msg\": \"Extra inputs are not permitted\", \"input\": \"༄༅། །བོད་སྐད་ནི་བོད་རིགས་ཀྱི་སྐད་ཡིག་ཡིན་ཞིང་། དེ་ནི་འཛམ་གླིང་སྟེང་གི་སྐད་ཡིག་རྙིང་ཤོས་ཤིག་རེད།\"}, {\"type\": \"extra_forbidden\", \"loc\": [\"min_similarity\"], \"msg\": \"Extra inputs are not permitted\", \"input\": 0.05}, {\"type\": \"missing\", \"loc\": [\"request_id\"], \"msg\": \"Field required\", \"input\": {\"text\": \"༄༅། །བོད་སྐད་ནི་བོད་རིགས་ཀྱི་སྐད་ཡིག་ཡིན་ཞིང་། དེ་ནི་འཛམ་གླིང་སྟེང་གི་སྐད་ཡིག་རྙིང་ཤོས་ཤིག་རེད།\", \"min_similarity\": 0.05}}, {\"type\": \"missing\", \"loc\": [\"method\"], \"msg\": \"Field required\", \"input\": {\"text\": \"༄༅། །བོད་སྐད་ནི་བོད་རིགས་ཀྱི་སྐད་ཡིག་ཡིན་ཞིང་། དེ་ནི་འཛམ་གླིང་སྟེང་གི་སྐད་ཡིག་རྙིང་ཤོས་ཤིག་རེད།\", \"min_similarity\": 0.05}}]}}"
+}

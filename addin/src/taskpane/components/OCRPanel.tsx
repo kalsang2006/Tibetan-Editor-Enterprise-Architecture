@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button, Textarea, Text, MessageBar, MessageBarBody, Spinner, makeStyles, tokens } from '@fluentui/react-components';
 
-import { MONLAM_API_KEY, MONLAM_BASE_URL } from '../config';
+import { getMonlamApiKey, MONLAM_BASE_URL } from '../config';
 
 const MONLAM_OCR_ENDPOINT = `${MONLAM_BASE_URL}/api/v1/ocr/single-page`;
 
@@ -47,6 +47,14 @@ export function OCRPanel({ onInsertText }: OCRPanelProps): JSX.Element {
     setExtractedText('');
 
     try {
+      const apiKey = await getMonlamApiKey();
+      if (!apiKey) {
+        setTimeout(() => {
+          setExtractedText('བོད་ཀྱི་སྐད་ཡིག་ནི་འཛམ་གླིང་འདིའི་སྟེང་གི་སྐད་ཡིག་རྙིང་ཤོས་ཤིག་ཡིན། (Demo OCR Extracted Text)');
+          setLoading(false);
+        }, 1000);
+        return;
+      }
       const formData = new FormData();
       formData.append('file', file);
       formData.append('lang_hint', 'bo');
@@ -54,7 +62,7 @@ export function OCRPanel({ onInsertText }: OCRPanelProps): JSX.Element {
       const response = await fetch(MONLAM_OCR_ENDPOINT, {
         method: 'POST',
         headers: {
-          'X-API-Key': MONLAM_API_KEY,
+          'X-API-Key': apiKey,
         },
         body: formData,
       });

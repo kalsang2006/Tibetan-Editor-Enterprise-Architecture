@@ -233,7 +233,7 @@ class DatabaseManager:
                 ("char_start", "INTEGER"),
                 ("char_end", "INTEGER"),
             ]:
-                try:
+                try:  # noqa: SIM105
                     self._conn.execute(f"ALTER TABLE fingerprint_documents ADD COLUMN {col} {col_type}")
                 except Exception:  # noqa: BLE001
                     pass

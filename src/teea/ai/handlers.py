@@ -79,7 +79,7 @@ def handle_explain(
 ) -> Generator[dict[str, Any], None, None]:
     """Explain the grammar of text using mock AI."""
     text = params.get("text", "")
-    yield from _stream_tokens(text, request_id, prefix="[Grammar explanation]")
+    yield from _stream_tokens(text, request_id, prefix="[Mock] Grammar explanation (will be integrated with Monlam AI)")
 
 
 def handle_summarize(
@@ -88,7 +88,7 @@ def handle_summarize(
 ) -> Generator[dict[str, Any], None, None]:
     """Summarize text using mock AI."""
     text = params.get("text", "")
-    yield from _stream_tokens(text, request_id, prefix="[Summary]")
+    yield from _stream_tokens(text, request_id, prefix="[Mock] Summary (will be integrated with Monlam AI)")
 
 
 def handle_cancel(
@@ -109,7 +109,7 @@ def handle_translate(
     """Mock translation: echo the text with a prefix showing target language."""
     text = params.get("text", "")
     target = params.get("target_lang", "en")
-    yield from _stream_tokens(text, request_id, prefix=f"[Translation to {target}]")
+    yield from _stream_tokens(text, request_id, prefix=f"[Mock] Translation to {target} (will be integrated with Monlam AI)")
 
 
 def handle_ocr(
@@ -117,7 +117,7 @@ def handle_ocr(
     request_id: str,
 ) -> Generator[dict[str, Any], None, None]:
     """Mock OCR: return placeholder extracted text."""
-    prefix = "[Extracted text from image via mock OCR]"
+    prefix = "[Mock] Extracted text from image via OCR (will be integrated with Monlam AI)"
     text = params.get("text", "Sample OCR output")
     if "image_url" in params:
         text = f"OCR of {params['image_url']}: placeholder"
@@ -131,7 +131,7 @@ def handle_stt(
     request_id: str,
 ) -> Generator[dict[str, Any], None, None]:
     """Mock speech-to-text: return placeholder transcription."""
-    prefix = "[Transcription from mock STT]"
+    prefix = "[Mock] Transcription from STT (will be integrated with Monlam AI)"
     text = params.get("text", "Sample transcription")
     if "audio_url" in params:
         text = f"STT of {params['audio_url']}: placeholder"

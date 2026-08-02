@@ -6,10 +6,18 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 /**
  * Load REACT_APP_* variables from `.env` and merge with process.env.
- * This makes `process.env.REACT_APP_MONLAM_API_KEY` (and friends) available
- * at build time via DefinePlugin — without it the browser bundle crashes with
+ *
+ * SECURITY: `REACT_APP_MONLAM_API_KEY` is deliberately EXCLUDED from the
+ * DefinePlugin map below so the API key is never statically embedded in the
+ * client bundle.  The add-in resolves the key at runtime from `config.json`
+ * (see `src/taskpane/config.ts` and `config.example.json`).
+ *
+ * Other REACT_APP_* variables remain available at build time via
+ * DefinePlugin — without it the browser bundle crashes with
  * `Uncaught ReferenceError: process is not defined` (OCRPanel, TTS hook, etc.).
  */
+const SECRET_ENV_KEYS = new Set(["REACT_APP_MONLAM_API_KEY"]);
+
 function loadEnvVariables() {
   const envPath = path.resolve(__dirname, ".env");
   const envVars = {};
@@ -21,6 +29,7 @@ function loadEnvVariables() {
       const eqIdx = trimmed.indexOf("=");
       if (eqIdx === -1) continue;
       const key = trimmed.slice(0, eqIdx).trim();
+      if (SECRET_ENV_KEYS.has(key)) continue;
       const value = trimmed.slice(eqIdx + 1).trim();
       envVars[key] = value;
     }
@@ -28,7 +37,7 @@ function loadEnvVariables() {
   // Merge: process.env overrides .env file (so CI can set vars without editing .env)
   const merged = { ...envVars };
   for (const [key, value] of Object.entries(process.env)) {
-    if (key.startsWith("REACT_APP_")) {
+    if (key.startsWith("REACT_APP_") && !SECRET_ENV_KEYS.has(key)) {
       merged[key] = value;
     }
   }
@@ -79,9 +88,10 @@ module.exports = (_env, argv) => {
       path: path.resolve(__dirname, "dist"),
       filename: "[name].js",
       clean: {
-        // Keep the local office.js bundle across rebuilds (ADR-002 —
-        // offline-first; the CDN is not reachable on an air-gapped machine).
-        keep: /office\.js$/,
+        // Keep the local Office.js library and runtime config across rebuilds
+        // (ADR-002 — offline-first; the CDN is not reachable on an air-gapped
+        // machine).
+        keep: /(office\.full\.js|config\.json)$/,
       },
       // Relative, so the bundle works from a file:// manifest as well as from
       // the dev server.
@@ -118,8 +128,9 @@ module.exports = (_env, argv) => {
     },
 
     plugins: [
-      // Inject REACT_APP_* env vars so `process.env.REACT_APP_MONLAM_API_KEY`
-      // is replaced at build time with the actual string value.
+      // Inject REACT_APP_* env vars so `process.env.*` is replaced at build
+      // time.  The Monlam API key is intentionally NOT injected here — see
+      // loadEnvVariables().
       new webpack.DefinePlugin(defineEnv),
       new HtmlWebpackPlugin({
         template: "./src/taskpane/taskpane.html",
@@ -132,10 +143,17 @@ module.exports = (_env, argv) => {
       {
         apply: (compiler) => {
           compiler.hooks.thisCompilation.tap("CopyOfficeJsPlugin", (compilation) => {
-            const officeJsPath = path.resolve(__dirname, "src/taskpane/office.js");
+            const officeJsPath = path.resolve(__dirname, "src/taskpane/office.full.js");
             if (fs.existsSync(officeJsPath)) {
               const content = fs.readFileSync(officeJsPath);
-              compilation.emitAsset("office.js", new webpack.sources.RawSource(content));
+              compilation.emitAsset("office.full.js", new webpack.sources.RawSource(content));
+            }
+          });
+          compiler.hooks.thisCompilation.tap("CopyRuntimeConfigPlugin", (compilation) => {
+            const configPath = path.resolve(__dirname, "config.json");
+            if (fs.existsSync(configPath)) {
+              const content = fs.readFileSync(configPath);
+              compilation.emitAsset("config.json", new webpack.sources.RawSource(content));
             }
           });
           compiler.hooks.thisCompilation.tap("CopyAssetsPlugin", (compilation) => {

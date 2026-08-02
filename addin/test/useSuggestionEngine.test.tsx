@@ -34,12 +34,12 @@ const passThrough = async (
 
 describe('auto-applicability', () => {
   it('accepts a confident non-critical suggestion', () => {
-    expect(isAutoApplicable(suggestion({ confidence: 0.8 }))).toBe(true);
+    expect(isAutoApplicable(suggestion({ confidence: 0.95 }))).toBe(true);
   });
 
   it('rejects anything below the confidence floor', () => {
-    expect(isAutoApplicable(suggestion({ confidence: 0.79 }))).toBe(false);
-    expect(AUTO_APPLY_CONFIDENCE).toBe(0.8);
+    expect(isAutoApplicable(suggestion({ confidence: 0.94 }))).toBe(false);
+    expect(AUTO_APPLY_CONFIDENCE).toBe(0.95);
   });
 
   it('rejects a critical suggestion however confident', () => {
@@ -161,9 +161,9 @@ describe('useSuggestionEngine', () => {
     const { result } = renderHook(() =>
       useSuggestionEngine(
         [
-          suggestion({ id: 'a', start: 0 }),
-          suggestion({ id: 'b', start: 10 }),
-          suggestion({ id: 'c', start: 20 }),
+          suggestion({ id: 'a', start: 0, confidence: 0.95 }),
+          suggestion({ id: 'b', start: 10, confidence: 0.95 }),
+          suggestion({ id: 'c', start: 20, confidence: 0.95 }),
         ],
         { apply, idFactory: () => 'batch-1' },
       ),
@@ -212,8 +212,8 @@ describe('useSuggestionEngine', () => {
     const { result } = renderHook(() =>
       useSuggestionEngine(
         [
-          suggestion({ id: 'a', start: 0, length: 5, originalText: 'abcde' }),
-          suggestion({ id: 'b', start: 3, length: 5, originalText: 'defgh' }),
+          suggestion({ id: 'a', start: 0, length: 5, originalText: 'abcde', confidence: 0.95 }),
+          suggestion({ id: 'b', start: 3, length: 5, originalText: 'defgh', confidence: 0.95 }),
         ],
         { apply: passThrough },
       ),

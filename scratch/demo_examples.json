@@ -1,0 +1,27 @@
+{
+  "verified_spelling_corrections": [
+    {
+      "input": "བཀྲ་ཤེས་བདེ་ལེགས།",
+      "expected_output": "བཀྲ་ཤིས་བདེ་ལེགས།",
+      "flagged_word": "ཤེས",
+      "replacement": "ཤིས",
+      "rule_type": "CONTEXTUAL_SPELLING",
+      "message": "[SPELL-CTX-001] Known word 'ཤེས' appears in an implausible context — did you mean 'ཤིས'?"
+    },
+    {
+      "input": "བོདསྐད",
+      "expected_output": "བོད་སྐད",
+      "flagged_word": "བོདསྐད",
+      "replacement": "བོད་སྐད",
+      "rule_type": "TSHEG_INSERTION_COMPOUND",
+      "message": "[SPELL-DICT-001] Correction available: Unknown word 'བོདསྐད' — Did you mean 'བོད་སྐད'?"
+    }
+  ],
+  "verified_clean_text": [
+    {
+      "input": "བོད་སྐད་ནི་སྐད་ཡིག་རྙིང་པ་ཞིག་རེད།",
+      "expected_output": "བོད་སྐད་ནི་སྐད་ཡིག་རྙིང་པ་ཞིག་རེད།",
+      "errors_flagged": 0
+    }
+  ]
+}

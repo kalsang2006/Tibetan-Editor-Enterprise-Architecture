@@ -17,8 +17,6 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 
-import pytest
-
 from teea.core.types import TextSpan, utf8_byte_offsets
 from teea.fusion import PriorityRankedFusionEngine, SuggestionPriority
 from teea.nlp.dependency import DependencyNode, DependencyRelation, DependencyTree
@@ -186,9 +184,9 @@ class TestSpellCheckerWithCorrection:
 
     def test_unknown_word_gets_correction(self) -> None:
         """An unknown word is corrected when a provider is available."""
-        known = {"good"}
-        unknown = "baad"
-        vocab = frozenset({"good", "bad", "bead", "band"})
+        known = {"བདེ"}
+        unknown = "བདི"  # edit distance 1 from བདེ (vowel sign ི -> ེ)
+        vocab = frozenset({"བདེ", "བདུ", "བདོ"})
 
         provider = CorrectionProvider(
             mock_scorer, vocab, confidence_threshold=0.5
@@ -217,7 +215,7 @@ class TestSpellCheckerWithCorrection:
             correction_provider=None,
         )
 
-        snapshot = _make_single_node_snapshot("unknown")
+        snapshot = _make_single_node_snapshot("བདི")
         suggestions = list(plugin.examine(snapshot))
 
         assert len(suggestions) == 1
@@ -230,11 +228,11 @@ class TestSpellCheckerWithCorrection:
         def no_candidates_scorer(
             s: str, ws: int, we: int, c: list[str]
         ) -> dict[str, float]:
-            return {c_: 0.1 for c_ in c}  # all below threshold
+            return dict.fromkeys(c, 0.1)  # all below threshold
 
         provider = CorrectionProvider(
             no_candidates_scorer,
-            frozenset({"far_away_word"}),  # too distant from "unknown"
+            frozenset({"མཁས་དབང"}),  # too distant from "བདི"
             confidence_threshold=0.5,
         )
         plugin = SpellCheckerPlugin(
@@ -242,7 +240,7 @@ class TestSpellCheckerWithCorrection:
             correction_provider=provider,
         )
 
-        snapshot = _make_single_node_snapshot("unknown")
+        snapshot = _make_single_node_snapshot("བདི")
         suggestions = list(plugin.examine(snapshot))
 
         assert len(suggestions) == 1
@@ -258,10 +256,10 @@ class TestEndToEndPipeline:
             Unknown word → AI correction → Suggestion with replacement → Fusion Engine
         """
         # -- Setup --
-        known_word = "good"
-        unknown_word = "baad"
+        known_word = "བདེ་ལེགས།"
+        unknown_word = "བཀྲ་ཤིམ་"  # edit distance 1 from བཀྲ་ཤིས་
         doc_text = known_word + unknown_word
-        vocab = frozenset({"good", "bad", "bead", "band"})
+        vocab = frozenset({"བཀྲ་ཤིས་", "བདེ་ལེགས།"})
 
         provider = CorrectionProvider(
             mock_scorer, vocab, confidence_threshold=0.3
@@ -319,12 +317,12 @@ class TestEndToEndPipeline:
             dictionary=SelectiveDictionary(set()),
             correction_provider=None,
         )
-        snapshot = _make_single_node_snapshot("unknown")
+        snapshot = _make_single_node_snapshot("བདི")
         runtime = SupervisedPluginRuntime([plugin])
         results = runtime.dispatch(snapshot)
 
         engine = PriorityRankedFusionEngine()
-        unified = engine.fuse("unknown", results.suggestions)
+        unified = engine.fuse("བདི", results.suggestions)
 
         # Advisory survives fusion.
         assert unified.num_suggestions == 1

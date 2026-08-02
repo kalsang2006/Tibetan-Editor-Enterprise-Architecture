@@ -2,7 +2,6 @@
 repeated words, and typography checking.
 """
 
-import pytest
 
 from teea.core.types import TextSpan, utf8_byte_offsets
 from teea.engine import TEEAEngine
@@ -14,7 +13,6 @@ from teea.nlp.snapshot import DocumentSnapshot, SentenceAnalysis
 from teea.nlp.snapshot.hashing import sentence_hash
 from teea.nlp.terminology import TerminologyAnnotation
 from teea.plugins.builtin.grammar import GrammarCheckerPlugin
-from teea.plugins.builtin.typography import TypographyPlugin
 
 
 def _make_empty_tree_snapshot(text: str) -> DocumentSnapshot:

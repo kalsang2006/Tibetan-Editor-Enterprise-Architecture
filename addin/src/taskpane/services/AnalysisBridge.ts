@@ -102,10 +102,16 @@ export async function fetchAnalysis(options: {
 
   let suggestionsList: unknown = null;
   if (body && typeof body === 'object') {
-    if (body.result && typeof body.result === 'object' && Array.isArray((body.result as any).suggestions)) {
-      suggestionsList = (body.result as any).suggestions;
-    } else if (Array.isArray(body.suggestions)) {
-      suggestionsList = body.suggestions;
+    const record = body as Record<string, unknown>;
+    const result = record.result;
+    if (
+      result &&
+      typeof result === 'object' &&
+      Array.isArray((result as Record<string, unknown>).suggestions)
+    ) {
+      suggestionsList = (result as Record<string, unknown>).suggestions;
+    } else if (Array.isArray(record.suggestions)) {
+      suggestionsList = record.suggestions;
     } else if (Array.isArray(body)) {
       suggestionsList = body;
     }

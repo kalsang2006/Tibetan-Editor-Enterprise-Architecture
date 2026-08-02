@@ -12,6 +12,7 @@ without modifying underlying engine components.
 from __future__ import annotations
 
 import time
+from pathlib import Path
 from typing import Any
 
 from teea import __version__
@@ -56,7 +57,9 @@ class TEEAEngine:
         ai_engine: InferenceEngine | None = None,
         dictionary: DictionaryRepository | None = None,
         plugins: list[FeaturePlugin] | None = None,
+        db_path: Path | str | None = None,
     ) -> None:
+        self._db_path = db_path
         self._settings = settings or load_settings()
         self._builder = LanguageServerSnapshotBuilder()
         self._fusion = PriorityRankedFusionEngine()
@@ -72,7 +75,6 @@ class TEEAEngine:
         self._dict_repo = InMemoryDictionaryRepository(extra_vocabulary=combined_vocab)
 
         # Initialize AI Runtime with local TiBERT checkpoint detection if available
-        from pathlib import Path
         tibert_dir = Path("TiBERT")
         local_path = tibert_dir if (tibert_dir.exists() and (tibert_dir / "model.safetensors").exists()) else None
 
@@ -122,7 +124,7 @@ class TEEAEngine:
                 return {cand: float(scores[i]) if i < len(scores) else 0.5 for i, cand in enumerate(candidates)}
             if isinstance(scores, dict) and scores:
                 return scores
-            return {cand: 0.5 for cand in candidates}
+            return dict.fromkeys(candidates, 0.5)
 
         # Build correction provider with combined vocabulary and corpus repository
         self._correction_provider = CorrectionProvider(
@@ -140,6 +142,7 @@ class TEEAEngine:
                 dictionary=self._dict_repo,
                 correction_provider=self._correction_provider,
                 corpus_repository=self._corpus_repo,
+                ai_runtime=self._ai_runtime,
             )
             grammar_checker = GrammarCheckerPlugin(
                 dictionary=self._dict_repo,
@@ -149,12 +152,31 @@ class TEEAEngine:
             grammar_correction = GrammarCorrectionPlugin()
             typography_plugin = TypographyPlugin()
             diagnostics = DocumentDiagnosticsPlugin()
-            plagiarism_engine = PlagiarismEngine(settings=self._settings.plagiarism)
+            plagiarism_engine = self._build_plagiarism_engine()
             self._plagiarism_engine = plagiarism_engine
             plagiarism_plugin = PlagiarismDetectorPlugin(engine=plagiarism_engine)
             self._plugins = [diagnostics, typography_plugin, grammar_checker, grammar_correction, spell_checker, plagiarism_plugin]
 
         self._plugin_runtime = SupervisedPluginRuntime(self._plugins)
+
+    def _build_plagiarism_engine(self) -> PlagiarismEngine:
+        """Build the plagiarism engine, pre-loading the SQLite fingerprint index when a db is configured."""
+        if self._db_path is None:
+            return PlagiarismEngine(settings=self._settings.plagiarism)
+        from teea.persistence import (  # noqa: PLC0415
+            DatabaseManager,
+            SqliteFingerprintRepository,
+            populate_all,
+        )
+        from teea.plagiarism.index import InMemoryFingerprintIndex  # noqa: PLC0415
+
+        db_manager = DatabaseManager(Path(self._db_path))
+        populate_all(db_manager)
+        fp_repo = SqliteFingerprintRepository(db_manager)
+        index = InMemoryFingerprintIndex()
+        for doc in fp_repo.all():
+            index.add(doc)
+        return PlagiarismEngine(index=index, settings=self._settings.plagiarism)
 
     @property
     def plagiarism_engine(self) -> PlagiarismEngine | None:
