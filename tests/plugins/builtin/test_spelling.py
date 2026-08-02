@@ -319,6 +319,73 @@ def test_content_relations_are_checked() -> None:
     assert len(suggestions) == 1
 
 
+# -- Empty dependency tree fallback -------------------------------------------
+
+
+def _make_empty_tree_snapshot(text: str) -> DocumentSnapshot:
+    """Build a snapshot whose dependency tree has no nodes (no parse)."""
+    byte_offsets = utf8_byte_offsets(text)
+    sent_span = TextSpan(
+        char_start=0,
+        char_end=len(text),
+        byte_start=byte_offsets[0],
+        byte_end=byte_offsets[len(text)],
+    )
+    sent = Sentence(text=text, index=0, span=sent_span, terminator="")
+    tree = DependencyTree(source=text, nodes=())
+    entities = EntityAnnotation(source=text, entities=())
+    terms = TerminologyAnnotation(source=text, terms=())
+    graph = SemanticGraph(
+        source=text,
+        intent=SentenceIntent(mood="declarative", polarity="affirmative"),
+        nodes=(),
+        edges=(),
+    )
+    analysis = SentenceAnalysis(
+        sentence=sent,
+        tree=tree,
+        entities=entities,
+        terms=terms,
+        graph=graph,
+        content_hash=sentence_hash(text),
+    )
+    return DocumentSnapshot(source=text, analyses=(analysis,))
+
+
+def test_empty_tree_sentence_is_tokenized_by_tsheg() -> None:
+    """A sentence with an empty dependency tree is spell-checked per token.
+
+    Regression: with no fallback, an empty tree used to skip the whole
+    sentence, so the fused unknown token could never be reported.
+    """
+    known = {"ང", "ཚོས", "སློབ"}
+    plugin = SpellCheckerPlugin(dictionary=SelectivelyEmptyDictionary(known=known))
+    text = "ང་ཚོས་སློབ་སྦྱངབྱེད།"
+    snapshot = _make_empty_tree_snapshot(text)
+
+    suggestions = list(plugin.examine(snapshot))
+
+    assert len(suggestions) == 1
+    sug = suggestions[0]
+    assert sug.error_type == "SPELLING"
+    assert text[sug.span.char_start : sug.span.char_end] == "སྦྱངབྱེད།"
+    assert "སྦྱངབྱེད" in sug.message
+
+
+def test_empty_tree_sentence_flags_each_unknown_token() -> None:
+    """Every tsheg-delimited token of an empty-tree sentence is examined."""
+    plugin = SpellCheckerPlugin(dictionary=AlwaysEmptyDictionary())
+    text = "ང་ཚོས་སློབ་སྦྱངབྱེད།"
+    snapshot = _make_empty_tree_snapshot(text)
+
+    suggestions = list(plugin.examine(snapshot))
+    spans = {(s.span.char_start, s.span.char_end) for s in suggestions}
+
+    # The final fallback token includes the trailing shad (no separate PUNCT
+    # node exists for a manually tokenized sentence), so it spans 9 chars.
+    assert spans == {(0, 1), (2, 5), (6, 10), (11, 20)}
+
+
 # -- Multiple sentences --------------------------------------------------------
 
 

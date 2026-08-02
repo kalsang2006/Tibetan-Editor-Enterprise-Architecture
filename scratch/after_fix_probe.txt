@@ -1,0 +1,16 @@
+2026-08-02 00:52:07 [info     ] tibert_loading                 device=auto source=TiBERT
+Loading weights:   0%|          | 0/202 [00:00<?, ?it/s]Loading weights: 100%|██████████| 202/202 [00:00<00:00, 3386.97it/s]
+2026-08-02 00:52:08 [info     ] tibert_loaded                  device=cpu key=tibert:1.0 vocab_size=29965
+2026-08-02 00:52:09 [info     ] analysis_completed             char_count=43 elapsed_ms=253.73 suggestions=1
+SENT: དེ་ལྟར་གོ་ཆ་བགོས་ནས་ཡེ་ཤེས་པ་སྤྱན་དྲང་བ་ edits= 0
+2026-08-02 00:52:09 [info     ] analysis_completed             char_count=29 elapsed_ms=118.01 suggestions=1
+SENT: མཚན་མོའི་མུན་ནག་སྤྲིན་རུམ་ནས། edits= 0
+2026-08-02 00:52:09 [info     ] analysis_completed             char_count=26 elapsed_ms=158.23 suggestions=1
+SENT: ཞེས་སྦྱིན་པ་བཏང་བར་མཛད་དོ། edits= 0
+2026-08-02 00:52:10 [info     ] analysis_completed             char_count=67 elapsed_ms=313.68 suggestions=1
+SENT: བུ་རེ་ཞིག་སྡོད་ལ་དགེ་བའི་ཕྱོགས་སུ་བརྩོན་ edits= 0
+2026-08-02 00:52:10 [info     ] analysis_completed             char_count=14 elapsed_ms=77.9 suggestions=1
+SENT: མ་བརྐོས་པ་དང་། edits= 0
+2026-08-02 00:52:10 [info     ] analysis_completed             char_count=31 elapsed_ms=101.47 suggestions=1
+SENT: སྤྱི་རུ་རྒྱུད་ཀྱི་རྣམ་གྲངས་དང་། edits= 0
+TOTAL edits: {}

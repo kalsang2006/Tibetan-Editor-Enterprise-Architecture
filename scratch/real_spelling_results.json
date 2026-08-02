@@ -1,0 +1,35 @@
+{
+  "corpus": {
+    "sentences": 55,
+    "words": 453
+  },
+  "confusion_matrix": {
+    "tp": 2,
+    "fp": 0,
+    "fn": 0,
+    "tn": 53
+  },
+  "metrics": {
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "specificity": 1.0,
+    "fpr": 0.0,
+    "fnr": 0.0,
+    "top1_accuracy": 100.0,
+    "top3_accuracy": 100.0,
+    "top5_accuracy": 100.0,
+    "mrr": 1.0,
+    "avg_candidates": 0.0,
+    "avg_confidence": 0.85
+  },
+  "latency": {
+    "mean_ms": 1.0600000004739163,
+    "std_ms": 0.48034421835329594,
+    "median_ms": 0.9157000022241846,
+    "p95_ms": 2.0612700005585793,
+    "p99_ms": 2.259009997942485,
+    "throughput_words_sec": 7770.1543704539945
+  }
+}

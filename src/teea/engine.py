@@ -60,17 +60,16 @@ class TEEAEngine:
         self._settings = settings or load_settings()
         self._builder = LanguageServerSnapshotBuilder()
         self._fusion = PriorityRankedFusionEngine()
-        self._dict_repo = dictionary or default_dictionary()
-
-        # Wire BoCorpusRepository if processed dataset is available
+        base_dict = dictionary or default_dictionary()
         from teea.corpus.repository import BoCorpusRepository
         corpus_repo = BoCorpusRepository()
         self._corpus_repo = corpus_repo if corpus_repo.is_available() else None
 
-        # Combine vocabularies if corpus repository is available
-        combined_vocab: set[str] = set(self._dict_repo.vocabulary)
+        from teea.persistence.dictionary import InMemoryDictionaryRepository
+        combined_vocab: set[str] = set(base_dict.vocabulary)
         if self._corpus_repo is not None:
             combined_vocab.update(self._corpus_repo.vocabulary.keys())
+        self._dict_repo = InMemoryDictionaryRepository(extra_vocabulary=combined_vocab)
 
         # Initialize AI Runtime with local TiBERT checkpoint detection if available
         from pathlib import Path
@@ -142,13 +141,18 @@ class TEEAEngine:
                 correction_provider=self._correction_provider,
                 corpus_repository=self._corpus_repo,
             )
-            grammar_checker = GrammarCheckerPlugin()
+            grammar_checker = GrammarCheckerPlugin(
+                dictionary=self._dict_repo,
+                corpus_repository=self._corpus_repo,
+            )
+            from teea.plugins.builtin.grammar_correction import GrammarCorrectionPlugin
+            grammar_correction = GrammarCorrectionPlugin()
             typography_plugin = TypographyPlugin()
             diagnostics = DocumentDiagnosticsPlugin()
             plagiarism_engine = PlagiarismEngine(settings=self._settings.plagiarism)
             self._plagiarism_engine = plagiarism_engine
             plagiarism_plugin = PlagiarismDetectorPlugin(engine=plagiarism_engine)
-            self._plugins = [diagnostics, typography_plugin, grammar_checker, spell_checker, plagiarism_plugin]
+            self._plugins = [diagnostics, typography_plugin, grammar_checker, grammar_correction, spell_checker, plagiarism_plugin]
 
         self._plugin_runtime = SupervisedPluginRuntime(self._plugins)
 

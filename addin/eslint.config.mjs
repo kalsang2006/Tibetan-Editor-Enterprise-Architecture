@@ -17,7 +17,7 @@ import jest from 'eslint-plugin-jest';
  * plugins actually configured beyond the defaults.
  */
 export default tseslint.config(
-  { ignores: ['dist/**', 'node_modules/**', 'coverage/**'] },
+  { ignores: ['dist/**', 'node_modules/**', 'coverage/**', 'src/taskpane/office*.js'] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {

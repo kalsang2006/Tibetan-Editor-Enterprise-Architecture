@@ -5,6 +5,37 @@ const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 /**
+ * Load REACT_APP_* variables from `.env` and merge with process.env.
+ * This makes `process.env.REACT_APP_MONLAM_API_KEY` (and friends) available
+ * at build time via DefinePlugin — without it the browser bundle crashes with
+ * `Uncaught ReferenceError: process is not defined` (OCRPanel, TTS hook, etc.).
+ */
+function loadEnvVariables() {
+  const envPath = path.resolve(__dirname, ".env");
+  const envVars = {};
+  if (fs.existsSync(envPath)) {
+    const lines = fs.readFileSync(envPath, "utf-8").split(/\r?\n/);
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith("#")) continue;
+      const eqIdx = trimmed.indexOf("=");
+      if (eqIdx === -1) continue;
+      const key = trimmed.slice(0, eqIdx).trim();
+      const value = trimmed.slice(eqIdx + 1).trim();
+      envVars[key] = value;
+    }
+  }
+  // Merge: process.env overrides .env file (so CI can set vars without editing .env)
+  const merged = { ...envVars };
+  for (const [key, value] of Object.entries(process.env)) {
+    if (key.startsWith("REACT_APP_")) {
+      merged[key] = value;
+    }
+  }
+  return merged;
+}
+
+/**
  * Bundle configuration for the TEEA task pane.
  *
  * No CDN, no remote chunk loading, no source-map upload. Everything the pane
@@ -12,6 +43,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
  */
 module.exports = (_env, argv) => {
   const isProduction = argv.mode === "production";
+  const envVars = loadEnvVariables();
 
   // Dynamic cross-platform dev cert resolution (ADR-002)
   const certDir = process.env.OFFICE_ADDIN_DEV_CERTS_DIR || path.join(os.homedir(), ".office-addin-dev-certs");
@@ -24,6 +56,18 @@ module.exports = (_env, argv) => {
       key: fs.readFileSync(keyPath),
       cert: fs.readFileSync(certPath),
     };
+  }
+
+  // Build a stringified map of process.env variables for DefinePlugin
+  const fullEnv = {
+    NODE_ENV: isProduction ? "production" : "development",
+    ...envVars,
+  };
+  const defineEnv = {
+    "process.env": JSON.stringify(fullEnv),
+  };
+  for (const [key, value] of Object.entries(fullEnv)) {
+    defineEnv[`process.env.${key}`] = JSON.stringify(value);
   }
 
   return {
@@ -74,10 +118,16 @@ module.exports = (_env, argv) => {
     },
 
     plugins: [
+      // Inject REACT_APP_* env vars so `process.env.REACT_APP_MONLAM_API_KEY`
+      // is replaced at build time with the actual string value.
+      new webpack.DefinePlugin(defineEnv),
       new HtmlWebpackPlugin({
         template: "./src/taskpane/taskpane.html",
         filename: "taskpane.html",
         chunks: ["taskpane"],
+        // Inject taskpane.js at the end of <body>, guaranteeing that office.js
+        // (loaded in <head>) is fully parsed before the React bundle executes.
+        inject: "body",
       }),
       {
         apply: (compiler) => {

@@ -1,0 +1,3003 @@
+{
+  "timestamp": "2026-08-01 23:18:39",
+  "api_key_preview": "ml-y4K0RI8...G0gg",
+  "total_execution_seconds": 687.77,
+  "summary": {
+    "total_tests": 250,
+    "passed": 249,
+    "failed": 1,
+    "pass_rate": 99.6
+  },
+  "suite_breakdown": [
+    {
+      "suite": "Chat / LLM",
+      "total": 50,
+      "passed": 49,
+      "failed": 1,
+      "avg_latency_ms": 2853.03
+    },
+    {
+      "suite": "Text-to-Speech (TTS)",
+      "total": 50,
+      "passed": 50,
+      "failed": 0,
+      "avg_latency_ms": 3432.93
+    },
+    {
+      "suite": "Speech-to-Text (STT)",
+      "total": 50,
+      "passed": 50,
+      "failed": 0,
+      "avg_latency_ms": 5581.28
+    },
+    {
+      "suite": "OCR (Optical Character Recognition)",
+      "total": 50,
+      "passed": 50,
+      "failed": 0,
+      "avg_latency_ms": 1302.58
+    },
+    {
+      "suite": "Dictionary Search",
+      "total": 50,
+      "passed": 50,
+      "failed": 0,
+      "avg_latency_ms": 585.37
+    }
+  ],
+  "details": {
+    "Chat / LLM": [
+      {
+        "name": "01. Valid system + user messages (Short)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2243.93,
+        "passed": true,
+        "response_snippet": "{\"response\":\"ཁྱེད་བདེ་མོ་ཡིན་ནམ། གང་ཞིག་ལ་རོགས་པ་བྱེད་དགོས་སམ།\",\"total_tokens\":53,\"prompt_tokens\":21,\"completion_tokens\":32,\"cost\":0.0006925,\"latency_ms\":1465,\"service_request_id\":\"5880d533-6a1e-4002-"
+      },
+      {
+        "name": "02. Valid user message (Medium)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2280.79,
+        "passed": true,
+        "response_snippet": "{\"response\":\"ལགས་རེད། ང་བདེ་མོ་ཡིན། ཁྱེད་རང་ག་འདྲ་འདུག\",\"total_tokens\":71,\"prompt_tokens\":38,\"completion_tokens\":33,\"cost\":0.000755,\"latency_ms\":1408,\"service_request_id\":\"ebc79fcb-317b-4a76-be9c-0e75"
+      },
+      {
+        "name": "03. Valid user message (Long 1,000 chars)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 6609.99,
+        "passed": true,
+        "response_snippet": "{\"response\":\"བཀྲ་ཤིས་བདེ་ལེགས། བཀྲ་ཤིས་བདེ་ལེགས། བཀྲ་ཤིས་བདེ་ལེགས། བཀྲ་ཤིས་བདེ་ལེགས། བཀྲ་ཤིས་བདེ་ལེགས། བཀྲ་ཤིས་བདེ་ལེགས། བཀྲ་ཤིས་བདེ་ལེགས། བཀྲ་ཤིས་བདེ་ལེགས། བཀྲ་ཤིས་བདེ་ལེགས། བཀྲ་ཤིས་བདེ་ལེགས། བཀྲ་ཤིས"
+      },
+      {
+        "name": "04. Very long input (Bounded to MAX_CHAT_CHARS=5000)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 7361.21,
+        "passed": true,
+        "response_snippet": "{\"response\":\"བཀྲ་ཤིས་བདེ་ལེགས། བཀྲ་ཤིས་བདེ་ལེགས། བཀྲ་ཤིས་བདེ་ལེགས། བཀྲ་ཤིས་བདེ་ལེགས། བཀྲ་ཤིས་བདེ་ལེགས། བཀྲ་ཤིས་བདེ་ལེགས། བཀྲ་ཤིས་བདེ་ལེགས། བཀྲ་ཤིས་བདེ་ལེགས། བཀྲ་ཤིས་བདེ་ལེགས། བཀྲ་ཤིས་བདེ་ལེགས། བཀྲ་ཤིས"
+      },
+      {
+        "name": "05. SSE Token Streaming (/chat/stream)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat/stream",
+        "status_code": 200,
+        "expected": [
+          200,
+          404,
+          405
+        ],
+        "latency_ms": 2559.24,
+        "passed": true,
+        "response_snippet": "data: {\"id\":\"chatcmpl-WP9E87\",\"object\":\"chat.completion.chunk\",\"created\":1785605855,\"model\":\"MonlamAI/fine_tune_melongv2_merged_4it3ft\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"\"},"
+      },
+      {
+        "name": "06. SSE Streaming with Long Prompt",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat/stream",
+        "status_code": 200,
+        "expected": [
+          200,
+          404,
+          405
+        ],
+        "latency_ms": 5113.46,
+        "passed": true,
+        "response_snippet": "data: {\"id\":\"chatcmpl-UDLQFb\",\"object\":\"chat.completion.chunk\",\"created\":1785605857,\"model\":\"MonlamAI/fine_tune_melongv2_merged_4it3ft\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"\"},"
+      },
+      {
+        "name": "07. Empty user message (Error handling)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200,
+          400,
+          422
+        ],
+        "latency_ms": 2216.99,
+        "passed": true,
+        "response_snippet": "{\"response\":\"Premise: \\\"An old man plays the guitar while a woman sings.\\\"\\nHypothesis: \\\"A woman is singing.\\\"\\nDo we know that the hypothesis entailed by the premise?\",\"total_tokens\":47,\"prompt_toke"
+      },
+      {
+        "name": "08. Whitespace-only user message",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200,
+          400,
+          422
+        ],
+        "latency_ms": 2962.09,
+        "passed": true,
+        "response_snippet": "{\"response\":\"I apologize, but I seem to have misunderstood your request. Please provide me with a specific prompt, question, or task that you would like me to help with. I'm here to assist you with a "
+      },
+      {
+        "name": "09. Special Tibetan Punctuation (༺ ༄༅༎ ༎ ༻)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2346.42,
+        "passed": true,
+        "response_snippet": "{\"response\":\"བཀྲ་ཤིས་བདེ་ལེགས།\",\"total_tokens\":46,\"prompt_tokens\":31,\"completion_tokens\":15,\"cost\":0.0003775,\"latency_ms\":1315,\"service_request_id\":\"f3177fa7-65eb-48ec-8e7f-35e6c1c68b36\",\"status\":\"suc"
+      },
+      {
+        "name": "10. Tibetan Stacked Characters (ཀྵྲཱིཾཿ)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2739.04,
+        "passed": true,
+        "response_snippet": "{\"response\":\"ཀྵྲཱིཾཿ སངྒྷཿ དྷརྨཿ ཞེས་པ་ནི་ལེགས་སྦྱར་གྱི་ཐ་སྙད་ཅིག་ཡིན་པ་དང་། ཞི་བ་དགེ་འདུན་ཆོས་ཞེས་པའི་དོན་ལ་གོ་བ་རེད།\",\"total_tokens\":104,\"prompt_tokens\":28,\"completion_tokens\":76,\"cost\":0.00159,\"lat"
+      },
+      {
+        "name": "11. Emojis and Tibetan script mixed",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2310.25,
+        "passed": true,
+        "response_snippet": "{\"response\":\"བཀྲ་ཤིས་བདེ་ལེགས་ཞུ། ཁྱེད་ལ་ག་རེ་དགོས་མཁོ་ཡོད་དམ།\",\"total_tokens\":63,\"prompt_tokens\":28,\"completion_tokens\":35,\"cost\":0.00077,\"latency_ms\":1474,\"service_request_id\":\"9385d3d9-0cd4-483b-84"
+      },
+      {
+        "name": "12. Multi-turn chat history (3 turns)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2472.55,
+        "passed": true,
+        "response_snippet": "{\"response\":\"I'm doing well, thanks for asking! How can I help you today?\",\"total_tokens\":52,\"prompt_tokens\":34,\"completion_tokens\":18,\"cost\":0.000445,\"latency_ms\":1341,\"service_request_id\":\"b2f83b8b-"
+      },
+      {
+        "name": "13. Large conversation history (15 turns)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2125.82,
+        "passed": true,
+        "response_snippet": "{\"response\":\"Turn 15\",\"total_tokens\":134,\"prompt_tokens\":129,\"completion_tokens\":5,\"cost\":0.0004225,\"latency_ms\":1209,\"service_request_id\":\"2d1c0dd2-dab2-4273-8c6a-b3511579e111\",\"status\":\"success\"}"
+      },
+      {
+        "name": "14. Invalid role string ('superhero')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200,
+          400,
+          422
+        ],
+        "latency_ms": 2512.38,
+        "passed": true,
+        "response_snippet": "{\"service_request\":{\"id\":\"94dc07f9-56c9-47a9-9a58-c0721bee3be3\",\"status\":\"failed\",\"input_usage\":0.0,\"output_usage\":0.0,\"cost\":0.0,\"latency_ms\":1252,\"created_at\":\"2026-08-01T17:37:59.285590+00:00\",\"com"
+      },
+      {
+        "name": "15. Missing 'role' key in message object",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 422,
+        "expected": [
+          200,
+          400,
+          422
+        ],
+        "latency_ms": 796.18,
+        "passed": true,
+        "response_snippet": "{\"detail\":[{\"type\":\"missing\",\"loc\":[\"body\",\"messages\",0,\"role\"],\"msg\":\"Field required\",\"input\":{\"content\":\"Hi\"}}]}"
+      },
+      {
+        "name": "16. Missing 'content' key in message object",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 422,
+        "expected": [
+          200,
+          400,
+          422
+        ],
+        "latency_ms": 1015.62,
+        "passed": true,
+        "response_snippet": "{\"detail\":[{\"type\":\"missing\",\"loc\":[\"body\",\"messages\",0,\"content\"],\"msg\":\"Field required\",\"input\":{\"role\":\"user\"}}]}"
+      },
+      {
+        "name": "17. Empty 'messages' array",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200,
+          400,
+          422
+        ],
+        "latency_ms": 6883.0,
+        "passed": true,
+        "response_snippet": "{\"response\":\"Sure, I'd be happy to help you brainstorm a creative project idea centered around the theme of \\\"Moon Landing.\\\" Here are a few ideas to get you started:\\n\\n1. **Interactive Moon Landing "
+      },
+      {
+        "name": "18. Missing 'messages' field in body",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200,
+          400,
+          422,
+          500
+        ],
+        "latency_ms": 2232.85,
+        "passed": true,
+        "response_snippet": "{\"response\":\"I'm ready to help you brainstorm, plan, or generate ideas for your project. What's the task or challenge you'd like to tackle?\",\"total_tokens\":42,\"prompt_tokens\":9,\"completion_tokens\":33,"
+      },
+      {
+        "name": "19. Missing 'model_name' field",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200,
+          400,
+          422
+        ],
+        "latency_ms": 2351.37,
+        "passed": true,
+        "response_snippet": "{\"response\":\"Hello! How can I help you today?\",\"total_tokens\":20,\"prompt_tokens\":10,\"completion_tokens\":10,\"cost\":0.000225,\"latency_ms\":1224,\"service_request_id\":\"4a82b335-9009-479d-9751-8e84c9f87bca\""
+      },
+      {
+        "name": "20. Alternative model_name ('melong-large')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 404,
+        "expected": [
+          200,
+          400,
+          422
+        ],
+        "latency_ms": 1172.78,
+        "passed": false,
+        "response_snippet": "{\"detail\":\"No active 'chat' model found named 'melong-large'.\"}"
+      },
+      {
+        "name": "21. Multilingual English-Tibetan-Chinese",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2501.52,
+        "passed": true,
+        "response_snippet": "{\"response\":\"བཀྲ་ཤིས་བདེ་ལེགས། ཁྱེད་ལ་ཅི་ཞིག་རོགས་བྱེད་དགོས་སམ།\",\"total_tokens\":60,\"prompt_tokens\":25,\"completion_tokens\":35,\"cost\":0.0007625,\"latency_ms\":1575,\"service_request_id\":\"7e90903e-100c-4fcf"
+      },
+      {
+        "name": "22. System Prompt Customization",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 6246.76,
+        "passed": true,
+        "response_snippet": "{\"response\":\"ལ་དོན་ནི་བོད་ཀྱི་བརྡ་སྤྲོད་རིག་པའི་ནང་ལ་གོ་དོན་དང་བྱེད་ལས་མང་པོ་ཡོད། དེ་ནི་གཙོ་བོ་རྣམ་དབྱེ་གཉིས་པ་ལས་སུ་བྱ་བ་དང་། རྣམ་དབྱེ་བཞི་པ་དགོས་ཆེད། རྣམ་དབྱེ་བདུན་པ་རྟེན་གནས། དེ་མིན་དུས་ཚོད་སྟོན་པ་"
+      },
+      {
+        "name": "23. Explicit temperature parameter (0.2)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2649.28,
+        "passed": true,
+        "response_snippet": "{\"response\":\"Hello! How can I help you today?\",\"total_tokens\":20,\"prompt_tokens\":10,\"completion_tokens\":10,\"cost\":0.000225,\"latency_ms\":1276,\"service_request_id\":\"753b079f-d12c-4a6c-81ce-81a05ef72478\""
+      },
+      {
+        "name": "24. Explicit top_p parameter (0.9)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2262.83,
+        "passed": true,
+        "response_snippet": "{\"response\":\"Hello! How can I help you today?\",\"total_tokens\":20,\"prompt_tokens\":10,\"completion_tokens\":10,\"cost\":0.000225,\"latency_ms\":1230,\"service_request_id\":\"985a7c21-dc1a-4368-b8a4-55ff2d601ea7\""
+      },
+      {
+        "name": "25. max_tokens parameter (50)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2294.93,
+        "passed": true,
+        "response_snippet": "{\"response\":\"One, two, three, four, five, six, seven, eight, nine, ten.\",\"total_tokens\":35,\"prompt_tokens\":14,\"completion_tokens\":21,\"cost\":0.000455,\"latency_ms\":1375,\"service_request_id\":\"5ad6b1e8-17"
+      },
+      {
+        "name": "26. High temperature parameter (1.5)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 6236.44,
+        "passed": true,
+        "response_snippet": "{\"response\":\"Posted Tuesday, May 18th 202114 January: SS Achievement , a bedroom Hermann captspider fra uop lions -, Retrieval tussle\\n Picks Dich Gaya Tuition PC Event Camp seeks disposal Angle consa"
+      },
+      {
+        "name": "27. HTML/XML Tags in prompt",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 6071.98,
+        "passed": true,
+        "response_snippet": "{\"response\":\"<script>alert(1)</script> <b>Tibetan</b>\\n\\n<script>alert(1)</script> <b>Tibetan</b>\\n\\n<script>alert(1)</script> <b>Tibetan</b>\\n\\n<script>alert(1)</script> <b>Tibetan</b>\\n\\n<script>ale"
+      },
+      {
+        "name": "28. SQL Injection style string in prompt",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 3639.33,
+        "passed": true,
+        "response_snippet": "{\"response\":\"The expression `' OR '1'='1` appears to be a concatenation of strings and a logical comparison, but it's not a complete or correct statement. \\n\\nIf we interpret it as a logical expressio"
+      },
+      {
+        "name": "29. Markdown formatted input",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2367.81,
+        "passed": true,
+        "response_snippet": "{\"response\":\"Sure, here's the restructured version of the text with a heading and bullet points:\\n\\n## Heading\\n\\n* Item 1\\n* Item 2\",\"total_tokens\":53,\"prompt_tokens\":21,\"completion_tokens\":32,\"cost\""
+      },
+      {
+        "name": "30. JSON payload as string inside content",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2262.25,
+        "passed": true,
+        "response_snippet": "{\"response\":\"{\\\"test\\\": \\\"value\\\"}\",\"total_tokens\":22,\"prompt_tokens\":15,\"completion_tokens\":7,\"cost\":0.0001775,\"latency_ms\":1252,\"service_request_id\":\"d8befff6-1968-4369-aa87-0bd647c3500a\",\"status\":\""
+      },
+      {
+        "name": "31. No API Key Header (Security check)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 401,
+        "expected": [
+          401,
+          403
+        ],
+        "latency_ms": 906.76,
+        "passed": true,
+        "response_snippet": "{\"detail\":\"Missing API Key. Please provide x-api-key header.\"}"
+      },
+      {
+        "name": "32. Invalid API Key Header (Security check)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 401,
+        "expected": [
+          401,
+          403
+        ],
+        "latency_ms": 764.03,
+        "passed": true,
+        "response_snippet": "{\"detail\":\"Invalid API Key.\"}"
+      },
+      {
+        "name": "33. Alternate Auth Header ('Authorization: Bearer key')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 401,
+        "expected": [
+          200,
+          401,
+          403
+        ],
+        "latency_ms": 987.93,
+        "passed": true,
+        "response_snippet": "{\"detail\":\"Missing API Key. Please provide x-api-key header.\"}"
+      },
+      {
+        "name": "34. Trailing Slash endpoint check",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat/",
+        "status_code": 307,
+        "expected": [
+          200,
+          301,
+          307,
+          308
+        ],
+        "latency_ms": 997.75,
+        "passed": true,
+        "response_snippet": ""
+      },
+      {
+        "name": "35. GET method instead of POST",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 405,
+        "expected": [
+          405,
+          400
+        ],
+        "latency_ms": 890.37,
+        "passed": true,
+        "response_snippet": "{\"detail\":\"Method Not Allowed\"}"
+      },
+      {
+        "name": "36. Extra unknown payload fields",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2314.24,
+        "passed": true,
+        "response_snippet": "{\"response\":\"Hello! How can I help you today?\",\"total_tokens\":20,\"prompt_tokens\":10,\"completion_tokens\":10,\"cost\":0.000225,\"latency_ms\":1278,\"service_request_id\":\"6fa6efe1-bb09-4f34-bcf6-35443938e482\""
+      },
+      {
+        "name": "37. Numeric content in user message",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2538.97,
+        "passed": true,
+        "response_snippet": "{\"response\":\"The number you provided is 1234567890. This is a ten-digit number.\\n\\nIf you need any specific information or calculations involving this number, feel free to ask!\",\"total_tokens\":63,\"pro"
+      },
+      {
+        "name": "38. Tibetan Numerals (༡ ༢ ༣ ༤ ༥ ༦ ༧ ༨ ༩ ༠)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2247.66,
+        "passed": true,
+        "response_snippet": "{\"response\":\"གོང་གི་ཨང་ཀི་རྣམས་ནི་དྲུག་ཅུ་རེ་དགུ་བར་གྱི་རིམ་པ་ལྟར་ཡོད།\",\"total_tokens\":69,\"prompt_tokens\":28,\"completion_tokens\":41,\"cost\":0.00089,\"latency_ms\":1467,\"service_request_id\":\"a69801f7-72e9"
+      },
+      {
+        "name": "39. Rapid sequential request 1",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 3282.32,
+        "passed": true,
+        "response_snippet": "{\"response\":\"\\\"Seq 1\\\" is not a complete sentence or phrase that makes sense in a typical context. It seems to be an abbreviation or a code name, but without further information or context, it's diffi"
+      },
+      {
+        "name": "40. Rapid sequential request 2",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 3363.09,
+        "passed": true,
+        "response_snippet": "{\"response\":\"I'm ready to assist you with the next sequence. Please provide the sequence you'd like me to work with, and let me know what you're looking for – whether it's a mathematical sequence, a l"
+      },
+      {
+        "name": "41. System prompt only (no user message)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200,
+          400,
+          422
+        ],
+        "latency_ms": 2733.01,
+        "passed": true,
+        "response_snippet": "{\"response\":\"As a chatbot, my primary function is to engage in conversations with users, answering their questions and providing information to the best of my knowledge and abilities. I am designed to"
+      },
+      {
+        "name": "42. Newline escaped strings in prompt",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2356.22,
+        "passed": true,
+        "response_snippet": "{\"response\":\"Line 1\\nLine 2\\nLine 3\",\"total_tokens\":32,\"prompt_tokens\":20,\"completion_tokens\":12,\"cost\":0.00029,\"latency_ms\":1241,\"service_request_id\":\"0e574e78-1a0c-44f3-9bf9-0266212b3b93\",\"status\":\""
+      },
+      {
+        "name": "43. Tab indented prompt string",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 3261.47,
+        "passed": true,
+        "response_snippet": "{\"response\":\"Indented text is a formatting style used to create a visual hierarchy in writing. It is used to give emphasis to certain words or phrases, to create a visual break, or to set apart a part"
+      },
+      {
+        "name": "44. Mixed case role string ('User')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200,
+          400,
+          422
+        ],
+        "latency_ms": 2209.69,
+        "passed": true,
+        "response_snippet": "{\"service_request\":{\"id\":\"c4c707ec-2786-4c7a-b6b7-04e80eabe8ee\",\"status\":\"failed\",\"input_usage\":0.0,\"output_usage\":0.0,\"cost\":0.0,\"latency_ms\":1191,\"created_at\":\"2026-08-01T17:39:19.361723+00:00\",\"com"
+      },
+      {
+        "name": "45. Zero temperature parameter (0.0)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 3203.13,
+        "passed": true,
+        "response_snippet": "{\"response\":\"The term \\\"exact answer\\\" is quite broad and can refer to a variety of contexts. In mathematics, an exact answer is a precise solution to a problem, often expressed in a closed form, as o"
+      },
+      {
+        "name": "46. Tibetan spell correction query",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2120.7,
+        "passed": true,
+        "response_snippet": "{\"response\":\"སློབ་སྦྱོང་\",\"total_tokens\":30,\"prompt_tokens\":21,\"completion_tokens\":9,\"cost\":0.0002325,\"latency_ms\":1211,\"service_request_id\":\"73768d13-57fc-499f-8281-9540c8d80692\",\"status\":\"success\"}"
+      },
+      {
+        "name": "47. Tibetan translation query",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2289.39,
+        "passed": true,
+        "response_snippet": "{\"response\":\"Good luck and good fortune.\",\"total_tokens\":35,\"prompt_tokens\":28,\"completion_tokens\":7,\"cost\":0.00021,\"latency_ms\":1280,\"service_request_id\":\"39d679c8-f3d9-4b9d-b1e3-32524a5eca04\",\"statu"
+      },
+      {
+        "name": "48. Tibetan summarization query",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 3101.96,
+        "passed": true,
+        "response_snippet": "{\"response\":\"བཀྲ་ཤིས་ བཀྲ་ཤིས་ བཀྲ་ཤིས་ བཀྲ་ཤིས་ བཀྲ་ཤིས་ བཀྲ་ཤིས་ བཀྲ་ཤིས་ བཀྲ་ཤིས་ བཀྲ་ཤིས་ བཀྲ་ཤིས་ བཀྲ་ཤིས་ བཀྲ་ཤིས་ བཀྲ་ཤིས་ བཀྲ་ཤིས་ བཀྲ་ཤིས་ བཀྲ་ཤིས་ བཀྲ་ཤིས་ བཀྲ་ཤིས་ བཀྲ་ཤིས་ བཀྲ་ཤིས་\",\"total"
+      },
+      {
+        "name": "49. Response structure verification",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2218.65,
+        "passed": true,
+        "response_snippet": "{\"response\":\"Hello! I'm here to help. What's on your mind today?\",\"total_tokens\":29,\"prompt_tokens\":11,\"completion_tokens\":18,\"cost\":0.0003875,\"latency_ms\":1343,\"service_request_id\":\"b4da2ee1-5a3d-430"
+      },
+      {
+        "name": "50. Final Chat suite health check",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ai/chat",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 4025.31,
+        "passed": true,
+        "response_snippet": "{\"response\":\"This message, \\\"Status OK,\\\" typically indicates that a system, process, or software has been checked and is functioning as expected. It can be seen in various contexts, such as:\\n\\n1. **"
+      }
+    ],
+    "Text-to-Speech (TTS)": [
+      {
+        "name": "01. Voice Grid: lhasa_female",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2884.77,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/c7bd870a-3cb1-43eb-8909-6ed18c901602/output.wav\",\"content_type\""
+      },
+      {
+        "name": "02. Voice Grid: lhasa_male",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 3193.74,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/b1fb8320-715b-44f5-afd3-be663556a619/output.wav\",\"content_type\""
+      },
+      {
+        "name": "03. Voice Grid: amdo_female",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2463.18,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/b0ba507f-21e2-4d1e-8c3e-873f40426ed9/output.wav\",\"content_type\""
+      },
+      {
+        "name": "04. Voice Grid: amdo_male",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2978.86,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/5655e502-3dba-452c-b2fa-0e4cd70b4608/output.wav\",\"content_type\""
+      },
+      {
+        "name": "05. Voice Grid: kham_female",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2879.07,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/14d8639b-8782-4cf0-b0d2-95eece106693/output.wav\",\"content_type\""
+      },
+      {
+        "name": "06. Voice Grid: kham_male",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 3040.83,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/b28315a9-98b7-4a04-923a-ed38d717c154/output.wav\",\"content_type\""
+      },
+      {
+        "name": "07. Single character Tibetan text",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2752.38,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/e94166ad-1345-4f30-a364-dfbacbde1272/output.wav\",\"content_type\""
+      },
+      {
+        "name": "08. Medium Tibetan paragraph (300 chars)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 5886.68,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/8be1daf2-2863-40ef-a6b9-eca141be8d3f/output.wav\",\"content_type\""
+      },
+      {
+        "name": "09. Long text (1,000 characters)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 14028.9,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/6f1535cd-5fee-42a1-beba-fdaabe274da4/output.wav\",\"content_type\""
+      },
+      {
+        "name": "10. Very long text (Bounded to MAX_TTS_CHARS=2000)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 22128.35,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/552ed881-5a34-450e-abd6-77ccedbd7dca/output.wav\",\"content_type\""
+      },
+      {
+        "name": "11. Empty text string (Error validation)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200,
+          400,
+          422
+        ],
+        "latency_ms": 961.4,
+        "passed": true,
+        "response_snippet": "{\"service_request\":{\"id\":\"c5b4feca-ad4b-4cfe-a4d2-5be7e8e74bc2\",\"status\":\"failed\",\"input_usage\":0.0,\"output_usage\":0.0,\"cost\":0.0,\"latency_ms\":13,\"created_at\":\"2026-08-01T17:40:40.631701+00:00\",\"compl"
+      },
+      {
+        "name": "12. Whitespace-only text string",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200,
+          400,
+          422
+        ],
+        "latency_ms": 1782.2,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":null,\"audio_base64\":null,\"content_type\":null,\"duration_seconds\":null,\"cost\":0.000192,\"latency_ms\":851,\"service_request_id\":\"7223d766-c2f9-4207-96f7-06aeaa4dc182\",\"s"
+      },
+      {
+        "name": "13. Text with newlines and tabs",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2871.81,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/d63527ef-f211-46f7-860f-dfee4fa4a920/output.wav\",\"content_type\""
+      },
+      {
+        "name": "14. Text with Tibetan Punctuation (༎ ༅ ༺ ༻)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 3032.76,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/b3668458-37b9-4f08-aacc-c4498c14b352/output.wav\",\"content_type\""
+      },
+      {
+        "name": "15. Text with numbers & symbols (2026-10-15 #1)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 3360.77,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/8ef0a788-b556-43a8-a9a2-214562de85ff/output.wav\",\"content_type\""
+      },
+      {
+        "name": "16. Invalid voice ID ('lhasa_robot')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200,
+          400,
+          422
+        ],
+        "latency_ms": 2867.1,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/58acacff-8c30-4849-b097-ff213abddb1c/output.wav\",\"content_type\""
+      },
+      {
+        "name": "17. Invalid voice ID ('random_voice_123')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200,
+          400,
+          422
+        ],
+        "latency_ms": 2792.06,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/29a05e61-8bce-46b5-a52f-0bf343bc172b/output.wav\",\"content_type\""
+      },
+      {
+        "name": "18. Missing 'voice_name' parameter",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 422,
+        "expected": [
+          200,
+          400,
+          422
+        ],
+        "latency_ms": 1061.6,
+        "passed": true,
+        "response_snippet": "{\"detail\":[{\"type\":\"missing\",\"loc\":[\"body\",\"voice_name\"],\"msg\":\"Field required\",\"input\":{\"text\":\"བཀྲ་ཤིས་\",\"model_name\":\"monlamai-tts\"}}]}"
+      },
+      {
+        "name": "19. Missing 'text' parameter",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 422,
+        "expected": [
+          400,
+          422
+        ],
+        "latency_ms": 808.75,
+        "passed": true,
+        "response_snippet": "{\"detail\":[{\"type\":\"missing\",\"loc\":[\"body\",\"text\"],\"msg\":\"Field required\",\"input\":{\"voice_name\":\"lhasa_female\",\"model_name\":\"monlamai-tts\"}}]}"
+      },
+      {
+        "name": "20. Missing 'model_name' parameter",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200,
+          400,
+          422
+        ],
+        "latency_ms": 3234.24,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/afd1ab11-8cf4-47ea-b387-953aa3617116/output.wav\",\"content_type\""
+      },
+      {
+        "name": "21. Explicit response_format ('mp3')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2780.26,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/c96f5027-eaf5-4b41-a8ec-9a9544b69c1a/output.wav\",\"content_type\""
+      },
+      {
+        "name": "22. Explicit response_format ('wav')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2483.1,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/5a2f65d5-3565-4c85-8656-57552d563330/output.wav\",\"content_type\""
+      },
+      {
+        "name": "23. Explicit response_format ('pcm')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200,
+          400,
+          422
+        ],
+        "latency_ms": 2614.45,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/96fc8cf5-6e5f-4689-87f8-3f0198afe814/output.wav\",\"content_type\""
+      },
+      {
+        "name": "24. Non-Tibetan text (English input)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2700.52,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/39313636-fc4b-44ab-bbee-b573cdbea9a9/output.wav\",\"content_type\""
+      },
+      {
+        "name": "25. Non-Tibetan text (Chinese input)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 3477.36,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/806f9b31-5268-4c9e-b628-402e92764a88/output.wav\",\"content_type\""
+      },
+      {
+        "name": "26. Mixed Tibetan + English sentence",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2819.39,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/f21aef7a-30eb-4687-ba56-2c3418ed8442/output.wav\",\"content_type\""
+      },
+      {
+        "name": "27. Multiple Tibetan sentences",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 3543.77,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/5422d7cd-1c71-420c-9d35-3cc3d6fed370/output.wav\",\"content_type\""
+      },
+      {
+        "name": "28. Speed / pitch parameter (if supported)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2890.55,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/66d332d1-d8b4-42b7-baaa-d7cf3cacf123/output.wav\",\"content_type\""
+      },
+      {
+        "name": "29. Extra unknown JSON field",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 3996.91,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/4deb3c71-7436-4b7d-ac6a-ffdee5fb9836/output.wav\",\"content_type\""
+      },
+      {
+        "name": "30. Duplicate request 1 (Idempotency test)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 3363.17,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/54615b1d-f9b8-4d5f-b2a1-9ed3be4d9d1f/output.wav\",\"content_type\""
+      },
+      {
+        "name": "31. Duplicate request 2 (Idempotency test)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2828.72,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/4dbe40ee-c95e-45cf-94b4-57846e3806e3/output.wav\",\"content_type\""
+      },
+      {
+        "name": "32. Audio URL reachability test",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2721.7,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/9f4f4bb8-4c31-4c08-9513-3a4a969efd5d/output.wav\",\"content_type\""
+      },
+      {
+        "name": "33. Large payload text (Bounded to MAX_TTS_CHARS=2000)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 11886.31,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/b4bb4b58-1086-41b9-93af-58199428cd58/output.wav\",\"content_type\""
+      },
+      {
+        "name": "34. Trailing slash check",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2758.26,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/a0eca716-80f5-4ca6-a810-4470c9258f0b/output.wav\",\"content_type\""
+      },
+      {
+        "name": "35. Non-trailing slash check",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech",
+        "status_code": 307,
+        "expected": [
+          200,
+          301,
+          307,
+          308
+        ],
+        "latency_ms": 1084.38,
+        "passed": true,
+        "response_snippet": ""
+      },
+      {
+        "name": "36. No API Key Header (Security check)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 401,
+        "expected": [
+          401,
+          403
+        ],
+        "latency_ms": 1117.47,
+        "passed": true,
+        "response_snippet": "{\"detail\":\"Missing API Key. Please provide x-api-key header.\"}"
+      },
+      {
+        "name": "37. Invalid API Key Header (Security check)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 401,
+        "expected": [
+          401,
+          403
+        ],
+        "latency_ms": 828.92,
+        "passed": true,
+        "response_snippet": "{\"detail\":\"Invalid API Key.\"}"
+      },
+      {
+        "name": "38. Alternate Auth Header ('Authorization: Bearer')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 401,
+        "expected": [
+          200,
+          401,
+          403
+        ],
+        "latency_ms": 1254.25,
+        "passed": true,
+        "response_snippet": "{\"detail\":\"Missing API Key. Please provide x-api-key header.\"}"
+      },
+      {
+        "name": "39. Wrong Content-Type ('text/plain')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 422,
+        "expected": [
+          400,
+          415,
+          422,
+          200
+        ],
+        "latency_ms": 861.73,
+        "passed": true,
+        "response_snippet": "{\"detail\":[{\"type\":\"model_attributes_type\",\"loc\":[\"body\"],\"msg\":\"Input should be a valid dictionary or object to extract fields from\",\"input\":\"Invalid payload\"}]}"
+      },
+      {
+        "name": "40. GET method instead of POST",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 405,
+        "expected": [
+          405,
+          400
+        ],
+        "latency_ms": 887.09,
+        "passed": true,
+        "response_snippet": "{\"detail\":\"Method Not Allowed\"}"
+      },
+      {
+        "name": "41. Numeric text input (123456789)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2830.54,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/f31e309a-5c94-41e3-b36c-fdc007cdb866/output.wav\",\"content_type\""
+      },
+      {
+        "name": "42. Tibetan numerals (༡ ༢ ༣ ༤ ༥ ༦ ༧ ༨ ༩ ༠)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 3485.07,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/fd8b1b99-1432-4d2e-a373-22c7baac6a62/output.wav\",\"content_type\""
+      },
+      {
+        "name": "43. High-pitch voice query (lhasa_female)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2752.94,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/0471b353-0037-409d-8ab1-ebd2712e97e2/output.wav\",\"content_type\""
+      },
+      {
+        "name": "44. Deep-tone voice query (kham_male)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2641.24,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/2dc8f89a-a3b2-4692-a5e2-52c0b7a4f89c/output.wav\",\"content_type\""
+      },
+      {
+        "name": "45. Rapid sequential request A",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2984.17,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/56872537-c82f-4f5b-83b8-67682b77a271/output.wav\",\"content_type\""
+      },
+      {
+        "name": "46. Rapid sequential request B",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2598.68,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/d44390e3-16e0-4602-97eb-1b5a896005a6/output.wav\",\"content_type\""
+      },
+      {
+        "name": "47. Tibetan dictionary entry text synthesis",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 4165.36,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/b924d883-2ba2-47a5-b0ef-946f0919d0fa/output.wav\",\"content_type\""
+      },
+      {
+        "name": "48. Tibetan poetry text synthesis",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 3068.91,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/9ca9b2ef-1ef9-4509-9b34-1352ae3788e7/output.wav\",\"content_type\""
+      },
+      {
+        "name": "49. Response structure audio_url verification",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2785.67,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/2bdd2bff-0db3-4058-ac59-bbc6938bbc3d/output.wav\",\"content_type\""
+      },
+      {
+        "name": "50. Final TTS suite health check",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/text-to-speech/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2425.93,
+        "passed": true,
+        "response_snippet": "{\"model\":\"monlamai-tts\",\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/tts/output/4c39a916-b86a-4f9f-a3e8-07e09b655e86/output.wav\",\"content_type\""
+      }
+    ],
+    "Speech-to-Text (STT)": [
+      {
+        "name": "01. Standard 16kHz Mono WAV (bo)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 8035.18,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨེ་ནས། ཁྱེད་རང་ཚོ་ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོའི་གྲོང་པའི་ནང་ལ་ཡོང་བ་ཡོད། ཨ་ལེ། ད་ག་རེ་བྱས་སོང་། ཨ་ཅག་ལགས། ང་ཚོ་གཉིས་ཀའི་མཉམ་དུ་ཡོང་དུས་སྐབས་སུ།\",\"model\":\"monlamai-stt\",\""
+      },
+      {
+        "name": "02. Low 8kHz Mono WAV (bo)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 8154.22,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨེ་ནས། ཁྱེད་རང་ཚོ་ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོའི་གྲོང་པའི་ནང་ལ་ཡོང་བ་ཡོད། ཨ་ལེ། ད་ག་རེ་བྱས་སོང་། ཨ་ཅག་ལགས། ང་ཚོ་གཉིས་ཀའི་མཉམ་དུ་ཡོང་དུས་སྐབས་སུ།\",\"model\":\"monlamai-stt\",\""
+      },
+      {
+        "name": "03. High 44.1kHz Stereo WAV (bo)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 8106.56,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨེ་ནས། ཁྱེད་རང་ཚོ་ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོའི་གྲོང་པའི་ནང་ལ་ཡོང་བ་ཡོད། ཨ་ལེ། ད་ག་རེ་བྱས་སོང་། ཨ་ཅག་ལགས། ང་ཚོ་གཉིས་ཀའི་མཉམ་དུ་ཡོང་དུས་སྐབས་སུ།\",\"model\":\"monlamai-stt\",\""
+      },
+      {
+        "name": "04. Very short audio (< 0.5s)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 7648.73,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨེ་ནས། ཁྱེད་རང་ཚོ་ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོའི་གྲོང་པའི་ནང་ལ་ཡོང་བ་ཡོད། ཨ་ལེ། ད་ག་རེ་བྱས་སོང་། ཨ་ཅག་ལགས། ང་ཚོ་གཉིས་ཀའི་མཉམ་དུ་ཡོང་དུས་སྐབས་སུ།\",\"model\":\"monlamai-stt\",\""
+      },
+      {
+        "name": "05. Long audio (Bounded to MAX_STT_BYTES=500KB)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 8201.46,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨེ་ནས། ཁྱེད་རང་ཚོ་ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོའི་གྲོང་པའི་ནང་ལ་ཡོང་བ་ཡོད། ཨ་ལེ། ད་ག་རེ་བྱས་སོང་། ཨ་ཅག་ལགས། ང་ཚོ་གཉིས་ཀའི་མཉམ་དུ་ཡོང་དུས་སྐབས་སུ།\",\"model\":\"monlamai-stt\",\""
+      },
+      {
+        "name": "06. Audio with background noise",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2138.41,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨུན།\",\"model\":\"monlamai-stt\",\"duration\":0.1,\"language\":\"bo\",\"segments\":[],\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-00000000"
+      },
+      {
+        "name": "07. MP3 mime format upload",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 7605.08,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨེ་ནས། ཁྱེད་རང་ཚོ་ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོའི་གྲོང་པའི་ནང་ལ་ཡོང་བ་ཡོད། ཨ་ལེ། ད་ག་རེ་བྱས་སོང་། ཨ་ཅག་ལགས། ང་ཚོ་གཉིས་ཀའི་མཉམ་དུ་ཡོང་དུས་སྐབས་སུ།\",\"model\":\"monlamai-stt\",\""
+      },
+      {
+        "name": "08. FLAC mime format upload",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 7816.59,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨེ་ནས། ཁྱེད་རང་ཚོ་ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོའི་གྲོང་པའི་ནང་ལ་ཡོང་བ་ཡོད། ཨ་ལེ། ད་ག་རེ་བྱས་སོང་། ཨ་ཅག་ལགས། ང་ཚོ་གཉིས་ཀའི་མཉམ་དུ་ཡོང་དུས་སྐབས་སུ།\",\"model\":\"monlamai-stt\",\""
+      },
+      {
+        "name": "09. Empty audio file (0 bytes)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200,
+          400,
+          422
+        ],
+        "latency_ms": 1462.76,
+        "passed": true,
+        "response_snippet": "{\"service_request\":{\"id\":\"02ed77a2-ac84-4fb1-b534-06e659164946\",\"status\":\"failed\",\"input_usage\":0.0,\"output_usage\":0.0,\"cost\":0.0,\"latency_ms\":12,\"created_at\":\"2026-08-01T17:43:28.281108+00:00\",\"compl"
+      },
+      {
+        "name": "10. Corrupted WAV header (Malformed)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200,
+          400,
+          422
+        ],
+        "latency_ms": 1852.84,
+        "passed": true,
+        "response_snippet": "{\"service_request\":{\"id\":\"c715d194-accf-4f10-a521-66b34b6f2246\",\"status\":\"failed\",\"input_usage\":0.0,\"output_usage\":0.0,\"cost\":0.0,\"latency_ms\":634,\"created_at\":\"2026-08-01T17:43:29.551522+00:00\",\"comp"
+      },
+      {
+        "name": "11. Language: English ('en')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 3829.12,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨ་ཧ་ཧ། ཇོ་བོ་རྒན་ལགས། ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོ་གཉིས་ཀ་རེད་ཤག ང་ཚོ་གཉིས་ཀའི་གྲོང་ཁྱེར་ལ་ཡོད།\",\"model\":\"monlamai-stt\",\"duration\":0.1,\"language\":\"en\",\"segments\":[],\"audi"
+      },
+      {
+        "name": "12. Language: Chinese ('zh')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 6888.39,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨ་མ་ལགས། ཁྱེད་རང་ད་ལྟ། ད་ལྟ་ང་རང་ཚོའི་གྲོང་པའི་ནང་ལ་འགྲོ་ཐུབ་ཀི་མ་རེད་པེ། ཨ་མ་ལགས་ཀིས། ང་རང་ཚོ་གཉིས་ཀའི་མཉམ་དུ། ང་ཚོ་གཉིས་ཀྱི་མཉམ་དུ་འགྲོ་རྒྱུ་རེད། ང་ཚོའི་མཉམ་དུ་འགྲོ\",\"mo"
+      },
+      {
+        "name": "13. Language: Auto-detect (None)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 7806.35,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨེ་ནས། ཁྱེད་རང་ཚོ་ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོའི་གྲོང་པའི་ནང་ལ་ཡོང་བ་ཡོད། ཨ་ལེ། ད་ག་རེ་བྱས་སོང་། ཨ་ཅག་ལགས། ང་ཚོ་གཉིས་ཀའི་མཉམ་དུ་ཡོང་དུས་སྐབས་སུ།\",\"model\":\"monlamai-stt\",\""
+      },
+      {
+        "name": "14. Task: Translate ('translate')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 8025.25,
+        "passed": true,
+        "response_snippet": "{\"task\":\"translate\",\"text\":\"ཨ་མ་ལགས། ང་རང་ང་རང་། ཨ་མ་ལགས་ཀུན། ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ག་རེ་བྱེད་དགོས། ང་ང་ར། ང་ར་ར་ར་ར།\",\"model\":\"monlamai-stt\",\"duration\":0.1,\"language\":\"bo\",\"segments\":[],\"audio_u"
+      },
+      {
+        "name": "15. Missing 'task' parameter",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 7815.45,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨེ་ནས། ཁྱེད་རང་ཚོ་ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོའི་གྲོང་པའི་ནང་ལ་ཡོང་བ་ཡོད། ཨ་ལེ། ད་ག་རེ་བྱས་སོང་། ཨ་ཅག་ལགས། ང་ཚོ་གཉིས་ཀའི་མཉམ་དུ་ཡོང་དུས་སྐབས་སུ།\",\"model\":\"monlamai-stt\",\""
+      },
+      {
+        "name": "16. Invalid language code ('invalid_lang')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200,
+          400,
+          422
+        ],
+        "latency_ms": 2079.02,
+        "passed": true,
+        "response_snippet": "{\"service_request\":{\"id\":\"dca8f6fd-80a1-4d6e-8107-272b10d00ce6\",\"status\":\"failed\",\"input_usage\":0.0,\"output_usage\":0.0,\"cost\":0.0,\"latency_ms\":749,\"created_at\":\"2026-08-01T17:44:05.866193+00:00\",\"comp"
+      },
+      {
+        "name": "17. Invalid file extension (.txt uploaded as audio)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200,
+          400,
+          422
+        ],
+        "latency_ms": 1767.28,
+        "passed": true,
+        "response_snippet": "{\"service_request\":{\"id\":\"15420f63-d587-4458-a047-d5b4f89dcd71\",\"status\":\"failed\",\"input_usage\":0.0,\"output_usage\":0.0,\"cost\":0.0,\"latency_ms\":645,\"created_at\":\"2026-08-01T17:44:07.648106+00:00\",\"comp"
+      },
+      {
+        "name": "18. Missing file parameter in body",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 422,
+        "expected": [
+          400,
+          422,
+          500
+        ],
+        "latency_ms": 1032.53,
+        "passed": true,
+        "response_snippet": "{\"detail\":[{\"type\":\"missing\",\"loc\":[\"body\",\"file\"],\"msg\":\"Field required\",\"input\":null}]}"
+      },
+      {
+        "name": "19. Streaming STT endpoint (/speech-to-text/stream)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/stream",
+        "status_code": 200,
+        "expected": [
+          200,
+          404,
+          405
+        ],
+        "latency_ms": 7920.37,
+        "passed": true,
+        "response_snippet": "{\"text\": \"ཨེ་ནས། ཁྱེད་རང་ཚོ་ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོའི་གྲོང་པའི་ནང་ལ་ཡོང་བ་ཡོད། ཨ་ལེ། ད་ག་རེ་བྱས་སོང་། ཨ་ཅག་ལགས། ང་ཚོ་གཉིས་ཀའི་མཉམ་དུ་ཡོང་དུས་སྐབས་སུ།\"}\n"
+      },
+      {
+        "name": "20. Fast/Live STT endpoint (/speech-to-text/live)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/live",
+        "status_code": 200,
+        "expected": [
+          200,
+          404,
+          405
+        ],
+        "latency_ms": 1848.16,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"\",\"chars\":[],\"model\":\"monlamai-stt\",\"backend\":\"omniasr\",\"duration\":0.1,\"language\":\"bo\",\"segments\":[],\"audio_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000"
+      },
+      {
+        "name": "21. No API Key Header (Security check)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 401,
+        "expected": [
+          401,
+          403
+        ],
+        "latency_ms": 980.4,
+        "passed": true,
+        "response_snippet": "{\"detail\":\"Missing API Key. Please provide x-api-key header.\"}"
+      },
+      {
+        "name": "22. Invalid API Key Header (Security check)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 401,
+        "expected": [
+          401,
+          403
+        ],
+        "latency_ms": 1098.91,
+        "passed": true,
+        "response_snippet": "{\"detail\":\"Invalid API Key.\"}"
+      },
+      {
+        "name": "23. Alternate Auth Header ('Authorization: Bearer')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 401,
+        "expected": [
+          200,
+          401,
+          403
+        ],
+        "latency_ms": 2473.19,
+        "passed": true,
+        "response_snippet": "{\"detail\":\"Missing API Key. Please provide x-api-key header.\"}"
+      },
+      {
+        "name": "24. Trailing slash endpoint check",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 8002.53,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨེ་ནས། ཁྱེད་རང་ཚོ་ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོའི་གྲོང་པའི་ནང་ལ་ཡོང་བ་ཡོད། ཨ་ལེ། ད་ག་རེ་བྱས་སོང་། ཨ་ཅག་ལགས། ང་ཚོ་གཉིས་ཀའི་མཉམ་དུ་ཡོང་དུས་སྐབས་སུ།\",\"model\":\"monlamai-stt\",\""
+      },
+      {
+        "name": "25. Non-trailing slash endpoint check",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text",
+        "status_code": 307,
+        "expected": [
+          200,
+          301,
+          307,
+          308
+        ],
+        "latency_ms": 1418.09,
+        "passed": true,
+        "response_snippet": ""
+      },
+      {
+        "name": "26. GET method instead of POST",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 405,
+        "expected": [
+          405,
+          400
+        ],
+        "latency_ms": 2040.67,
+        "passed": true,
+        "response_snippet": "{\"detail\":\"Method Not Allowed\"}"
+      },
+      {
+        "name": "27. Pure silence audio payload",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 7550.67,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨེ་ནས། ཁྱེད་རང་ཚོ་ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོའི་གྲོང་པའི་ནང་ལ་ཡོང་བ་ཡོད། ཨ་ལེ། ད་ག་རེ་བྱས་སོང་། ཨ་ཅག་ལགས། ང་ཚོ་གཉིས་ཀའི་མཉམ་དུ་ཡོང་དུས་སྐབས་སུ།\",\"model\":\"monlamai-stt\",\""
+      },
+      {
+        "name": "28. Tibetan Speech sample 1",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 7496.12,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨེ་ནས། ཁྱེད་རང་ཚོ་ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོའི་གྲོང་པའི་ནང་ལ་ཡོང་བ་ཡོད། ཨ་ལེ། ད་ག་རེ་བྱས་སོང་། ཨ་ཅག་ལགས། ང་ཚོ་གཉིས་ཀའི་མཉམ་དུ་ཡོང་དུས་སྐབས་སུ།\",\"model\":\"monlamai-stt\",\""
+      },
+      {
+        "name": "29. Tibetan Speech sample 2",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 7733.94,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨེ་ནས། ཁྱེད་རང་ཚོ་ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོའི་གྲོང་པའི་ནང་ལ་ཡོང་བ་ཡོད། ཨ་ལེ། ད་ག་རེ་བྱས་སོང་། ཨ་ཅག་ལགས། ང་ཚོ་གཉིས་ཀའི་མཉམ་དུ་ཡོང་དུས་སྐབས་སུ།\",\"model\":\"monlamai-stt\",\""
+      },
+      {
+        "name": "30. Tibetan Speech sample 3",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 7780.97,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨེ་ནས། ཁྱེད་རང་ཚོ་ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོའི་གྲོང་པའི་ནང་ལ་ཡོང་བ་ཡོད། ཨ་ལེ། ད་ག་རེ་བྱས་སོང་། ཨ་ཅག་ལགས། ང་ཚོ་གཉིས་ཀའི་མཉམ་དུ་ཡོང་དུས་སྐབས་སུ།\",\"model\":\"monlamai-stt\",\""
+      },
+      {
+        "name": "31. STT Parameterization Test Batch #31",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 3896.21,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨ་ཧ་ཧ། ཇོ་བོ་རྒན་ལགས། ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོ་གཉིས་ཀ་རེད་ཤག ང་ཚོ་གཉིས་ཀའི་གྲོང་ཁྱེར་ལ་ཡོད།\",\"model\":\"monlamai-stt\",\"duration\":0.1,\"language\":\"en\",\"segments\":[],\"audi"
+      },
+      {
+        "name": "32. STT Parameterization Test Batch #32",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 7998.89,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨེ་ནས། ཁྱེད་རང་ཚོ་ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོའི་གྲོང་པའི་ནང་ལ་ཡོང་བ་ཡོད། ཨ་ལེ། ད་ག་རེ་བྱས་སོང་། ཨ་ཅག་ལགས། ང་ཚོ་གཉིས་ཀའི་མཉམ་དུ་ཡོང་དུས་སྐབས་སུ།\",\"model\":\"monlamai-stt\",\""
+      },
+      {
+        "name": "33. STT Parameterization Test Batch #33",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 3920.94,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨ་ཧ་ཧ། ཇོ་བོ་རྒན་ལགས། ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོ་གཉིས་ཀ་རེད་ཤག ང་ཚོ་གཉིས་ཀའི་གྲོང་ཁྱེར་ལ་ཡོད།\",\"model\":\"monlamai-stt\",\"duration\":0.1,\"language\":\"en\",\"segments\":[],\"audi"
+      },
+      {
+        "name": "34. STT Parameterization Test Batch #34",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 7666.42,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨེ་ནས། ཁྱེད་རང་ཚོ་ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོའི་གྲོང་པའི་ནང་ལ་ཡོང་བ་ཡོད། ཨ་ལེ། ད་ག་རེ་བྱས་སོང་། ཨ་ཅག་ལགས། ང་ཚོ་གཉིས་ཀའི་མཉམ་དུ་ཡོང་དུས་སྐབས་སུ།\",\"model\":\"monlamai-stt\",\""
+      },
+      {
+        "name": "35. STT Parameterization Test Batch #35",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 4251.92,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨ་ཧ་ཧ། ཇོ་བོ་རྒན་ལགས། ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོ་གཉིས་ཀ་རེད་ཤག ང་ཚོ་གཉིས་ཀའི་གྲོང་ཁྱེར་ལ་ཡོད།\",\"model\":\"monlamai-stt\",\"duration\":0.1,\"language\":\"en\",\"segments\":[],\"audi"
+      },
+      {
+        "name": "36. STT Parameterization Test Batch #36",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 7920.04,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨེ་ནས། ཁྱེད་རང་ཚོ་ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོའི་གྲོང་པའི་ནང་ལ་ཡོང་བ་ཡོད། ཨ་ལེ། ད་ག་རེ་བྱས་སོང་། ཨ་ཅག་ལགས། ང་ཚོ་གཉིས་ཀའི་མཉམ་དུ་ཡོང་དུས་སྐབས་སུ།\",\"model\":\"monlamai-stt\",\""
+      },
+      {
+        "name": "37. STT Parameterization Test Batch #37",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 4748.96,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨ་ཧ་ཧ། ཇོ་བོ་རྒན་ལགས། ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོ་གཉིས་ཀ་རེད་ཤག ང་ཚོ་གཉིས་ཀའི་གྲོང་ཁྱེར་ལ་ཡོད།\",\"model\":\"monlamai-stt\",\"duration\":0.1,\"language\":\"en\",\"segments\":[],\"audi"
+      },
+      {
+        "name": "38. STT Parameterization Test Batch #38",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 8456.81,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨེ་ནས། ཁྱེད་རང་ཚོ་ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོའི་གྲོང་པའི་ནང་ལ་ཡོང་བ་ཡོད། ཨ་ལེ། ད་ག་རེ་བྱས་སོང་། ཨ་ཅག་ལགས། ང་ཚོ་གཉིས་ཀའི་མཉམ་དུ་ཡོང་དུས་སྐབས་སུ།\",\"model\":\"monlamai-stt\",\""
+      },
+      {
+        "name": "39. STT Parameterization Test Batch #39",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 4164.6,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨ་ཧ་ཧ། ཇོ་བོ་རྒན་ལགས། ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོ་གཉིས་ཀ་རེད་ཤག ང་ཚོ་གཉིས་ཀའི་གྲོང་ཁྱེར་ལ་ཡོད།\",\"model\":\"monlamai-stt\",\"duration\":0.1,\"language\":\"en\",\"segments\":[],\"audi"
+      },
+      {
+        "name": "40. STT Parameterization Test Batch #40",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 8152.53,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨེ་ནས། ཁྱེད་རང་ཚོ་ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོའི་གྲོང་པའི་ནང་ལ་ཡོང་བ་ཡོད། ཨ་ལེ། ད་ག་རེ་བྱས་སོང་། ཨ་ཅག་ལགས། ང་ཚོ་གཉིས་ཀའི་མཉམ་དུ་ཡོང་དུས་སྐབས་སུ།\",\"model\":\"monlamai-stt\",\""
+      },
+      {
+        "name": "41. STT Parameterization Test Batch #41",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 4480.3,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨ་ཧ་ཧ། ཇོ་བོ་རྒན་ལགས། ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོ་གཉིས་ཀ་རེད་ཤག ང་ཚོ་གཉིས་ཀའི་གྲོང་ཁྱེར་ལ་ཡོད།\",\"model\":\"monlamai-stt\",\"duration\":0.1,\"language\":\"en\",\"segments\":[],\"audi"
+      },
+      {
+        "name": "42. STT Parameterization Test Batch #42",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 8166.57,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨེ་ནས། ཁྱེད་རང་ཚོ་ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོའི་གྲོང་པའི་ནང་ལ་ཡོང་བ་ཡོད། ཨ་ལེ། ད་ག་རེ་བྱས་སོང་། ཨ་ཅག་ལགས། ང་ཚོ་གཉིས་ཀའི་མཉམ་དུ་ཡོང་དུས་སྐབས་སུ།\",\"model\":\"monlamai-stt\",\""
+      },
+      {
+        "name": "43. STT Parameterization Test Batch #43",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 3831.92,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨ་ཧ་ཧ། ཇོ་བོ་རྒན་ལགས། ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོ་གཉིས་ཀ་རེད་ཤག ང་ཚོ་གཉིས་ཀའི་གྲོང་ཁྱེར་ལ་ཡོད།\",\"model\":\"monlamai-stt\",\"duration\":0.1,\"language\":\"en\",\"segments\":[],\"audi"
+      },
+      {
+        "name": "44. STT Parameterization Test Batch #44",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 8322.8,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨེ་ནས། ཁྱེད་རང་ཚོ་ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོའི་གྲོང་པའི་ནང་ལ་ཡོང་བ་ཡོད། ཨ་ལེ། ད་ག་རེ་བྱས་སོང་། ཨ་ཅག་ལགས། ང་ཚོ་གཉིས་ཀའི་མཉམ་དུ་ཡོང་དུས་སྐབས་སུ།\",\"model\":\"monlamai-stt\",\""
+      },
+      {
+        "name": "45. STT Parameterization Test Batch #45",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 4167.24,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨ་ཧ་ཧ། ཇོ་བོ་རྒན་ལགས། ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོ་གཉིས་ཀ་རེད་ཤག ང་ཚོ་གཉིས་ཀའི་གྲོང་ཁྱེར་ལ་ཡོད།\",\"model\":\"monlamai-stt\",\"duration\":0.1,\"language\":\"en\",\"segments\":[],\"audi"
+      },
+      {
+        "name": "46. STT Parameterization Test Batch #46",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 8154.15,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨེ་ནས། ཁྱེད་རང་ཚོ་ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོའི་གྲོང་པའི་ནང་ལ་ཡོང་བ་ཡོད། ཨ་ལེ། ད་ག་རེ་བྱས་སོང་། ཨ་ཅག་ལགས། ང་ཚོ་གཉིས་ཀའི་མཉམ་དུ་ཡོང་དུས་སྐབས་སུ།\",\"model\":\"monlamai-stt\",\""
+      },
+      {
+        "name": "47. STT Parameterization Test Batch #47",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 3957.57,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨ་ཧ་ཧ། ཇོ་བོ་རྒན་ལགས། ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོ་གཉིས་ཀ་རེད་ཤག ང་ཚོ་གཉིས་ཀའི་གྲོང་ཁྱེར་ལ་ཡོད།\",\"model\":\"monlamai-stt\",\"duration\":0.1,\"language\":\"en\",\"segments\":[],\"audi"
+      },
+      {
+        "name": "48. STT Parameterization Test Batch #48",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 7877.45,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨེ་ནས། ཁྱེད་རང་ཚོ་ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོའི་གྲོང་པའི་ནང་ལ་ཡོང་བ་ཡོད། ཨ་ལེ། ད་ག་རེ་བྱས་སོང་། ཨ་ཅག་ལགས། ང་ཚོ་གཉིས་ཀའི་མཉམ་དུ་ཡོང་དུས་སྐབས་སུ།\",\"model\":\"monlamai-stt\",\""
+      },
+      {
+        "name": "49. STT Parameterization Test Batch #49",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 4113.55,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨ་ཧ་ཧ། ཇོ་བོ་རྒན་ལགས། ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོ་གཉིས་ཀ་རེད་ཤག ང་ཚོ་གཉིས་ཀའི་གྲོང་ཁྱེར་ལ་ཡོད།\",\"model\":\"monlamai-stt\",\"duration\":0.1,\"language\":\"en\",\"segments\":[],\"audi"
+      },
+      {
+        "name": "50. STT Parameterization Test Batch #50",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/speech-to-text/",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 8205.69,
+        "passed": true,
+        "response_snippet": "{\"task\":\"transcribe\",\"text\":\"ཨེ་ནས། ཁྱེད་རང་ཚོ་ག་རེ་བྱེད་ཀི་ཡོད་རེད། ང་རང་ཚོའི་གྲོང་པའི་ནང་ལ་ཡོང་བ་ཡོད། ཨ་ལེ། ད་ག་རེ་བྱས་སོང་། ཨ་ཅག་ལགས། ང་ཚོ་གཉིས་ཀའི་མཉམ་དུ་ཡོང་དུས་སྐབས་སུ།\",\"model\":\"monlamai-stt\",\""
+      }
+    ],
+    "OCR (Optical Character Recognition)": [
+      {
+        "name": "01. Single-page Tibetan Text Image (PNG)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 1523.55,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/8a571b77-9047-4255-9da7-3fe33d599"
+      },
+      {
+        "name": "02. Single-page Tibetan Text Image (JPEG)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 1587.74,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/32fd8ea8-ef10-4d25-92de-6f213a7d0"
+      },
+      {
+        "name": "03. Mixed Tibetan and English Image",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 1119.42,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/87d86be5-a268-466f-8938-dd9f8d8c6"
+      },
+      {
+        "name": "04. Handwritten Tibetan Script Image",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 1838.47,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/215b27b8-34a6-4ec0-8f92-0595fc073"
+      },
+      {
+        "name": "05. Low-resolution Image (100x100 px)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 1532.44,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/149153ed-c02c-452f-9641-3ec34c159"
+      },
+      {
+        "name": "06. High-resolution Image (4000x4000 px)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 1518.11,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/5ef3e78b-55e8-48e9-a291-966ef5480"
+      },
+      {
+        "name": "07. Language hint: English ('en')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 1255.4,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/a11fa01d-5dfd-4b31-a6b8-2c3fbe8af"
+      },
+      {
+        "name": "08. Language hint: Chinese ('zh')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 1192.13,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/6503f3a2-2c58-4342-bab2-d8fca7ef1"
+      },
+      {
+        "name": "09. Missing 'lang_hint' parameter",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 1872.62,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/6ce9ea1a-84c9-41b7-811a-be133ef0a"
+      },
+      {
+        "name": "10. Invalid 'lang_hint' code ('xx')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200,
+          400,
+          422
+        ],
+        "latency_ms": 1441.96,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/90501df4-257f-48b8-8855-565bb7538"
+      },
+      {
+        "name": "11. Blank image payload (0 bytes)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200,
+          400,
+          422
+        ],
+        "latency_ms": 1277.5,
+        "passed": true,
+        "response_snippet": "{\"service_request\":{\"id\":\"dad8286e-4795-4307-8546-91c037b210d9\",\"status\":\"failed\",\"input_usage\":0.0,\"output_usage\":0.0,\"cost\":0.0,\"latency_ms\":12,\"created_at\":\"2026-08-01T17:47:24.163148+00:00\",\"compl"
+      },
+      {
+        "name": "12. Unsupported PDF file type",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200,
+          400,
+          415,
+          422
+        ],
+        "latency_ms": 2080.27,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/800f802e-ea61-409a-9403-110311514"
+      },
+      {
+        "name": "13. Unsupported SVG file type",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200,
+          400,
+          415,
+          422
+        ],
+        "latency_ms": 1429.24,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/c5d8f38c-fe1d-44a1-b246-c291c2ed3"
+      },
+      {
+        "name": "14. Image with no text (Landscape)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 1371.71,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/20861c7a-0af8-4206-bd53-d1afe0925"
+      },
+      {
+        "name": "15. Rotated text image (90 degrees)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 1791.34,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/6e8456a5-68db-42be-be35-5e7645a62"
+      },
+      {
+        "name": "16. Rotated text image (180 degrees)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 1015.33,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/4f02d29b-e6de-43a5-aa7a-cda94b3f6"
+      },
+      {
+        "name": "17. Rotated text image (270 degrees)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 1274.56,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/c8afdc74-802f-44b4-978b-359e57308"
+      },
+      {
+        "name": "18. Skewed / tilted image text",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 1285.16,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/39d99739-eb10-4a06-a0c4-eb1e6d4ba"
+      },
+      {
+        "name": "19. Multi-page OCR endpoint (/multi-page)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/multi-page",
+        "status_code": 422,
+        "expected": [
+          200,
+          404,
+          405,
+          422
+        ],
+        "latency_ms": 3633.91,
+        "passed": true,
+        "response_snippet": "{\"detail\":[{\"type\":\"missing\",\"loc\":[\"body\",\"page_1\"],\"msg\":\"Field required\",\"input\":null},{\"type\":\"missing\",\"loc\":[\"body\",\"page_2\"],\"msg\":\"Field required\",\"input\":null}]}"
+      },
+      {
+        "name": "20. Missing file parameter in body",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 422,
+        "expected": [
+          400,
+          422,
+          500
+        ],
+        "latency_ms": 950.64,
+        "passed": true,
+        "response_snippet": "{\"detail\":[{\"type\":\"missing\",\"loc\":[\"body\",\"file\"],\"msg\":\"Field required\",\"input\":null}]}"
+      },
+      {
+        "name": "21. No API Key Header (Security check)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 401,
+        "expected": [
+          401,
+          403
+        ],
+        "latency_ms": 530.86,
+        "passed": true,
+        "response_snippet": "{\"detail\":\"Missing API Key. Please provide x-api-key header.\"}"
+      },
+      {
+        "name": "22. Invalid API Key Header (Security check)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 401,
+        "expected": [
+          401,
+          403
+        ],
+        "latency_ms": 518.45,
+        "passed": true,
+        "response_snippet": "{\"detail\":\"Invalid API Key.\"}"
+      },
+      {
+        "name": "23. Alternate Auth Header ('Authorization: Bearer')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 401,
+        "expected": [
+          200,
+          401,
+          403
+        ],
+        "latency_ms": 556.42,
+        "passed": true,
+        "response_snippet": "{\"detail\":\"Missing API Key. Please provide x-api-key header.\"}"
+      },
+      {
+        "name": "24. Trailing slash endpoint check",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page/",
+        "status_code": 307,
+        "expected": [
+          200,
+          301,
+          307,
+          308
+        ],
+        "latency_ms": 610.26,
+        "passed": true,
+        "response_snippet": ""
+      },
+      {
+        "name": "25. GET method instead of POST",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 405,
+        "expected": [
+          405,
+          400
+        ],
+        "latency_ms": 561.45,
+        "passed": true,
+        "response_snippet": "{\"detail\":\"Method Not Allowed\"}"
+      },
+      {
+        "name": "26. Very large image payload (Bounded to MAX_OCR_IMAGE_BYTES=10MB)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 1526.58,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/87a6e780-cd9d-42b9-969b-218cc3b96"
+      },
+      {
+        "name": "27. Image with table / grid layout",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 1020.39,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/bb10f7d3-b33c-464b-955f-12e9c986d"
+      },
+      {
+        "name": "28. Tibetan manuscript scan (Woodblock Pecha)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 771.44,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/c4a9119e-4256-43df-b9e1-f23b0f2ef"
+      },
+      {
+        "name": "29. Modern printed Tibetan font image",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 1953.37,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/6a45ec40-0adc-48a6-ad7e-ab6b47cfc"
+      },
+      {
+        "name": "30. Tibetan calligraphy script image",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 736.28,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/4f39abc3-641a-4541-83b2-e16897932"
+      },
+      {
+        "name": "31. OCR Parameterization Test Batch #31",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 1003.56,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/7fa11c1e-5bda-4d45-9e1e-e494a360f"
+      },
+      {
+        "name": "32. OCR Parameterization Test Batch #32",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 761.68,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/d9635087-babf-40b4-9a19-ecfb76c52"
+      },
+      {
+        "name": "33. OCR Parameterization Test Batch #33",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 4216.01,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/45bb3270-ea29-4750-a029-e2e843b7f"
+      },
+      {
+        "name": "34. OCR Parameterization Test Batch #34",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 812.36,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/57e43190-3ef1-4dae-a973-9e51c91e4"
+      },
+      {
+        "name": "35. OCR Parameterization Test Batch #35",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 1578.82,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/177a6efd-4132-4ca7-aa0d-44d29dfbd"
+      },
+      {
+        "name": "36. OCR Parameterization Test Batch #36",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 969.08,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/95b4790c-e672-49fc-8bef-be7f9cb90"
+      },
+      {
+        "name": "37. OCR Parameterization Test Batch #37",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2399.77,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/f26baeec-b783-4b48-95e4-0cfd11679"
+      },
+      {
+        "name": "38. OCR Parameterization Test Batch #38",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 987.62,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/f0646f28-6c4e-4ab8-8cfe-841b19442"
+      },
+      {
+        "name": "39. OCR Parameterization Test Batch #39",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 761.19,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/72e89384-6826-48d4-9176-673989c93"
+      },
+      {
+        "name": "40. OCR Parameterization Test Batch #40",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 1138.39,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/0f042761-49d6-487c-b90d-9e8a90cc5"
+      },
+      {
+        "name": "41. OCR Parameterization Test Batch #41",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 1116.13,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/16108267-844e-4d5f-baa8-311ecbc51"
+      },
+      {
+        "name": "42. OCR Parameterization Test Batch #42",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 2407.14,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/5d65c0ab-7483-46f8-8e7b-6c2facf76"
+      },
+      {
+        "name": "43. OCR Parameterization Test Batch #43",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 793.93,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/78c38ab3-8a6f-4e25-9c77-f61ffcfc0"
+      },
+      {
+        "name": "44. OCR Parameterization Test Batch #44",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 797.99,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/d901728e-9599-4838-bf43-885297b3a"
+      },
+      {
+        "name": "45. OCR Parameterization Test Batch #45",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 800.46,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/f1e2255d-4de2-4fb7-b837-3c20428e7"
+      },
+      {
+        "name": "46. OCR Parameterization Test Batch #46",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 799.73,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/055ddb88-2436-4917-bd45-532d41655"
+      },
+      {
+        "name": "47. OCR Parameterization Test Batch #47",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 1116.19,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/6b43de12-73fe-43e1-8fab-ab72d89ec"
+      },
+      {
+        "name": "48. OCR Parameterization Test Batch #48",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 804.03,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/8ae49257-3023-4d69-aa64-450c788a1"
+      },
+      {
+        "name": "49. OCR Parameterization Test Batch #49",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 987.53,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/fc63484e-7cbf-4016-a04c-18365b902"
+      },
+      {
+        "name": "50. OCR Parameterization Test Batch #50",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/ocr/single-page",
+        "status_code": 200,
+        "expected": [
+          200
+        ],
+        "latency_ms": 1100.14,
+        "passed": true,
+        "response_snippet": "{\"cost\":0.5,\"text\":\"\",\"model\":\"monlam-ocr\",\"output\":\"\",\"image_url\":\"https://d1pb3si5teao6v.cloudfront.net/organizations/00000000-0000-0000-0000-000000000001/ocr/input/97034c8b-a11b-4afd-a84f-664fa8457"
+      }
+    ],
+    "Dictionary Search": [
+      {
+        "name": "Dict Search (bo-en): 'སློབ་སྦྱོང'",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-en&q=%E0%BD%A6%E0%BE%B3%E0%BD%BC%E0%BD%96%E0%BC%8B%E0%BD%A6%E0%BE%A6%E0%BE%B1%E0%BD%BC%E0%BD%84",
+        "status_code": 200,
+        "expected": [
+          200,
+          404,
+          422
+        ],
+        "latency_ms": 529.45,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":1,\"query\":\"སློབ་སྦྱོང\",\"results\":[{\"data\":{\"word\":\"སློབ་སྦྱོང་\",\"word_id\":510148,\"explanation\":\"learning\"},\"type\":\"tibetan-to-english\"}],\"timestamp\":\"2026-08-01T17:48:13"
+      },
+      {
+        "name": "Dict Search (bo-en): 'བཀྲ་ཤིས'",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-en&q=%E0%BD%96%E0%BD%80%E0%BE%B2%E0%BC%8B%E0%BD%A4%E0%BD%B2%E0%BD%A6",
+        "status_code": 200,
+        "expected": [
+          200,
+          404,
+          422
+        ],
+        "latency_ms": 582.27,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":1,\"query\":\"བཀྲ་ཤིས\",\"results\":[{\"data\":{\"word\":\"བཀྲ་ཤིས་\",\"word_id\":186367,\"explanation\":\"In later Tibetan translations, it is translated as {g.yung.drung}. In the early"
+      },
+      {
+        "name": "Dict Search (bo-en): 'སངས་རྒྱས'",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-en&q=%E0%BD%A6%E0%BD%84%E0%BD%A6%E0%BC%8B%E0%BD%A2%E0%BE%92%E0%BE%B1%E0%BD%A6",
+        "status_code": 200,
+        "expected": [
+          200,
+          404,
+          422
+        ],
+        "latency_ms": 477.18,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":1,\"query\":\"སངས་རྒྱས\",\"results\":[{\"data\":{\"word\":\"སངས་རྒྱས་\",\"word_id\":449080,\"explanation\":\"Also rendered \\\"buddha.\\\"\"},\"type\":\"tibetan-to-english\"}],\"timestamp\":\"2026-0"
+      },
+      {
+        "name": "Dict Search (bo-en): 'བྱང་ཆུབ'",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-en&q=%E0%BD%96%E0%BE%B1%E0%BD%84%E0%BC%8B%E0%BD%86%E0%BD%B4%E0%BD%96",
+        "status_code": 200,
+        "expected": [
+          200,
+          404,
+          422
+        ],
+        "latency_ms": 501.7,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":1,\"query\":\"བྱང་ཆུབ\",\"results\":[{\"data\":{\"word\":\"བྱང་ཆུབ་\",\"word_id\":223317,\"explanation\":\"The Sanskrit can mean knowledge, realization, waking, blossoming, etc., accordi"
+      },
+      {
+        "name": "Dict Search (bo-en): 'ཤེས་རབ'",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-en&q=%E0%BD%A4%E0%BD%BA%E0%BD%A6%E0%BC%8B%E0%BD%A2%E0%BD%96",
+        "status_code": 200,
+        "expected": [
+          200,
+          404,
+          422
+        ],
+        "latency_ms": 459.07,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":1,\"query\":\"ཤེས་རབ\",\"results\":[{\"data\":{\"word\":\"ཤེས་རབ་\",\"word_id\":444444,\"explanation\":\"A mind that sees the ultimate truth directly.\"},\"type\":\"tibetan-to-english\"}],\"ti"
+      },
+      {
+        "name": "Dict Search (bo-bo): 'སློབ་སྦྱོང'",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-bo&q=%E0%BD%A6%E0%BE%B3%E0%BD%BC%E0%BD%96%E0%BC%8B%E0%BD%A6%E0%BE%A6%E0%BE%B1%E0%BD%BC%E0%BD%84",
+        "status_code": 200,
+        "expected": [
+          200,
+          404,
+          422
+        ],
+        "latency_ms": 534.41,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":1,\"query\":\"སློབ་སྦྱོང\",\"results\":[{\"data\":{\"word\":\"སློབ་སྦྱོང་\",\"word_id\":360173,\"explanation\":\" མིང་ཚིག \\r\\n ཤེས་བྱ་ཡོན་ཏན་གང་ཞིག་ལ་དོན་གཉེར་བྱས་ཏེ་ཁོང་དུ་ཆུད་ཐབས་བྱེད་"
+      },
+      {
+        "name": "Dict Search (bo-bo): 'བཀྲ་ཤིས'",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-bo&q=%E0%BD%96%E0%BD%80%E0%BE%B2%E0%BC%8B%E0%BD%A4%E0%BD%B2%E0%BD%A6",
+        "status_code": 200,
+        "expected": [
+          200,
+          404,
+          422
+        ],
+        "latency_ms": 586.43,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":1,\"query\":\"བཀྲ་ཤིས\",\"results\":[{\"data\":{\"word\":\"བཀྲ་ཤིས་\",\"word_id\":133943,\"explanation\":\"མིང་ཚིག \\r\\n1. བཀྲ་ཤིས་ནི། དགེ་བའམ་ལེགས་པའི་དོན་ཏེ། བཀྲ་ཤིས་པའོ། ། \\r\\nདཔེར་ན། "
+      },
+      {
+        "name": "Dict Search (bo-bo): 'སངས་རྒྱས'",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-bo&q=%E0%BD%A6%E0%BD%84%E0%BD%A6%E0%BC%8B%E0%BD%A2%E0%BE%92%E0%BE%B1%E0%BD%A6",
+        "status_code": 200,
+        "expected": [
+          200,
+          404,
+          422
+        ],
+        "latency_ms": 713.62,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":1,\"query\":\"སངས་རྒྱས\",\"results\":[{\"data\":{\"word\":\"སངས་རྒྱས་\",\"word_id\":318201,\"explanation\":\"མིང་ཚིག \\r\\n1. ༡ཆོས་ལུགས། མདོ། ཤེར་ཕྱིན། སངས་རྒྱས་ཞེས་པའི་དོན་ནི། ཆོས་རྒྱལ་ཁྲ"
+      },
+      {
+        "name": "Dict Search (bo-bo): 'བྱང་ཆུབ'",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-bo&q=%E0%BD%96%E0%BE%B1%E0%BD%84%E0%BC%8B%E0%BD%86%E0%BD%B4%E0%BD%96",
+        "status_code": 200,
+        "expected": [
+          200,
+          404,
+          422
+        ],
+        "latency_ms": 479.07,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":1,\"query\":\"བྱང་ཆུབ\",\"results\":[{\"data\":{\"word\":\"བྱང་ཆུབ་\",\"word_id\":161267,\"explanation\":\" མིང་ཚིག\\r\\n1. ༡ཆོས་ལུགས། མདོ། བྱང་ཆུབ་སེམས་དཔའི་ཀུན་རྫོབ་ཡོན་ཏན་གྱི་སྒྲ་དོན་གས"
+      },
+      {
+        "name": "Dict Search (bo-bo): 'ཤེས་རབ'",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-bo&q=%E0%BD%A4%E0%BD%BA%E0%BD%A6%E0%BC%8B%E0%BD%A2%E0%BD%96",
+        "status_code": 200,
+        "expected": [
+          200,
+          404,
+          422
+        ],
+        "latency_ms": 537.08,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":1,\"query\":\"ཤེས་རབ\",\"results\":[{\"data\":{\"word\":\"ཤེས་རབ་\",\"word_id\":313908,\"explanation\":\" མིང་ཚིག \\r\\n 1. ཡིན་མིན་དང་ལེགས་ཉེས་སོགས་ཀྱི་ཁྱད་པར་འབྱེད་ཐུབ་ཅིང་བསམ་གཞིགས་དང་ག"
+      },
+      {
+        "name": "Dict Search (en-bo): 'སློབ་སྦྱོང'",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=en-bo&q=%E0%BD%A6%E0%BE%B3%E0%BD%BC%E0%BD%96%E0%BC%8B%E0%BD%A6%E0%BE%A6%E0%BE%B1%E0%BD%BC%E0%BD%84",
+        "status_code": 200,
+        "expected": [
+          200,
+          404,
+          422
+        ],
+        "latency_ms": 880.62,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":0,\"query\":\"སློབ་སྦྱོང\",\"results\":[],\"timestamp\":\"2026-08-01T17:48:19.605Z\"},\"success\":true,\"cost\":0.0,\"latency_ms\":43,\"service_request_id\":\"e35493bb-edd3-4254-91e8-2f79c"
+      },
+      {
+        "name": "Dict Search (en-bo): 'བཀྲ་ཤིས'",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=en-bo&q=%E0%BD%96%E0%BD%80%E0%BE%B2%E0%BC%8B%E0%BD%A4%E0%BD%B2%E0%BD%A6",
+        "status_code": 200,
+        "expected": [
+          200,
+          404,
+          422
+        ],
+        "latency_ms": 426.15,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":0,\"query\":\"བཀྲ་ཤིས\",\"results\":[],\"timestamp\":\"2026-08-01T17:48:20.170Z\"},\"success\":true,\"cost\":0.0,\"latency_ms\":42,\"service_request_id\":\"020c6be4-5c5b-438b-bf69-f49f8b16"
+      },
+      {
+        "name": "Dict Search (en-bo): 'སངས་རྒྱས'",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=en-bo&q=%E0%BD%A6%E0%BD%84%E0%BD%A6%E0%BC%8B%E0%BD%A2%E0%BE%92%E0%BE%B1%E0%BD%A6",
+        "status_code": 200,
+        "expected": [
+          200,
+          404,
+          422
+        ],
+        "latency_ms": 483.03,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":0,\"query\":\"སངས་རྒྱས\",\"results\":[],\"timestamp\":\"2026-08-01T17:48:20.618Z\"},\"success\":true,\"cost\":0.0,\"latency_ms\":40,\"service_request_id\":\"c5745380-f851-424e-9b6b-65adbaf"
+      },
+      {
+        "name": "Dict Search (en-bo): 'བྱང་ཆུབ'",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=en-bo&q=%E0%BD%96%E0%BE%B1%E0%BD%84%E0%BC%8B%E0%BD%86%E0%BD%B4%E0%BD%96",
+        "status_code": 200,
+        "expected": [
+          200,
+          404,
+          422
+        ],
+        "latency_ms": 1049.4,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":0,\"query\":\"བྱང་ཆུབ\",\"results\":[],\"timestamp\":\"2026-08-01T17:48:21.537Z\"},\"success\":true,\"cost\":0.0,\"latency_ms\":41,\"service_request_id\":\"814bdd23-0042-44ec-a892-6be9288c"
+      },
+      {
+        "name": "Dict Search (en-bo): 'ཤེས་རབ'",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=en-bo&q=%E0%BD%A4%E0%BD%BA%E0%BD%A6%E0%BC%8B%E0%BD%A2%E0%BD%96",
+        "status_code": 200,
+        "expected": [
+          200,
+          404,
+          422
+        ],
+        "latency_ms": 441.16,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":0,\"query\":\"ཤེས་རབ\",\"results\":[],\"timestamp\":\"2026-08-01T17:48:22.138Z\"},\"success\":true,\"cost\":0.0,\"latency_ms\":43,\"service_request_id\":\"104a2299-c333-401f-990f-e6df99fed"
+      },
+      {
+        "name": "Dict Search (bo-zh): 'སློབ་སྦྱོང'",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-zh&q=%E0%BD%A6%E0%BE%B3%E0%BD%BC%E0%BD%96%E0%BC%8B%E0%BD%A6%E0%BE%A6%E0%BE%B1%E0%BD%BC%E0%BD%84",
+        "status_code": 422,
+        "expected": [
+          200,
+          404,
+          422
+        ],
+        "latency_ms": 589.13,
+        "passed": true,
+        "response_snippet": "{\"detail\":\"Invalid pair 'bo-zh'. Must be one of: bo-bo, bo-en, en-bo.\"}"
+      },
+      {
+        "name": "Dict Search (bo-zh): 'བཀྲ་ཤིས'",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-zh&q=%E0%BD%96%E0%BD%80%E0%BE%B2%E0%BC%8B%E0%BD%A4%E0%BD%B2%E0%BD%A6",
+        "status_code": 422,
+        "expected": [
+          200,
+          404,
+          422
+        ],
+        "latency_ms": 385.26,
+        "passed": true,
+        "response_snippet": "{\"detail\":\"Invalid pair 'bo-zh'. Must be one of: bo-bo, bo-en, en-bo.\"}"
+      },
+      {
+        "name": "Dict Search (bo-zh): 'སངས་རྒྱས'",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-zh&q=%E0%BD%A6%E0%BD%84%E0%BD%A6%E0%BC%8B%E0%BD%A2%E0%BE%92%E0%BE%B1%E0%BD%A6",
+        "status_code": 422,
+        "expected": [
+          200,
+          404,
+          422
+        ],
+        "latency_ms": 324.49,
+        "passed": true,
+        "response_snippet": "{\"detail\":\"Invalid pair 'bo-zh'. Must be one of: bo-bo, bo-en, en-bo.\"}"
+      },
+      {
+        "name": "Dict Search (bo-zh): 'བྱང་ཆུབ'",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-zh&q=%E0%BD%96%E0%BE%B1%E0%BD%84%E0%BC%8B%E0%BD%86%E0%BD%B4%E0%BD%96",
+        "status_code": 422,
+        "expected": [
+          200,
+          404,
+          422
+        ],
+        "latency_ms": 322.57,
+        "passed": true,
+        "response_snippet": "{\"detail\":\"Invalid pair 'bo-zh'. Must be one of: bo-bo, bo-en, en-bo.\"}"
+      },
+      {
+        "name": "Dict Search (bo-zh): 'ཤེས་རབ'",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-zh&q=%E0%BD%A4%E0%BD%BA%E0%BD%A6%E0%BC%8B%E0%BD%A2%E0%BD%96",
+        "status_code": 422,
+        "expected": [
+          200,
+          404,
+          422
+        ],
+        "latency_ms": 345.16,
+        "passed": true,
+        "response_snippet": "{\"detail\":\"Invalid pair 'bo-zh'. Must be one of: bo-bo, bo-en, en-bo.\"}"
+      },
+      {
+        "name": "21. English word search (en-bo): 'study'",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=en-bo&q=study",
+        "status_code": 200,
+        "expected": [
+          200,
+          404
+        ],
+        "latency_ms": 502.5,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":1,\"query\":\"study\",\"results\":[{\"data\":{\"word\":\"Study\",\"word_id\":1056713,\"explanation\":\"ཐོས་པ། Study\"},\"type\":\"english-to-tibetan\"}],\"timestamp\":\"2026-08-01T17:48:24.590Z\""
+      },
+      {
+        "name": "22. English word search (en-bo): 'wisdom'",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=en-bo&q=wisdom",
+        "status_code": 200,
+        "expected": [
+          200,
+          404
+        ],
+        "latency_ms": 455.12,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":1,\"query\":\"wisdom\",\"results\":[{\"data\":{\"word\":\"Wisdom\",\"word_id\":1072803,\"explanation\":\"ཡེ་ཤེས། Wisdom\"},\"type\":\"english-to-tibetan\"}],\"timestamp\":\"2026-08-01T17:48:25.0"
+      },
+      {
+        "name": "23. Chinese word search (zh-bo): '学习'",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=zh-bo&q=%E5%AD%A6%E4%B9%A0",
+        "status_code": 422,
+        "expected": [
+          200,
+          404,
+          422
+        ],
+        "latency_ms": 342.68,
+        "passed": true,
+        "response_snippet": "{\"detail\":\"Invalid pair 'zh-bo'. Must be one of: bo-bo, bo-en, en-bo.\"}"
+      },
+      {
+        "name": "24. Tibetan Punctuation (༺ ༄༅༎ ༎ ༻)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-bo&q=%E0%BD%80%E0%BD%B1%E0%BD%B2%E0%BE%92",
+        "status_code": 200,
+        "expected": [
+          200,
+          404
+        ],
+        "latency_ms": 526.6,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":0,\"query\":\"ཀཱིྒ\",\"results\":[],\"timestamp\":\"2026-08-01T17:48:25.838Z\"},\"success\":true,\"cost\":0.0,\"latency_ms\":42,\"service_request_id\":\"4888a5e5-cc13-497a-9b0d-537eede8249"
+      },
+      {
+        "name": "25. Long sentence query (Bounded to MAX_QUERY_LENGTH=50)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-en&q=%E0%BD%96%E0%BD%80%E0%BE%B2%E0%BC%8B%E0%BD%A4%E0%BD%B2%E0%BD%A6%E0%BC%8B%E0%BD%96%E0%BD%91%E0%BD%BA%E0%BC%8B%E0%BD%A3%E0%BD%BA%E0%BD%82%E0%BD%A6%E0%BC%8B%20%E0%BD%81%E0%BE%B1%E0%BD%BA%E0%BD%91%E0%BC%8B%E0%BD%A2%E0%BD%84%E0%BC%8B%E0%BD%A6%E0%BE%90%E0%BD%B4%E0%BC%8B%E0%BD%81%E0%BD%98%E0%BD%A6%E0%BC%8B%E0%BD%96%E0%BD%9F%E0%BD%84%E0%BC%8B%E0%BD%84%E0%BD%98%E0%BC%8D",
+        "status_code": 200,
+        "expected": [
+          200,
+          404,
+          422
+        ],
+        "latency_ms": 491.67,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":0,\"query\":\"བཀྲ་ཤིས་བདེ་ལེགས་ ཁྱེད་རང་སྐུ་ཁམས་བཟང་ངམ།\",\"results\":[],\"timestamp\":\"2026-08-01T17:48:26.425Z\"},\"success\":true,\"cost\":0.0,\"latency_ms\":41,\"service_request_id\""
+      },
+      {
+        "name": "26. Non-existent random Tibetan word",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-en&q=%E0%BD%80%E0%BE%B5%E0%BE%B2%E0%BD%B1%E0%BD%B2%E0%BD%BE%E0%BD%BFxyz999",
+        "status_code": 200,
+        "expected": [
+          200,
+          404
+        ],
+        "latency_ms": 624.33,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":0,\"query\":\"ཀྵྲཱིཾཿxyz999\",\"results\":[],\"timestamp\":\"2026-08-01T17:48:26.914Z\"},\"success\":true,\"cost\":0.0,\"latency_ms\":41,\"service_request_id\":\"0ee74bcb-c29a-40d5-ab7e-d2"
+      },
+      {
+        "name": "27. Single Tibetan letter query ('ཀ')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-bo&q=%E0%BD%80",
+        "status_code": 200,
+        "expected": [
+          200,
+          404
+        ],
+        "latency_ms": 424.5,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":1,\"query\":\"ཀ\",\"results\":[{\"data\":{\"word\":\"ཀ་\",\"word_id\":372613,\"explanation\":\"མིང་ཚིག\\r\\n1. བོད་ཡིག་གི་གསལ་བྱེད་ལས་སྡེ་བ་དང་པོའི་ཡི་གེ་དང་པོ་སྟེ། འདིའི་ང་རོ་འདོན་ཚུལ་ནི།"
+      },
+      {
+        "name": "28. Empty query string ('q=')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-en&q=",
+        "status_code": 422,
+        "expected": [
+          200,
+          400,
+          404,
+          422
+        ],
+        "latency_ms": 409.11,
+        "passed": true,
+        "response_snippet": "{\"detail\":[{\"type\":\"string_too_short\",\"loc\":[\"query\",\"q\"],\"msg\":\"String should have at least 1 character\",\"input\":\"\",\"ctx\":{\"min_length\":1}}]}"
+      },
+      {
+        "name": "29. Missing 'q' parameter in URL",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-en",
+        "status_code": 422,
+        "expected": [
+          200,
+          400,
+          404,
+          422
+        ],
+        "latency_ms": 558.63,
+        "passed": true,
+        "response_snippet": "{\"detail\":[{\"type\":\"missing\",\"loc\":[\"query\",\"q\"],\"msg\":\"Field required\",\"input\":null}]}"
+      },
+      {
+        "name": "30. Missing 'pair' parameter in URL",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?q=%E0%BD%A6%E0%BD%B3%E0%BD%B2",
+        "status_code": 422,
+        "expected": [
+          200,
+          400,
+          422
+        ],
+        "latency_ms": 413.85,
+        "passed": true,
+        "response_snippet": "{\"detail\":[{\"type\":\"missing\",\"loc\":[\"query\",\"pair\"],\"msg\":\"Field required\",\"input\":null}]}"
+      },
+      {
+        "name": "31. Invalid language pair ('xx-xx')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=xx-xx&q=test",
+        "status_code": 422,
+        "expected": [
+          200,
+          400,
+          422,
+          404
+        ],
+        "latency_ms": 429.2,
+        "passed": true,
+        "response_snippet": "{\"detail\":\"Invalid pair 'xx-xx'. Must be one of: bo-bo, bo-en, en-bo.\"}"
+      },
+      {
+        "name": "32. Mixed case pair parameter ('BO-EN')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=BO-EN&q=test",
+        "status_code": 200,
+        "expected": [
+          200,
+          400,
+          422,
+          404
+        ],
+        "latency_ms": 1603.22,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":0,\"query\":\"test\",\"results\":[],\"timestamp\":\"2026-08-01T17:48:30.749Z\"},\"success\":true,\"cost\":0.0,\"latency_ms\":42,\"service_request_id\":\"8e3d8e2f-cd72-446e-b58b-043e5e30144"
+      },
+      {
+        "name": "33. Numeric query string ('12345')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-en&q=12345",
+        "status_code": 200,
+        "expected": [
+          200,
+          404
+        ],
+        "latency_ms": 1598.1,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":0,\"query\":\"12345\",\"results\":[],\"timestamp\":\"2026-08-01T17:48:32.263Z\"},\"success\":true,\"cost\":0.0,\"latency_ms\":47,\"service_request_id\":\"63d6e799-34a0-44ab-b86d-301b91a227"
+      },
+      {
+        "name": "34. Tibetan Numerals query ('༡༢༣')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-bo&q=%E0%BD%A1%E0%BD%A2%E0%BD%A3",
+        "status_code": 200,
+        "expected": [
+          200,
+          404
+        ],
+        "latency_ms": 420.6,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":0,\"query\":\"ཡརལ\",\"results\":[],\"timestamp\":\"2026-08-01T17:48:32.906Z\"},\"success\":true,\"cost\":0.0,\"latency_ms\":41,\"service_request_id\":\"b2d45b6c-f4bd-419e-b8fe-5a26d5028657"
+      },
+      {
+        "name": "35. No API Key Header (Security check)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-en&q=test",
+        "status_code": 401,
+        "expected": [
+          401,
+          403
+        ],
+        "latency_ms": 316.94,
+        "passed": true,
+        "response_snippet": "{\"detail\":\"Missing API Key. Please provide x-api-key header.\"}"
+      },
+      {
+        "name": "36. Invalid API Key Header (Security check)",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-en&q=test",
+        "status_code": 401,
+        "expected": [
+          401,
+          403
+        ],
+        "latency_ms": 325.09,
+        "passed": true,
+        "response_snippet": "{\"detail\":\"Invalid API Key.\"}"
+      },
+      {
+        "name": "37. Alternate Auth Header ('Authorization: Bearer')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-en&q=test",
+        "status_code": 401,
+        "expected": [
+          200,
+          401,
+          403
+        ],
+        "latency_ms": 1638.77,
+        "passed": true,
+        "response_snippet": "{\"detail\":\"Missing API Key. Please provide x-api-key header.\"}"
+      },
+      {
+        "name": "38. Trailing slash endpoint check",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search/?pair=bo-en&q=test",
+        "status_code": 200,
+        "expected": [
+          200,
+          301,
+          307,
+          308,
+          404
+        ],
+        "latency_ms": 1041.2,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":0,\"query\":\"test\",\"results\":[],\"timestamp\":\"2026-08-01T17:48:36.230Z\"},\"success\":true,\"cost\":0.0,\"latency_ms\":41,\"service_request_id\":\"a6dc05a8-e094-4023-b8f6-00f50ed37fc"
+      },
+      {
+        "name": "39. POST method instead of GET",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search",
+        "status_code": 405,
+        "expected": [
+          405,
+          400,
+          422,
+          200
+        ],
+        "latency_ms": 296.41,
+        "passed": true,
+        "response_snippet": "{\"detail\":\"Method Not Allowed\"}"
+      },
+      {
+        "name": "40. URL encoded special characters query",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-en&q=%23%24%25%26%2A",
+        "status_code": 200,
+        "expected": [
+          200,
+          404
+        ],
+        "latency_ms": 448.56,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":0,\"query\":\"#$%&*\",\"results\":[],\"timestamp\":\"2026-08-01T17:48:36.951Z\"},\"success\":true,\"cost\":0.0,\"latency_ms\":40,\"service_request_id\":\"fb4e1265-42b3-4a97-8bbf-a55bf03e1a"
+      },
+      {
+        "name": "41. Dictionary Batch Search #41 ('བཀྲ་ཤིས')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-en&q=%E0%BD%96%E0%BD%80%E0%BE%B2%E0%BC%8B%E0%BD%A4%E0%BD%B2%E0%BD%A6",
+        "status_code": 200,
+        "expected": [
+          200,
+          404
+        ],
+        "latency_ms": 955.23,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":1,\"query\":\"བཀྲ་ཤིས\",\"results\":[{\"data\":{\"word\":\"བཀྲ་ཤིས་\",\"word_id\":186367,\"explanation\":\"In later Tibetan translations, it is translated as {g.yung.drung}. In the early"
+      },
+      {
+        "name": "42. Dictionary Batch Search #42 ('སངས་རྒྱས')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-en&q=%E0%BD%A6%E0%BD%84%E0%BD%A6%E0%BC%8B%E0%BD%A2%E0%BE%92%E0%BE%B1%E0%BD%A6",
+        "status_code": 200,
+        "expected": [
+          200,
+          404
+        ],
+        "latency_ms": 428.61,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":1,\"query\":\"སངས་རྒྱས\",\"results\":[{\"data\":{\"word\":\"སངས་རྒྱས་\",\"word_id\":449080,\"explanation\":\"Also rendered \\\"buddha.\\\"\"},\"type\":\"tibetan-to-english\"}],\"timestamp\":\"2026-0"
+      },
+      {
+        "name": "43. Dictionary Batch Search #43 ('བྱང་ཆུབ')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-en&q=%E0%BD%96%E0%BE%B1%E0%BD%84%E0%BC%8B%E0%BD%86%E0%BD%B4%E0%BD%96",
+        "status_code": 200,
+        "expected": [
+          200,
+          404
+        ],
+        "latency_ms": 527.29,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":1,\"query\":\"བྱང་ཆུབ\",\"results\":[{\"data\":{\"word\":\"བྱང་ཆུབ་\",\"word_id\":223317,\"explanation\":\"The Sanskrit can mean knowledge, realization, waking, blossoming, etc., accordi"
+      },
+      {
+        "name": "44. Dictionary Batch Search #44 ('ཤེས་རབ')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-en&q=%E0%BD%A4%E0%BD%BA%E0%BD%A6%E0%BC%8B%E0%BD%A2%E0%BD%96",
+        "status_code": 200,
+        "expected": [
+          200,
+          404
+        ],
+        "latency_ms": 907.48,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":1,\"query\":\"ཤེས་རབ\",\"results\":[{\"data\":{\"word\":\"ཤེས་རབ་\",\"word_id\":444444,\"explanation\":\"A mind that sees the ultimate truth directly.\"},\"type\":\"tibetan-to-english\"}],\"ti"
+      },
+      {
+        "name": "45. Dictionary Batch Search #45 ('སློབ་སྦྱོང')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-en&q=%E0%BD%A6%E0%BE%B3%E0%BD%BC%E0%BD%96%E0%BC%8B%E0%BD%A6%E0%BE%A6%E0%BE%B1%E0%BD%BC%E0%BD%84",
+        "status_code": 200,
+        "expected": [
+          200,
+          404
+        ],
+        "latency_ms": 533.75,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":1,\"query\":\"སློབ་སྦྱོང\",\"results\":[{\"data\":{\"word\":\"སློབ་སྦྱོང་\",\"word_id\":510148,\"explanation\":\"learning\"},\"type\":\"tibetan-to-english\"}],\"timestamp\":\"2026-08-01T17:48:40"
+      },
+      {
+        "name": "46. Dictionary Batch Search #46 ('བཀྲ་ཤིས')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-en&q=%E0%BD%96%E0%BD%80%E0%BE%B2%E0%BC%8B%E0%BD%A4%E0%BD%B2%E0%BD%A6",
+        "status_code": 200,
+        "expected": [
+          200,
+          404
+        ],
+        "latency_ms": 486.03,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":1,\"query\":\"བཀྲ་ཤིས\",\"results\":[{\"data\":{\"word\":\"བཀྲ་ཤིས་\",\"word_id\":186367,\"explanation\":\"In later Tibetan translations, it is translated as {g.yung.drung}. In the early"
+      },
+      {
+        "name": "47. Dictionary Batch Search #47 ('སངས་རྒྱས')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-en&q=%E0%BD%A6%E0%BD%84%E0%BD%A6%E0%BC%8B%E0%BD%A2%E0%BE%92%E0%BE%B1%E0%BD%A6",
+        "status_code": 200,
+        "expected": [
+          200,
+          404
+        ],
+        "latency_ms": 488.56,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":1,\"query\":\"སངས་རྒྱས\",\"results\":[{\"data\":{\"word\":\"སངས་རྒྱས་\",\"word_id\":449080,\"explanation\":\"Also rendered \\\"buddha.\\\"\"},\"type\":\"tibetan-to-english\"}],\"timestamp\":\"2026-0"
+      },
+      {
+        "name": "48. Dictionary Batch Search #48 ('བྱང་ཆུབ')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-en&q=%E0%BD%96%E0%BE%B1%E0%BD%84%E0%BC%8B%E0%BD%86%E0%BD%B4%E0%BD%96",
+        "status_code": 200,
+        "expected": [
+          200,
+          404
+        ],
+        "latency_ms": 501.97,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":1,\"query\":\"བྱང་ཆུབ\",\"results\":[{\"data\":{\"word\":\"བྱང་ཆུབ་\",\"word_id\":223317,\"explanation\":\"The Sanskrit can mean knowledge, realization, waking, blossoming, etc., accordi"
+      },
+      {
+        "name": "49. Dictionary Batch Search #49 ('ཤེས་རབ')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-en&q=%E0%BD%A4%E0%BD%BA%E0%BD%A6%E0%BC%8B%E0%BD%A2%E0%BD%96",
+        "status_code": 200,
+        "expected": [
+          200,
+          404
+        ],
+        "latency_ms": 476.27,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":1,\"query\":\"ཤེས་རབ\",\"results\":[{\"data\":{\"word\":\"ཤེས་རབ་\",\"word_id\":444444,\"explanation\":\"A mind that sees the ultimate truth directly.\"},\"type\":\"tibetan-to-english\"}],\"ti"
+      },
+      {
+        "name": "50. Dictionary Batch Search #50 ('སློབ་སྦྱོང')",
+        "endpoint": "https://api-v1.monlamai.studio/api/v1/dictionary/search?pair=bo-en&q=%E0%BD%A6%E0%BE%B3%E0%BD%BC%E0%BD%96%E0%BC%8B%E0%BD%A6%E0%BE%A6%E0%BE%B1%E0%BD%BC%E0%BD%84",
+        "status_code": 200,
+        "expected": [
+          200,
+          404
+        ],
+        "latency_ms": 449.05,
+        "passed": true,
+        "response_snippet": "{\"data\":{\"mode\":\"fast\",\"count\":1,\"query\":\"སློབ་སྦྱོང\",\"results\":[{\"data\":{\"word\":\"སློབ་སྦྱོང་\",\"word_id\":510148,\"explanation\":\"learning\"},\"type\":\"tibetan-to-english\"}],\"timestamp\":\"2026-08-01T17:48:42"
+      }
+    ]
+  }
+}

@@ -53,7 +53,7 @@ What ships here today
 / ``plugins`` / ``fuse`` handlers :class:`~teea.daemon.TEEADaemon` already
 registers on its ``IpcServer``) to one HTTP endpoint.
 
-:mod:`http_server` extends this with AI streaming endpoints (rewrite, explain,
+:mod:`http_server` extends this with AI streaming endpoints (explain,
 summarize, cancel) served over SSE (Server-Sent Events), combining both
 analysis and AI behind a single loopback HTTP server on a single port.
 """

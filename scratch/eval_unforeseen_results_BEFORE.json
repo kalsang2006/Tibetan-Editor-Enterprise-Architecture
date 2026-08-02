@@ -1,0 +1,98 @@
+{
+  "setup": {
+    "seed": 42,
+    "holdout_buckets": 4,
+    "positive_records": 325,
+    "clean_records": 150,
+    "total_records": 475,
+    "engine_faults": 0
+  },
+  "detection": {
+    "tp": 142,
+    "fp": 9,
+    "fn": 183,
+    "tn": 141,
+    "accuracy": 0.5957894736842105,
+    "precision": 0.9403973509933775,
+    "recall": 0.4369230769230769,
+    "f1": 0.5966386554621849,
+    "specificity": 0.94,
+    "fpr": 0.06,
+    "fnr": 0.563076923076923,
+    "mcc": 0.37625220952839156
+  },
+  "word_level": {
+    "tp": 5,
+    "fp": 178,
+    "fn": 427,
+    "precision": 0.0273224043715847,
+    "recall": 0.011574074074074073,
+    "f1": 0.016260162601626015
+  },
+  "correction": {
+    "exact_match": 142,
+    "exact_match_rate": 0.29894736842105263
+  },
+  "latency_ms": {
+    "mean": 576.10210189471,
+    "median": 470.19970000110334,
+    "p95": 1695.351499998651,
+    "p99": 2183.864000002359
+  },
+  "per_kind": {
+    "clean": {
+      "total": 150,
+      "emitted": 9,
+      "gold_error": 0,
+      "exact": 141
+    },
+    "grammar": {
+      "total": 150,
+      "emitted": 62,
+      "gold_error": 150,
+      "exact": 0
+    },
+    "syn:CASE_PARTICLE_SUBSTITUTION": {
+      "total": 25,
+      "emitted": 12,
+      "gold_error": 25,
+      "exact": 1
+    },
+    "syn:CHARACTER_CONFUSION": {
+      "total": 25,
+      "emitted": 5,
+      "gold_error": 25,
+      "exact": 0
+    },
+    "syn:PARTICLE_OMISSION": {
+      "total": 25,
+      "emitted": 2,
+      "gold_error": 25,
+      "exact": 0
+    },
+    "syn:SYLLABLE_SWAP": {
+      "total": 25,
+      "emitted": 16,
+      "gold_error": 25,
+      "exact": 0
+    },
+    "syn:TSHEG_DROP": {
+      "total": 25,
+      "emitted": 19,
+      "gold_error": 25,
+      "exact": 0
+    },
+    "syn:VOWEL_MUTATION": {
+      "total": 25,
+      "emitted": 3,
+      "gold_error": 25,
+      "exact": 0
+    },
+    "syn:WORD_DUPLICATION": {
+      "total": 25,
+      "emitted": 23,
+      "gold_error": 25,
+      "exact": 0
+    }
+  }
+}

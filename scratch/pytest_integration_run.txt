@@ -1,0 +1,36 @@
+F........                                                                [100%]
+================================== FAILURES ===================================
+_____________________ test_loads_the_authoritative_model ______________________
+
+real_tokenizer = <teea.nlp.tokenization.tibert.TiBERTTokenizer object at 0x000001EBB16C0C20>
+
+    def test_loads_the_authoritative_model(real_tokenizer: TiBERTTokenizer) -> None:
+>       assert real_tokenizer.model_id == "CMLI-NLP/TiBERT"
+E       AssertionError: assert './TiBERT' == 'CMLI-NLP/TiBERT'
+E         
+E         - CMLI-NLP/TiBERT
+E         + ./TiBERT
+
+tests\nlp\tokenization\test_tibert_integration.py:60: AssertionError
+---------------------------- Captured stdout setup ----------------------------
+2026-08-02 03:31:28 [info     ] loading_tokenizer              local_path=None model_id=./TiBERT
+2026-08-02 03:31:33 [info     ] tokenizer_loaded               is_fast=True model_id=./TiBERT vocab_size=29965
+============================== warnings summary ===============================
+..\..\AppData\Local\Programs\Python\Python312\Lib\site-packages\fastapi\testclient.py:1
+  C:\Users\kalsa\AppData\Local\Programs\Python\Python312\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+tests/nlp/tokenization/test_tibert_integration.py::test_loads_the_authoritative_model
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
+
+tests/nlp/tokenization/test_tibert_integration.py::test_loads_the_authoritative_model
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+SKIPPED [1] tests\corpus\test_builder.py:8: could not import 'pyarrow': No module named 'pyarrow'
+SKIPPED [1] tests\corpus\test_cli_dataset.py:8: could not import 'pyarrow': No module named 'pyarrow'
+FAILED tests/nlp/tokenization/test_tibert_integration.py::test_loads_the_authoritative_model
+1 failed, 8 passed, 2 skipped, 2374 deselected, 3 warnings in 5.39s
+sys:1: DeprecationWarning: builtin type swigvarlink has no __module__ attribute
+EXIT:1

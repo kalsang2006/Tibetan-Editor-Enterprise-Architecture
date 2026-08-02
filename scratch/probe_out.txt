@@ -1,0 +1,13 @@
+2026-08-02 00:22:01 [info     ] tibert_loading                 device=auto source=TiBERT
+Loading weights:   0%|          | 0/202 [00:00<?, ?it/s]Loading weights: 100%|██████████| 202/202 [00:00<00:00, 5525.05it/s]
+2026-08-02 00:22:02 [info     ] tibert_loaded                  device=cpu key=tibert:1.0 vocab_size=29965
+engine ready 5.61 s
+2026-08-02 00:22:02 [info     ] analysis_completed             char_count=1 elapsed_ms=31.57 suggestions=1
+'ང' -> [(0, 0, None, 1.0, 'low', 'SPELLING')]
+2026-08-02 00:22:02 [info     ] analysis_completed             char_count=1 elapsed_ms=22.17 suggestions=1
+'པ' -> [(0, 0, None, 1.0, 'low', 'SPELLING')]
+2026-08-02 00:22:02 [info     ] analysis_completed             char_count=4 elapsed_ms=22.83 suggestions=1
+'མཚོན' -> [(0, 0, None, 1.0, 'low', 'SPELLING')]
+--- clean sentence ---
+2026-08-02 00:22:02 [info     ] analysis_completed             char_count=17 elapsed_ms=82.15 suggestions=1
+[(0, 0, None, 1.0, 'low', 'SPELLING', 'sentence_count=1; token_count=4; entity_count=0; term_count=0; unresol')]

@@ -289,7 +289,7 @@ class ContextualGrammarEngine:
             next_is_po = False
             if i + 1 < len(words_with_spans):
                 w_next = words_with_spans[i + 1][0].strip("་ །\u0f0b\u0f0d ")
-                if w_next in ("པོ", "བོ"):
+                if w_next in ("པོ", "བོ", "གྱི", "གི", "ཀྱི", "འི", "ཡི", "ནི", "དང"):
                     next_is_po = True
             if not next_is_po:
                 return ContextualError(
@@ -310,7 +310,7 @@ class ContextualGrammarEngine:
                 next_is_po = False
                 if i + 2 < len(words_with_spans):
                     w_after = words_with_spans[i + 2][0].strip("་ །\u0f0b\u0f0d ")
-                    if w_after in ("པོ", "བོ"):
+                    if w_after in ("པོ", "བོ", "གྱི", "གི", "ཀྱི", "འི", "ཡི", "ནི", "དང"):
                         next_is_po = True
                 if not next_is_po:
                     span_text = sentence_text[s_start:s_next_end] if sentence_text else "གལ་ཆེན"

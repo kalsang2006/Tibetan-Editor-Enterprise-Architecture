@@ -42,7 +42,7 @@ NormalizationForm = Literal["NFC", "NFKC", "NFD", "NFKD"]
 
 #: Default Hugging Face model identifier for TiBERT. This is the authoritative
 #: Tibetan encoder for the project and must not be silently substituted.
-DEFAULT_TIBERT_MODEL_ID = "./TiBERT"
+DEFAULT_TIBERT_MODEL_ID = "CMLI-NLP/TiBERT"
 
 #: BERT-base positional limit. TiBERT is a BERT-base encoder (12 layers).
 DEFAULT_MAX_SEQUENCE_LENGTH = 512

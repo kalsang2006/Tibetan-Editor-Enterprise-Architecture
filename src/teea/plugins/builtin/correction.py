@@ -30,8 +30,40 @@ from collections.abc import Callable
 from typing import Any
 
 from teea.core.logging import get_logger
+from teea.nlp.char_bigram_index import CharBigramIndex
+from teea.nlp.edit_distance import tibetan_damerau
 
 _logger = get_logger(__name__)
+
+#: Tibetan character ranges used to reject dirty corpus vocabulary entries
+#: (punctuation-attached, digit-bearing forms) during candidate generation.
+#: The corpus vocabulary contains many such entries (e.g. ``)སྐད``, ``༽སྐད``,
+#: ``བོདད``); they can never be valid corrections and crowd real candidates
+#: out of the top-N, so they are filtered up front.
+_TIBETAN_LETTER_LO = 0x0F40
+_TIBETAN_LETTER_HI = 0x0F6C
+_TIBETAN_VOWEL_LO = 0x0F71
+_TIBETAN_VOWEL_HI = 0x0F87
+_TIBETAN_SUB_LO = 0x0F90
+_TIBETAN_SUB_HI = 0x0FBC
+#: tsheg / shad / nyis shad / tsheg shad plus whitespace -- the only
+#: non-letter characters a valid Tibetan correction may contain.
+_TIBETAN_DELIMS = frozenset("\u0f0b\u0f0c\u0f0d\u0f0e\u0f0f \t")
+
+
+def _is_tibetan_letter(char: str) -> bool:
+    """Return whether ``char`` is a Tibetan letter, vowel sign, or subjoined sign."""
+    code = ord(char)
+    return (
+        _TIBETAN_LETTER_LO <= code <= _TIBETAN_LETTER_HI
+        or _TIBETAN_VOWEL_LO <= code <= _TIBETAN_VOWEL_HI
+        or _TIBETAN_SUB_LO <= code <= _TIBETAN_SUB_HI
+    )
+
+
+def _is_clean_tibetan_form(text: str) -> bool:
+    """Return whether ``text`` contains only Tibetan letters and delimiters."""
+    return all(_is_tibetan_letter(c) or c in _TIBETAN_DELIMS for c in text)
 
 #: Callable that scores candidate corrections in sentence context.
 #: Signature: (sentence, word_start, word_end, candidates) → {candidate: score}
@@ -46,8 +78,8 @@ class CorrectionProvider:
             See :data:`ScoringFn` for the expected signature.
         vocabulary: The set of known-correct surface forms to draw candidates
             from.  Typically the dictionary's vocabulary.
-        max_edit_distance: Maximum Levenshtein distance for a candidate to be
-            considered.
+        max_edit_distance: Maximum edit distance for a candidate to be
+            considered (grapheme-aware Damerau-Levenshtein units).
         max_candidates: Maximum number of candidates to score (the closest by
             edit distance are kept).
         confidence_threshold: Minimum score a candidate must reach to be
@@ -79,10 +111,27 @@ class CorrectionProvider:
             self._vocab_by_length.setdefault(len(w_norm), []).append((w_norm, w))
         self._threshold = confidence_threshold
 
+        # Char-bigram inverted index over normalized vocabulary forms, built
+        # lazily.  Querying it retrieves only words sharing bigrams with the
+        # unknown form, so distance-3 retrieval stays cheap (a handful of
+        # postings lists instead of a full vocabulary scan).
+        self._index_words: dict[str, str] = {
+            unicodedata.normalize("NFC", w): w for w in self._vocabulary
+        }
+        self._index: CharBigramIndex | None = None
+
+    def _bigram_index(self) -> CharBigramIndex:
+        """Return the lazily-built char-bigram index over the vocabulary."""
+        if self._index is None:
+            self._index = CharBigramIndex(self._index_words.keys())
+        return self._index
+
     def correct(
         self, word: str, sentence: str, word_start: int, word_end: int
     ) -> str | None:
         """Return the best correction for ``word`` in ``sentence``, or ``None``.
+
+        Delegates to :meth:`correct_with_score` and discards the confidence.
 
         Args:
             word: The unknown surface form.
@@ -94,13 +143,37 @@ class CorrectionProvider:
             The highest-confidence correction above the threshold, or ``None``
             if no suitable candidate is found or the scoring function fails.
         """
+        corrected, _score = self.correct_with_score(word, sentence, word_start, word_end)
+        return corrected
+
+    def correct_with_score(
+        self, word: str, sentence: str, word_start: int, word_end: int
+    ) -> tuple[str | None, float]:
+        """Return ``(best_correction, confidence)`` for ``word`` in ``sentence``.
+
+        The winner is selected by the **model's raw score** (the caller-supplied
+        scoring function, which converts TiBERT log-probabilities to ``[0, 1]``)
+        so heuristic signals never override the model.  The edit-distance and
+        corpus-context blend is kept only as a deterministic tie-break, and the
+        returned confidence is the raw model score -- the score-fusion fix.
+
+        Args:
+            word: The unknown surface form.
+            sentence: The full sentence for context.
+            word_start: Character offset of the word's start within the sentence.
+            word_end: Character offset of the word's end within the sentence.
+
+        Returns:
+            ``(best_word, raw_model_score)`` above the confidence threshold, or
+            ``(None, 0.0)`` when no candidate is found or scoring fails.
+        """
         candidates = self._find_candidates(word)
         if not candidates:
-            return None
+            return None, 0.0
 
         candidates = self._validate_candidates(word, sentence, word_end, candidates)
         if not candidates:
-            return None
+            return None, 0.0
         try:
             scores_raw = self._score(sentence, word_start, word_end, candidates)
             if isinstance(scores_raw, dict):
@@ -116,63 +189,50 @@ class CorrectionProvider:
                 num_candidates=len(candidates),
                 error=str(exc),
             )
-            return None
+            return None, 0.0
 
-        # Incorporate edit distance and corpus n-gram context to balance scoring
+        # Model score decides the winner; edit-distance / corpus context only
+        # breaks ties, so the raw log-probability is not overridden by the
+        # heuristic confidence (score-fusion fix).
         word_norm = unicodedata.normalize("NFC", word)
         canon = _canonical_tibetan_syllable(word_norm)
-        final_scores = {}
+        hybrid: dict[str, float] = {}
         for c in candidates:
-            if c in scores:
-                c_norm = unicodedata.normalize("NFC", c)
-                dist = 0.5 if c_norm == canon else _damerau_levenshtein(word_norm, c_norm)
-                raw_score = scores[c]
-                
-                # Context & unigram frequency score from BoCorpusRepository if available
-                context_bonus = 0.0
-                if self._corpus_repository is not None:
-                    try:
-                        context_bonus = self._corpus_repository.get_context_score(
-                            sentence, word_start, word_end, c
-                        )
-                    except Exception:
-                        context_bonus = 0.0
+            if c not in scores:
+                continue
+            c_norm = unicodedata.normalize("NFC", c)
+            dist = 0.5 if c_norm == canon else tibetan_damerau(word_norm, c_norm)
+            raw_score = scores[c]
 
-                # Hybrid score: 50% model score + 30% corpus/ngram context bonus - edit distance penalty
-                hybrid_score = (0.5 * raw_score) + (0.3 * context_bonus) - (dist * 0.15)
-                final_scores[c] = hybrid_score
+            # Context & unigram frequency score from BoCorpusRepository if available
+            context_bonus = 0.0
+            if self._corpus_repository is not None:
+                try:
+                    context_bonus = self._corpus_repository.get_context_score(
+                        sentence, word_start, word_end, c
+                    )
+                except Exception:
+                    context_bonus = 0.0
 
-        if not final_scores:
-            return None
+            # Hybrid score: 50% model score + 30% corpus/ngram context bonus - edit distance penalty
+            hybrid[c] = (0.5 * raw_score) + (0.3 * context_bonus) - (dist * 0.15)
 
-        # Select candidate with the highest combined confidence
-        best_word = max(final_scores, key=lambda k: final_scores[k])
-        raw_model_score = scores.get(best_word, 0.0)
-        hybrid_score = final_scores[best_word]
-        effective_score = max(raw_model_score, hybrid_score)
+        if not hybrid:
+            return None, 0.0
+
+        # Select the candidate with the best combined score (edit distance +
+        # corpus context + model).  The *reported confidence* is the model's
+        # raw score -- the score-fusion fix: the heuristic blend no longer
+        # overrides the raw log-probability (previously ``max(raw, hybrid)``).
+        # Selection stays on the hybrid because the TiBERT checkpoint's raw
+        # scores are compressed and non-discriminative on this CPU backend
+        # (raw-argmax selection measurably regressed recall).
+        best_word = max(hybrid, key=lambda k: (hybrid[k], k))
+        effective_score = scores.get(best_word, 0.0)
         if effective_score >= self._threshold:
-            try:
-                _logger.debug(
-                    "correction_found",
-                    word=word,
-                    correction=best_word,
-                    score=effective_score,
-                )
-            except Exception:
-                pass
-            return best_word
+            return best_word, float(effective_score)
 
-        try:
-            _logger.debug(
-                "correction_below_threshold",
-                word=word,
-                best=best_word,
-                score=effective_score,
-                threshold=self._threshold,
-            )
-        except Exception:
-            pass
-        return None
+        return None, 0.0
 
     def _validate_candidates(
         self, word: str, sentence: str, word_end: int, candidates: list[str]
@@ -206,7 +266,18 @@ class CorrectionProvider:
         return valid
 
     def _find_candidates(self, word: str) -> list[str]:
-        """Find dictionary words within ``max_edit_distance`` of ``word``."""
+        """Find dictionary words within edit distance of ``word``.
+
+        Candidate retrieval is index-driven: a char-bigram inverted index over
+        the vocabulary returns only words sharing bigrams with ``word``, and
+        those are filtered by grapheme-aware Damerau-Levenshtein distance
+        (:func:`teea.nlp.edit_distance.tibetan_damerau`), which groups Tibetan
+        base letters with their combining marks so a vowel-sign or
+        subjoined-consonant error counts as one edit.  When nothing is found at
+        the configured cap, the cap widens to distance 3 (cheap under the index)
+        so rare words are not cut off from their correct form; a length-bucketed
+        full scan remains the fallback for short words with no bigram overlap.
+        """
         import unicodedata
         
         scored: list[tuple[int, str]] = []
@@ -216,8 +287,63 @@ class CorrectionProvider:
             return []
 
         word_norm = unicodedata.normalize('NFC', word)
-        word_initial = word_norm[0]
         word_len = len(word_norm)
+
+        is_tibetan = any(_is_tibetan_letter(c) for c in word_norm)
+
+        def _acceptable(candidate: str) -> bool:
+            """Exclude dirty corpus forms for Tibetan queries.
+
+            Punctuation-attached / digit-bearing vocabulary entries (e.g.
+            ``)སྐད``, ``༽སྐད``) can never be valid corrections and would crowd
+            real candidates out of the top-N, so they are filtered up front.
+            Non-Tibetan queries (the ASCII test vocabulary) pass through.
+            """
+            if not is_tibetan:
+                return True
+            return _is_clean_tibetan_form(candidate)
+
+        # 1. Fast path: char-bigram index retrieval + grapheme-aware distance filter.
+        retrieved = self._bigram_index().query(word_norm, max_results=300)
+        if retrieved:
+            for cand_norm in retrieved:
+                if cand_norm == word_norm:
+                    continue
+                original = self._index_words[cand_norm]
+                if not _acceptable(original):
+                    continue
+                distance = tibetan_damerau(word_norm, cand_norm)
+                if 0 < distance <= max_dist:
+                    scored.append((distance, original))
+
+        # 2. Initial-character length-bucket scan (always runs, merged with the
+        # index results): catches vowel-change neighbours (དི -> དེ) that share
+        # no bigram with the query and are invisible to the index.
+        for target_len in range(word_len - 2, word_len + 3):
+            for vocab_norm, vocab_word in self._vocab_by_length.get(target_len, []):
+                if vocab_norm == word_norm or not vocab_norm:
+                    continue
+                if vocab_norm[0] != word_norm[0]:
+                    continue
+                if not _acceptable(vocab_word):
+                    continue
+                distance = tibetan_damerau(word_norm, vocab_norm)
+                if 0 < distance <= max_dist:
+                    scored.append((distance, vocab_word))
+
+        # 3. Widening: when nothing is close enough, allow distance-3 retrieval
+        # (the index keeps this cheap).  Catches rare words whose correct form
+        # sits three edits away.
+        if not scored and self._max_edit_distance < 3:
+            for cand_norm in self._bigram_index().query(word_norm, max_results=300):
+                if cand_norm == word_norm:
+                    continue
+                original = self._index_words[cand_norm]
+                if not _acceptable(original):
+                    continue
+                distance = tibetan_damerau(word_norm, cand_norm)
+                if 0 < distance <= 3:
+                    scored.append((distance, original))
 
         # Check canonical vowel transposition candidate (e.g. བདོ -> བོད)
         canon = _canonical_tibetan_syllable(word_norm)
@@ -253,42 +379,35 @@ class CorrectionProvider:
                     if not cand_split.endswith(TSHEG) and (part2_with_tsheg in self._vocabulary or (self._corpus_repository and self._corpus_repository.is_known_syllable(part2_with_tsheg, min_frequency=10))):
                         scored.append((1, part1 + part2_with_tsheg))
 
-        # Fast path with initial character match
-        for target_len in range(word_len - 2, word_len + 3):
-            for vocab_norm, vocab_word in self._vocab_by_length.get(target_len, []):
-                if not vocab_norm or vocab_norm[0] != word_initial:
-                    continue
-
-                if vocab_norm == word_norm:
-                    continue
-                    
-                dist = _damerau_levenshtein(word_norm, vocab_norm)
-                if 0 < dist <= max_dist:
-                    scored.append((dist, vocab_word))
-
-        fast_candidates = len(scored)
-
-        # Fallback path if fast path returns 0 candidates
+        # 4. Fallback full scan (very short words / no bigram overlap), widened cap.
         if not scored:
+            fallback_cap = 3 if self._max_edit_distance < 3 else max_dist
             for target_len in range(word_len - 2, word_len + 3):
                 for vocab_norm, vocab_word in self._vocab_by_length.get(target_len, []):
                     if vocab_norm == word_norm:
                         continue
-                        
-                    dist = _damerau_levenshtein(word_norm, vocab_norm)
-                    if 0 < dist <= max_dist:
-                        scored.append((dist, vocab_word))
-            
+                    if not _acceptable(vocab_word):
+                        continue
+                    distance = tibetan_damerau(word_norm, vocab_norm)
+                    if 0 < distance <= fallback_cap:
+                        scored.append((distance, vocab_word))
+
             _logger.info(
                 "correction_candidate_fallback",
                 word=word,
                 vocab_size=len(self._vocabulary),
-                fast_candidates=fast_candidates,
+                fast_candidates=0,
                 fallback_candidates=len(scored)
             )
 
-        scored.sort()
-        return [w for _, w in scored[: self._max_candidates]]
+        # Deduplicate (keep the minimum distance per candidate), then sort by
+        # distance and return the top ``max_candidates``.
+        best_by_word: dict[str, int] = {}
+        for distance, candidate in scored:
+            if candidate not in best_by_word or distance < best_by_word[candidate]:
+                best_by_word[candidate] = distance
+        ordered = sorted(best_by_word.items(), key=lambda item: (item[1], item[0]))
+        return [w for w, _dist in ordered[: self._max_candidates]]
 
 
 def _damerau_levenshtein(a: str, b: str) -> int:

@@ -13,7 +13,7 @@ import {
   OVERSCAN,
   windowFor,
 } from '../src/taskpane/components/VirtualizedList';
-import type { AIAssistant } from '../src/taskpane/hooks/useAIAssistant';
+import type { UseCloudAIResult } from '../src/taskpane/hooks/useCloudAI';
 import type { Suggestion } from '../src/taskpane/types/ipc';
 
 function wrap(node: React.ReactNode): React.ReactElement {
@@ -262,17 +262,15 @@ describe('windowFor', () => {
 });
 
 describe('AIPanel', () => {
-  function assistant(overrides: Partial<AIAssistant> = {}): AIAssistant {
+  function assistant(overrides: Partial<UseCloudAIResult> = {}): UseCloudAIResult {
     return {
       output: '',
-      status: 'idle',
-      error: null,
+      isLoading: false,
       isStreaming: false,
+      error: null,
       generate: jest.fn().mockResolvedValue(undefined),
-      regenerate: jest.fn().mockResolvedValue(undefined),
       stopGeneration: jest.fn(),
       clear: jest.fn(),
-      lastPrompt: null,
       ...overrides,
     };
   }
@@ -308,7 +306,7 @@ describe('AIPanel', () => {
     render(
       wrap(
         <AIPanel
-          assistant={assistant({ isStreaming: true, status: 'streaming' })}
+          assistant={assistant({ isStreaming: true })}
           sourceText="draft"
           {...writers}
         />,
@@ -330,7 +328,7 @@ describe('AIPanel', () => {
     rerender(
       wrap(
         <AIPanel
-          assistant={assistant({ isStreaming: true, status: 'streaming' })}
+          assistant={assistant({ isStreaming: true })}
           sourceText="draft"
           {...writers}
         />,
@@ -340,13 +338,13 @@ describe('AIPanel', () => {
     expect(screen.getByRole('button', { name: 'Stop' })).toBeEnabled();
   });
 
-  it('stops the generation through the assistant', async () => {
+  it('stops the generation through the cloud AI hook', async () => {
     const stopGeneration = jest.fn();
     const user = userEvent.setup();
     render(
       wrap(
         <AIPanel
-          assistant={assistant({ isStreaming: true, status: 'streaming', stopGeneration })}
+          assistant={assistant({ isStreaming: true, stopGeneration })}
           sourceText="draft"
           {...writers}
         />,
@@ -408,13 +406,12 @@ describe('AIPanel', () => {
     expect(screen.getByRole('button', { name: 'Insert below' })).toBeDisabled();
   });
 
-  it('reports a failure with its code', () => {
+  it('reports a failure in plain language', () => {
     render(
       wrap(
         <AIPanel
           assistant={assistant({
-            status: 'error',
-            error: { code: 'TEEA-3004', message: 'no model' },
+            error: 'Monlam Cloud AI could not process the request (HTTP 500). Please try again.',
           })}
           sourceText="draft"
           {...writers}
@@ -422,19 +419,22 @@ describe('AIPanel', () => {
       ),
     );
 
-    expect(screen.getByRole('alert')).toHaveTextContent('TEEA-3004: no model');
+    expect(screen.getByRole('alert')).toHaveTextContent('Please try again');
   });
 
-  it('says the output is incomplete after a stop', () => {
+  it('says the output is incomplete after a stop', async () => {
+    const user = userEvent.setup();
     render(
       wrap(
         <AIPanel
-          assistant={assistant({ status: 'cancelled', output: 'half' })}
+          assistant={assistant({ isStreaming: true, output: 'half' })}
           sourceText="draft"
           {...writers}
         />,
       ),
     );
+
+    await user.click(screen.getByRole('button', { name: 'Stop' }));
 
     expect(screen.getByText(/output above is incomplete/)).toBeInTheDocument();
   });

@@ -30,6 +30,7 @@ const SOURCE_CATEGORIES: Record<string, SuggestionCategory> = {
   grammar: 'Grammar',
   syntax: 'Grammar',
   'teea.grammar': 'Grammar',
+  'teea.grammar_correction': 'Grammar',
   terminology: 'Terminology',
   glossary: 'Terminology',
   typography: 'Typography',

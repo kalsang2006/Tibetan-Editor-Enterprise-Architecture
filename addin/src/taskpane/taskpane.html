@@ -22,10 +22,35 @@
     </style>
 
     <!--
-      office.js is loaded from the local bundle, not from the Microsoft CDN.
-      TEEA is offline-first (ADR-002) and must start on an air-gapped machine;
-      a CDN script tag would make the task pane fail to load without a network.
+      Office.js loading, in order of preference:
+
+      1. Real Office.js from the Microsoft CDN. This is the only supported way
+         to access the Word JavaScript APIs: inside Word this script connects
+         to the host, and `Word.run` / `context.document.body` become real.
+         Without it, `readDocumentText` has nothing to read and no suggestions
+         are produced.
+
+         A note on self-hosting (why we don't vendor the library and point the
+         script tag at it): the CDN file is a loader. At runtime it fetches
+         MicrosoftAjax.js from ajax.aspnetcdn.com and a host-specific Word API
+         script (e.g. word-16.01.js for Word win32) from the Office CDN, then
+         loads locale strings. Microsoft does not support self-hosting, and a
+         single vendored copy would still need those CDN fetches — so it cannot
+         provide offline document access either. (The official file is saved as
+         office.full.js in this folder for reference only; it is NOT wired in.)
+
+      2. The local bootstrap stub (office.js, below) is a last-resort fallback
+         for air-gapped machines (ADR-002). It self-guards: if the CDN script
+         loaded, it does nothing at all. If the CDN is unreachable, it fires
+         Office.onReady so the pane still initializes — but document reading
+         and editing are unavailable in that mode (inherent: with no real
+         library there is no host bridge to Word), and the console will say so.
     -->
+    <!-- Global process polyfill to prevent runtime ReferenceError in browser -->
+    <script>
+      window.process = window.process || { env: {} };
+    </script>
+    <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
     <script src="office.js"></script>
   </head>
 

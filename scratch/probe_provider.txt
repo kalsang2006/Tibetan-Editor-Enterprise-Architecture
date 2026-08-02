@@ -1,0 +1,389 @@
+engine ready.
+  in dict: བོདསྐད = False
+  in provider._vocabulary: བོདསྐད = False
+  in dict: བོད = True
+  in provider._vocabulary: བོད = True
+  in dict: སྐད = True
+  in provider._vocabulary: སྐད = True
+  in dict: དི = True
+  in provider._vocabulary: དི = True
+  in dict: དེ = True
+  in provider._vocabulary: དེ = True
+  in dict: བདི = True
+  in provider._vocabulary: བདི = True
+  in dict: བདེ = True
+  in provider._vocabulary: བདེ = True
+  in dict: སེས = True
+  in provider._vocabulary: སེས = True
+  in dict: ཤེས = True
+  in provider._vocabulary: ཤེས = True
+
+=== correct_with_score('བོདསྐད') in 'ང་བོདསྐད་སྦྱོང་བྱེད་ཀྱི་ཡོད།'
+  _find_candidates -> ['དསྐད', 'བོད་སྐད', 'བོད་སྐད་', 'བོདད', ')སྐད', ',དཔྱོད', '/སྐད', '>སྐད', '༡སྐད', '༨༤སྐད', '༩སྐད', '༼སྐད', '༽སྐད', 'ངགསྐད', 'ཅིགསྐད', 'ཇིསྐད', 'དསྐྱེད', 'དསྐྱོད', 'བསྐད', 'བོད']
+  validated -> ['དསྐད', 'བོད་སྐད', 'བོདད', ')སྐད', ',དཔྱོད', '/སྐད', '>སྐད', '༡སྐད', '༨༤སྐད', '༩སྐད', '༼སྐད', '༽སྐད', 'ངགསྐད', 'ཅིགསྐད', 'ཇིསྐད', 'དསྐྱེད', 'དསྐྱོད', 'བསྐད', 'བོད']
+    cand='དསྐད' raw=0.000 hybrid=-0.142 in_vocab=True
+    cand='བོད་སྐད' raw=0.378 hybrid=0.122 in_vocab=False
+    cand='བོདད' raw=0.000 hybrid=-0.142 in_vocab=True
+    cand=')སྐད' raw=0.336 hybrid=-0.124 in_vocab=True
+    cand=',དཔྱོད' raw=0.000 hybrid=-0.295 in_vocab=True
+    cand='/སྐད' raw=0.152 hybrid=-0.219 in_vocab=True
+    cand='>སྐད' raw=0.108 hybrid=-0.235 in_vocab=True
+    cand='༡སྐད' raw=0.000 hybrid=-0.295 in_vocab=True
+    cand='༨༤སྐད' raw=0.000 hybrid=-0.295 in_vocab=True
+    cand='༩སྐད' raw=0.000 hybrid=-0.295 in_vocab=True
+    cand='༼སྐད' raw=0.207 hybrid=-0.181 in_vocab=True
+    cand='༽སྐད' raw=0.316 hybrid=-0.130 in_vocab=True
+    cand='ངགསྐད' raw=0.000 hybrid=-0.295 in_vocab=True
+    cand='ཅིགསྐད' raw=0.000 hybrid=-0.295 in_vocab=True
+    cand='ཇིསྐད' raw=0.000 hybrid=-0.295 in_vocab=True
+    cand='དསྐྱེད' raw=0.000 hybrid=-0.295 in_vocab=True
+    cand='དསྐྱོད' raw=0.000 hybrid=-0.295 in_vocab=True
+    cand='བསྐད' raw=0.000 hybrid=-0.295 in_vocab=True
+    cand='བོད' raw=0.000 hybrid=-0.224 in_vocab=True
+  RAW-argmax winner   = 'བོད་སྐད' (raw 0.378)
+  HYBRID-argmax winner= 'བོད་སྐད' (raw 0.378)
+  correct_with_score -> ('བོད་སྐད', 0.378)
+
+=== correct_with_score('དི') in 'དི་རིང་ང་བོད་སྐད་སློབ་སྦྱོང་བྱེད་ཀྱི་ཡོད།'
+  _find_candidates -> ['<དི', '༼དི', 'ཀྲདི', 'ཀྵུདི', 'ཉདི', 'ཉིདི', 'ཎཱདི', 'དདི', 'དིཀྟྲི', 'དིཀྵཱི', 'དིཀྵི', 'དིགྔྷི', 'དིགྡི', 'དིགྡྭཱི', 'དིགྡྷི', 'དིགྦི', 'དིགྱཱི', 'དིངི', 'དིངྷི', 'དིཎྜི']
+  validated -> ['<དི', '༼དི', 'ཀྲདི', 'ཀྵུདི', 'ཉདི', 'ཉིདི', 'ཎཱདི', 'དདི', 'དིཀྟྲི', 'དིཀྵཱི', 'དིཀྵི', 'དིགྔྷི', 'དིགྡི', 'དིགྡྭཱི', 'དིགྡྷི', 'དིགྦི', 'དིགྱཱི', 'དིངི', 'དིངྷི', 'དིཎྜི']
+    cand='<དི' raw=0.000 hybrid=-0.136 in_vocab=True
+    cand='༼དི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='ཀྲདི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='ཀྵུདི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='ཉདི' raw=0.000 hybrid=-0.138 in_vocab=True
+    cand='ཉིདི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='ཎཱདི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='དདི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='དིཀྟྲི' raw=0.000 hybrid=-0.135 in_vocab=True
+    cand='དིཀྵཱི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='དིཀྵི' raw=0.000 hybrid=-0.142 in_vocab=True
+    cand='དིགྔྷི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='དིགྡི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='དིགྡྭཱི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='དིགྡྷི' raw=0.000 hybrid=-0.138 in_vocab=True
+    cand='དིགྦི' raw=0.000 hybrid=-0.136 in_vocab=True
+    cand='དིགྱཱི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='དིངི' raw=0.000 hybrid=-0.138 in_vocab=True
+    cand='དིངྷི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='དིཎྜི' raw=0.000 hybrid=-0.139 in_vocab=True
+  RAW-argmax winner   = 'དིཀྟྲི' (raw 0.000)
+  HYBRID-argmax winner= 'དིཀྟྲི' (raw 0.000)
+  correct_with_score -> ('དིཀྟྲི', 0.000)
+
+=== correct_with_score('བདི') in 'བཀྲ་ཤིས་བདི་ལེགས།'
+  _find_candidates -> ['<དི', '༼དི', 'ཀྲདི', 'ཀྵུདི', 'ཉདི', 'ཉིདི', 'ཎཱདི', 'དདི', 'དི', 'པདི', 'བདིག', 'བདིའི', 'བདྐི', 'བདྡི', 'བདྡྷི', 'བདྣི', 'བདྤི', 'བདྦི', 'བདྦྲཱི', 'བདྦྷི']
+  validated -> ['<དི', '༼དི', 'ཀྲདི', 'ཀྵུདི', 'ཉདི', 'ཉིདི', 'ཎཱདི', 'དདི', 'དི', 'པདི', 'བདིག', 'བདིའི', 'བདྐི', 'བདྡི', 'བདྡྷི', 'བདྣི', 'བདྤི', 'བདྦི', 'བདྦྲཱི', 'བདྦྷི']
+    cand='<དི' raw=0.000 hybrid=-0.136 in_vocab=True
+    cand='༼དི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='ཀྲདི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='ཀྵུདི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='ཉདི' raw=0.000 hybrid=-0.138 in_vocab=True
+    cand='ཉིདི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='ཎཱདི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='དདི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='དི' raw=0.000 hybrid=-0.082 in_vocab=True
+    cand='པདི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='བདིག' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='བདིའི' raw=0.000 hybrid=-0.142 in_vocab=True
+    cand='བདྐི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='བདྡི' raw=0.000 hybrid=-0.142 in_vocab=True
+    cand='བདྡྷི' raw=0.000 hybrid=-0.136 in_vocab=True
+    cand='བདྣི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='བདྤི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='བདྦི' raw=0.000 hybrid=-0.133 in_vocab=True
+    cand='བདྦྲཱི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='བདྦྷི' raw=0.000 hybrid=-0.139 in_vocab=True
+  RAW-argmax winner   = 'དི' (raw 0.000)
+  HYBRID-argmax winner= 'དི' (raw 0.000)
+  correct_with_score -> ('དི', 0.000)
+
+=== correct_with_score('སེས') in 'སེས་ཡོན་མེད་ན་མུན་ནག་ནང་དུ་འགྲོ་བ་དང་འདྲ།'
+  _find_candidates -> ['གསེས', 'བསེས', 'སེངྒེས', '"ཞེས', '"ཤེས', '"སེམས', '(ངེས', '(ཅེས', '(དེས', '(ཞེས', '(སེམས', ')ངེས', ')ཅེས', ')ཆེས', ')དེས', ')ཞེས', ')ཤེས', ')སེམས', ')སྐྱེས', ',ངེས']
+  validated -> ['གསེས', 'བསེས', 'སེངྒེས', '"ཞེས', '"ཤེས', '"སེམས', '(ངེས', '(ཅེས', '(དེས', '(ཞེས', '(སེམས', ')ངེས', ')ཅེས', ')ཆེས', ')དེས', ')ཞེས', ')ཤེས', ')སེམས', ')སྐྱེས', ',ངེས']
+    cand='གསེས' raw=0.000 hybrid=-0.099 in_vocab=True
+    cand='བསེས' raw=0.000 hybrid=-0.129 in_vocab=True
+    cand='སེངྒེས' raw=0.000 hybrid=-0.118 in_vocab=True
+    cand='"ཞེས' raw=0.000 hybrid=-0.288 in_vocab=True
+    cand='"ཤེས' raw=0.000 hybrid=-0.295 in_vocab=True
+    cand='"སེམས' raw=0.000 hybrid=-0.292 in_vocab=True
+    cand='(ངེས' raw=0.000 hybrid=-0.292 in_vocab=True
+    cand='(ཅེས' raw=0.000 hybrid=-0.288 in_vocab=True
+    cand='(དེས' raw=0.000 hybrid=-0.295 in_vocab=True
+    cand='(ཞེས' raw=0.000 hybrid=-0.292 in_vocab=True
+    cand='(སེམས' raw=0.000 hybrid=-0.295 in_vocab=True
+    cand=')ངེས' raw=0.019 hybrid=-0.280 in_vocab=True
+    cand=')ཅེས' raw=0.000 hybrid=-0.288 in_vocab=True
+    cand=')ཆེས' raw=0.000 hybrid=-0.295 in_vocab=True
+    cand=')དེས' raw=0.000 hybrid=-0.288 in_vocab=True
+    cand=')ཞེས' raw=0.000 hybrid=-0.278 in_vocab=True
+    cand=')ཤེས' raw=0.000 hybrid=-0.289 in_vocab=True
+    cand=')སེམས' raw=0.000 hybrid=-0.292 in_vocab=True
+    cand=')སྐྱེས' raw=0.023 hybrid=-0.283 in_vocab=True
+    cand=',ངེས' raw=0.000 hybrid=-0.292 in_vocab=True
+  RAW-argmax winner   = ')སྐྱེས' (raw 0.023)
+  HYBRID-argmax winner= 'གསེས' (raw 0.000)
+  correct_with_score -> (')སྐྱེས', 0.023)
+
+=== correct_with_score('མཛོདསྒོ') in 'གསུང་རབ་མཛོདསྒོ་རིན་པོ་ཆེའི་གླེགས་བམ།'
+  _find_candidates -> ['མཛོད', 'མཛོདໆ', 'མཛོད་སྒོ', 'མཛོད་སྒོ་', 'མཛོད༴', 'མཛོདང', 'མཛོདཿ', '(མཛོད', '༼མཛོད', '༽མཛོད', 'མཛོ', 'མཛོད)4', 'མཛོད༠,', 'མཛོད༴༴', 'མཛོད༵', 'མཛོད༷', 'མཛོད༽ཨོཾ', 'མཛོདཅིག', 'མཛོདརིན', 'མཛོདལས']
+  validated -> ['མཛོད', 'མཛོདໆ', 'མཛོད་སྒོ', 'མཛོད༴', 'མཛོདང', 'མཛོདཿ', '(མཛོད', '༼མཛོད', '༽མཛོད', 'མཛོ', 'མཛོད)4', 'མཛོད༠,', 'མཛོད༴༴', 'མཛོད༵', 'མཛོད༷', 'མཛོད༽ཨོཾ', 'མཛོདཅིག', 'མཛོདརིན', 'མཛོདལས']
+    cand='མཛོད' raw=0.282 hybrid=0.077 in_vocab=True
+    cand='མཛོདໆ' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='མཛོད་སྒོ' raw=0.469 hybrid=0.170 in_vocab=False
+    cand='མཛོད༴' raw=0.000 hybrid=-0.131 in_vocab=True
+    cand='མཛོདང' raw=0.000 hybrid=-0.139 in_vocab=True
+    cand='མཛོདཿ' raw=0.000 hybrid=-0.118 in_vocab=True
+    cand='(མཛོད' raw=0.297 hybrid=-0.146 in_vocab=True
+    cand='༼མཛོད' raw=0.260 hybrid=-0.161 in_vocab=True
+    cand='༽མཛོད' raw=0.228 hybrid=-0.166 in_vocab=True
+    cand='མཛོ' raw=0.306 hybrid=-0.096 in_vocab=True
+    cand='མཛོད)4' raw=0.022 hybrid=-0.284 in_vocab=True
+    cand='མཛོད༠,' raw=0.000 hybrid=-0.283 in_vocab=True
+    cand='མཛོད༴༴' raw=0.000 hybrid=-0.295 in_vocab=True
+    cand='མཛོད༵' raw=0.000 hybrid=-0.286 in_vocab=True
+    cand='མཛོད༷' raw=0.000 hybrid=-0.283 in_vocab=True
+    cand='མཛོད༽ཨོཾ' raw=0.087 hybrid=-0.251 in_vocab=True
+    cand='མཛོདཅིག' raw=0.000 hybrid=-0.289 in_vocab=True
+    cand='མཛོདརིན' raw=0.000 hybrid=-0.295 in_vocab=True
+    cand='མཛོདལས' raw=0.000 hybrid=-0.295 in_vocab=True
+  RAW-argmax winner   = 'མཛོད་སྒོ' (raw 0.469)
+  HYBRID-argmax winner= 'མཛོད་སྒོ' (raw 0.469)
+  correct_with_score -> ('མཛོད་སྒོ', 0.469)
+
+=== correct_with_score('}གཡིང') in '{ 1 }གཡིང་དྲུང་ལས་དག་གི་རྒྱུད།'
+  _find_candidates -> ['}གཡུང', 'གཡིང', ')གཡུང', '/གཡང', '/གཡུང', '<ཡིང', '[གདིང', '{གཡུང', 'ཡིང']
+  validated -> ['}གཡུང', 'གཡིང', ')གཡུང', '/གཡང', '/གཡུང', '<ཡིང', '[གདིང', '{གཡུང', 'ཡིང']
+    cand='}གཡུང' raw=0.000 hybrid=-0.133 in_vocab=True
+    cand='གཡིང' raw=0.000 hybrid=-0.134 in_vocab=True
+    cand=')གཡུང' raw=0.000 hybrid=-0.295 in_vocab=True
+    cand='/གཡང' raw=0.273 hybrid=-0.158 in_vocab=True
+    cand='/གཡུང' raw=0.000 hybrid=-0.289 in_vocab=True
+    cand='<ཡིང' raw=0.000 hybrid=-0.289 in_vocab=True
+    cand='[གདིང' raw=0.000 hybrid=-0.292 in_vocab=True
+    cand='{གཡུང' raw=0.000 hybrid=-0.262 in_vocab=True
+    cand='ཡིང' raw=0.000 hybrid=-0.275 in_vocab=True
+  RAW-argmax winner   = '/གཡང' (raw 0.273)
+  HYBRID-argmax winner= '}གཡུང' (raw 0.000)
+  correct_with_score -> ('/གཡང', 0.273)
+
+=== correct_with_score('དྲུངབོན') in 'མདོ་སྔགས་ཐེག་ཆེན་གཡུང་དྲུངབོན།'
+  _find_candidates -> ['དྲུང་བོན', 'དྲུང་བོན་', '/༼བོན', '/བོན', '13བོན', '1བོན', '27བོན', '32བོན', '41བོན', '55བོན', '64བོན', '67བོན', '85བོན', '8བོན', '<<བོན', '>བོན', '{8བོན', '༧དབོན', '༼བོན', '༽བོན']
+  validated -> ['དྲུང་བོན', '/༼བོན', '/བོན', '13བོན', '1བོན', '27བོན', '32བོན', '41བོན', '55བོན', '64བོན', '67བོན', '85བོན', '8བོན', '<<བོན', '>བོན', '{8བོན', '༧དབོན', '༼བོན', '༽བོན']
+    cand='དྲུང་བོན' raw=0.043 hybrid=0.167 in_vocab=False
+    cand='/༼བོན' raw=0.000 hybrid=-0.292 in_vocab=True
+    cand='/བོན' raw=0.000 hybrid=-0.289 in_vocab=True
+    cand='13བོན' raw=0.000 hybrid=-0.295 in_vocab=True
+    cand='1བོན' raw=0.000 hybrid=-0.284 in_vocab=True
+    cand='27བོན' raw=0.000 hybrid=-0.295 in_vocab=True
+    cand='32བོན' raw=0.000 hybrid=-0.295 in_vocab=True
+    cand='41བོན' raw=0.000 hybrid=-0.295 in_vocab=True
+    cand='55བོན' raw=0.000 hybrid=-0.289 in_vocab=True
+    cand='64བོན' raw=0.000 hybrid=-0.295 in_vocab=True
+    cand='67བོན' raw=0.000 hybrid=-0.292 in_vocab=True
+    cand='85བོན' raw=0.000 hybrid=-0.295 in_vocab=True
+    cand='8བོན' raw=0.000 hybrid=-0.295 in_vocab=True
+    cand='<<བོན' raw=0.000 hybrid=-0.281 in_vocab=True
+    cand='>བོན' raw=0.000 hybrid=-0.295 in_vocab=True
+    cand='{8བོན' raw=0.000 hybrid=-0.295 in_vocab=True
+    cand='༧དབོན' raw=0.000 hybrid=-0.295 in_vocab=True
+    cand='༼བོན' raw=0.000 hybrid=-0.265 in_vocab=True
+    cand='༽བོན' raw=0.000 hybrid=-0.276 in_vocab=True
+  RAW-argmax winner   = 'དྲུང་བོན' (raw 0.043)
+  HYBRID-argmax winner= 'དྲུང་བོན' (raw 0.043)
+  correct_with_score -> ('དྲུང་བོན', 0.043)
+
+=== correct_with_score('ཕམ') in 'གསུང་རབ་སྒོ་མཛོད་རིན་པོ་ཆེའི་གླེགས་ཕམ།'
+  _find_candidates -> ['༼ཕམ', 'མིཕམ', 'འཕམ', '༣༠ཕམ']
+  validated -> ['༼ཕམ', 'མིཕམ', 'འཕམ', '༣༠ཕམ']
+    cand='༼ཕམ' raw=0.000 hybrid=-0.136 in_vocab=True
+    cand='མིཕམ' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='འཕམ' raw=0.000 hybrid=-0.111 in_vocab=True
+    cand='༣༠ཕམ' raw=0.000 hybrid=-0.295 in_vocab=True
+  RAW-argmax winner   = 'འཕམ' (raw 0.000)
+  HYBRID-argmax winner= 'འཕམ' (raw 0.000)
+  correct_with_score -> ('འཕམ', 0.000)
+
+=== correct_with_score('སྒོརབ') in 'གསུང་སྒོརབ་མཛོད་རིན་པོ་ཆེའི་གླེགས་བམ།'
+  _find_candidates -> [')རབ', ',རབ', '1རབ', '7རབ', '<རབ', '>རབ', '[རབ', '༡རབ', '༢རབ', '༣རབ', '༤རབ', '༧རབ', '༼རབ', '༽རབ', 'བོརབ', 'སྒོ་རབ', 'སྒོ་རབ་', 'སྒོབ', 'སྒོར', 'སྒོརར']
+  validated -> [')རབ', ',རབ', '1རབ', '7རབ', '<རབ', '>རབ', '[རབ', '༡རབ', '༢རབ', '༣རབ', '༤རབ', '༧རབ', '༼རབ', '༽རབ', 'བོརབ', 'སྒོ་རབ', 'སྒོབ', 'སྒོར', 'སྒོརར']
+    cand=')རབ' raw=0.287 hybrid=0.002 in_vocab=True
+    cand=',རབ' raw=0.119 hybrid=-0.085 in_vocab=True
+    cand='1རབ' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='7རབ' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='<རབ' raw=0.097 hybrid=-0.093 in_vocab=True
+    cand='>རབ' raw=0.100 hybrid=-0.088 in_vocab=True
+    cand='[རབ' raw=0.319 hybrid=0.028 in_vocab=True
+    cand='༡རབ' raw=0.000 hybrid=-0.138 in_vocab=True
+    cand='༢རབ' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='༣རབ' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='༤རབ' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='༧རབ' raw=0.000 hybrid=-0.139 in_vocab=True
+    cand='༼རབ' raw=0.255 hybrid=0.009 in_vocab=True
+    cand='༽རབ' raw=0.229 hybrid=-0.017 in_vocab=True
+    cand='བོརབ' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='སྒོ་རབ' raw=0.363 hybrid=0.125 in_vocab=False
+    cand='སྒོབ' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='སྒོར' raw=0.057 hybrid=-0.053 in_vocab=True
+    cand='སྒོརར' raw=0.000 hybrid=-0.145 in_vocab=True
+  RAW-argmax winner   = 'སྒོ་རབ' (raw 0.363)
+  HYBRID-argmax winner= 'སྒོ་རབ' (raw 0.363)
+  correct_with_score -> ('སྒོ་རབ', 0.363)
+
+=== correct_with_score('སྐོ') in '༧ སྟོན་པ་ལོངས་སྤྱོད་རྫོགས་སྐོ།'
+  _find_candidates -> ['ཀོསྐོ', 'ཀྐོ', 'ཏྐོ', 'ནིསྐོ', 'པུཾསྐོ', 'བསྐོ', 'རྐོ', 'རྐྐོོ', 'ལྐོ', 'སྐོག', 'སྐོང', 'སྐོང༵', 'སྐོང༷', 'སྐོད', 'སྐོན', 'སྐོབ', 'སྐོམ', 'སྐོམ༷', 'སྐོམྃ', 'སྐོའི']
+  validated -> ['ཀོསྐོ', 'ཀྐོ', 'ཏྐོ', 'ནིསྐོ', 'པུཾསྐོ', 'བསྐོ', 'རྐོ', 'རྐྐོོ', 'ལྐོ', 'སྐོག', 'སྐོང', 'སྐོང༵', 'སྐོང༷', 'སྐོད', 'སྐོན', 'སྐོབ', 'སྐོམ', 'སྐོམ༷', 'སྐོམྃ', 'སྐོའི']
+    cand='ཀོསྐོ' raw=0.000 hybrid=-0.125 in_vocab=True
+    cand='ཀྐོ' raw=0.000 hybrid=-0.128 in_vocab=True
+    cand='ཏྐོ' raw=0.000 hybrid=-0.142 in_vocab=True
+    cand='ནིསྐོ' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='པུཾསྐོ' raw=0.000 hybrid=-0.142 in_vocab=True
+    cand='བསྐོ' raw=0.000 hybrid=-0.093 in_vocab=True
+    cand='རྐོ' raw=0.000 hybrid=-0.097 in_vocab=True
+    cand='རྐྐོོ' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='ལྐོ' raw=0.000 hybrid=-0.129 in_vocab=True
+    cand='སྐོག' raw=0.000 hybrid=-0.126 in_vocab=True
+    cand='སྐོང' raw=0.000 hybrid=-0.081 in_vocab=True
+    cand='སྐོང༵' raw=0.000 hybrid=-0.135 in_vocab=True
+    cand='སྐོང༷' raw=0.000 hybrid=-0.142 in_vocab=True
+    cand='སྐོད' raw=0.000 hybrid=-0.127 in_vocab=True
+    cand='སྐོན' raw=0.000 hybrid=-0.111 in_vocab=True
+    cand='སྐོབ' raw=0.000 hybrid=-0.139 in_vocab=True
+    cand='སྐོམ' raw=0.000 hybrid=-0.081 in_vocab=True
+    cand='སྐོམ༷' raw=0.000 hybrid=-0.129 in_vocab=True
+    cand='སྐོམྃ' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='སྐོའི' raw=0.000 hybrid=-0.124 in_vocab=True
+  RAW-argmax winner   = 'སྐོམ' (raw 0.000)
+  HYBRID-argmax winner= 'སྐོམ' (raw 0.000)
+  correct_with_score -> ('སྐོམ', 0.000)
+
+=== correct_with_score('བྱིའི') in '༧ གསུང་རབ་སྒོ་མཛོད་ཪིན་པོ་ཆེའི་མ་བྱིའི་དཔེ་རྙིང་།'
+  _find_candidates -> ['ཀཱིའི', 'ཀིའི', 'ཀྐིའི', 'ཀྟིའི', 'ཀྟྲིའི', 'ཀྱིའི', 'ཀྲཱིའི', 'ཀྲིའི', 'ཀྵཱིའི', 'ཀྵིའི', 'ཀྵྨཱིའི', 'ཀྶིའི', 'ཁིའི', 'ཁྱིའི', 'ཁྲིའི', 'གཱིའི', 'གིའི', 'གྣིའི', 'གྱིའི', 'གྲིའི']
+  validated -> ['ཀཱིའི', 'ཀིའི', 'ཀྐིའི', 'ཀྟིའི', 'ཀྟྲིའི', 'ཀྱིའི', 'ཀྲཱིའི', 'ཀྲིའི', 'ཀྵཱིའི', 'ཀྵིའི', 'ཀྵྨཱིའི', 'ཀྶིའི', 'ཁིའི', 'ཁྱིའི', 'ཁྲིའི', 'གཱིའི', 'གིའི', 'གྣིའི', 'གྱིའི', 'གྲིའི']
+    cand='ཀཱིའི' raw=0.000 hybrid=-0.105 in_vocab=True
+    cand='ཀིའི' raw=0.000 hybrid=-0.098 in_vocab=True
+    cand='ཀྐིའི' raw=0.000 hybrid=-0.136 in_vocab=True
+    cand='ཀྟིའི' raw=0.000 hybrid=-0.133 in_vocab=True
+    cand='ཀྟྲིའི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='ཀྱིའི' raw=0.000 hybrid=-0.133 in_vocab=True
+    cand='ཀྲཱིའི' raw=0.000 hybrid=-0.138 in_vocab=True
+    cand='ཀྲིའི' raw=0.000 hybrid=-0.127 in_vocab=True
+    cand='ཀྵཱིའི' raw=0.000 hybrid=-0.138 in_vocab=True
+    cand='ཀྵིའི' raw=0.000 hybrid=-0.129 in_vocab=True
+    cand='ཀྵྨཱིའི' raw=0.000 hybrid=-0.139 in_vocab=True
+    cand='ཀྶིའི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='ཁིའི' raw=0.000 hybrid=-0.121 in_vocab=True
+    cand='ཁྱིའི' raw=0.000 hybrid=-0.099 in_vocab=True
+    cand='ཁྲིའི' raw=0.000 hybrid=-0.090 in_vocab=True
+    cand='གཱིའི' raw=0.000 hybrid=-0.136 in_vocab=True
+    cand='གིའི' raw=0.000 hybrid=-0.113 in_vocab=True
+    cand='གྣིའི' raw=0.000 hybrid=-0.138 in_vocab=True
+    cand='གྱིའི' raw=0.000 hybrid=-0.133 in_vocab=True
+    cand='གྲིའི' raw=0.000 hybrid=-0.091 in_vocab=True
+  RAW-argmax winner   = 'ཁྲིའི' (raw 0.000)
+  HYBRID-argmax winner= 'ཁྲིའི' (raw 0.000)
+  correct_with_score -> ('ཁྲིའི', 0.000)
+
+=== correct_with_score('པི') in 'གསུང་རབ་སྒོ་མཛོད་རིན་པི་ཆེའི་གླེགས་བམ་སྤྱིའི་དཔེ་རྩིས།'
+  _find_candidates -> [',པི', '<པི', '༽པི', 'ཀཔི', 'ཀླིཔི', 'ཀླྀཔི', 'ཀྵེཔི', 'ཉཔི', 'ཏྭཱཔི', 'ཏྱཔི', 'ཏྲཔི', 'དཔི', 'པིཀྵི', 'པིཉྫི', 'པིཌྜྷི', 'པིཎཱི', 'པིཎྜཱི', 'པིཎྜི', 'པིཏྶཱི', 'པིཏྶི']
+  validated -> [',པི', '<པི', '༽པི', 'ཀཔི', 'ཀླིཔི', 'ཀླྀཔི', 'ཀྵེཔི', 'ཉཔི', 'ཏྭཱཔི', 'ཏྱཔི', 'ཏྲཔི', 'དཔི', 'པིཀྵི', 'པིཉྫི', 'པིཌྜྷི', 'པིཎཱི', 'པིཎྜཱི', 'པིཎྜི', 'པིཏྶཱི', 'པིཏྶི']
+    cand=',པི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='<པི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='༽པི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='ཀཔི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='ཀླིཔི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='ཀླྀཔི' raw=0.000 hybrid=-0.139 in_vocab=True
+    cand='ཀྵེཔི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='ཉཔི' raw=0.000 hybrid=-0.142 in_vocab=True
+    cand='ཏྭཱཔི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='ཏྱཔི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='ཏྲཔི' raw=0.000 hybrid=-0.142 in_vocab=True
+    cand='དཔི' raw=0.000 hybrid=-0.138 in_vocab=True
+    cand='པིཀྵི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='པིཉྫི' raw=0.000 hybrid=-0.139 in_vocab=True
+    cand='པིཌྜྷི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='པིཎཱི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='པིཎྜཱི' raw=0.000 hybrid=-0.142 in_vocab=True
+    cand='པིཎྜི' raw=0.000 hybrid=-0.127 in_vocab=True
+    cand='པིཏྶཱི' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='པིཏྶི' raw=0.000 hybrid=-0.142 in_vocab=True
+  RAW-argmax winner   = 'པིཎྜི' (raw 0.000)
+  HYBRID-argmax winner= 'པིཎྜི' (raw 0.000)
+  correct_with_score -> ('པིཎྜི', 0.000)
+
+=== correct_with_score('ལནབསབས') in 'དྲིན་ལནབསབས་མདོ།'
+  _find_candidates -> ['ལན་བསབས', 'ལན་བསབས་', 'ཀུནབསྒྲུབས', 'བསབས', 'ལསབསྒྲུབས']
+  validated -> ['ལན་བསབས', 'ཀུནབསྒྲུབས', 'བསབས', 'ལསབསྒྲུབས']
+    cand='ལན་བསབས' raw=0.000 hybrid=-0.061 in_vocab=False
+    cand='ཀུནབསྒྲུབས' raw=0.000 hybrid=-0.292 in_vocab=True
+    cand='བསབས' raw=0.000 hybrid=-0.246 in_vocab=True
+    cand='ལསབསྒྲུབས' raw=0.000 hybrid=-0.295 in_vocab=True
+  RAW-argmax winner   = 'ལན་བསབས' (raw 0.000)
+  HYBRID-argmax winner= 'ལན་བསབས' (raw 0.000)
+  correct_with_score -> ('ལན་བསབས', 0.000)
+
+=== correct_with_score('ལནབསབས') in 'དྲིན་ལནབསབས་མདོ།'
+  _find_candidates -> ['ལན་བསབས', 'ལན་བསབས་', 'ཀུནབསྒྲུབས', 'བསབས', 'ལསབསྒྲུབས']
+  validated -> ['ལན་བསབས', 'ཀུནབསྒྲུབས', 'བསབས', 'ལསབསྒྲུབས']
+    cand='ལན་བསབས' raw=0.000 hybrid=-0.061 in_vocab=False
+    cand='ཀུནབསྒྲུབས' raw=0.000 hybrid=-0.292 in_vocab=True
+    cand='བསབས' raw=0.000 hybrid=-0.246 in_vocab=True
+    cand='ལསབསྒྲུབས' raw=0.000 hybrid=-0.295 in_vocab=True
+  RAW-argmax winner   = 'ལན་བསབས' (raw 0.000)
+  HYBRID-argmax winner= 'ལན་བསབས' (raw 0.000)
+  correct_with_score -> ('ལན་བསབས', 0.000)
+
+=== correct_with_score('བུགས') in 'ལུང་མཚན་ཉིད་སྲིད་པའི་མཛོད་བུགས།'
+  _find_candidates -> ['ཀུགས', 'ཀྱུགས', 'ཀྲུགས', 'ཀླུགས', 'ཁུགས', 'ཁྱུགས', 'ཁྲུགས', 'གུགས', 'གྱུགས', 'གྲུགས', 'གླུགས', 'ཅུགས', 'ཆུགས', 'ཆླུགས', 'ཉུགས', 'ཏུགས', 'ཐུགས', 'ཐུུགས', 'དབུགས', 'བུ་གས']
+  validated -> ['ཀུགས', 'ཀྱུགས', 'ཀྲུགས', 'ཀླུགས', 'ཁུགས', 'ཁྱུགས', 'ཁྲུགས', 'གུགས', 'གྱུགས', 'གྲུགས', 'གླུགས', 'ཅུགས', 'ཆུགས', 'ཆླུགས', 'ཉུགས', 'ཏུགས', 'ཐུགས', 'ཐུུགས', 'དབུགས', 'བུ་གས']
+    cand='ཀུགས' raw=0.000 hybrid=-0.135 in_vocab=True
+    cand='ཀྱུགས' raw=0.000 hybrid=-0.139 in_vocab=True
+    cand='ཀྲུགས' raw=0.000 hybrid=-0.129 in_vocab=True
+    cand='ཀླུགས' raw=0.000 hybrid=-0.142 in_vocab=True
+    cand='ཁུགས' raw=0.000 hybrid=-0.100 in_vocab=True
+    cand='ཁྱུགས' raw=0.000 hybrid=-0.104 in_vocab=True
+    cand='ཁྲུགས' raw=0.000 hybrid=-0.125 in_vocab=True
+    cand='གུགས' raw=0.000 hybrid=-0.142 in_vocab=True
+    cand='གྱུགས' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='གྲུགས' raw=0.000 hybrid=-0.106 in_vocab=True
+    cand='གླུགས' raw=0.000 hybrid=-0.134 in_vocab=True
+    cand='ཅུགས' raw=0.000 hybrid=-0.142 in_vocab=True
+    cand='ཆུགས' raw=0.000 hybrid=-0.106 in_vocab=True
+    cand='ཆླུགས' raw=0.000 hybrid=-0.138 in_vocab=True
+    cand='ཉུགས' raw=0.000 hybrid=-0.128 in_vocab=True
+    cand='ཏུགས' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='ཐུགས' raw=0.000 hybrid=-0.057 in_vocab=True
+    cand='ཐུུགས' raw=0.000 hybrid=-0.142 in_vocab=True
+    cand='དབུགས' raw=0.000 hybrid=-0.076 in_vocab=True
+    cand='བུ་གས' raw=0.220 hybrid=0.043 in_vocab=False
+  RAW-argmax winner   = 'བུ་གས' (raw 0.220)
+  HYBRID-argmax winner= 'བུ་གས' (raw 0.220)
+  correct_with_score -> ('བུ་གས', 0.220)
+
+=== correct_with_score('གླིངབ') in '༼ ཀ 002 འདུལ་བ་རྒྱུད་དྲུག 042 མདོ་ཀ་གླིངབ་དགུ།'
+  _find_candidates -> ['༼ངབ', 'གླི་ངབ', 'གླི་ངབ་', 'གླིང', 'གླིང+', 'གླིང༴', 'གླིངས', 'གླིངཿ', 'ངབ', 'ཕྲེངབ', 'བྱངབ', 'བྱུངབ', '(,བ', ',གླིང', '5གླིང', '>གླིང', '[གླིང', '༼གླི༽བ', '༼གླིང', '༼གླིང༽']
+  validated -> ['༼ངབ', 'གླི་ངབ', 'གླིང', 'གླིང+', 'གླིང༴', 'གླིངས', 'གླིངཿ', 'ངབ', 'ཕྲེངབ', 'བྱངབ', 'བྱུངབ', '(,བ', ',གླིང', '5གླིང', '>གླིང', '[གླིང', '༼གླི༽བ', '༼གླིང', '༼གླིང༽']
+    cand='༼ངབ' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='གླི་ངབ' raw=0.000 hybrid=-0.124 in_vocab=False
+    cand='གླིང' raw=0.171 hybrid=0.018 in_vocab=True
+    cand='གླིང+' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='གླིང༴' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='གླིངས' raw=0.000 hybrid=-0.135 in_vocab=True
+    cand='གླིངཿ' raw=0.000 hybrid=-0.131 in_vocab=True
+    cand='ངབ' raw=0.000 hybrid=-0.122 in_vocab=True
+    cand='ཕྲེངབ' raw=0.000 hybrid=-0.145 in_vocab=True
+    cand='བྱངབ' raw=0.000 hybrid=-0.142 in_vocab=True
+    cand='བྱུངབ' raw=0.000 hybrid=-0.142 in_vocab=True
+    cand='(,བ' raw=0.245 hybrid=-0.172 in_vocab=True
+    cand=',གླིང' raw=0.231 hybrid=-0.179 in_vocab=True
+    cand='5གླིང' raw=0.000 hybrid=-0.292 in_vocab=True
+    cand='>གླིང' raw=0.180 hybrid=-0.202 in_vocab=True
+    cand='[གླིང' raw=0.252 hybrid=-0.166 in_vocab=True
+    cand='༼གླི༽བ' raw=0.000 hybrid=-0.295 in_vocab=True
+    cand='༼གླིང' raw=0.413 hybrid=-0.077 in_vocab=True
+    cand='༼གླིང༽' raw=0.241 hybrid=-0.174 in_vocab=True
+  RAW-argmax winner   = '༼གླིང' (raw 0.413)
+  HYBRID-argmax winner= 'གླིང' (raw 0.171)
+  correct_with_score -> ('༼གླིང', 0.413)
+
+(picked 12 synthetic records)

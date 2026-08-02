@@ -1,0 +1,39 @@
+=== syllable frequencies ===
+  བདི: 11  (get_syllable_frequency=11)
+  བདེ: 233545  (get_syllable_frequency=233545)
+  དི: 7767  (get_syllable_frequency=7767)
+  དེ: 2504782  (get_syllable_frequency=2504782)
+  སེས: 50  (get_syllable_frequency=50)
+  ཤེས: 895273  (get_syllable_frequency=895273)
+  སྦྱོབ: 0  (get_syllable_frequency=0)
+  སྦྱོང: 36996  (get_syllable_frequency=36996)
+  བདུ: 11  (get_syllable_frequency=11)
+  བདོ: 805  (get_syllable_frequency=805)
+  དུ: 1722898  (get_syllable_frequency=1722898)
+  དོ: 339436  (get_syllable_frequency=339436)
+  གི: 786071  (get_syllable_frequency=786071)
+  ཀྱི: 1680079  (get_syllable_frequency=1680079)
+  གྱི: 896146  (get_syllable_frequency=896146)
+  ཡི: 355818  (get_syllable_frequency=355818)
+  འི: 647  (get_syllable_frequency=647)
+
+=== skad/slob bigram keys ===
+  matching keys: 166
+  'ཀྱང སྐད': 638
+  'ཀྱང སློབ': 594
+  'ཀྱི སྐད': 2100
+  'ཀྱི སློབ': 1290
+  'ཀྱིས སྐད': 481
+  'ཀྱིས སློབ': 738
+  'གར སྐད': 4119
+  'གསུངས སློབ': 486
+  'གསུམ སློབ': 319
+  'གི སྐད': 676
+
+=== particle-omission target pairs ===
+  ('སྦྱོང','གལ'): []
+  ('སྦྱོང','གི'): ['སྦྱོང གི']
+  ('གི','གལ'): []
+  ('སྐད','སློབ'): []
+  ('སྐད','ཀྱི'): ['སྐད ཀྱི']
+  ('ཀྱི','སློབ'): ['ཀྱི སློབ']

@@ -1,0 +1,674 @@
+Loading data...
+Test set: 325 positives + 150 clean = 475
+Initialising TEEAEngine (may take a moment)...
+2026-08-02 00:53:43 [info     ] tibert_loading                 device=auto source=TiBERT
+Loading weights:   0%|          | 0/202 [00:00<?, ?it/s]Loading weights: 100%|██████████| 202/202 [00:00<00:00, 4967.69it/s]
+2026-08-02 00:53:44 [info     ] tibert_loaded                  device=cpu key=tibert:1.0 vocab_size=29965
+Engine ready.
+2026-08-02 00:53:45 [info     ] analysis_completed             char_count=37 elapsed_ms=189.26 suggestions=3
+2026-08-02 00:53:45 [info     ] analysis_completed             char_count=37 elapsed_ms=208.83 suggestions=3
+2026-08-02 00:53:45 [info     ] analysis_completed             char_count=46 elapsed_ms=297.03 suggestions=1
+2026-08-02 00:53:45 [debug    ] correction_found               correction=ཕྱྭ་050 score=0.0 word=ཕྱྭ050
+2026-08-02 00:53:45 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.85 error_type=SPELLING rejected=True rule_id=SPELL-DICT-001 sentence_hash=6427545800049818665 suggestion=None word=ཕྱྭ050
+2026-08-02 00:53:45 [info     ] analysis_completed             char_count=38 elapsed_ms=372.68 suggestions=2
+2026-08-02 00:53:46 [info     ] analysis_completed             char_count=25 elapsed_ms=148.29 suggestions=1
+2026-08-02 00:53:46 [info     ] analysis_completed             char_count=29 elapsed_ms=112.67 suggestions=2
+2026-08-02 00:53:46 [info     ] analysis_completed             char_count=12 elapsed_ms=22.03 suggestions=2
+2026-08-02 00:53:46 [info     ] analysis_completed             char_count=36 elapsed_ms=65.38 suggestions=2
+2026-08-02 00:53:47 [info     ] analysis_completed             char_count=146 elapsed_ms=811.15 suggestions=2
+2026-08-02 00:53:47 [debug    ] correction_found               correction=༡༧་ལོ score=0.5905669728914897 word=༡༧ལོ
+2026-08-02 00:53:47 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.85 error_type=SPELLING rejected=True rule_id=SPELL-DICT-001 sentence_hash=2393958465521135699 suggestion=None word=༡༧ལོ
+2026-08-02 00:53:47 [info     ] analysis_completed             char_count=36 elapsed_ms=498.23 suggestions=2
+2026-08-02 00:53:47 [info     ] analysis_completed             char_count=44 elapsed_ms=141.06 suggestions=3
+2026-08-02 00:53:48 [info     ] analysis_completed             char_count=72 elapsed_ms=258.26 suggestions=2
+2026-08-02 00:53:48 [debug    ] correction_found               correction=བཀའ་རིང score=0.37883783876895905 word=བཀའརིང
+2026-08-02 00:53:48 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=-1048593825984769144 suggestion=བཀའ་རིང word=བཀའརིང
+2026-08-02 00:53:48 [info     ] analysis_completed             char_count=76 elapsed_ms=730.9 suggestions=2
+2026-08-02 00:53:49 [info     ] analysis_completed             char_count=152 elapsed_ms=631.84 suggestions=2
+2026-08-02 00:53:49 [info     ] analysis_completed             char_count=64 elapsed_ms=254.65 suggestions=2
+2026-08-02 00:53:49 [debug    ] correction_found               correction=ཧྲང་སྒོ score=0.06691654523213708 word=ཧྲངསྒོ
+2026-08-02 00:53:49 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=-1728779390574101186 suggestion=ཧྲང་སྒོ word=ཧྲངསྒོ
+2026-08-02 00:53:49 [info     ] analysis_completed             char_count=11 elapsed_ms=178.68 suggestions=2
+2026-08-02 00:53:49 [info     ] analysis_completed             char_count=19 elapsed_ms=60.0 suggestions=2
+2026-08-02 00:53:50 [debug    ] correction_found               correction=ཁམས་མན score=0.0 word=ཁམསམན
+2026-08-02 00:53:50 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=1110415053940182688 suggestion=ཁམས་མན word=ཁམསམན
+2026-08-02 00:53:50 [info     ] analysis_completed             char_count=9 elapsed_ms=167.9 suggestions=2
+2026-08-02 00:53:50 [info     ] analysis_completed             char_count=24 elapsed_ms=138.26 suggestions=2
+2026-08-02 00:53:50 [debug    ] correction_found               correction=དཔེ score=0.0 word=དཔེམ
+2026-08-02 00:53:50 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.85 error_type=SPELLING rejected=True rule_id=SPELL-DICT-001 sentence_hash=-427415374235899909 suggestion=None word=དཔེམ
+2026-08-02 00:53:50 [info     ] analysis_completed             char_count=26 elapsed_ms=424.7 suggestions=2
+2026-08-02 00:53:50 [info     ] analysis_completed             char_count=37 elapsed_ms=45.66 suggestions=2
+2026-08-02 00:53:51 [debug    ] correction_found               correction=བསྟན་དག score=0.30012007355690007 word=བསྟནདག
+2026-08-02 00:53:51 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=-7740915277527657745 suggestion=བསྟན་དག word=བསྟནདག
+2026-08-02 00:53:51 [info     ] analysis_completed             char_count=23 elapsed_ms=504.54 suggestions=2
+2026-08-02 00:53:51 [info     ] analysis_completed             char_count=36 elapsed_ms=63.14 suggestions=2
+2026-08-02 00:53:51 [info     ] analysis_completed             char_count=20 elapsed_ms=82.33 suggestions=2
+2026-08-02 00:53:51 [info     ] analysis_completed             char_count=41 elapsed_ms=39.38 suggestions=2
+2026-08-02 00:53:51 [info     ] analysis_completed             char_count=30 elapsed_ms=144.41 suggestions=1
+2026-08-02 00:53:51 [info     ] analysis_completed             char_count=22 elapsed_ms=99.24 suggestions=1
+2026-08-02 00:53:51 [info     ] analysis_completed             char_count=26 elapsed_ms=129.23 suggestions=1
+2026-08-02 00:53:51 [info     ] analysis_completed             char_count=29 elapsed_ms=161.61 suggestions=1
+2026-08-02 00:53:51 [info     ] analysis_completed             char_count=8 elapsed_ms=41.27 suggestions=1
+2026-08-02 00:53:52 [info     ] analysis_completed             char_count=22 elapsed_ms=120.26 suggestions=1
+2026-08-02 00:53:52 [info     ] analysis_completed             char_count=123 elapsed_ms=489.07 suggestions=4
+2026-08-02 00:53:52 [info     ] analysis_completed             char_count=54 elapsed_ms=242.9 suggestions=3
+2026-08-02 00:53:53 [info     ] analysis_completed             char_count=80 elapsed_ms=384.98 suggestions=2
+2026-08-02 00:53:53 [info     ] analysis_completed             char_count=28 elapsed_ms=151.36 suggestions=1
+2026-08-02 00:53:53 [info     ] analysis_completed             char_count=22 elapsed_ms=103.71 suggestions=1
+2026-08-02 00:53:53 [info     ] analysis_completed             char_count=11 elapsed_ms=61.45 suggestions=1
+2026-08-02 00:53:53 [info     ] analysis_completed             char_count=31 elapsed_ms=138.65 suggestions=1
+2026-08-02 00:53:53 [info     ] analysis_completed             char_count=27 elapsed_ms=134.05 suggestions=1
+2026-08-02 00:53:53 [info     ] analysis_completed             char_count=38 elapsed_ms=195.0 suggestions=1
+2026-08-02 00:53:54 [info     ] analysis_completed             char_count=37 elapsed_ms=213.84 suggestions=1
+2026-08-02 00:53:54 [info     ] analysis_completed             char_count=24 elapsed_ms=152.08 suggestions=1
+2026-08-02 00:53:54 [info     ] analysis_completed             char_count=32 elapsed_ms=171.68 suggestions=1
+2026-08-02 00:53:54 [info     ] analysis_completed             char_count=33 elapsed_ms=204.67 suggestions=1
+2026-08-02 00:53:54 [info     ] analysis_completed             char_count=17 elapsed_ms=76.08 suggestions=1
+2026-08-02 00:53:54 [info     ] analysis_completed             char_count=28 elapsed_ms=105.58 suggestions=1
+2026-08-02 00:53:55 [info     ] analysis_completed             char_count=27 elapsed_ms=201.7 suggestions=1
+2026-08-02 00:53:55 [info     ] analysis_completed             char_count=32 elapsed_ms=222.74 suggestions=2
+2026-08-02 00:53:55 [info     ] analysis_completed             char_count=28 elapsed_ms=147.91 suggestions=1
+2026-08-02 00:53:55 [info     ] analysis_completed             char_count=32 elapsed_ms=186.1 suggestions=1
+2026-08-02 00:53:55 [info     ] analysis_completed             char_count=23 elapsed_ms=71.12 suggestions=2
+2026-08-02 00:53:56 [info     ] analysis_completed             char_count=55 elapsed_ms=333.21 suggestions=2
+2026-08-02 00:53:56 [info     ] analysis_completed             char_count=42 elapsed_ms=192.82 suggestions=2
+2026-08-02 00:53:56 [debug    ] correction_found               correction=044་044 score=0.0 word=044044
+2026-08-02 00:53:56 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=-2190182261873933641 suggestion=044་044 word=044044
+2026-08-02 00:53:56 [info     ] analysis_completed             char_count=27 elapsed_ms=257.81 suggestions=2
+2026-08-02 00:53:56 [info     ] analysis_completed             char_count=15 elapsed_ms=80.97 suggestions=1
+2026-08-02 00:53:56 [info     ] analysis_completed             char_count=28 elapsed_ms=136.84 suggestions=2
+2026-08-02 00:53:56 [info     ] analysis_completed             char_count=29 elapsed_ms=150.13 suggestions=2
+2026-08-02 00:53:56 [info     ] analysis_completed             char_count=18 elapsed_ms=50.86 suggestions=2
+2026-08-02 00:53:57 [info     ] analysis_completed             char_count=50 elapsed_ms=187.07 suggestions=2
+2026-08-02 00:53:57 [info     ] analysis_completed             char_count=65 elapsed_ms=257.86 suggestions=2
+2026-08-02 00:53:58 [info     ] analysis_completed             char_count=134 elapsed_ms=709.86 suggestions=2
+2026-08-02 00:53:58 [info     ] analysis_completed             char_count=23 elapsed_ms=70.4 suggestions=2
+2026-08-02 00:53:58 [info     ] analysis_completed             char_count=80 elapsed_ms=376.87 suggestions=2
+2026-08-02 00:53:58 [info     ] analysis_completed             char_count=36 elapsed_ms=162.73 suggestions=2
+2026-08-02 00:53:58 [info     ] analysis_completed             char_count=15 elapsed_ms=45.81 suggestions=2
+2026-08-02 00:53:58 [info     ] analysis_completed             char_count=13 elapsed_ms=21.24 suggestions=2
+2026-08-02 00:53:59 [info     ] analysis_completed             char_count=106 elapsed_ms=471.67 suggestions=3
+2026-08-02 00:53:59 [info     ] analysis_completed             char_count=57 elapsed_ms=220.02 suggestions=2
+2026-08-02 00:54:00 [info     ] analysis_completed             char_count=152 elapsed_ms=733.58 suggestions=2
+2026-08-02 00:54:00 [info     ] analysis_completed             char_count=55 elapsed_ms=297.7 suggestions=2
+2026-08-02 00:54:00 [info     ] analysis_completed             char_count=65 elapsed_ms=315.04 suggestions=2
+2026-08-02 00:54:01 [info     ] analysis_completed             char_count=74 elapsed_ms=347.91 suggestions=3
+2026-08-02 00:54:01 [info     ] analysis_completed             char_count=35 elapsed_ms=43.4 suggestions=3
+2026-08-02 00:54:01 [info     ] analysis_completed             char_count=35 elapsed_ms=171.79 suggestions=2
+2026-08-02 00:54:01 [info     ] analysis_completed             char_count=25 elapsed_ms=52.19 suggestions=2
+2026-08-02 00:54:01 [info     ] analysis_completed             char_count=30 elapsed_ms=112.96 suggestions=2
+2026-08-02 00:54:01 [info     ] analysis_completed             char_count=16 elapsed_ms=42.8 suggestions=2
+2026-08-02 00:54:01 [info     ] analysis_completed             char_count=36 elapsed_ms=147.18 suggestions=2
+2026-08-02 00:54:01 [info     ] analysis_completed             char_count=12 elapsed_ms=37.81 suggestions=2
+2026-08-02 00:54:01 [info     ] analysis_completed             char_count=25 elapsed_ms=109.34 suggestions=2
+2026-08-02 00:54:02 [info     ] analysis_completed             char_count=54 elapsed_ms=196.38 suggestions=2
+2026-08-02 00:54:02 [info     ] analysis_completed             char_count=9 elapsed_ms=55.98 suggestions=1
+2026-08-02 00:54:03 [debug    ] correction_found               correction=གསར་བརྗེ score=0.40962715248266857 word=གསརབརྗེ
+2026-08-02 00:54:03 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=3053357079233459862 suggestion=གསར་བརྗེ word=གསརབརྗེ
+2026-08-02 00:54:03 [info     ] analysis_completed             char_count=181 elapsed_ms=1272.17 suggestions=2
+2026-08-02 00:54:03 [info     ] analysis_completed             char_count=43 elapsed_ms=185.38 suggestions=2
+2026-08-02 00:54:04 [info     ] analysis_completed             char_count=131 elapsed_ms=743.19 suggestions=2
+2026-08-02 00:54:04 [info     ] analysis_completed             char_count=31 elapsed_ms=92.71 suggestions=3
+2026-08-02 00:54:04 [info     ] analysis_completed             char_count=117 elapsed_ms=542.35 suggestions=3
+2026-08-02 00:54:05 [debug    ] correction_found               correction=པའི་བཀའ score=0.3601959854364395 word=པའིབཀའ
+2026-08-02 00:54:05 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=529223775844423514 suggestion=པའི་བཀའ word=པའིབཀའ
+2026-08-02 00:54:06 [info     ] analysis_completed             char_count=188 elapsed_ms=1482.47 suggestions=3
+2026-08-02 00:54:06 [info     ] analysis_completed             char_count=119 elapsed_ms=523.02 suggestions=2
+2026-08-02 00:54:07 [info     ] analysis_completed             char_count=132 elapsed_ms=709.31 suggestions=2
+2026-08-02 00:54:08 [debug    ] correction_found               correction=ལབ་ཅངས score=0.0 word=ལབཅངས
+2026-08-02 00:54:08 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=-1113812480693733157 suggestion=ལབ་ཅངས word=ལབཅངས
+2026-08-02 00:54:08 [info     ] analysis_completed             char_count=85 elapsed_ms=976.27 suggestions=2
+2026-08-02 00:54:09 [info     ] analysis_completed             char_count=67 elapsed_ms=389.6 suggestions=2
+2026-08-02 00:54:09 [info     ] analysis_completed             char_count=154 elapsed_ms=795.72 suggestions=2
+2026-08-02 00:54:10 [info     ] analysis_completed             char_count=58 elapsed_ms=250.95 suggestions=2
+2026-08-02 00:54:10 [info     ] analysis_completed             char_count=111 elapsed_ms=589.91 suggestions=1
+2026-08-02 00:54:11 [info     ] analysis_completed             char_count=64 elapsed_ms=316.85 suggestions=2
+2026-08-02 00:54:11 [info     ] analysis_completed             char_count=122 elapsed_ms=633.24 suggestions=2
+2026-08-02 00:54:11 [info     ] analysis_completed             char_count=33 elapsed_ms=150.24 suggestions=2
+2026-08-02 00:54:12 [info     ] analysis_completed             char_count=61 elapsed_ms=330.21 suggestions=2
+2026-08-02 00:54:12 [info     ] analysis_completed             char_count=37 elapsed_ms=117.41 suggestions=2
+2026-08-02 00:54:12 [debug    ] correction_found               correction=ཕུས score=0.0 word=ཕསྡུས
+2026-08-02 00:54:12 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.85 error_type=SPELLING rejected=True rule_id=SPELL-DICT-001 sentence_hash=-3333775050421639565 suggestion=None word=ཕསྡུས
+2026-08-02 00:54:12 [info     ] analysis_completed             char_count=31 elapsed_ms=364.86 suggestions=2
+2026-08-02 00:54:12 [info     ] analysis_completed             char_count=13 elapsed_ms=71.61 suggestions=1
+2026-08-02 00:54:12 [info     ] analysis_completed             char_count=11 elapsed_ms=66.51 suggestions=1
+2026-08-02 00:54:12 [info     ] analysis_completed             char_count=33 elapsed_ms=179.43 suggestions=1
+2026-08-02 00:54:12 [info     ] analysis_completed             char_count=12 elapsed_ms=75.11 suggestions=1
+2026-08-02 00:54:13 [info     ] analysis_completed             char_count=122 elapsed_ms=633.79 suggestions=2
+2026-08-02 00:54:14 [info     ] analysis_completed             char_count=87 elapsed_ms=417.23 suggestions=1
+2026-08-02 00:54:14 [info     ] analysis_completed             char_count=45 elapsed_ms=298.38 suggestions=1
+2026-08-02 00:54:14 [debug    ] correction_found               correction=ཕྱིད score=0.0 word=ཕརྗིད
+2026-08-02 00:54:14 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=5116654075798348963 suggestion=ཕྱིད word=ཕརྗིད
+2026-08-02 00:54:14 [info     ] analysis_completed             char_count=43 elapsed_ms=461.92 suggestions=2
+2026-08-02 00:54:15 [debug    ] correction_found               correction=ྱ score=0.09600715637207036 word=ྱི
+2026-08-02 00:54:15 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.85 error_type=SPELLING rejected=True rule_id=SPELL-DICT-001 sentence_hash=-1607224533248718926 suggestion=None word=ྱི
+2026-08-02 00:54:15 [info     ] analysis_completed             char_count=150 elapsed_ms=1010.34 suggestions=2
+2026-08-02 00:54:16 [info     ] analysis_completed             char_count=71 elapsed_ms=314.32 suggestions=2
+2026-08-02 00:54:16 [info     ] analysis_completed             char_count=37 elapsed_ms=147.4 suggestions=2
+2026-08-02 00:54:16 [info     ] analysis_completed             char_count=35 elapsed_ms=174.56 suggestions=1
+2026-08-02 00:54:16 [info     ] analysis_completed             char_count=33 elapsed_ms=163.85 suggestions=1
+2026-08-02 00:54:16 [info     ] analysis_completed             char_count=25 elapsed_ms=136.82 suggestions=1
+2026-08-02 00:54:16 [info     ] analysis_completed             char_count=36 elapsed_ms=190.14 suggestions=2
+2026-08-02 00:54:17 [debug    ] correction_found               correction=ྱ score=0.27720265388488774 word=ྱི
+2026-08-02 00:54:17 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.85 error_type=SPELLING rejected=True rule_id=SPELL-DICT-001 sentence_hash=1743983483630352659 suggestion=None word=ྱི
+2026-08-02 00:54:17 [info     ] analysis_completed             char_count=39 elapsed_ms=297.79 suggestions=2
+2026-08-02 00:54:17 [debug    ] correction_found               correction=གཡོ score=0.24346399307250977 word=གཐོ
+2026-08-02 00:54:17 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=-215319411582348418 suggestion=གཡོ word=གཐོ
+2026-08-02 00:54:17 [info     ] analysis_completed             char_count=35 elapsed_ms=493.21 suggestions=2
+2026-08-02 00:54:17 [info     ] analysis_completed             char_count=17 elapsed_ms=84.0 suggestions=1
+2026-08-02 00:54:17 [info     ] analysis_completed             char_count=26 elapsed_ms=54.86 suggestions=2
+2026-08-02 00:54:17 [info     ] analysis_completed             char_count=25 elapsed_ms=109.54 suggestions=1
+2026-08-02 00:54:18 [info     ] analysis_completed             char_count=40 elapsed_ms=198.41 suggestions=1
+2026-08-02 00:54:18 [info     ] analysis_completed             char_count=30 elapsed_ms=120.25 suggestions=1
+2026-08-02 00:54:18 [info     ] analysis_completed             char_count=27 elapsed_ms=101.17 suggestions=1
+2026-08-02 00:54:18 [info     ] analysis_completed             char_count=42 elapsed_ms=184.05 suggestions=2
+2026-08-02 00:54:18 [info     ] analysis_completed             char_count=41 elapsed_ms=185.14 suggestions=1
+2026-08-02 00:54:19 [info     ] analysis_completed             char_count=120 elapsed_ms=500.01 suggestions=1
+2026-08-02 00:54:19 [info     ] analysis_completed             char_count=76 elapsed_ms=395.12 suggestions=2
+2026-08-02 00:54:19 [info     ] analysis_completed             char_count=45 elapsed_ms=209.79 suggestions=1
+2026-08-02 00:54:20 [debug    ] correction_found               correction=རྒྱ་སྒོ score=0.4571984271208446 word=རྒྱསྒོ
+2026-08-02 00:54:20 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=2289306400433846615 suggestion=རྒྱ་སྒོ word=རྒྱསྒོ
+2026-08-02 00:54:20 [info     ] analysis_completed             char_count=61 elapsed_ms=733.06 suggestions=2
+2026-08-02 00:54:21 [info     ] analysis_completed             char_count=90 elapsed_ms=401.49 suggestions=1
+2026-08-02 00:54:21 [info     ] analysis_completed             char_count=34 elapsed_ms=157.68 suggestions=1
+2026-08-02 00:54:21 [debug    ] correction_found               correction=གས་བཤད score=0.3746503829956055 word=གསབཤད
+2026-08-02 00:54:21 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=3733342270814389235 suggestion=གས་བཤད word=གསབཤད
+2026-08-02 00:54:21 [info     ] analysis_completed             char_count=43 elapsed_ms=532.07 suggestions=3
+2026-08-02 00:54:21 [info     ] analysis_completed             char_count=31 elapsed_ms=156.92 suggestions=1
+2026-08-02 00:54:22 [info     ] analysis_completed             char_count=49 elapsed_ms=247.38 suggestions=1
+2026-08-02 00:54:22 [debug    ] correction_found               correction=གས་གདན score=0.5045055409272512 word=གསགདན
+2026-08-02 00:54:22 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=1666697452823435076 suggestion=གས་གདན word=གསགདན
+2026-08-02 00:54:22 [info     ] analysis_completed             char_count=38 elapsed_ms=461.71 suggestions=2
+2026-08-02 00:54:22 [info     ] analysis_completed             char_count=32 elapsed_ms=116.87 suggestions=2
+2026-08-02 00:54:22 [info     ] analysis_completed             char_count=12 elapsed_ms=51.22 suggestions=1
+2026-08-02 00:54:22 [info     ] analysis_completed             char_count=39 elapsed_ms=148.0 suggestions=1
+2026-08-02 00:54:22 [info     ] analysis_completed             char_count=23 elapsed_ms=81.99 suggestions=1
+2026-08-02 00:54:23 [info     ] analysis_completed             char_count=27 elapsed_ms=144.05 suggestions=1
+2026-08-02 00:54:23 [info     ] analysis_completed             char_count=37 elapsed_ms=171.74 suggestions=2
+2026-08-02 00:54:23 [info     ] analysis_completed             char_count=29 elapsed_ms=178.33 suggestions=1
+2026-08-02 00:54:23 [info     ] analysis_completed             char_count=24 elapsed_ms=144.42 suggestions=1
+2026-08-02 00:54:23 [info     ] analysis_completed             char_count=32 elapsed_ms=103.77 suggestions=2
+2026-08-02 00:54:23 [info     ] analysis_completed             char_count=25 elapsed_ms=132.56 suggestions=1
+2026-08-02 00:54:23 [info     ] analysis_completed             char_count=23 elapsed_ms=109.73 suggestions=1
+2026-08-02 00:54:24 [info     ] analysis_completed             char_count=26 elapsed_ms=135.51 suggestions=1
+2026-08-02 00:54:24 [info     ] analysis_completed             char_count=28 elapsed_ms=145.57 suggestions=1
+2026-08-02 00:54:24 [info     ] analysis_completed             char_count=22 elapsed_ms=125.59 suggestions=1
+2026-08-02 00:54:24 [info     ] analysis_completed             char_count=24 elapsed_ms=81.04 suggestions=2
+2026-08-02 00:54:24 [info     ] analysis_completed             char_count=71 elapsed_ms=310.17 suggestions=1
+2026-08-02 00:54:25 [info     ] analysis_completed             char_count=112 elapsed_ms=612.7 suggestions=2
+2026-08-02 00:54:25 [info     ] analysis_completed             char_count=84 elapsed_ms=394.93 suggestions=2
+2026-08-02 00:54:25 [info     ] analysis_completed             char_count=38 elapsed_ms=180.73 suggestions=1
+2026-08-02 00:54:26 [info     ] analysis_completed             char_count=112 elapsed_ms=510.49 suggestions=1
+2026-08-02 00:54:26 [info     ] analysis_completed             char_count=109 elapsed_ms=489.59 suggestions=14
+2026-08-02 00:54:27 [info     ] analysis_completed             char_count=76 elapsed_ms=298.79 suggestions=1
+2026-08-02 00:54:27 [info     ] analysis_completed             char_count=40 elapsed_ms=129.6 suggestions=2
+2026-08-02 00:54:27 [info     ] analysis_completed             char_count=36 elapsed_ms=124.3 suggestions=2
+2026-08-02 00:54:27 [debug    ] correction_found               correction=བཙིག score=0.0 word=བཙགི
+2026-08-02 00:54:27 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=-6699703124455294639 suggestion=བཙིག word=བཙགི
+2026-08-02 00:54:28 [info     ] analysis_completed             char_count=34 elapsed_ms=548.69 suggestions=2
+2026-08-02 00:54:28 [info     ] analysis_completed             char_count=82 elapsed_ms=332.08 suggestions=2
+2026-08-02 00:54:28 [info     ] analysis_completed             char_count=30 elapsed_ms=97.25 suggestions=1
+2026-08-02 00:54:28 [info     ] analysis_completed             char_count=23 elapsed_ms=92.13 suggestions=2
+2026-08-02 00:54:28 [info     ] analysis_completed             char_count=34 elapsed_ms=133.68 suggestions=2
+2026-08-02 00:54:28 [info     ] analysis_completed             char_count=26 elapsed_ms=124.5 suggestions=1
+2026-08-02 00:54:28 [info     ] analysis_completed             char_count=37 elapsed_ms=107.98 suggestions=2
+2026-08-02 00:54:29 [info     ] analysis_completed             char_count=26 elapsed_ms=98.98 suggestions=1
+2026-08-02 00:54:29 [info     ] analysis_completed             char_count=27 elapsed_ms=102.15 suggestions=1
+2026-08-02 00:54:29 [info     ] analysis_completed             char_count=27 elapsed_ms=107.92 suggestions=2
+2026-08-02 00:54:29 [info     ] analysis_completed             char_count=28 elapsed_ms=122.41 suggestions=2
+2026-08-02 00:54:29 [info     ] analysis_completed             char_count=28 elapsed_ms=142.32 suggestions=1
+2026-08-02 00:54:29 [info     ] analysis_completed             char_count=27 elapsed_ms=126.61 suggestions=2
+2026-08-02 00:54:29 [info     ] analysis_completed             char_count=26 elapsed_ms=127.5 suggestions=1
+2026-08-02 00:54:29 [info     ] analysis_completed             char_count=30 elapsed_ms=125.54 suggestions=1
+2026-08-02 00:54:29 [info     ] analysis_completed             char_count=22 elapsed_ms=100.73 suggestions=1
+2026-08-02 00:54:30 [info     ] analysis_completed             char_count=39 elapsed_ms=143.15 suggestions=2
+2026-08-02 00:54:30 [info     ] analysis_completed             char_count=35 elapsed_ms=121.36 suggestions=2
+2026-08-02 00:54:30 [info     ] analysis_completed             char_count=22 elapsed_ms=97.21 suggestions=2
+2026-08-02 00:54:30 [info     ] analysis_completed             char_count=33 elapsed_ms=126.11 suggestions=1
+2026-08-02 00:54:30 [info     ] analysis_completed             char_count=26 elapsed_ms=161.49 suggestions=2
+2026-08-02 00:54:31 [debug    ] correction_found               correction=གཞོགས score=0.11569232940673824 word=གཚོགས
+2026-08-02 00:54:31 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=-1730997413868061898 suggestion=གཞོགས word=གཚོགས
+2026-08-02 00:54:31 [info     ] analysis_completed             char_count=31 elapsed_ms=443.34 suggestions=2
+2026-08-02 00:54:31 [info     ] analysis_completed             char_count=24 elapsed_ms=164.4 suggestions=1
+2026-08-02 00:54:31 [info     ] analysis_completed             char_count=29 elapsed_ms=138.63 suggestions=2
+2026-08-02 00:54:31 [info     ] analysis_completed             char_count=41 elapsed_ms=161.17 suggestions=2
+2026-08-02 00:54:31 [info     ] analysis_completed             char_count=32 elapsed_ms=95.76 suggestions=2
+2026-08-02 00:54:31 [info     ] analysis_completed             char_count=22 elapsed_ms=98.33 suggestions=2
+2026-08-02 00:54:31 [info     ] analysis_completed             char_count=49 elapsed_ms=177.53 suggestions=2
+2026-08-02 00:54:32 [debug    ] correction_found               correction=ྱ score=0.11591281890869143 word=ྱིན
+2026-08-02 00:54:32 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.85 error_type=SPELLING rejected=True rule_id=SPELL-DICT-001 sentence_hash=-5004386489008956049 suggestion=None word=ྱིན
+2026-08-02 00:54:32 [info     ] analysis_completed             char_count=27 elapsed_ms=212.05 suggestions=2
+2026-08-02 00:54:32 [info     ] analysis_completed             char_count=34 elapsed_ms=160.47 suggestions=2
+2026-08-02 00:54:32 [info     ] analysis_completed             char_count=24 elapsed_ms=73.33 suggestions=2
+2026-08-02 00:54:32 [info     ] analysis_completed             char_count=32 elapsed_ms=116.31 suggestions=2
+2026-08-02 00:54:32 [info     ] analysis_completed             char_count=39 elapsed_ms=157.64 suggestions=1
+2026-08-02 00:54:32 [info     ] analysis_completed             char_count=34 elapsed_ms=148.7 suggestions=2
+2026-08-02 00:54:32 [info     ] analysis_completed             char_count=26 elapsed_ms=107.64 suggestions=2
+2026-08-02 00:54:33 [info     ] analysis_completed             char_count=36 elapsed_ms=192.4 suggestions=1
+2026-08-02 00:54:33 [info     ] analysis_completed             char_count=27 elapsed_ms=78.6 suggestions=1
+2026-08-02 00:54:33 [info     ] analysis_completed             char_count=31 elapsed_ms=156.23 suggestions=1
+2026-08-02 00:54:33 [debug    ] correction_found               correction=གཤེན་ཁྱབ score=0.1643338322639465 word=གཤེནཁྱབ
+2026-08-02 00:54:33 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=5677145350340369602 suggestion=གཤེན་ཁྱབ word=གཤེནཁྱབ
+2026-08-02 00:54:33 [info     ] analysis_completed             char_count=26 elapsed_ms=320.53 suggestions=2
+2026-08-02 00:54:33 [info     ] analysis_completed             char_count=29 elapsed_ms=136.91 suggestions=1
+2026-08-02 00:54:33 [info     ] analysis_completed             char_count=27 elapsed_ms=108.12 suggestions=2
+2026-08-02 00:54:34 [info     ] analysis_completed             char_count=24 elapsed_ms=181.14 suggestions=1
+2026-08-02 00:54:34 [info     ] analysis_completed             char_count=26 elapsed_ms=191.09 suggestions=1
+2026-08-02 00:54:34 [info     ] analysis_completed             char_count=46 elapsed_ms=201.23 suggestions=2
+2026-08-02 00:54:34 [info     ] analysis_completed             char_count=32 elapsed_ms=162.49 suggestions=1
+2026-08-02 00:54:34 [info     ] analysis_completed             char_count=28 elapsed_ms=117.63 suggestions=2
+2026-08-02 00:54:34 [info     ] analysis_completed             char_count=44 elapsed_ms=139.42 suggestions=3
+2026-08-02 00:54:35 [info     ] analysis_completed             char_count=31 elapsed_ms=120.31 suggestions=1
+2026-08-02 00:54:35 [info     ] analysis_completed             char_count=31 elapsed_ms=121.4 suggestions=2
+2026-08-02 00:54:35 [info     ] analysis_completed             char_count=27 elapsed_ms=94.79 suggestions=2
+2026-08-02 00:54:35 [info     ] analysis_completed             char_count=18 elapsed_ms=37.93 suggestions=3
+2026-08-02 00:54:35 [info     ] analysis_completed             char_count=27 elapsed_ms=100.52 suggestions=2
+2026-08-02 00:54:35 [debug    ] correction_found               correction=རྟོགས་ལྡན score=0.22436686952908835 word=རྟོགསལྡན
+2026-08-02 00:54:35 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=1821400982258064706 suggestion=རྟོགས་ལྡན word=རྟོགསལྡན
+2026-08-02 00:54:35 [info     ] analysis_completed             char_count=30 elapsed_ms=260.88 suggestions=2
+2026-08-02 00:54:35 [info     ] analysis_completed             char_count=39 elapsed_ms=159.36 suggestions=1
+2026-08-02 00:54:35 [info     ] analysis_completed             char_count=29 elapsed_ms=132.07 suggestions=2
+2026-08-02 00:54:36 [info     ] analysis_completed             char_count=31 elapsed_ms=121.1 suggestions=2
+2026-08-02 00:54:36 [info     ] analysis_completed             char_count=25 elapsed_ms=141.16 suggestions=1
+2026-08-02 00:54:36 [info     ] analysis_completed             char_count=35 elapsed_ms=144.07 suggestions=1
+2026-08-02 00:54:36 [debug    ] correction_found               correction=བག་ནས score=0.20447953343391423 word=བགནས
+2026-08-02 00:54:36 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=-5236172807441018862 suggestion=བག་ནས word=བགནས
+2026-08-02 00:54:36 [info     ] analysis_completed             char_count=31 elapsed_ms=485.47 suggestions=2
+2026-08-02 00:54:37 [debug    ] correction_found               correction=འདུ score=0.2454056739807129 word=འཚུ
+2026-08-02 00:54:37 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=-6308850783735331718 suggestion=འདུ word=འཚུ
+2026-08-02 00:54:37 [info     ] analysis_completed             char_count=31 elapsed_ms=394.49 suggestions=2
+2026-08-02 00:54:37 [info     ] analysis_completed             char_count=23 elapsed_ms=89.73 suggestions=2
+2026-08-02 00:54:37 [info     ] analysis_completed             char_count=24 elapsed_ms=173.91 suggestions=1
+2026-08-02 00:54:37 [info     ] analysis_completed             char_count=25 elapsed_ms=121.33 suggestions=1
+2026-08-02 00:54:37 [info     ] analysis_completed             char_count=25 elapsed_ms=114.54 suggestions=1
+2026-08-02 00:54:37 [info     ] analysis_completed             char_count=34 elapsed_ms=110.69 suggestions=2
+2026-08-02 00:54:37 [info     ] analysis_completed             char_count=31 elapsed_ms=114.24 suggestions=1
+2026-08-02 00:54:38 [debug    ] correction_found               correction=སངས score=0.0 word=སཚངས
+2026-08-02 00:54:38 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.85 error_type=SPELLING rejected=True rule_id=SPELL-DICT-001 sentence_hash=-165654137056227740 suggestion=None word=སཚངས
+2026-08-02 00:54:38 [info     ] analysis_completed             char_count=28 elapsed_ms=456.7 suggestions=2
+2026-08-02 00:54:38 [debug    ] correction_found               correction=འཁོར score=0.10346622467041011 word=འལྟར
+2026-08-02 00:54:38 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=4597391037037371422 suggestion=འཁོར word=འལྟར
+2026-08-02 00:54:38 [info     ] analysis_completed             char_count=30 elapsed_ms=396.13 suggestions=2
+2026-08-02 00:54:39 [debug    ] correction_found               correction=བྱ་ཅེས score=0.07767852942148834 word=བྱཅེས
+2026-08-02 00:54:39 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=-8696067738770668846 suggestion=བྱ་ཅེས word=བྱཅེས
+2026-08-02 00:54:39 [info     ] analysis_completed             char_count=10 elapsed_ms=383.68 suggestions=2
+2026-08-02 00:54:39 [debug    ] correction_found               correction=སྐུགས score=0.0 word=སཐུགས
+2026-08-02 00:54:39 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=8659256262844044457 suggestion=སྐུགས word=སཐུགས
+2026-08-02 00:54:39 [info     ] analysis_completed             char_count=31 elapsed_ms=477.13 suggestions=2
+2026-08-02 00:54:39 [info     ] analysis_completed             char_count=34 elapsed_ms=155.5 suggestions=1
+2026-08-02 00:54:39 [info     ] analysis_completed             char_count=28 elapsed_ms=135.14 suggestions=2
+2026-08-02 00:54:40 [info     ] analysis_completed             char_count=33 elapsed_ms=153.5 suggestions=2
+2026-08-02 00:54:40 [info     ] analysis_completed             char_count=28 elapsed_ms=121.86 suggestions=1
+2026-08-02 00:54:40 [info     ] analysis_completed             char_count=36 elapsed_ms=172.93 suggestions=2
+2026-08-02 00:54:40 [info     ] correction_candidate_fallback  fallback_candidates=4610 fast_candidates=0 vocab_size=178534 word=ྐུ
+2026-08-02 00:54:40 [debug    ] correction_found               correction=ཐུ score=0.1954517364501953 word=ྐུ
+2026-08-02 00:54:40 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=-1979493179640564524 suggestion=ཐུ word=ྐུ
+2026-08-02 00:54:41 [info     ] analysis_completed             char_count=28 elapsed_ms=649.29 suggestions=2
+2026-08-02 00:54:41 [info     ] analysis_completed             char_count=26 elapsed_ms=111.83 suggestions=2
+2026-08-02 00:54:41 [info     ] analysis_completed             char_count=45 elapsed_ms=158.43 suggestions=2
+2026-08-02 00:54:41 [info     ] analysis_completed             char_count=23 elapsed_ms=93.22 suggestions=2
+2026-08-02 00:54:41 [info     ] analysis_completed             char_count=42 elapsed_ms=141.84 suggestions=1
+2026-08-02 00:54:41 [info     ] analysis_completed             char_count=28 elapsed_ms=97.01 suggestions=2
+2026-08-02 00:54:41 [info     ] analysis_completed             char_count=36 elapsed_ms=149.67 suggestions=1
+2026-08-02 00:54:41 [info     ] analysis_completed             char_count=37 elapsed_ms=155.71 suggestions=1
+2026-08-02 00:54:42 [info     ] analysis_completed             char_count=31 elapsed_ms=89.19 suggestions=2
+2026-08-02 00:54:42 [info     ] analysis_completed             char_count=38 elapsed_ms=146.4 suggestions=1
+2026-08-02 00:54:42 [info     ] analysis_completed             char_count=29 elapsed_ms=141.54 suggestions=1
+2026-08-02 00:54:42 [info     ] analysis_completed             char_count=29 elapsed_ms=109.47 suggestions=2
+2026-08-02 00:54:42 [debug    ] correction_found               correction=རྒྱ་གིས score=0.2756024062633514 word=རྒྱགིས
+2026-08-02 00:54:42 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=135532819810963932 suggestion=རྒྱ་གིས word=རྒྱགིས
+2026-08-02 00:54:42 [info     ] analysis_completed             char_count=30 elapsed_ms=447.92 suggestions=2
+2026-08-02 00:54:43 [debug    ] correction_found               correction=སྐུགས score=0.0 word=སཐུགས
+2026-08-02 00:54:43 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=8659256262844044457 suggestion=སྐུགས word=སཐུགས
+2026-08-02 00:54:43 [info     ] analysis_completed             char_count=31 elapsed_ms=467.68 suggestions=2
+2026-08-02 00:54:43 [info     ] analysis_completed             char_count=26 elapsed_ms=123.09 suggestions=1
+2026-08-02 00:54:43 [info     ] analysis_completed             char_count=23 elapsed_ms=124.02 suggestions=1
+2026-08-02 00:54:43 [info     ] analysis_completed             char_count=28 elapsed_ms=74.18 suggestions=2
+2026-08-02 00:54:43 [info     ] analysis_completed             char_count=26 elapsed_ms=92.84 suggestions=1
+2026-08-02 00:54:44 [debug    ] correction_found               correction=སེམས score=0.0 word=སཐམས
+2026-08-02 00:54:44 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=5325304737721265403 suggestion=སེམས word=སཐམས
+2026-08-02 00:54:44 [info     ] analysis_completed             char_count=25 elapsed_ms=435.19 suggestions=2
+2026-08-02 00:54:44 [info     ] analysis_completed             char_count=25 elapsed_ms=85.27 suggestions=2
+2026-08-02 00:54:44 [info     ] analysis_completed             char_count=32 elapsed_ms=128.43 suggestions=2
+2026-08-02 00:54:44 [info     ] analysis_completed             char_count=39 elapsed_ms=134.68 suggestions=2
+2026-08-02 00:54:44 [info     ] analysis_completed             char_count=29 elapsed_ms=116.01 suggestions=2
+2026-08-02 00:54:44 [info     ] analysis_completed             char_count=32 elapsed_ms=156.91 suggestions=1
+2026-08-02 00:54:44 [info     ] analysis_completed             char_count=29 elapsed_ms=156.81 suggestions=1
+2026-08-02 00:54:45 [debug    ] correction_found               correction=མག་དུགས score=0.0 word=མགདུགས
+2026-08-02 00:54:45 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=-2464839728239982641 suggestion=མག་དུགས word=མགདུགས
+2026-08-02 00:54:45 [info     ] analysis_completed             char_count=31 elapsed_ms=427.83 suggestions=2
+2026-08-02 00:54:45 [info     ] analysis_completed             char_count=29 elapsed_ms=114.77 suggestions=2
+2026-08-02 00:54:45 [info     ] analysis_completed             char_count=32 elapsed_ms=111.55 suggestions=2
+2026-08-02 00:54:46 [debug    ] correction_found               correction=འབྲོང score=0.13580884933471682 word=འསྟོང
+2026-08-02 00:54:46 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=853161105944082872 suggestion=འབྲོང word=འསྟོང
+2026-08-02 00:54:46 [info     ] analysis_completed             char_count=38 elapsed_ms=493.35 suggestions=2
+2026-08-02 00:54:46 [debug    ] correction_found               correction=འོ score=0.20040526390075686 word=འསོ
+2026-08-02 00:54:46 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.85 error_type=SPELLING rejected=True rule_id=SPELL-DICT-001 sentence_hash=-6265846390513835010 suggestion=None word=འསོ
+2026-08-02 00:54:46 [info     ] analysis_completed             char_count=17 elapsed_ms=289.86 suggestions=2
+2026-08-02 00:54:46 [info     ] analysis_completed             char_count=37 elapsed_ms=179.57 suggestions=2
+2026-08-02 00:54:46 [info     ] analysis_completed             char_count=27 elapsed_ms=125.8 suggestions=1
+2026-08-02 00:54:46 [info     ] analysis_completed             char_count=39 elapsed_ms=133.68 suggestions=2
+2026-08-02 00:54:47 [info     ] analysis_completed             char_count=40 elapsed_ms=150.08 suggestions=2
+2026-08-02 00:54:47 [info     ] analysis_completed             char_count=23 elapsed_ms=95.87 suggestions=3
+2026-08-02 00:54:47 [info     ] analysis_completed             char_count=33 elapsed_ms=88.06 suggestions=2
+2026-08-02 00:54:47 [info     ] analysis_completed             char_count=30 elapsed_ms=121.05 suggestions=2
+2026-08-02 00:54:47 [info     ] analysis_completed             char_count=26 elapsed_ms=134.35 suggestions=1
+2026-08-02 00:54:47 [debug    ] correction_found               correction=འཆིང score=0.3510252952575683 word=འཞིང
+2026-08-02 00:54:47 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=3836891534177084792 suggestion=འཆིང word=འཞིང
+2026-08-02 00:54:47 [info     ] analysis_completed             char_count=29 elapsed_ms=420.78 suggestions=2
+2026-08-02 00:54:47 [info     ] analysis_completed             char_count=35 elapsed_ms=91.14 suggestions=2
+2026-08-02 00:54:48 [info     ] analysis_completed             char_count=29 elapsed_ms=140.04 suggestions=2
+2026-08-02 00:54:48 [info     ] analysis_completed             char_count=27 elapsed_ms=160.74 suggestions=2
+2026-08-02 00:54:48 [info     ] analysis_completed             char_count=26 elapsed_ms=191.32 suggestions=1
+2026-08-02 00:54:48 [debug    ] correction_found               correction=མདོ score=0.33139200210571285 word=མཔོ
+2026-08-02 00:54:48 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=-1178807861982791331 suggestion=མདོ word=མཔོ
+2026-08-02 00:54:48 [info     ] analysis_completed             char_count=26 elapsed_ms=431.99 suggestions=2
+2026-08-02 00:54:48 [info     ] analysis_completed             char_count=27 elapsed_ms=103.01 suggestions=1
+2026-08-02 00:54:49 [info     ] analysis_completed             char_count=36 elapsed_ms=134.91 suggestions=3
+2026-08-02 00:54:49 [info     ] analysis_completed             char_count=29 elapsed_ms=111.9 suggestions=2
+2026-08-02 00:54:49 [info     ] analysis_completed             char_count=24 elapsed_ms=139.35 suggestions=1
+2026-08-02 00:54:49 [info     ] analysis_completed             char_count=30 elapsed_ms=106.56 suggestions=1
+2026-08-02 00:54:49 [info     ] analysis_completed             char_count=25 elapsed_ms=117.4 suggestions=1
+2026-08-02 00:54:49 [info     ] analysis_completed             char_count=31 elapsed_ms=136.93 suggestions=1
+2026-08-02 00:54:49 [info     ] analysis_completed             char_count=29 elapsed_ms=131.27 suggestions=1
+2026-08-02 00:54:49 [info     ] analysis_completed             char_count=27 elapsed_ms=74.97 suggestions=2
+2026-08-02 00:54:50 [info     ] analysis_completed             char_count=24 elapsed_ms=73.19 suggestions=2
+2026-08-02 00:54:50 [info     ] analysis_completed             char_count=29 elapsed_ms=113.95 suggestions=1
+2026-08-02 00:54:50 [debug    ] correction_found               correction=མལ་ོན score=0.12827660044034328 word=མལོན
+2026-08-02 00:54:50 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=-9180878893821325265 suggestion=མལ་ོན word=མལོན
+2026-08-02 00:54:50 [info     ] analysis_completed             char_count=30 elapsed_ms=439.32 suggestions=2
+2026-08-02 00:54:50 [debug    ] correction_found               correction=སྟོད score=0.0 word=སྟོད༼
+2026-08-02 00:54:50 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=4006521004434319002 suggestion=སྟོད word=སྟོད༼
+2026-08-02 00:54:50 [info     ] analysis_completed             char_count=6 elapsed_ms=266.01 suggestions=2
+2026-08-02 00:54:50 [info     ] analysis_completed             char_count=31 elapsed_ms=124.23 suggestions=2
+2026-08-02 00:54:51 [info     ] analysis_completed             char_count=37 elapsed_ms=161.42 suggestions=1
+2026-08-02 00:54:51 [info     ] analysis_completed             char_count=34 elapsed_ms=128.2 suggestions=2
+2026-08-02 00:54:51 [info     ] analysis_completed             char_count=38 elapsed_ms=218.48 suggestions=1
+2026-08-02 00:54:51 [info     ] analysis_completed             char_count=22 elapsed_ms=92.46 suggestions=2
+2026-08-02 00:54:51 [info     ] analysis_completed             char_count=35 elapsed_ms=175.78 suggestions=3
+2026-08-02 00:54:51 [info     ] analysis_completed             char_count=42 elapsed_ms=159.4 suggestions=3
+2026-08-02 00:54:52 [info     ] analysis_completed             char_count=31 elapsed_ms=119.23 suggestions=2
+2026-08-02 00:54:52 [debug    ] correction_found               correction=གྱེད score=0.0 word=གབྱེད
+2026-08-02 00:54:52 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=8210353915138934350 suggestion=གྱེད word=གབྱེད
+2026-08-02 00:54:52 [info     ] analysis_completed             char_count=30 elapsed_ms=502.0 suggestions=2
+2026-08-02 00:54:52 [info     ] analysis_completed             char_count=31 elapsed_ms=74.88 suggestions=2
+2026-08-02 00:54:52 [debug    ] correction_found               correction=གོ score=0.0 word=གཧོ
+2026-08-02 00:54:52 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.85 error_type=SPELLING rejected=True rule_id=SPELL-DICT-001 sentence_hash=3004326645004064278 suggestion=None word=གཧོ
+2026-08-02 00:54:52 [info     ] analysis_completed             char_count=23 elapsed_ms=368.47 suggestions=2
+2026-08-02 00:54:53 [info     ] analysis_completed             char_count=26 elapsed_ms=147.11 suggestions=1
+2026-08-02 00:54:53 [info     ] analysis_completed             char_count=29 elapsed_ms=130.78 suggestions=1
+2026-08-02 00:54:53 [info     ] analysis_completed             char_count=31 elapsed_ms=136.46 suggestions=1
+2026-08-02 00:54:53 [info     ] analysis_completed             char_count=29 elapsed_ms=132.1 suggestions=1
+2026-08-02 00:54:53 [info     ] analysis_completed             char_count=23 elapsed_ms=181.37 suggestions=1
+2026-08-02 00:54:53 [info     ] analysis_completed             char_count=29 elapsed_ms=200.77 suggestions=1
+2026-08-02 00:54:53 [info     ] analysis_completed             char_count=25 elapsed_ms=96.77 suggestions=2
+2026-08-02 00:54:54 [debug    ] correction_found               correction=བྲིས score=0.0 word=བཡིས
+2026-08-02 00:54:54 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=-779330483865488147 suggestion=བྲིས word=བཡིས
+2026-08-02 00:54:54 [info     ] analysis_completed             char_count=33 elapsed_ms=474.54 suggestions=2
+2026-08-02 00:54:54 [info     ] analysis_completed             char_count=29 elapsed_ms=127.06 suggestions=2
+2026-08-02 00:54:54 [info     ] analysis_completed             char_count=25 elapsed_ms=76.41 suggestions=2
+2026-08-02 00:54:55 [debug    ] correction_found               correction=གྱིམ score=0.0 word=གཁྱིམ
+2026-08-02 00:54:55 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=-7848649476898365685 suggestion=གྱིམ word=གཁྱིམ
+2026-08-02 00:54:55 [info     ] analysis_completed             char_count=29 elapsed_ms=473.26 suggestions=2
+2026-08-02 00:54:55 [info     ] analysis_completed             char_count=28 elapsed_ms=108.11 suggestions=2
+2026-08-02 00:54:55 [info     ] analysis_completed             char_count=39 elapsed_ms=194.61 suggestions=2
+2026-08-02 00:54:55 [info     ] analysis_completed             char_count=33 elapsed_ms=216.59 suggestions=2
+2026-08-02 00:54:55 [info     ] analysis_completed             char_count=29 elapsed_ms=116.24 suggestions=2
+2026-08-02 00:54:56 [info     ] analysis_completed             char_count=32 elapsed_ms=392.14 suggestions=1
+2026-08-02 00:54:56 [info     ] analysis_completed             char_count=25 elapsed_ms=435.52 suggestions=1
+2026-08-02 00:54:56 [info     ] analysis_completed             char_count=29 elapsed_ms=364.86 suggestions=2
+2026-08-02 00:54:57 [info     ] analysis_completed             char_count=24 elapsed_ms=380.2 suggestions=2
+2026-08-02 00:54:57 [info     ] analysis_completed             char_count=41 elapsed_ms=534.4 suggestions=1
+2026-08-02 00:54:59 [debug    ] correction_found               correction=གཟུ score=0.25165343284606934 word=གཟླ
+2026-08-02 00:54:59 [info     ] spell_checker_suggestion       candidate_confidence=0.92 candidates_count=1 confidence=0.92 error_type=SPELLING rejected=False rule_id=SPELL-DICT-001 sentence_hash=-8807622768127639308 suggestion=གཟུ word=གཟླ
+2026-08-02 00:54:59 [info     ] analysis_completed             char_count=30 elapsed_ms=1833.2 suggestions=2
+2026-08-02 00:55:00 [info     ] analysis_completed             char_count=28 elapsed_ms=577.73 suggestions=1
+2026-08-02 00:55:01 [info     ] analysis_completed             char_count=43 elapsed_ms=967.69 suggestions=1
+2026-08-02 00:55:01 [info     ] analysis_completed             char_count=29 elapsed_ms=480.34 suggestions=1
+2026-08-02 00:55:02 [info     ] analysis_completed             char_count=26 elapsed_ms=561.56 suggestions=1
+2026-08-02 00:55:03 [info     ] analysis_completed             char_count=67 elapsed_ms=1141.27 suggestions=1
+2026-08-02 00:55:03 [info     ] analysis_completed             char_count=14 elapsed_ms=242.27 suggestions=1
+2026-08-02 00:55:04 [info     ] analysis_completed             char_count=31 elapsed_ms=322.71 suggestions=1
+2026-08-02 00:55:04 [info     ] analysis_completed             char_count=40 elapsed_ms=734.28 suggestions=1
+2026-08-02 00:55:05 [info     ] analysis_completed             char_count=44 elapsed_ms=847.75 suggestions=1
+2026-08-02 00:55:06 [info     ] analysis_completed             char_count=40 elapsed_ms=886.28 suggestions=1
+2026-08-02 00:55:07 [info     ] analysis_completed             char_count=90 elapsed_ms=815.92 suggestions=1
+2026-08-02 00:55:07 [info     ] analysis_completed             char_count=79 elapsed_ms=419.0 suggestions=1
+2026-08-02 00:55:07 [info     ] analysis_completed             char_count=27 elapsed_ms=191.48 suggestions=1
+2026-08-02 00:55:08 [info     ] analysis_completed             char_count=56 elapsed_ms=281.16 suggestions=1
+2026-08-02 00:55:08 [info     ] analysis_completed             char_count=20 elapsed_ms=111.71 suggestions=1
+2026-08-02 00:55:08 [info     ] analysis_completed             char_count=28 elapsed_ms=214.41 suggestions=1
+2026-08-02 00:55:08 [info     ] analysis_completed             char_count=37 elapsed_ms=252.66 suggestions=1
+2026-08-02 00:55:08 [info     ] analysis_completed             char_count=11 elapsed_ms=48.13 suggestions=1
+2026-08-02 00:55:08 [info     ] analysis_completed             char_count=21 elapsed_ms=127.58 suggestions=1
+2026-08-02 00:55:09 [info     ] analysis_completed             char_count=24 elapsed_ms=141.69 suggestions=1
+2026-08-02 00:55:09 [info     ] analysis_completed             char_count=27 elapsed_ms=172.1 suggestions=1
+2026-08-02 00:55:09 [info     ] analysis_completed             char_count=64 elapsed_ms=307.82 suggestions=1
+2026-08-02 00:55:09 [info     ] analysis_completed             char_count=14 elapsed_ms=83.51 suggestions=1
+2026-08-02 00:55:09 [info     ] analysis_completed             char_count=13 elapsed_ms=105.19 suggestions=1
+2026-08-02 00:55:09 [info     ] analysis_completed             char_count=23 elapsed_ms=135.21 suggestions=1
+2026-08-02 00:55:10 [info     ] analysis_completed             char_count=28 elapsed_ms=138.05 suggestions=1
+2026-08-02 00:55:10 [info     ] analysis_completed             char_count=41 elapsed_ms=170.66 suggestions=1
+2026-08-02 00:55:10 [info     ] analysis_completed             char_count=50 elapsed_ms=226.72 suggestions=2
+2026-08-02 00:55:10 [info     ] analysis_completed             char_count=36 elapsed_ms=180.55 suggestions=1
+2026-08-02 00:55:10 [info     ] analysis_completed             char_count=30 elapsed_ms=237.84 suggestions=1
+2026-08-02 00:55:10 [info     ] analysis_completed             char_count=24 elapsed_ms=136.29 suggestions=1
+2026-08-02 00:55:11 [info     ] analysis_completed             char_count=25 elapsed_ms=110.92 suggestions=1
+2026-08-02 00:55:11 [info     ] analysis_completed             char_count=51 elapsed_ms=308.2 suggestions=2
+2026-08-02 00:55:11 [info     ] analysis_completed             char_count=12 elapsed_ms=79.58 suggestions=1
+2026-08-02 00:55:11 [info     ] analysis_completed             char_count=26 elapsed_ms=143.8 suggestions=1
+2026-08-02 00:55:11 [info     ] analysis_completed             char_count=45 elapsed_ms=257.81 suggestions=1
+2026-08-02 00:55:12 [info     ] analysis_completed             char_count=15 elapsed_ms=186.68 suggestions=1
+2026-08-02 00:55:12 [info     ] analysis_completed             char_count=59 elapsed_ms=464.55 suggestions=1
+2026-08-02 00:55:12 [info     ] analysis_completed             char_count=26 elapsed_ms=126.96 suggestions=1
+2026-08-02 00:55:12 [info     ] analysis_completed             char_count=48 elapsed_ms=207.63 suggestions=1
+2026-08-02 00:55:13 [info     ] analysis_completed             char_count=29 elapsed_ms=151.09 suggestions=1
+2026-08-02 00:55:13 [info     ] analysis_completed             char_count=12 elapsed_ms=43.09 suggestions=1
+2026-08-02 00:55:13 [info     ] analysis_completed             char_count=28 elapsed_ms=135.63 suggestions=1
+2026-08-02 00:55:13 [info     ] analysis_completed             char_count=14 elapsed_ms=57.05 suggestions=1
+2026-08-02 00:55:13 [info     ] analysis_completed             char_count=11 elapsed_ms=80.19 suggestions=1
+2026-08-02 00:55:13 [info     ] analysis_completed             char_count=32 elapsed_ms=203.55 suggestions=1
+2026-08-02 00:55:13 [info     ] analysis_completed             char_count=33 elapsed_ms=177.82 suggestions=1
+2026-08-02 00:55:13 [info     ] analysis_completed             char_count=44 elapsed_ms=149.91 suggestions=1
+2026-08-02 00:55:14 [info     ] analysis_completed             char_count=121 elapsed_ms=553.98 suggestions=1
+2026-08-02 00:55:14 [info     ] analysis_completed             char_count=26 elapsed_ms=118.01 suggestions=1
+2026-08-02 00:55:14 [info     ] analysis_completed             char_count=34 elapsed_ms=128.4 suggestions=1
+2026-08-02 00:55:14 [info     ] analysis_completed             char_count=31 elapsed_ms=128.12 suggestions=1
+2026-08-02 00:55:14 [info     ] analysis_completed             char_count=31 elapsed_ms=135.79 suggestions=1
+2026-08-02 00:55:15 [info     ] analysis_completed             char_count=80 elapsed_ms=382.66 suggestions=1
+2026-08-02 00:55:15 [info     ] analysis_completed             char_count=67 elapsed_ms=304.02 suggestions=1
+2026-08-02 00:55:15 [info     ] analysis_completed             char_count=36 elapsed_ms=146.51 suggestions=1
+2026-08-02 00:55:15 [info     ] analysis_completed             char_count=48 elapsed_ms=220.18 suggestions=1
+2026-08-02 00:55:16 [info     ] analysis_completed             char_count=28 elapsed_ms=120.03 suggestions=1
+2026-08-02 00:55:16 [info     ] analysis_completed             char_count=86 elapsed_ms=418.6 suggestions=1
+2026-08-02 00:55:16 [info     ] analysis_completed             char_count=19 elapsed_ms=126.02 suggestions=1
+2026-08-02 00:55:16 [info     ] analysis_completed             char_count=53 elapsed_ms=238.53 suggestions=1
+2026-08-02 00:55:17 [info     ] analysis_completed             char_count=31 elapsed_ms=138.5 suggestions=1
+2026-08-02 00:55:17 [info     ] analysis_completed             char_count=28 elapsed_ms=116.74 suggestions=1
+2026-08-02 00:55:17 [info     ] analysis_completed             char_count=76 elapsed_ms=359.29 suggestions=1
+2026-08-02 00:55:17 [info     ] analysis_completed             char_count=49 elapsed_ms=193.83 suggestions=1
+2026-08-02 00:55:17 [info     ] analysis_completed             char_count=42 elapsed_ms=244.7 suggestions=1
+2026-08-02 00:55:18 [info     ] analysis_completed             char_count=32 elapsed_ms=214.82 suggestions=1
+2026-08-02 00:55:18 [info     ] analysis_completed             char_count=25 elapsed_ms=134.61 suggestions=1
+2026-08-02 00:55:19 [info     ] analysis_completed             char_count=121 elapsed_ms=711.28 suggestions=1
+2026-08-02 00:55:19 [info     ] analysis_completed             char_count=101 elapsed_ms=484.82 suggestions=1
+2026-08-02 00:55:19 [info     ] analysis_completed             char_count=41 elapsed_ms=217.39 suggestions=1
+2026-08-02 00:55:20 [info     ] analysis_completed             char_count=54 elapsed_ms=297.47 suggestions=1
+2026-08-02 00:55:20 [info     ] analysis_completed             char_count=28 elapsed_ms=139.52 suggestions=1
+2026-08-02 00:55:20 [info     ] analysis_completed             char_count=22 elapsed_ms=106.9 suggestions=1
+2026-08-02 00:55:20 [info     ] analysis_completed             char_count=47 elapsed_ms=245.01 suggestions=1
+2026-08-02 00:55:20 [info     ] analysis_completed             char_count=15 elapsed_ms=88.56 suggestions=1
+2026-08-02 00:55:20 [info     ] analysis_completed             char_count=41 elapsed_ms=185.74 suggestions=1
+2026-08-02 00:55:21 [info     ] analysis_completed             char_count=57 elapsed_ms=285.54 suggestions=4
+2026-08-02 00:55:21 [info     ] analysis_completed             char_count=24 elapsed_ms=111.89 suggestions=1
+2026-08-02 00:55:21 [info     ] analysis_completed             char_count=26 elapsed_ms=131.11 suggestions=1
+2026-08-02 00:55:21 [info     ] analysis_completed             char_count=39 elapsed_ms=158.7 suggestions=1
+2026-08-02 00:55:21 [info     ] analysis_completed             char_count=25 elapsed_ms=119.72 suggestions=1
+2026-08-02 00:55:21 [info     ] analysis_completed             char_count=24 elapsed_ms=145.55 suggestions=1
+2026-08-02 00:55:22 [info     ] analysis_completed             char_count=94 elapsed_ms=419.76 suggestions=1
+2026-08-02 00:55:22 [info     ] analysis_completed             char_count=78 elapsed_ms=368.11 suggestions=1
+2026-08-02 00:55:22 [info     ] analysis_completed             char_count=46 elapsed_ms=195.28 suggestions=1
+2026-08-02 00:55:22 [info     ] analysis_completed             char_count=31 elapsed_ms=129.05 suggestions=1
+2026-08-02 00:55:22 [info     ] analysis_completed             char_count=24 elapsed_ms=135.29 suggestions=2
+2026-08-02 00:55:23 [info     ] analysis_completed             char_count=30 elapsed_ms=151.91 suggestions=1
+2026-08-02 00:55:23 [info     ] analysis_completed             char_count=43 elapsed_ms=265.12 suggestions=1
+2026-08-02 00:55:23 [info     ] analysis_completed             char_count=29 elapsed_ms=148.97 suggestions=1
+2026-08-02 00:55:23 [info     ] analysis_completed             char_count=25 elapsed_ms=112.0 suggestions=1
+2026-08-02 00:55:23 [info     ] analysis_completed             char_count=9 elapsed_ms=38.41 suggestions=1
+2026-08-02 00:55:23 [info     ] analysis_completed             char_count=32 elapsed_ms=108.16 suggestions=1
+2026-08-02 00:55:24 [info     ] analysis_completed             char_count=53 elapsed_ms=237.09 suggestions=2
+2026-08-02 00:55:24 [info     ] analysis_completed             char_count=32 elapsed_ms=187.96 suggestions=1
+2026-08-02 00:55:24 [info     ] analysis_completed             char_count=31 elapsed_ms=99.93 suggestions=1
+2026-08-02 00:55:24 [info     ] analysis_completed             char_count=24 elapsed_ms=113.66 suggestions=1
+2026-08-02 00:55:24 [info     ] analysis_completed             char_count=27 elapsed_ms=91.18 suggestions=1
+2026-08-02 00:55:25 [info     ] analysis_completed             char_count=98 elapsed_ms=492.31 suggestions=1
+2026-08-02 00:55:25 [info     ] analysis_completed             char_count=26 elapsed_ms=149.77 suggestions=1
+2026-08-02 00:55:25 [info     ] analysis_completed             char_count=24 elapsed_ms=132.82 suggestions=1
+2026-08-02 00:55:25 [info     ] analysis_completed             char_count=28 elapsed_ms=136.77 suggestions=1
+2026-08-02 00:55:25 [info     ] analysis_completed             char_count=62 elapsed_ms=315.65 suggestions=2
+2026-08-02 00:55:25 [info     ] analysis_completed             char_count=30 elapsed_ms=148.16 suggestions=1
+2026-08-02 00:55:26 [info     ] analysis_completed             char_count=106 elapsed_ms=534.22 suggestions=4
+2026-08-02 00:55:26 [info     ] analysis_completed             char_count=50 elapsed_ms=207.79 suggestions=1
+2026-08-02 00:55:26 [info     ] analysis_completed             char_count=22 elapsed_ms=22.2 suggestions=3
+2026-08-02 00:55:26 [info     ] analysis_completed             char_count=17 elapsed_ms=93.28 suggestions=1
+2026-08-02 00:55:26 [info     ] analysis_completed             char_count=27 elapsed_ms=97.29 suggestions=1
+2026-08-02 00:55:27 [info     ] analysis_completed             char_count=39 elapsed_ms=175.67 suggestions=1
+2026-08-02 00:55:27 [info     ] analysis_completed             char_count=37 elapsed_ms=216.27 suggestions=1
+2026-08-02 00:55:27 [info     ] analysis_completed             char_count=10 elapsed_ms=72.67 suggestions=1
+2026-08-02 00:55:27 [info     ] analysis_completed             char_count=80 elapsed_ms=375.04 suggestions=1
+2026-08-02 00:55:27 [info     ] analysis_completed             char_count=35 elapsed_ms=178.5 suggestions=2
+2026-08-02 00:55:27 [info     ] analysis_completed             char_count=25 elapsed_ms=95.59 suggestions=1
+2026-08-02 00:55:28 [info     ] analysis_completed             char_count=31 elapsed_ms=201.5 suggestions=1
+2026-08-02 00:55:28 [info     ] analysis_completed             char_count=74 elapsed_ms=399.99 suggestions=2
+2026-08-02 00:55:28 [info     ] analysis_completed             char_count=17 elapsed_ms=90.65 suggestions=1
+2026-08-02 00:55:29 [info     ] analysis_completed             char_count=109 elapsed_ms=526.98 suggestions=1
+2026-08-02 00:55:29 [info     ] analysis_completed             char_count=22 elapsed_ms=161.78 suggestions=1
+2026-08-02 00:55:29 [info     ] analysis_completed             char_count=23 elapsed_ms=147.83 suggestions=1
+2026-08-02 00:55:30 [info     ] analysis_completed             char_count=97 elapsed_ms=484.78 suggestions=1
+2026-08-02 00:55:30 [info     ] analysis_completed             char_count=34 elapsed_ms=149.8 suggestions=1
+2026-08-02 00:55:30 [info     ] analysis_completed             char_count=27 elapsed_ms=119.89 suggestions=1
+2026-08-02 00:55:30 [info     ] analysis_completed             char_count=47 elapsed_ms=198.25 suggestions=1
+2026-08-02 00:55:30 [info     ] analysis_completed             char_count=25 elapsed_ms=106.75 suggestions=1
+2026-08-02 00:55:30 [info     ] analysis_completed             char_count=25 elapsed_ms=108.78 suggestions=1
+2026-08-02 00:55:30 [info     ] analysis_completed             char_count=28 elapsed_ms=138.36 suggestions=1
+2026-08-02 00:55:30 [info     ] analysis_completed             char_count=10 elapsed_ms=73.58 suggestions=1
+2026-08-02 00:55:31 [info     ] analysis_completed             char_count=32 elapsed_ms=149.02 suggestions=1
+2026-08-02 00:55:31 [info     ] analysis_completed             char_count=32 elapsed_ms=133.23 suggestions=2
+2026-08-02 00:55:31 [info     ] analysis_completed             char_count=41 elapsed_ms=254.52 suggestions=1
+2026-08-02 00:55:31 [info     ] analysis_completed             char_count=15 elapsed_ms=88.95 suggestions=1
+2026-08-02 00:55:31 [info     ] analysis_completed             char_count=83 elapsed_ms=425.11 suggestions=2
+2026-08-02 00:55:32 [info     ] analysis_completed             char_count=23 elapsed_ms=111.17 suggestions=1
+2026-08-02 00:55:32 [info     ] analysis_completed             char_count=19 elapsed_ms=92.84 suggestions=1
+2026-08-02 00:55:32 [info     ] analysis_completed             char_count=30 elapsed_ms=140.42 suggestions=1
+2026-08-02 00:55:32 [info     ] analysis_completed             char_count=30 elapsed_ms=143.53 suggestions=1
+2026-08-02 00:55:32 [info     ] analysis_completed             char_count=21 elapsed_ms=105.72 suggestions=1
+2026-08-02 00:55:32 [info     ] analysis_completed             char_count=14 elapsed_ms=35.24 suggestions=1
+2026-08-02 00:55:32 [info     ] analysis_completed             char_count=88 elapsed_ms=399.04 suggestions=1
+2026-08-02 00:55:33 [info     ] analysis_completed             char_count=38 elapsed_ms=154.1 suggestions=2
+2026-08-02 00:55:33 [info     ] analysis_completed             char_count=14 elapsed_ms=70.0 suggestions=1
+2026-08-02 00:55:33 [info     ] analysis_completed             char_count=36 elapsed_ms=190.11 suggestions=1
+2026-08-02 00:55:33 [info     ] analysis_completed             char_count=78 elapsed_ms=365.63 suggestions=1
+2026-08-02 00:55:34 [info     ] analysis_completed             char_count=81 elapsed_ms=357.74 suggestions=1
+2026-08-02 00:55:34 [info     ] analysis_completed             char_count=70 elapsed_ms=296.4 suggestions=1
+2026-08-02 00:55:34 [info     ] analysis_completed             char_count=50 elapsed_ms=239.39 suggestions=1
+2026-08-02 00:55:34 [info     ] analysis_completed             char_count=26 elapsed_ms=162.36 suggestions=2
+2026-08-02 00:55:34 [info     ] analysis_completed             char_count=26 elapsed_ms=110.67 suggestions=1
+{
+  "setup": {
+    "seed": 42,
+    "holdout_buckets": 4,
+    "positive_records": 325,
+    "clean_records": 150,
+    "total_records": 475,
+    "engine_faults": 0
+  },
+  "detection": {
+    "tp": 177,
+    "fp": 9,
+    "fn": 148,
+    "tn": 141,
+    "accuracy": 0.6694736842105263,
+    "precision": 0.9516129032258065,
+    "recall": 0.5446153846153846,
+    "f1": 0.6927592954990215,
+    "specificity": 0.94,
+    "fpr": 0.06,
+    "fnr": 0.4553846153846154,
+    "mcc": 0.46150787246122393
+  },
+  "word_level": {
+    "tp": 15,
+    "fp": 223,
+    "fn": 417,
+    "precision": 0.06302521008403361,
+    "recall": 0.034722222222222224,
+    "f1": 0.04477611940298507
+  },
+  "correction": {
+    "exact_match": 144,
+    "exact_match_rate": 0.3031578947368421
+  },
+  "latency_ms": {
+    "mean": 231.5784993684486,
+    "median": 150.40229999794974,
+    "p95": 612.8949999983888,
+    "p99": 976.4768999993976
+  },
+  "per_kind": {
+    "clean": {
+      "total": 150,
+      "emitted": 9,
+      "gold_error": 0,
+      "exact": 141
+    },
+    "grammar": {
+      "total": 150,
+      "emitted": 84,
+      "gold_error": 150,
+      "exact": 1
+    },
+    "syn:CASE_PARTICLE_SUBSTITUTION": {
+      "total": 25,
+      "emitted": 13,
+      "gold_error": 25,
+      "exact": 1
+    },
+    "syn:CHARACTER_CONFUSION": {
+      "total": 25,
+      "emitted": 7,
+      "gold_error": 25,
+      "exact": 0
+    },
+    "syn:PARTICLE_OMISSION": {
+      "total": 25,
+      "emitted": 5,
+      "gold_error": 25,
+      "exact": 0
+    },
+    "syn:SYLLABLE_SWAP": {
+      "total": 25,
+      "emitted": 20,
+      "gold_error": 25,
+      "exact": 0
+    },
+    "syn:TSHEG_DROP": {
+      "total": 25,
+      "emitted": 21,
+      "gold_error": 25,
+      "exact": 1
+    },
+    "syn:VOWEL_MUTATION": {
+      "total": 25,
+      "emitted": 3,
+      "gold_error": 25,
+      "exact": 0
+    },
+    "syn:WORD_DUPLICATION": {
+      "total": 25,
+      "emitted": 24,
+      "gold_error": 25,
+      "exact": 0
+    }
+  }
+}
+Saved C:\Users\kalsa\Desktop\Tibetan Editor Enterprise Architecture\scratch\eval_unforeseen_results.json

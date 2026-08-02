@@ -121,6 +121,33 @@ class RuleRegistry:
                 example_correct="ཁོང་སློབ་མ་ཡིན།",
                 explanation="Sentence-final declarative copula should not end with nominalizer 'པ'.",
             ),
+            GrammarRule(
+                rule_id="TIB-VOWEL-001",
+                category="spelling",
+                description="Vowel mutation detection: unknown token whose single vowel-sign substitution is attested",
+                confidence_baseline=0.85,
+                example_incorrect="བཀྲ་ཤིས་བདི་ལེགས",
+                example_correct="བཀྲ་ཤིས་བདེ་ལེགས",
+                explanation="One vowel sign is mutated (ི↔ེ↔ོ↔ུ); the unique attested variant is offered.",
+            ),
+            GrammarRule(
+                rule_id="TIB-PART-OMIT-001",
+                category="particle",
+                description="Missing genitive particle between two attested content words",
+                confidence_baseline=0.80,
+                example_incorrect="སློབ་སྦྱོང་གལ་གནད",
+                example_correct="སློབ་སྦྱོང་གི་གལ་གནད",
+                explanation="The corpus attests the particle-bearing trigram but not the bare bigram, so the expected genitive particle is re-inserted.",
+            ),
+            GrammarRule(
+                rule_id="TIB-CHAR-001",
+                category="spelling",
+                description="Character confusion detection: unknown token whose single confusable-letter substitution is attested",
+                confidence_baseline=0.85,
+                example_incorrect="སློབ་སྦྱོབ",
+                example_correct="སློབ་སྦྱོང",
+                explanation="Confusable letter pairs (ཤ↔ཞ, ཏ↔ད, ས↔ཤ, བ↔ང, ན↔ལ) are substituted one at a time; the unique attested form is offered.",
+            ),
         ]
         for r in defaults:
             self.register(r)

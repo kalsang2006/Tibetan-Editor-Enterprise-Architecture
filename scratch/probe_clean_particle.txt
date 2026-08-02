@@ -1,0 +1,60 @@
+clean sentences: 150
+engine ready
+corpus bigrams: 50000, vocab: 178452
+
+--- clean[13] tree_empty=? emitted_edit=True ---
+text: སྤྲིན་བོན་བ་ཐུལ་དང༌།
+  FIRE a='སྤྲིན' b='བོན' particle='གྱི' counts={'a_p': 3292, 'p_b': 620, 'bare': 0} compound_attested=False score=0.8 repl='གྱི་བོན' span=6-9
+
+--- clean[19] tree_empty=? emitted_edit=True ---
+text: ཀུན་ཀྱང་ཕྱག་གཡོན་ཚེ་ཡི་བུམ།
+  FIRE a='གཡོན' b='ཚེ' particle='གྱི' counts={'a_p': 3325, 'p_b': 2449, 'bare': 0} compound_attested=False score=0.8 repl='གྱི་ཚེ' span=17-19
+
+--- clean[25] tree_empty=? emitted_edit=True ---
+text: བཀའ་བརྒྱུད་གསེར་ཕྲེང་ལ་སོགས་སྟོང་ལྷག་དང་།
+  FIRE a='གསེར' b='ཕྲེང' particle='གྱི' counts={'a_p': 16447, 'p_b': 1173, 'bare': 0} compound_attested=False score=0.8 repl='གྱི་ཕྲེང' span=16-20
+
+--- clean[38] tree_empty=? emitted_edit=True ---
+text: ཕན་མེད་གནོད་མེད་མ་ཡིན་མཁྱེན་བརྩེའི་སྟོབས་དང་ལྡན།
+  FIRE a='མེད' b='གནོད' particle='ཀྱི' counts={'a_p': 21946, 'p_b': 893, 'bare': 0} compound_attested=False score=0.8 repl='ཀྱི་གནོད' span=7-11
+
+--- clean[62] tree_empty=? emitted_edit=True ---
+text: ཚོགས་ཕུད་ཆ་གསུམ་དུ་སྤྲོས་པའི་དང་པོ་དཀར་མངར་ཕུད་ཀྱིས་བྲན་པ་དཀར་ཟླུམ་དུ་ཕུལ་ལ།
+  FIRE a='ཕུད' b='ཆ' particle='ཀྱི' counts={'a_p': 810, 'p_b': 5223, 'bare': 0} compound_attested=False score=0.8 repl='ཀྱི་ཆ' span=9-10
+
+--- clean[65] tree_empty=? emitted_edit=True ---
+text: དཔལ་མགོན་གསང་བ་ལག་པོ་ཆེའི་གཟུངས།
+  FIRE a='མགོན' b='གསང' particle='གྱི' counts={'a_p': 526, 'p_b': 1694, 'bare': 0} compound_attested=False score=0.8 repl='གྱི་གསང' span=9-12
+
+--- clean[78] tree_empty=? emitted_edit=True ---
+text: ཐམས་ཅད་བཀའ་ཡི་གཏོར་མ་ལོངས།
+  FIRE a='ཅད' b='བཀའ' particle='ཀྱི' counts={'a_p': 74146, 'p_b': 4655, 'bare': 0} compound_attested=False score=0.8 repl='ཀྱི་བཀའ' span=7-10
+
+--- clean[81] tree_empty=? emitted_edit=True ---
+text: སྤྱན་ཉི་ཤུ་རྩ་བཞི་ཕྱེ་བ།
+  FIRE a='སྤྱན' b='ཉི' particle='གྱི' counts={'a_p': 942, 'p_b': 600, 'bare': 0} compound_attested=False score=0.8 repl='གྱི་ཉི' span=5-7
+
+--- clean[93] tree_empty=? emitted_edit=True ---
+text: གཞན་ཡང་ལ་ལ་ཞིག་མུན་ཁང་གི་ནང་དུ་སྒྲོན་མ་ཆེན་པོ་ཕྱུང་ན།
+  FIRE a='ཞིག' b='མུན' particle='གི' counts={'a_p': 7085, 'p_b': 605, 'bare': 0} compound_attested=False score=0.8 repl='གི་མུན' span=15-18
+
+--- clean[102] tree_empty=? emitted_edit=True ---
+text: དཔལ་རྡོ་རྗེ་ཕྲེང་བ་ཞེས་བྱ་བ་ལ་སོགས་པས་ལུང་ཚད་མ་ཉིད་དུ་བསྟན་ཏོ།
+  FIRE a='ལུང' b='ཚད' particle='གི' counts={'a_p': 5103, 'p_b': 1798, 'bare': 0} compound_attested=False score=0.8 repl='གི་ཚད' span=42-44
+
+--- clean[116] tree_empty=? emitted_edit=True ---
+text: གང་ཟག་སོ་སོ་བ་ལ་རྗོད་བྱེད་རྣ་བར་བརྒྱུད་པས་ན་སྙན་ཁུངས་སུ་བརྒྱུད་པ་ཞེས་བྱའོ།
+  FIRE a='བར' b='བརྒྱུད' particle='གྱི' counts={'a_p': 7607, 'p_b': 524, 'bare': 0} compound_attested=False score=0.8 repl='གྱི་བརྒྱུད' span=32-38
+
+--- clean[126] tree_empty=? emitted_edit=True ---
+text: བཟོ་བོ་ལ་ནི་སྔགས་རིགས་པས།
+  FIRE a='སྔགས' b='རིགས' particle='ཀྱི' counts={'a_p': 31184, 'p_b': 7332, 'bare': 0} compound_attested=False score=0.8 repl='ཀྱི་རིགས' span=17-21
+
+--- clean[130] tree_empty=? emitted_edit=True ---
+text: ནང་སྟོང་པ་ཉིད་ལ་སློབ་སློབ་པ་དང་།
+  FIRE a='སློབ' b='སློབ' particle='ཀྱི' counts={'a_p': 308, 'p_b': 1290, 'bare': 0} compound_attested=False score=0.8 repl='ཀྱི་སློབ' span=21-25
+
+=== SUMMARY ===
+clean with any edit: 30/150
+sentences with >=1 particle fire: 13
+empty-tree first-analyses: 0

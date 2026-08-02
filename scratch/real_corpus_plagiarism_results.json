@@ -1,0 +1,27 @@
+{
+  "corpus": {
+    "indexed_documents": 50,
+    "total_fingerprints": 351
+  },
+  "confusion_matrix": {
+    "tp": 50,
+    "fp": 0,
+    "fn": 0,
+    "tn": 50
+  },
+  "metrics": {
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "specificity": 1.0,
+    "top1_attribution_accuracy": 96.0
+  },
+  "latency": {
+    "mean_ms": 0.0807630005874671,
+    "std_ms": 0.030536364114940595,
+    "median_ms": 0.07235000157379545,
+    "p95_ms": 0.12252000087755727,
+    "p99_ms": 0.1901450045261301
+  }
+}

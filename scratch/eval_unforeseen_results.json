@@ -1,0 +1,98 @@
+{
+  "setup": {
+    "seed": 42,
+    "holdout_buckets": 4,
+    "positive_records": 325,
+    "clean_records": 150,
+    "total_records": 475,
+    "engine_faults": 0
+  },
+  "detection": {
+    "tp": 222,
+    "fp": 18,
+    "fn": 103,
+    "tn": 132,
+    "accuracy": 0.7452631578947368,
+    "precision": 0.925,
+    "recall": 0.683076923076923,
+    "f1": 0.7858407079646018,
+    "specificity": 0.88,
+    "fpr": 0.12,
+    "fnr": 0.3169230769230769,
+    "mcc": 0.5234985544369202
+  },
+  "word_level": {
+    "tp": 43,
+    "fp": 290,
+    "fn": 389,
+    "precision": 0.12912912912912913,
+    "recall": 0.09953703703703703,
+    "f1": 0.11241830065359476
+  },
+  "correction": {
+    "exact_match": 155,
+    "exact_match_rate": 0.3263157894736842
+  },
+  "latency_ms": {
+    "mean": 903.0689728420111,
+    "median": 501.75389999640174,
+    "p95": 3400.5662999989,
+    "p99": 5845.425700004853
+  },
+  "per_kind": {
+    "clean": {
+      "total": 150,
+      "emitted": 18,
+      "gold_error": 0,
+      "exact": 132
+    },
+    "grammar": {
+      "total": 150,
+      "emitted": 96,
+      "gold_error": 150,
+      "exact": 10
+    },
+    "syn:CASE_PARTICLE_SUBSTITUTION": {
+      "total": 25,
+      "emitted": 12,
+      "gold_error": 25,
+      "exact": 1
+    },
+    "syn:CHARACTER_CONFUSION": {
+      "total": 25,
+      "emitted": 14,
+      "gold_error": 25,
+      "exact": 2
+    },
+    "syn:PARTICLE_OMISSION": {
+      "total": 25,
+      "emitted": 10,
+      "gold_error": 25,
+      "exact": 0
+    },
+    "syn:SYLLABLE_SWAP": {
+      "total": 25,
+      "emitted": 20,
+      "gold_error": 25,
+      "exact": 0
+    },
+    "syn:TSHEG_DROP": {
+      "total": 25,
+      "emitted": 24,
+      "gold_error": 25,
+      "exact": 0
+    },
+    "syn:VOWEL_MUTATION": {
+      "total": 25,
+      "emitted": 22,
+      "gold_error": 25,
+      "exact": 10
+    },
+    "syn:WORD_DUPLICATION": {
+      "total": 25,
+      "emitted": 24,
+      "gold_error": 25,
+      "exact": 0
+    }
+  }
+}

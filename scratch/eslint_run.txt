@@ -1,0 +1,387 @@
+npm notice run teea-word-addin@1.0.0 npx
+npm notice run eslint src test
+
+C:\Users\kalsa\Desktop\Tibetan Editor Enterprise Architecture\addin\src\taskpane\components\PlagiarismPanel.tsx
+  260:27  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  260:37  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+C:\Users\kalsa\Desktop\Tibetan Editor Enterprise Architecture\addin\src\taskpane\components\TextToSpeechPanel.tsx
+  153:13  error  Visible, non-interactive elements with click handlers must have at least one keyboard listener  jsx-a11y/click-events-have-key-events
+  187:11  error  Media elements such as <audio> and <video> must have a <track> for captions                     jsx-a11y/media-has-caption
+
+C:\Users\kalsa\Desktop\Tibetan Editor Enterprise Architecture\addin\src\taskpane\hooks\useMonlamDictionary.ts
+  19:9   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  24:16  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  33:56  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\kalsa\Desktop\Tibetan Editor Enterprise Architecture\addin\src\taskpane\index.tsx
+  147:6  warning  React Hook React.useEffect has a missing dependency: 'analysis'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\kalsa\Desktop\Tibetan Editor Enterprise Architecture\addin\src\taskpane\office.full.js
+  17:13     error  'performance' is not defined                                               no-undef
+  17:28     error  'performance' is not defined                                               no-undef
+  18:20     error  'performance' is not defined                                               no-undef
+  26:53     error  'performance' is not defined                                               no-undef
+  27:20     error  'performance' is not defined                                               no-undef
+  35:53     error  'performance' is not defined                                               no-undef
+  36:20     error  'performance' is not defined                                               no-undef
+  44:53     error  'performance' is not defined                                               no-undef
+  45:20     error  'performance' is not defined                                               no-undef
+  76:2347   error  Unexpected aliasing of 'this' to local variable                            @typescript-eslint/no-this-alias
+  76:2620   error  Unexpected aliasing of 'this' to local variable                            @typescript-eslint/no-this-alias
+  76:3547   error  'document' is not defined                                                  no-undef
+  76:3577   error  'document' is not defined                                                  no-undef
+  76:3684   error  'document' is not defined                                                  no-undef
+  76:3748   error  'a' is already defined                                                     no-redeclare
+  76:3885   error  Unexpected aliasing of 'this' to local variable                            @typescript-eslint/no-this-alias
+  76:4198   error  'h' is defined but never used                                              @typescript-eslint/no-unused-vars
+  76:4200   error  Empty block statement                                                      no-empty
+  76:4720   error  'window' is not defined                                                    no-undef
+  76:4752   error  'window' is not defined                                                    no-undef
+  76:4832   error  Unexpected aliasing of 'this' to local variable                            @typescript-eslint/no-this-alias
+  76:4951   error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:5819   error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  76:5922   error  Unexpected aliasing of 'this' to local variable                            @typescript-eslint/no-this-alias
+  76:5945   error  'window' is not defined                                                    no-undef
+  76:6340   error  'window' is not defined                                                    no-undef
+  76:6360   error  'window' is not defined                                                    no-undef
+  76:6385   error  'window' is not defined                                                    no-undef
+  76:6714   error  'clearTimeout' is not defined                                              no-undef
+  76:6926   error  'clearTimeout' is not defined                                              no-undef
+  76:7281   error  'setTimeout' is not defined                                                no-undef
+  76:7621   error  Unexpected aliasing of 'this' to local variable                            @typescript-eslint/no-this-alias
+  76:8161   error  Unexpected aliasing of 'this' to local variable                            @typescript-eslint/no-this-alias
+  76:8325   error  'Microsoft' is not defined                                                 no-undef
+  76:8387   error  'Microsoft' is not defined                                                 no-undef
+  76:8446   error  'Microsoft' is not defined                                                 no-undef
+  76:8496   error  'Microsoft' is not defined                                                 no-undef
+  76:8547   error  'Microsoft' is not defined                                                 no-undef
+  76:8602   error  'Microsoft' is not defined                                                 no-undef
+  76:8686   error  'Microsoft' is not defined                                                 no-undef
+  76:8744   error  'Microsoft' is not defined                                                 no-undef
+  76:9180   error  Unexpected aliasing of 'this' to local variable                            @typescript-eslint/no-this-alias
+  76:9365   error  Unexpected aliasing of 'this' to local variable                            @typescript-eslint/no-this-alias
+  76:9542   error  'Microsoft' is not defined                                                 no-undef
+  76:9591   error  'Microsoft' is not defined                                                 no-undef
+  76:9765   error  'b' is assigned a value but never used                                     @typescript-eslint/no-unused-vars
+  76:9974   error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:10249  error  'pb' is assigned a value but never used                                    @typescript-eslint/no-unused-vars
+  76:10264  error  'jb' is defined but never used                                             @typescript-eslint/no-unused-vars
+  76:10397  error  'window' is not defined                                                    no-undef
+  76:10422  error  'G' is assigned a value but never used                                     @typescript-eslint/no-unused-vars
+  76:10509  error  'process' is not defined                                                   no-undef
+  76:10644  error  'process' is not defined                                                   no-undef
+  76:10663  error  'process' is not defined                                                   no-undef
+  76:10776  error  'setImmediate' is not defined                                              no-undef
+  76:10836  error  'MessageChannel' is not defined                                            no-undef
+  76:10944  error  'setTimeout' is not defined                                                no-undef
+  76:12053  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:12154  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:12347  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:12855  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:12969  error  Unexpected aliasing of 'this' to local variable                            @typescript-eslint/no-this-alias
+  76:13185  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:13535  error  Unexpected aliasing of 'this' to local variable                            @typescript-eslint/no-this-alias
+  76:13665  error  Unexpected aliasing of 'this' to local variable                            @typescript-eslint/no-this-alias
+  76:13906  error  Unexpected aliasing of 'this' to local variable                            @typescript-eslint/no-this-alias
+  76:13993  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:14071  error  Unexpected aliasing of 'this' to local variable                            @typescript-eslint/no-this-alias
+  76:14234  error  Unexpected aliasing of 'this' to local variable                            @typescript-eslint/no-this-alias
+  76:14485  error  Unexpected aliasing of 'this' to local variable                            @typescript-eslint/no-this-alias
+  76:14596  error  Unexpected aliasing of 'this' to local variable                            @typescript-eslint/no-this-alias
+  76:14944  error  Unexpected aliasing of 'this' to local variable                            @typescript-eslint/no-this-alias
+  76:15029  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:15040  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:15205  error  Unexpected aliasing of 'this' to local variable                            @typescript-eslint/no-this-alias
+  76:15457  error  'e' is assigned a value but never used                                     @typescript-eslint/no-unused-vars
+  76:15561  error  'window' is not defined                                                    no-undef
+  76:15793  error  'window' is not defined                                                    no-undef
+  76:15855  error  'window' is not defined                                                    no-undef
+  76:16061  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:16128  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:16210  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:16301  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:16374  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:16480  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:16568  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:16665  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:16777  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:16883  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:16983  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:17065  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:17162  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:17235  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:17738  error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  76:19217  error  'oteljs_agave' is not defined                                              no-undef
+  76:19664  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:19714  error  'Microsoft' is not defined                                                 no-undef
+  76:19897  error  'c' is defined but never used                                              @typescript-eslint/no-unused-vars
+  76:19899  error  Empty block statement                                                      no-empty
+  76:20012  error  'c' is defined but never used                                              @typescript-eslint/no-unused-vars
+  76:20014  error  Empty block statement                                                      no-empty
+  76:20353  error  Unexpected aliasing of 'this' to local variable                            @typescript-eslint/no-this-alias
+  76:20374  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:20404  error  'console' is not defined                                                   no-undef
+  76:20418  error  'console' is not defined                                                   no-undef
+  76:20717  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:20902  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:21145  error  'window' is not defined                                                    no-undef
+  76:21579  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:21647  error  'Microsoft' is not defined                                                 no-undef
+  76:21948  error  'b' is assigned a value but never used                                     @typescript-eslint/no-unused-vars
+  76:22148  error  'window' is not defined                                                    no-undef
+  76:22169  error  'window' is not defined                                                    no-undef
+  76:22216  error  'document' is not defined                                                  no-undef
+  76:22254  error  'URL' is not defined                                                       no-undef
+  76:22302  error  'window' is not defined                                                    no-undef
+  76:22404  error  'URL' is not defined                                                       no-undef
+  76:23426  error  Unexpected aliasing of 'this' to local variable                            @typescript-eslint/no-this-alias
+  76:24372  error  'isOsfSecurityDefaultsEnabled' is not defined                              no-undef
+  76:24452  error  'window' is not defined                                                    no-undef
+  76:24474  error  'window' is not defined                                                    no-undef
+  76:24493  error  'Microsoft' is not defined                                                 no-undef
+  76:24521  error  'Microsoft' is not defined                                                 no-undef
+  76:24549  error  'window' is not defined                                                    no-undef
+  76:24587  error  'window' is not defined                                                    no-undef
+  76:24604  error  'window' is not defined                                                    no-undef
+  76:24618  error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  76:24636  error  'Microsoft' is not defined                                                 no-undef
+  76:24669  error  'window' is not defined                                                    no-undef
+  76:24686  error  'window' is not defined                                                    no-undef
+  76:24700  error  'Microsoft' is not defined                                                 no-undef
+  76:24785  error  'Microsoft' is not defined                                                 no-undef
+  76:24926  error  'Microsoft' is not defined                                                 no-undef
+  76:25179  error  'window' is not defined                                                    no-undef
+  76:25429  error  'Microsoft' is not defined                                                 no-undef
+  76:25529  error  'window' is not defined                                                    no-undef
+  76:25562  error  'window' is not defined                                                    no-undef
+  76:25620  error  'Microsoft' is not defined                                                 no-undef
+  76:25700  error  'console' is not defined                                                   no-undef
+  76:26027  error  'self' is not defined                                                      no-undef
+  76:26084  error  'hb' is defined but never used                                             @typescript-eslint/no-unused-vars
+  76:26087  error  Empty block statement                                                      no-empty
+  76:26089  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:26089  error  'window' is not defined                                                    no-undef
+  76:26109  error  'window' is not defined                                                    no-undef
+  76:26184  error  'window' is not defined                                                    no-undef
+  76:26217  error  'window' is not defined                                                    no-undef
+  76:26240  error  'window' is not defined                                                    no-undef
+  76:26265  error  'window' is not defined                                                    no-undef
+  76:26672  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:26885  error  'Microsoft' is not defined                                                 no-undef
+  76:26997  error  'Microsoft' is not defined                                                 no-undef
+  76:27097  error  'Microsoft' is not defined                                                 no-undef
+  76:27157  error  'Microsoft' is not defined                                                 no-undef
+  76:27797  error  'Microsoft' is not defined                                                 no-undef
+  76:27959  error  'd' is defined but never used                                              @typescript-eslint/no-unused-vars
+  76:27961  error  Empty block statement                                                      no-empty
+  76:28193  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:28507  error  'd' is defined but never used                                              @typescript-eslint/no-unused-vars
+  76:28509  error  Empty block statement                                                      no-empty
+  76:28936  error  'c' is defined but never used                                              @typescript-eslint/no-unused-vars
+  76:28938  error  Empty block statement                                                      no-empty
+  76:28941  error  'Microsoft' is not defined                                                 no-undef
+  76:29454  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:29512  error  'window' is not defined                                                    no-undef
+  76:29861  error  'window' is not defined                                                    no-undef
+  76:29917  error  'd' is defined but never used                                              @typescript-eslint/no-unused-vars
+  76:30000  error  'window' is not defined                                                    no-undef
+  76:30016  error  'window' is not defined                                                    no-undef
+  76:30046  error  'window' is not defined                                                    no-undef
+  76:30095  error  'window' is not defined                                                    no-undef
+  76:30137  error  'd' is defined but never used                                              @typescript-eslint/no-unused-vars
+  76:30139  error  Empty block statement                                                      no-empty
+  76:30204  error  'window' is not defined                                                    no-undef
+  76:30220  error  'window' is not defined                                                    no-undef
+  76:30265  error  'agaveHost' is not defined                                                 no-undef
+  76:30287  error  'window' is not defined                                                    no-undef
+  76:30333  error  'agaveHost' is not defined                                                 no-undef
+  76:30364  error  'window' is not defined                                                    no-undef
+  76:30589  error  'q' is defined but never used                                              @typescript-eslint/no-unused-vars
+  76:30591  error  Empty block statement                                                      no-empty
+  76:30663  error  'q' is defined but never used                                              @typescript-eslint/no-unused-vars
+  76:30665  error  Empty block statement                                                      no-empty
+  76:30700  error  'window' is not defined                                                    no-undef
+  76:30724  error  'window' is not defined                                                    no-undef
+  76:30752  error  'b' is defined but never used                                              @typescript-eslint/no-unused-vars
+  76:30754  error  Empty block statement                                                      no-empty
+  76:31850  error  'u' is defined but never used                                              @typescript-eslint/no-unused-vars
+  76:31852  error  Empty block statement                                                      no-empty
+  76:31914  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:32119  error  'window' is not defined                                                    no-undef
+  76:32127  error  'window' is not defined                                                    no-undef
+  76:32139  error  'window' is not defined                                                    no-undef
+  76:32157  error  'window' is not defined                                                    no-undef
+  76:32182  error  'window' is not defined                                                    no-undef
+  76:32287  error  'window' is not defined                                                    no-undef
+  76:32306  error  'window' is not defined                                                    no-undef
+  76:32321  error  'window' is not defined                                                    no-undef
+  76:32622  error  'Sys' is not defined                                                       no-undef
+  76:32648  error  'Sys' is not defined                                                       no-undef
+  76:32671  error  'Type' is not defined                                                      no-undef
+  76:32702  error  'Type' is not defined                                                      no-undef
+  76:32730  error  'Type' is not defined                                                      no-undef
+  76:32757  error  'Type' is not defined                                                      no-undef
+  76:32917  error  'Strings' is not defined                                                   no-undef
+  76:33297  error  'Strings' is not defined                                                   no-undef
+  76:33325  error  'window' is not defined                                                    no-undef
+  76:33346  error  'Type' is not defined                                                      no-undef
+  76:33381  error  'window' is not defined                                                    no-undef
+  76:33391  error  'window' is not defined                                                    no-undef
+  76:33406  error  'Type' is not defined                                                      no-undef
+  76:33447  error  'a' is assigned a value but never used                                     @typescript-eslint/no-unused-vars
+  76:33719  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:34012  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:34216  error  'Microsoft' is not defined                                                 no-undef
+  76:34316  error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  76:34338  error  'Microsoft' is not defined                                                 no-undef
+  76:34381  error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  76:34399  error  'Microsoft' is not defined                                                 no-undef
+  76:34772  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:34877  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:34877  error  'Microsoft' is not defined                                                 no-undef
+  76:34919  error  'Microsoft' is not defined                                                 no-undef
+  76:34999  error  'Microsoft' is not defined                                                 no-undef
+  76:35040  error  'Microsoft' is not defined                                                 no-undef
+  76:35140  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:35783  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:35932  error  'Strings' is not defined                                                   no-undef
+  76:35949  error  'Strings' is not defined                                                   no-undef
+  76:36158  error  'window' is not defined                                                    no-undef
+  76:36182  error  'window' is not defined                                                    no-undef
+  76:36217  error  'window' is not defined                                                    no-undef
+  76:36256  error  'p' is defined but never used                                              @typescript-eslint/no-unused-vars
+  76:36258  error  Empty block statement                                                      no-empty
+  76:36288  error  'window' is not defined                                                    no-undef
+  76:36301  error  'window' is not defined                                                    no-undef
+  76:36314  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:36314  error  'window' is not defined                                                    no-undef
+  76:36330  error  'window' is not defined                                                    no-undef
+  76:36350  error  'window' is not defined                                                    no-undef
+  76:36426  error  'window' is not defined                                                    no-undef
+  76:36461  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:36555  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:36666  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:37603  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:37657  error  'window' is not defined                                                    no-undef
+  76:37849  error  'f' is defined but never used                                              @typescript-eslint/no-unused-vars
+  76:37906  error  'window' is not defined                                                    no-undef
+  76:38081  error  'e' is defined but never used                                              @typescript-eslint/no-unused-vars
+  76:38212  error  'window' is not defined                                                    no-undef
+  76:38417  error  'window' is not defined                                                    no-undef
+  76:38505  error  'window' is not defined                                                    no-undef
+  76:38589  error  'window' is not defined                                                    no-undef
+  76:38737  error  'window' is not defined                                                    no-undef
+  76:38767  error  'window' is not defined                                                    no-undef
+  76:38801  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:38801  error  'window' is not defined                                                    no-undef
+  76:38826  error  'window' is not defined                                                    no-undef
+  76:38880  error  'Microsoft' is not defined                                                 no-undef
+  76:38937  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  76:38961  error  'OSFPerfUtil' is not defined                                               no-undef
+  80:12     error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:89     error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:243    error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:662    error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:2807   error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:5188   error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:5262   error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:5334   error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:5385   error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:5406   error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:6078   error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:6091   error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:6988   error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:7001   error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:7382   error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:7395   error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:8012   error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:8025   error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:8287   error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:8324   error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:9290   error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:9303   error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:9769   error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:10461  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:10596  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:10897  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:10986  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:11075  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:11366  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:11837  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:11909  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:12023  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:12114  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:12182  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:12371  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:12553  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:12789  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:13772  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:13961  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:14131  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:14246  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:14353  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:14847  error  Unnecessary escape character: \.                                           no-useless-escape
+  80:14907  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:15015  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:15185  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:15198  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:15740  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:16317  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:16920  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:17575  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:17670  error  'e' is defined but never used                                              @typescript-eslint/no-unused-vars
+  80:17672  error  Empty block statement                                                      no-empty
+  80:18053  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:18119  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:18410  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:18951  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:18993  error  'window' is not defined                                                    no-undef
+  80:19021  error  'window' is not defined                                                    no-undef
+  80:19078  error  'window' is not defined                                                    no-undef
+  80:19424  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:20362  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:21785  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:21798  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:23423  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:24272  error  Unexpected aliasing of 'this' to local variable                            @typescript-eslint/no-this-alias
+  80:24522  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:24818  error  Expected an assignment or function call and instead saw an expression      @typescript-eslint/no-unused-expressions
+  80:26147  error  'window' is not defined                                                    no-undef
+
+C:\Users\kalsa\Desktop\Tibetan Editor Enterprise Architecture\addin\src\taskpane\office.js
+   53:11  error  'setTimeout' is not defined  no-undef
+   74:5   error  'console' is not defined     no-undef
+  118:34  error  'self' is not defined        no-undef
+
+C:\Users\kalsa\Desktop\Tibetan Editor Enterprise Architecture\addin\src\taskpane\services\AnalysisBridge.ts
+  105:89  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  106:41  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\kalsa\Desktop\Tibetan Editor Enterprise Architecture\addin\src\taskpane\services\WordDocument.ts
+   56:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   56:59  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   82:78  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   94:53  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  227:47  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  260:47  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  375:31  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  380:67  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  465:86  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\kalsa\Desktop\Tibetan Editor Enterprise Architecture\addin\src\taskpane\services\suggestionAdapter.ts
+  109:36  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  145:70  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  146:20  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  147:56  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  147:93  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  148:20  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  152:13  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  153:13  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  154:27  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  156:25  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  157:25  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 363 problems (362 errors, 1 warning)
+
+EXIT:1

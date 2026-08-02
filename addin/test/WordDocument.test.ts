@@ -1,7 +1,9 @@
 import {
   LARGE_DOCUMENT_THRESHOLD,
+  READ_RETRY_BACKOFF_MS,
   SLICE_SIZE,
   applyOperations,
+  canonicalizeDocumentText,
   countOccurrencesBefore,
   insertAfterSelection,
   isLargeDocument,
@@ -12,6 +14,17 @@ import {
 import { installOfficeMock } from './officeMock';
 
 describe('reading the document', () => {
+  /** Make the tier-2 retry loop instant, then restore the real delays. */
+  const withZeroBackoff = async <T>(run: () => Promise<T>): Promise<T> => {
+    const saved = [...READ_RETRY_BACKOFF_MS];
+    READ_RETRY_BACKOFF_MS.splice(0, READ_RETRY_BACKOFF_MS.length, 0, 0, 0);
+    try {
+      return await run();
+    } finally {
+      READ_RETRY_BACKOFF_MS.splice(0, READ_RETRY_BACKOFF_MS.length, ...saved);
+    }
+  };
+
   it('falls back to a single body read when the host has no slicing API', async () => {
     installOfficeMock(['first paragraph', 'second paragraph']);
 
@@ -20,11 +33,78 @@ describe('reading the document', () => {
     );
   });
 
+  it('tier 3 select-all reads through a body that reports empty, then restores the selection', async () => {
+    const host = installOfficeMock(['first paragraph', 'second paragraph'], {
+      selection: 'the cursor',
+      emptyBody: true,
+      withSelectionFallback: true,
+    });
+
+    await withZeroBackoff(async () => {
+      await expect(readDocumentText()).resolves.toBe(
+        'first paragraph\rsecond paragraph',
+      );
+    });
+
+    // The user's original selection must be restored, not the whole body.
+    expect(host.state.selection).toBe('the cursor');
+  });
+
+  it('tier 3 restores a collapsed cursor when there was no prior selection', async () => {
+    const host = installOfficeMock(['only paragraph'], {
+      emptyBody: true,
+      withSelectionFallback: true,
+    });
+
+    await withZeroBackoff(async () => {
+      await expect(readDocumentText()).resolves.toBe('only paragraph');
+    });
+
+    // No selection option means the initial selection was an empty string,
+    // standing in for a collapsed cursor; the restore puts it back to empty.
+    expect(host.state.selection).toBe('');
+  });
+
+  it('returns "" only after every tier has been exhausted', async () => {
+    // No getFileAsync, an empty document, and no select-all capability:
+    // every tier must fail before "" is returned.
+    installOfficeMock([], {});
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+    try {
+      await withZeroBackoff(async () => {
+        await expect(readDocumentText()).resolves.toBe('');
+      });
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining('all 5 tiers exhausted'));
+    } finally {
+      warn.mockRestore();
+    }
+  });
+
   it('reads through getFileAsync when the host exposes it', async () => {
     const host = installOfficeMock(['alpha', 'beta'], { withGetFileAsync: true });
 
     await expect(readDocumentText()).resolves.toBe('alpha\rbeta');
     expect(host.state.slicesRead).toEqual([0]);
+  });
+
+  it('collapses CRLF paragraph breaks from getFileAsync to the canonical CR', async () => {
+    // On Windows, getFileAsync emits \r\n between paragraphs; the daemon's
+    // offsets are computed against exactly that text. readDocumentText must
+    // collapse every break to a single CR so the apply-time reconstruction
+    // (which assumes one character per paragraph boundary) stays in sync.
+    installOfficeMock(['alpha', 'beta'], {
+      withGetFileAsync: true,
+      fileSeparator: '\r\n',
+    });
+
+    await expect(readDocumentText()).resolves.toBe('alpha\rbeta');
+  });
+
+  it('canonicalizes every paragraph-break convention to a single CR', () => {
+    expect(canonicalizeDocumentText('a\r\nb\rc\nd')).toBe('a\rb\rc\rd');
+    expect(canonicalizeDocumentText('\uFEFFབོད་ཡིག')).toBe('བོད་ཡིག');
+    expect(canonicalizeDocumentText('no breaks')).toBe('no breaks');
   });
 
   it('re-stitches a document that spans several slices', async () => {
@@ -183,6 +263,67 @@ describe('applying operations', () => {
     ]);
 
     expect(host.state.paragraphs[0]).toBe(`XX${text.slice(4)}`);
+  });
+
+  it('rescues an operation whose offset drifted but whose text still exists once', async () => {
+    // A separator-width skew shifts the recorded offset by one character; the
+    // text itself is still there. applyOperations must not throw the whole
+    // batch away -- it searches the paragraph and applies when unambiguous.
+    const host = installOfficeMock(['the cat sat']);
+
+    const report = await applyOperations([
+      { rangeStart: 3, rangeLength: 3, originalText: 'cat', newText: 'dog' },
+    ]);
+
+    expect(report.applied).toHaveLength(1);
+    expect(report.skipped).toHaveLength(0);
+    expect(host.state.paragraphs[0]).toBe('the dog sat');
+  });
+
+  it('does not rescue when the drifted text appears more than once', async () => {
+    // Ambiguous: two candidate occurrences, so applying by search could hit the
+    // wrong one. The operation must be skipped rather than guessed.
+    const host = installOfficeMock(['cat cat cat']);
+
+    const report = await applyOperations([
+      { rangeStart: 1, rangeLength: 3, originalText: 'cat', newText: 'DOG' },
+    ]);
+
+    expect(report.applied).toHaveLength(0);
+    expect(report.skipped).toHaveLength(1);
+    expect(host.state.paragraphs[0]).toBe('cat cat cat');
+  });
+
+  it('rescues across paragraphs when the text exists exactly once document-wide', async () => {
+    // The drifting offset resolves to paragraph 0 (start + length stays inside
+    // its bounds, so the boundary check passes), but the text actually lives
+    // in paragraph 1. A paragraph-scoped rescue would either miss it or
+    // replace the wrong location -- the document-wide uniqueness check is what
+    // makes this safe: 'three' exists exactly once, so it is unambiguous.
+    const host = installOfficeMock(['the quick brown fox jumps', 'lazy three']);
+
+    const report = await applyOperations([
+      { rangeStart: 5, rangeLength: 5, originalText: 'three', newText: 'THREE' },
+    ]);
+
+    expect(report.applied).toHaveLength(1);
+    expect(report.skipped).toHaveLength(0);
+    expect(host.state.paragraphs[1]).toBe('lazy THREE');
+  });
+
+  it('refuses a cross-paragraph rescue when the text appears in two paragraphs', async () => {
+    // 'cat' exists once in each paragraph, so a document-wide search cannot
+    // tell which instance the stale offset meant. Must skip, never guess.
+    const host = installOfficeMock(['cat two', 'and cat']);
+
+    const report = await applyOperations([
+      { rangeStart: 1, rangeLength: 3, originalText: 'cat', newText: 'DOG' },
+    ]);
+
+    expect(report.applied).toHaveLength(0);
+    expect(report.skipped).toHaveLength(1);
+    expect(host.state.paragraphs[0]).toBe('cat two');
+    expect(host.state.paragraphs[1]).toBe('and cat');
   });
 
   it('is a no-op for an empty batch', async () => {

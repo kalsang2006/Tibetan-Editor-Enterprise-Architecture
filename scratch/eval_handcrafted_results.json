@@ -1,0 +1,487 @@
+{
+  "setup": {
+    "total_records": 22,
+    "error_records": 20,
+    "clean_records": 2
+  },
+  "detection": {
+    "tp": 8,
+    "fp": 0,
+    "fn": 12,
+    "tn": 2,
+    "accuracy": 0.45454545454545453,
+    "precision": 1.0,
+    "recall": 0.4,
+    "f1": 0.5714285714285715,
+    "specificity": 1.0,
+    "fpr": 0.0,
+    "fnr": 0.6,
+    "mcc": 0.23904572186687872
+  },
+  "word_level": {
+    "tp": 7,
+    "fp": 4,
+    "fn": 22,
+    "precision": 0.6363636363636364,
+    "recall": 0.2413793103448276,
+    "f1": 0.35
+  },
+  "correction": {
+    "exact_match": 6,
+    "exact_match_rate": 0.2727272727272727
+  },
+  "latency_ms": {
+    "mean": 821.8576727284182,
+    "median": 617.8343999999925,
+    "p95": 1345.5048000032548,
+    "p99": 3017.9348000019672
+  },
+  "per_kind": {
+    "spelling": {
+      "total": 10,
+      "emitted": 6,
+      "gold_error": 10,
+      "exact": 4
+    },
+    "grammar": {
+      "total": 10,
+      "emitted": 2,
+      "gold_error": 10,
+      "exact": 0
+    },
+    "clean": {
+      "total": 2,
+      "emitted": 0,
+      "gold_error": 0,
+      "exact": 2
+    }
+  },
+  "results": [
+    {
+      "kind": "spelling",
+      "error_type": "WORD_DUPLICATION",
+      "text": "ང་བོད་སྐད་སྦྱོང་སྦྱོང་བྱེད་ཀྱི་ཡོད།",
+      "gold": "ང་བོད་སྐད་སྦྱོང་བྱེད་ཀྱི་ཡོད།",
+      "emitted": false,
+      "exact_match": false,
+      "corrected": "ང་བོད་སྐད་སྦྱོང་སྦྱོང་བྱེད་ཀྱི་ཡོད།",
+      "w_tp": 0,
+      "w_fp": 0,
+      "w_fn": 1,
+      "suggestions": [],
+      "fault": null
+    },
+    {
+      "kind": "spelling",
+      "error_type": "TSHEG_DROP",
+      "text": "ང་བོདསྐད་སྦྱོང་བྱེད་ཀྱི་ཡོད།",
+      "gold": "ང་བོད་སྐད་སྦྱོང་བྱེད་ཀྱི་ཡོད།",
+      "emitted": true,
+      "exact_match": true,
+      "corrected": "ང་བོད་སྐད་སྦྱོང་བྱེད་ཀྱི་ཡོད།",
+      "w_tp": 2,
+      "w_fp": 0,
+      "w_fn": 0,
+      "suggestions": [
+        {
+          "span": [
+            2,
+            8
+          ],
+          "replacement": "བོད་སྐད",
+          "score": 0.92,
+          "source": "teea.spelling",
+          "error_type": "SPELLING",
+          "message": "[SPELL-DICT-001] Correction available: Unknown word 'བོདསྐད' — Did you mean 'བོད་སྐད'? (confidence: 0.92)"
+        }
+      ],
+      "fault": null
+    },
+    {
+      "kind": "spelling",
+      "error_type": "SYLLABLE_SWAP",
+      "text": "ང་སྐད་བོད་སྦྱོང་བྱེད་ཀྱི་ཡོད།",
+      "gold": "ང་བོད་སྐད་སྦྱོང་བྱེད་ཀྱི་ཡོད།",
+      "emitted": false,
+      "exact_match": false,
+      "corrected": "ང་སྐད་བོད་སྦྱོང་བྱེད་ཀྱི་ཡོད།",
+      "w_tp": 0,
+      "w_fp": 0,
+      "w_fn": 2,
+      "suggestions": [],
+      "fault": null
+    },
+    {
+      "kind": "spelling",
+      "error_type": "VOWEL_MUTATION",
+      "text": "བཀྲ་ཤིས་བདི་ལེགས།",
+      "gold": "བཀྲ་ཤིས་བདེ་ལེགས།",
+      "emitted": true,
+      "exact_match": false,
+      "corrected": "བཀྲ་ཤེས་བདེ་ལེགས།",
+      "w_tp": 1,
+      "w_fp": 1,
+      "w_fn": 0,
+      "suggestions": [
+        {
+          "span": [
+            4,
+            7
+          ],
+          "replacement": "ཤེས",
+          "score": 0.85,
+          "source": "teea.grammar",
+          "error_type": "GRAMMAR",
+          "message": "[TIB-VOWEL-001] Vowel mutation: \"ཤིས\" may be a mutated spelling of \"ཤེས\""
+        },
+        {
+          "span": [
+            8,
+            11
+          ],
+          "replacement": "བདེ",
+          "score": 0.85,
+          "source": "teea.grammar",
+          "error_type": "GRAMMAR",
+          "message": "[TIB-VOWEL-001] Vowel mutation: \"བདི\" may be a mutated spelling of \"བདེ\""
+        }
+      ],
+      "fault": null
+    },
+    {
+      "kind": "spelling",
+      "error_type": "CHARACTER_CONFUSION",
+      "text": "སློབ་སྦྱོབ་ནི་གལ་ཆེ་བ་ཞིག་ཡིན།",
+      "gold": "སློབ་སྦྱོང་ནི་གལ་ཆེ་བ་ཞིག་ཡིན།",
+      "emitted": true,
+      "exact_match": true,
+      "corrected": "སློབ་སྦྱོང་ནི་གལ་ཆེ་བ་ཞིག་ཡིན།",
+      "w_tp": 1,
+      "w_fp": 0,
+      "w_fn": 0,
+      "suggestions": [
+        {
+          "span": [
+            5,
+            10
+          ],
+          "replacement": "སྦྱོང",
+          "score": 0.85,
+          "source": "teea.grammar",
+          "error_type": "GRAMMAR",
+          "message": "[TIB-CHAR-001] Character confusion: \"སྦྱོབ\" may be a misspelling of \"སྦྱོང\""
+        }
+      ],
+      "fault": null
+    },
+    {
+      "kind": "spelling",
+      "error_type": "CASE_PARTICLE_SUBSTITUTION",
+      "text": "སློབ་སྦྱོང་ཀྱི་གལ་གནད་སྐོར་བཤད་པ།",
+      "gold": "སློབ་སྦྱོང་གི་གལ་གནད་སྐོར་བཤད་པ།",
+      "emitted": true,
+      "exact_match": false,
+      "corrected": "སློབ་སྦྱོང་གི་གང་གནད་སྐོར་བཤད་པ།",
+      "w_tp": 1,
+      "w_fp": 1,
+      "w_fn": 0,
+      "suggestions": [
+        {
+          "span": [
+            11,
+            14
+          ],
+          "replacement": "གི",
+          "score": 0.98,
+          "source": "teea.grammar",
+          "error_type": "GRAMMAR",
+          "message": "Genitive particle agreement error: \"སྦྱོང\" should take \"གི\" instead of \"ཀྱི\""
+        },
+        {
+          "span": [
+            15,
+            17
+          ],
+          "replacement": "གང",
+          "score": 0.606,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'གལ' appears in an implausible context — did you mean 'གང'?"
+        }
+      ],
+      "fault": null
+    },
+    {
+      "kind": "spelling",
+      "error_type": "PARTICLE_OMISSION",
+      "text": "སློབ་སྦྱོང་གལ་གནད་སྐོར་བཤད་པ།",
+      "gold": "སློབ་སྦྱོང་གི་གལ་གནད་སྐོར་བཤད་པ།",
+      "emitted": false,
+      "exact_match": false,
+      "corrected": "སློབ་སྦྱོང་གལ་གནད་སྐོར་བཤད་པ།",
+      "w_tp": 0,
+      "w_fp": 0,
+      "w_fn": 1,
+      "suggestions": [],
+      "fault": null
+    },
+    {
+      "kind": "spelling",
+      "error_type": "CHARACTER_CONFUSION",
+      "text": "སེས་ཡོན་མེད་ན་མུན་ནག་ནང་དུ་འགྲོ་བ་དང་འདྲ།",
+      "gold": "ཤེས་ཡོན་མེད་ན་མུན་ནག་ནང་དུ་འགྲོ་བ་དང་འདྲ།",
+      "emitted": true,
+      "exact_match": true,
+      "corrected": "ཤེས་ཡོན་མེད་ན་མུན་ནག་ནང་དུ་འགྲོ་བ་དང་འདྲ།",
+      "w_tp": 1,
+      "w_fp": 0,
+      "w_fn": 0,
+      "suggestions": [
+        {
+          "span": [
+            0,
+            3
+          ],
+          "replacement": "ཤེས",
+          "score": 0.85,
+          "source": "teea.grammar",
+          "error_type": "GRAMMAR",
+          "message": "[TIB-CHAR-001] Character confusion: \"སེས\" may be a misspelling of \"ཤེས\""
+        }
+      ],
+      "fault": null
+    },
+    {
+      "kind": "spelling",
+      "error_type": "VOWEL_MUTATION",
+      "text": "དི་རིང་ང་བོད་སྐད་སློབ་སྦྱོང་བྱེད་ཀྱི་ཡོད།",
+      "gold": "དེ་རིང་ང་བོད་སྐད་སློབ་སྦྱོང་བྱེད་ཀྱི་ཡོད།",
+      "emitted": true,
+      "exact_match": true,
+      "corrected": "དེ་རིང་ང་བོད་སྐད་སློབ་སྦྱོང་བྱེད་ཀྱི་ཡོད།",
+      "w_tp": 1,
+      "w_fp": 0,
+      "w_fn": 0,
+      "suggestions": [
+        {
+          "span": [
+            0,
+            2
+          ],
+          "replacement": "དེ",
+          "score": 0.85,
+          "source": "teea.grammar",
+          "error_type": "GRAMMAR",
+          "message": "[TIB-VOWEL-001] Vowel mutation: \"དི\" may be a mutated spelling of \"དེ\""
+        }
+      ],
+      "fault": null
+    },
+    {
+      "kind": "spelling",
+      "error_type": "SYLLABLE_SWAP",
+      "text": "ང་ཚན་སློབ་ལ་དུས་ཚོད་ཆེན་པོ་སྦྱིན་དགོས།",
+      "gold": "ང་སློབ་ཚན་ལ་དུས་ཚོད་ཆེན་པོ་སྦྱིན་དགོས།",
+      "emitted": false,
+      "exact_match": false,
+      "corrected": "ང་ཚན་སློབ་ལ་དུས་ཚོད་ཆེན་པོ་སྦྱིན་དགོས།",
+      "w_tp": 0,
+      "w_fp": 0,
+      "w_fn": 2,
+      "suggestions": [],
+      "fault": null
+    },
+    {
+      "kind": "grammar",
+      "error_type": "VERB_FORM",
+      "text": "བྱས་ནི",
+      "gold": "བྱེད་པ",
+      "emitted": false,
+      "exact_match": false,
+      "corrected": "བྱས་ནི",
+      "w_tp": 0,
+      "w_fp": 0,
+      "w_fn": 2,
+      "suggestions": [],
+      "fault": null
+    },
+    {
+      "kind": "grammar",
+      "error_type": "ADJECTIVE_NOMINALIZATION",
+      "text": "གལ་ཆེན",
+      "gold": "གལ་ཆེན་པོ",
+      "emitted": false,
+      "exact_match": false,
+      "corrected": "གལ་ཆེན",
+      "w_tp": 0,
+      "w_fp": 0,
+      "w_fn": 1,
+      "suggestions": [],
+      "fault": null
+    },
+    {
+      "kind": "grammar",
+      "error_type": "VERB_NOMINALIZATION",
+      "text": "མེད",
+      "gold": "མེད་པ",
+      "emitted": false,
+      "exact_match": false,
+      "corrected": "མེད",
+      "w_tp": 0,
+      "w_fp": 0,
+      "w_fn": 1,
+      "suggestions": [],
+      "fault": null
+    },
+    {
+      "kind": "grammar",
+      "error_type": "TENSE_MISMATCH",
+      "text": "ང་མི་བྱས།",
+      "gold": "ང་མ་བྱས།",
+      "emitted": false,
+      "exact_match": false,
+      "corrected": "ང་མི་བྱས།",
+      "w_tp": 0,
+      "w_fp": 0,
+      "w_fn": 1,
+      "suggestions": [],
+      "fault": null
+    },
+    {
+      "kind": "grammar",
+      "error_type": "CONTEXTUAL_SEMANTIC",
+      "text": "དག་གིས་པར་སྤྲོ་གསར་པ་སླབས།",
+      "gold": "དགེ་གིས་བརྡ་སྤྲོད་གསར་པ་བསླབས།",
+      "emitted": false,
+      "exact_match": false,
+      "corrected": "དག་གིས་པར་སྤྲོ་གསར་པ་སླབས།",
+      "w_tp": 0,
+      "w_fp": 0,
+      "w_fn": 4,
+      "suggestions": [],
+      "fault": null
+    },
+    {
+      "kind": "grammar",
+      "error_type": "TENSE_MISMATCH",
+      "text": "དེ་རིང་ང་བོད་སྐད་སློབ་ཚན་ལ་ཕྱི།",
+      "gold": "དེ་རིང་ང་བོད་སྐད་སློབ་ཚན་ལ་ཕྱིན།",
+      "emitted": false,
+      "exact_match": false,
+      "corrected": "དེ་རིང་ང་བོད་སྐད་སློབ་ཚན་ལ་ཕྱི།",
+      "w_tp": 0,
+      "w_fp": 0,
+      "w_fn": 1,
+      "suggestions": [],
+      "fault": null
+    },
+    {
+      "kind": "grammar",
+      "error_type": "STRUCTURAL",
+      "text": "དགེ་གིས་བརྡ་སྤྲོད་སླབས།",
+      "gold": "དགེ་གིས་བརྡ་སྤྲོད་བསླབས།",
+      "emitted": true,
+      "exact_match": false,
+      "corrected": "དགེ་ཡིས་བརྡ་སྤྲོད་སླབས།",
+      "w_tp": 0,
+      "w_fp": 1,
+      "w_fn": 1,
+      "suggestions": [
+        {
+          "span": [
+            4,
+            7
+          ],
+          "replacement": "ཡིས",
+          "score": 0.98,
+          "source": "teea.grammar",
+          "error_type": "GRAMMAR",
+          "message": "Ergative particle agreement error: \"དགེ\" should take \"ཡིས\" instead of \"གིས\""
+        }
+      ],
+      "fault": null
+    },
+    {
+      "kind": "grammar",
+      "error_type": "CONTEXTUAL_SEMANTIC",
+      "text": "ང་ཚོས་ཡིག་ཆ་ཀློ་ཅིང་ཡི་གེ་བོང་བྱ།",
+      "gold": "ང་ཚོས་ཡིག་ཆ་ཀློག་ཅིང་ཡི་གེ་སྦྱོང་བྱས།",
+      "emitted": true,
+      "exact_match": false,
+      "corrected": "ང་ཚོས་ཡིག་ཆ་ཀླུ་ཅིང་ཡི་གེ་བོང་བྱ།",
+      "w_tp": 0,
+      "w_fp": 1,
+      "w_fn": 3,
+      "suggestions": [
+        {
+          "span": [
+            12,
+            15
+          ],
+          "replacement": "ཀླུ",
+          "score": 0.85,
+          "source": "teea.grammar",
+          "error_type": "GRAMMAR",
+          "message": "[TIB-VOWEL-001] Vowel mutation: \"ཀློ\" may be a mutated spelling of \"ཀླུ\""
+        }
+      ],
+      "fault": null
+    },
+    {
+      "kind": "grammar",
+      "error_type": "SPELLING_FALLBACK",
+      "text": "དུས་ཚོད་བཅང་པོ་མེད།",
+      "gold": "དུས་ཚོད་ཆང་པོ་མེད།",
+      "emitted": false,
+      "exact_match": false,
+      "corrected": "དུས་ཚོད་བཅང་པོ་མེད།",
+      "w_tp": 0,
+      "w_fp": 0,
+      "w_fn": 1,
+      "suggestions": [],
+      "fault": null
+    },
+    {
+      "kind": "grammar",
+      "error_type": "PARTICLE_CASE",
+      "text": "སློབ་སྦྱོང་འབད་དགོས་པ་ཡིན།",
+      "gold": "སློབ་སྦྱོང་ལ་འབད་དགོས་པ་ཡིན།",
+      "emitted": false,
+      "exact_match": false,
+      "corrected": "སློབ་སྦྱོང་འབད་དགོས་པ་ཡིན།",
+      "w_tp": 0,
+      "w_fp": 0,
+      "w_fn": 1,
+      "suggestions": [],
+      "fault": null
+    },
+    {
+      "kind": "clean",
+      "error_type": "NONE",
+      "text": "གནད་དོན་འདི་བཤད་པར་བྱའོ། འཇིག་རྟེན་གསོན་པོའི་དཔེ་དེབ་ཤེས་རིག་བཟང་པོ་འདི་ཡིས་ནུས་པ་གཏན་ཏན་ཐོན་ནོ།",
+      "gold": "གནད་དོན་འདི་བཤད་པར་བྱའོ། འཇིག་རྟེན་གསོན་པོའི་དཔེ་དེབ་ཤེས་རིག་བཟང་པོ་འདི་ཡིས་ནུས་པ་གཏན་ཏན་ཐོན་ནོ།",
+      "emitted": false,
+      "exact_match": true,
+      "corrected": "གནད་དོན་འདི་བཤད་པར་བྱའོ། འཇིག་རྟེན་གསོན་པོའི་དཔེ་དེབ་ཤེས་རིག་བཟང་པོ་འདི་ཡིས་ནུས་པ་གཏན་ཏན་ཐོན་ནོ།",
+      "w_tp": 0,
+      "w_fp": 0,
+      "w_fn": 0,
+      "suggestions": [],
+      "fault": null
+    },
+    {
+      "kind": "clean",
+      "error_type": "NONE",
+      "text": "སློབ་སྦྱོང་གི་གལ་གནད་སྐོར་བཤད་པ། དེང་དུས་ཀྱི་འཇིག་རྟེན་འདིར་མི་ཚེ་གསོན་པོར་གནས་པ་དང་མདུན་བསྐྱོད་བྱེད་ཆེད་སློབ་སྦྱོང་ནི་ཧ་ཅང་གལ་ཆེ་བ་ཞིག་ཡིན།",
+      "gold": "སློབ་སྦྱོང་གི་གལ་གནད་སྐོར་བཤད་པ། དེང་དུས་ཀྱི་འཇིག་རྟེན་འདིར་མི་ཚེ་གསོན་པོར་གནས་པ་དང་མདུན་བསྐྱོད་བྱེད་ཆེད་སློབ་སྦྱོང་ནི་ཧ་ཅང་གལ་ཆེ་བ་ཞིག་ཡིན།",
+      "emitted": false,
+      "exact_match": true,
+      "corrected": "སློབ་སྦྱོང་གི་གལ་གནད་སྐོར་བཤད་པ། དེང་དུས་ཀྱི་འཇིག་རྟེན་འདིར་མི་ཚེ་གསོན་པོར་གནས་པ་དང་མདུན་བསྐྱོད་བྱེད་ཆེད་སློབ་སྦྱོང་ནི་ཧ་ཅང་གལ་ཆེ་བ་ཞིག་ཡིན།",
+      "w_tp": 0,
+      "w_fp": 0,
+      "w_fn": 0,
+      "suggestions": [],
+      "fault": null
+    }
+  ]
+}

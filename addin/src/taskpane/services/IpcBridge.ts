@@ -252,8 +252,8 @@ export class SseParser {
  *
  * `baseUrl` is checked before the first byte is sent (`assertLoopback`), and
  * each request's own path is resolved from its `method` via
- * {@link AI_METHOD_PATHS} -- the server routes `/api/ai/rewrite`,
- * `/api/ai/explain`, `/api/ai/summarize` and `/api/ai/cancel` to four different
+ * {@link AI_METHOD_PATHS} -- the server routes `/api/ai/explain`,
+ * `/api/ai/summarize` and `/api/ai/cancel` to different
  * handlers, so one fixed endpoint URL cannot serve every call the way a single
  * generic POST target could for a simpler API. The `AbortSignal` is passed
  * straight through so `stopGeneration` closes the real HTTP connection: the
@@ -265,7 +265,7 @@ export class SseParser {
  * @param options.baseUrl The daemon's origin, e.g. `http://127.0.0.1:50505`.
  *   Must be loopback.
  * @param options.fetchImpl `fetch` to use; overridable for tests.
- * @returns A transport usable by `useAIAssistant`.
+ * @returns A transport usable by the assistant hooks.
  */
 export function createFetchStreamTransport(options: {
   baseUrl: string;
@@ -358,7 +358,7 @@ export function createFetchStreamTransport(options: {
  * @param subscribe How the host delivers emitted frames back to the pane.
  * @param options.cancelMethod The command to fire on abort, e.g. `ai.cancel`.
  *   Omit only if the channel's handlers ignore cancellation entirely.
- * @returns A transport usable by `useAIAssistant`.
+ * @returns A transport usable by the assistant hooks.
  */
 export function createChannelStreamTransport(
   channel: Channel,

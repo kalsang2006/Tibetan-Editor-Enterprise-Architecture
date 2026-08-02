@@ -58,6 +58,7 @@ export async function readSourceText(): Promise<string> {
  * clicked into one paragraph would silently hide suggestions elsewhere in it.
  */
 export async function readAnalysisText(): Promise<string> {
+  // Always read the full document, ignore any selection.
   return readDocumentText();
 }
 
@@ -120,6 +121,7 @@ function Bootstrap(): JSX.Element {
             setSourceText('');
           }
         });
+      analysis.refresh();
     };
 
     load();
@@ -148,7 +150,6 @@ function Bootstrap(): JSX.Element {
     <App
       suggestions={analysis.suggestions}
       sourceText={sourceText}
-      transport={daemon.transport}
       daemonStatus={daemon.status}
       daemonBaseUrl={daemon.baseUrl}
       onRetryDaemonConnection={daemon.retry}

@@ -1,0 +1,23 @@
+{
+  "total_passages": 50,
+  "total_sentences": 98,
+  "total_tokens": 56,
+  "total_suggestions": 16,
+  "latency": {
+    "min": 85.30819999577943,
+    "max": 320.7284999953117,
+    "mean": 183.03739999959362,
+    "median": 173.53069999808213,
+    "p95": 293.2273999977042
+  },
+  "classification": {
+    "tp": 10,
+    "fp": 6,
+    "fn": 0,
+    "tn": 41,
+    "accuracy": 0.8947368421052632,
+    "precision": 0.625,
+    "recall": 1.0,
+    "f1": 0.7692307692307693
+  }
+}

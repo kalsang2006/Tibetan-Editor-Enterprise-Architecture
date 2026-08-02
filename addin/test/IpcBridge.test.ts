@@ -279,7 +279,7 @@ describe('createFetchStreamTransport', () => {
     const frames: unknown[] = [];
 
     await transport(
-      buildRequest('ai.rewrite', { text: 'x' }),
+      buildRequest('ai.explain', { text: 'x' }),
       (frame) => frames.push(frame),
       new AbortController().signal,
     );
@@ -288,7 +288,6 @@ describe('createFetchStreamTransport', () => {
   });
 
   it.each([
-    ['ai.rewrite', '/api/ai/rewrite'],
     ['ai.explain', '/api/ai/explain'],
     ['ai.summarize', '/api/ai/summarize'],
     ['ai.cancel', '/api/ai/cancel'],
@@ -332,7 +331,7 @@ describe('createFetchStreamTransport', () => {
       fetchImpl: fetchImpl as unknown as typeof fetch,
     });
 
-    await transport(buildRequest('ai.rewrite', {}), () => undefined, controller.signal);
+    await transport(buildRequest('ai.explain', {}), () => undefined, controller.signal);
 
     expect(fetchImpl.mock.calls[0]?.[1]?.signal).toBe(controller.signal);
   });
@@ -345,7 +344,7 @@ describe('createFetchStreamTransport', () => {
     });
 
     await expect(
-      transport(buildRequest('ai.rewrite', {}), () => undefined, new AbortController().signal),
+      transport(buildRequest('ai.explain', {}), () => undefined, new AbortController().signal),
     ).rejects.toBeInstanceOf(DaemonFaultError);
   });
 
@@ -357,7 +356,7 @@ describe('createFetchStreamTransport', () => {
     });
 
     const error = await transport(
-      buildRequest('ai.rewrite', {}),
+      buildRequest('ai.explain', {}),
       () => undefined,
       new AbortController().signal,
     ).catch((caught: unknown) => caught);
@@ -378,7 +377,7 @@ describe('createFetchStreamTransport', () => {
     });
 
     const error = await transport(
-      buildRequest('ai.rewrite', {}),
+      buildRequest('ai.explain', {}),
       () => undefined,
       new AbortController().signal,
     ).catch((caught: unknown) => caught);

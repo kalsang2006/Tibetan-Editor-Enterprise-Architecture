@@ -1,0 +1,23 @@
+2026-08-02 03:50:11 [info     ] tibert_loading                 device=auto source=TiBERT
+Loading weights:   0%|          | 0/202 [00:00<?, ?it/s]Loading weights: 100%|██████████| 202/202 [00:00<00:00, 9373.78it/s]
+2026-08-02 03:50:11 [info     ] tibert_loaded                  device=cpu key=tibert:1.0 vocab_size=29965
+=== corpus repo available? === True
+
+--- input: 'བཀྲ་ཤིམ་'  expected correct: 'བཀྲ་ཤིས་' ---
+   teea.diagnostics -> SPELLING None sentence_count=1; token_count=2; entity_count=0; term_count=0; unresolved_depend
+
+--- input: 'བདེ་ལེག'  expected correct: 'བདེ་ལེགས།' ---
+   teea.diagnostics -> SPELLING None sentence_count=1; token_count=2; entity_count=0; term_count=0; unresolved_depend
+   teea.grammar -> GRAMMAR ལོག [TIB-VOWEL-001] Vowel mutation: "ལེག" may be a mutated spelling of "ལོག"
+   teea.spelling -> CONTEXT None [SPELL-CTX-002] Known word 'བདེ' appears in an implausible context.
+
+--- input: 'མངོན་སུམ'  expected correct: 'མངོན་སུམ་' ---
+   teea.diagnostics -> SPELLING None sentence_count=1; token_count=2; entity_count=0; term_count=0; unresolved_depend
+
+--- input: 'ལྷ་སར'  expected correct: 'ལྷ་སར་' ---
+   teea.diagnostics -> SPELLING None sentence_count=1; token_count=2; entity_count=0; term_count=0; unresolved_depend
+   teea.spelling -> CONTEXT None [SPELL-CTX-002] Known word 'ལྷ' appears in an implausible context.
+   teea.spelling -> CONTEXT None [SPELL-CTX-002] Known word 'སར' appears in an implausible context.
+
+--- input: 'དགེ་རྒན'  expected correct: 'དགེ་རྒན་' ---
+   teea.diagnostics -> SPELLING None sentence_count=1; token_count=2; entity_count=0; term_count=0; unresolved_depend

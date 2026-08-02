@@ -1,0 +1,24 @@
+Starting TEEA Daemon for Microsoft Word Add-in on http://127.0.0.1:50505...
+2026-08-02 04:17:39 [info     ] tibert_loading                 device=auto source=TiBERT
+Loading weights:   0%|          | 0/202 [00:00<?, ?it/s]Loading weights: 100%|##########| 202/202 [00:00<00:00, 4924.81it/s]
+2026-08-02 04:17:39 [info     ] tibert_loaded                  device=cpu key=tibert:1.0 vocab_size=29965
+Loaded active plugins: ['teea.diagnostics', 'teea.typography', 'teea.grammar', 'teea.grammar_correction', 'teea.spelling', 'teea.plagiarism']
+Traceback (most recent call last):
+  File "C:\Users\kalsa\Desktop\Tibetan Editor Enterprise Architecture\start_daemon.py", line 30, in <module>
+    main()
+  File "C:\Users\kalsa\Desktop\Tibetan Editor Enterprise Architecture\start_daemon.py", line 13, in main
+    server = serve_http(
+             ^^^^^^^^^^^
+  File "C:\Users\kalsa\Desktop\Tibetan Editor Enterprise Architecture\src\teea\transport\http_server.py", line 486, in serve_http
+    server = TEEAHttpServer(builder, plugins, fusion, host=host, port=port)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kalsa\Desktop\Tibetan Editor Enterprise Architecture\src\teea\transport\http_server.py", line 417, in __init__
+    httpd = _BridgeHTTPServer((host, port), _BridgeRequestHandler)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\kalsa\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "C:\Users\kalsa\AppData\Local\Programs\Python\Python312\Lib\http\server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "C:\Users\kalsa\AppData\Local\Programs\Python\Python312\Lib\socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+PermissionError: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions

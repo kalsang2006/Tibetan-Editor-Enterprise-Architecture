@@ -1,0 +1,24 @@
+npm notice run teea-word-addin@1.0.0 npx
+npm notice run jest --silent
+PASS test/PlagiarismBridge.test.ts
+PASS test/AnalysisBridge.test.ts
+PASS test/IpcBridge.test.ts
+PASS test/WordDocument.test.ts
+PASS test/CommandStack.test.ts
+PASS test/suggestionAdapter.test.ts
+PASS test/useOnlineStatus.test.ts
+PASS test/useUndoStack.test.tsx
+PASS test/useSuggestionEngine.test.tsx
+PASS test/useAIAssistant.test.tsx
+PASS test/useDaemonTransport.test.tsx
+PASS test/useDocumentAnalysis.test.tsx
+PASS test/hooks.test.tsx
+PASS test/PlagiarismPanel.test.tsx
+PASS test/App.test.tsx
+PASS test/components.test.tsx (6.604 s)
+
+Test Suites: 16 passed, 16 total
+Tests:       283 passed, 283 total
+Snapshots:   0 total
+Time:        8.541 s, estimated 29 s
+EXIT:0

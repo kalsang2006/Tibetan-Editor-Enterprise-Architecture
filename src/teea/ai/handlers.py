@@ -73,16 +73,6 @@ def _stream_tokens(
     _cleanup(request_id)
 
 
-def handle_rewrite(
-    params: dict[str, Any],
-    request_id: str,
-) -> Generator[dict[str, Any], None, None]:
-    """Rewrite text using a mock AI engine."""
-    text = params.get("text", "")
-    template = params.get("template", "rewrite_fluent")
-    yield from _stream_tokens(text, request_id, prefix=f"[{template}]")
-
-
 def handle_explain(
     params: dict[str, Any],
     request_id: str,
@@ -151,7 +141,6 @@ def handle_stt(
 
 
 AI_ENDPOINT_METHODS: dict[str, HandlerFn] = {
-    "ai.rewrite": handle_rewrite,
     "ai.explain": handle_explain,
     "ai.summarize": handle_summarize,
     "ai.cancel": handle_cancel,
@@ -166,7 +155,6 @@ __all__ = [
     "handle_cancel",
     "handle_explain",
     "handle_ocr",
-    "handle_rewrite",
     "handle_stt",
     "handle_summarize",
     "handle_translate",

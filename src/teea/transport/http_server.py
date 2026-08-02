@@ -25,7 +25,6 @@ Path                  Method  Description
 ===================== ======= ================================================
 ``/health``           GET     Liveness check.
 ``/api/analysis/run`` POST    Run the full analysis pipeline (JSON response).
-``/api/ai/rewrite``   POST    AI rewrite (SSE response).
 ``/api/ai/explain``   POST    AI grammar explanation (SSE response).
 ``/api/ai/summarize`` POST    AI summarisation (SSE response).
 ``/api/ai/cancel``    POST    Cancel a running generation (SSE response).
@@ -67,7 +66,6 @@ PLAGIARISM_METHOD: Final = "plagiarism.check"
 PLAGIARISM_PATH: Final = "/api/plagiarism/check"
 
 AI_PATHS: Final = frozenset({
-    "/api/ai/rewrite",
     "/api/ai/explain",
     "/api/ai/summarize",
     "/api/ai/cancel",

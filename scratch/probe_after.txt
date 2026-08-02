@@ -1,0 +1,102 @@
+ready.
+  dict contains བདེ: True
+  dict contains བདི: True
+  dict contains གལ: True
+  dict contains ཤེས: True
+  dict contains སེས: True
+  dict contains སྦྱོང: True
+  dict contains སྦྱོབ: False
+  dict contains དེ: True
+  dict contains དི: True
+  dict contains རིང: True
+
+=== corpus bigram key format ===
+  engine._corpus_repository is None (grammar rules inert!)
+
+=== VOWEL_MUTATION: བཀྲ་ཤིས་བདི་ལེགས།
+  [teea.grammar] GRAMMAR high   score=0.85 span=(4,7) -> ཤེས
+      msg: [TIB-VOWEL-001] Vowel mutation: "ཤིས" may be a mutated spelling of "ཤེས"
+  [teea.grammar] GRAMMAR high   score=0.85 span=(8,11) -> བདེ
+      msg: [TIB-VOWEL-001] Vowel mutation: "བདི" may be a mutated spelling of "བདེ"
+  [teea.diagnostics] SPELLING low    score=1.00 span=(0,0) -> <advisory>
+      msg: sentence_count=1; token_count=4; entity_count=0; term_count=0; unresolved_dependency_count=0; unresolved_ratio
+  corrected: བཀྲ་ཤེས་བདེ་ལེགས།
+
+=== VOWEL_MUTATION2: དི་རིང་ང་བོད་སྐད་སློབ་སྦྱོང་བྱེད་ཀྱི་ཡོད།
+  [teea.grammar] GRAMMAR high   score=0.85 span=(0,2) -> དེ
+      msg: [TIB-VOWEL-001] Vowel mutation: "དི" may be a mutated spelling of "དེ"
+  [teea.grammar] GRAMMAR high   score=0.80 span=(17,21) -> ཀྱི་སློབ
+      msg: [TIB-PART-OMIT-001] Missing genitive particle: expected "ཀྱི" between "སྐད" and "སློབ"
+  [teea.diagnostics] SPELLING low    score=1.00 span=(0,0) -> <advisory>
+      msg: sentence_count=1; token_count=10; entity_count=1; term_count=0; unresolved_dependency_count=0; unresolved_rati
+  [teea.spelling] CONTEXT low    score=0.50 span=(3,6) -> <advisory>
+      msg: [SPELL-CTX-002] Known word 'རིང' appears in an implausible context.
+  [teea.spelling] CONTEXT low    score=0.50 span=(7,8) -> <advisory>
+      msg: [SPELL-CTX-002] Known word 'ང' appears in an implausible context.
+  [teea.spelling] CONTEXT low    score=0.50 span=(17,21) -> <advisory>
+      msg: [SPELL-CTX-002] Known word 'སློབ' appears in an implausible context.
+  corrected: དེ་རིང་ང་བོད་སྐད་ཀྱི་སློབ་སྦྱོང་བྱེད་ཀྱི་ཡོད།
+
+=== CHAR_CONF_1: སློབ་སྦྱོབ་ནི་གལ་ཆེ་བ་ཞིག་ཡིན།
+  [teea.grammar] GRAMMAR high   score=0.85 span=(5,10) -> སྦྱོང
+      msg: [TIB-CHAR-001] Character confusion: "སྦྱོབ" may be a misspelling of "སྦྱོང"
+  [teea.diagnostics] SPELLING low    score=1.00 span=(0,0) -> <advisory>
+      msg: sentence_count=1; token_count=8; entity_count=0; term_count=0; unresolved_dependency_count=1; unresolved_ratio
+  [teea.spelling] CONTEXT low    score=0.50 span=(0,4) -> <advisory>
+      msg: [SPELL-CTX-002] Known word 'སློབ' appears in an implausible context.
+  corrected: སློབ་སྦྱོང་ནི་གལ་ཆེ་བ་ཞིག་ཡིན།
+
+=== CHAR_CONF_2: སེས་ཡོན་མེད་ན་མུན་ནག་ནང་དུ་འགྲོ་བ་དང་འདྲ།
+  [teea.grammar] GRAMMAR high   score=0.85 span=(0,3) -> ཤེས
+      msg: [TIB-CHAR-001] Character confusion: "སེས" may be a misspelling of "ཤེས"
+  [teea.grammar] GRAMMAR high   score=0.80 span=(21,23) -> གི་ནང
+      msg: [TIB-PART-OMIT-001] Missing genitive particle: expected "གི" between "ནག" and "ནང"
+  [teea.diagnostics] SPELLING low    score=1.00 span=(0,0) -> <advisory>
+      msg: sentence_count=1; token_count=12; entity_count=1; term_count=0; unresolved_dependency_count=0; unresolved_rati
+  [teea.spelling] CONTEXT low    score=0.50 span=(32,33) -> <advisory>
+      msg: [SPELL-CTX-002] Known word 'བ' appears in an implausible context.
+  corrected: ཤེས་ཡོན་མེད་ན་མུན་ནག་གི་ནང་དུ་འགྲོ་བ་དང་འདྲ།
+
+=== PARTICLE_OMISSION: སློབ་སྦྱོང་གལ་གནད་སྐོར་བཤད་པ།
+  [teea.grammar] GRAMMAR high   score=0.80 span=(14,17) -> གྱི་གནད
+      msg: [TIB-PART-OMIT-001] Missing genitive particle: expected "གྱི" between "གལ" and "གནད"
+  [teea.diagnostics] SPELLING low    score=1.00 span=(0,0) -> <advisory>
+      msg: sentence_count=1; token_count=7; entity_count=0; term_count=0; unresolved_dependency_count=0; unresolved_ratio
+  [teea.spelling] CONTEXT low    score=0.50 span=(0,4) -> <advisory>
+      msg: [SPELL-CTX-002] Known word 'སློབ' appears in an implausible context.
+  [teea.spelling] CONTEXT low    score=0.50 span=(5,10) -> <advisory>
+      msg: [SPELL-CTX-002] Known word 'སྦྱོང' appears in an implausible context.
+  [teea.spelling] CONTEXT low    score=0.50 span=(11,13) -> <advisory>
+      msg: [SPELL-CTX-002] Known word 'གལ' appears in an implausible context.
+  corrected: སློབ་སྦྱོང་གལ་གྱི་གནད་སྐོར་བཤད་པ།
+
+=== SYLLABLE_SWAP: ང་སྐད་བོད་སྦྱོང་བྱེད་ཀྱི་ཡོད།
+  [teea.diagnostics] SPELLING low    score=1.00 span=(0,0) -> <advisory>
+      msg: sentence_count=1; token_count=7; entity_count=1; term_count=0; unresolved_dependency_count=0; unresolved_ratio
+  [teea.spelling] CONTEXT low    score=0.50 span=(0,1) -> <advisory>
+      msg: [SPELL-CTX-002] Known word 'ང' appears in an implausible context.
+  [teea.spelling] CONTEXT low    score=0.50 span=(2,5) -> <advisory>
+      msg: [SPELL-CTX-002] Known word 'སྐད' appears in an implausible context.
+  corrected: ང་སྐད་བོད་སྦྱོང་བྱེད་ཀྱི་ཡོད།
+
+=== TSHEG_DROP: ང་བོདསྐད་སྦྱོང་བྱེད་ཀྱི་ཡོད།
+  [teea.diagnostics] SPELLING low    score=1.00 span=(0,0) -> <advisory>
+      msg: sentence_count=1; token_count=6; entity_count=0; term_count=0; unresolved_dependency_count=0; unresolved_ratio
+  corrected: ང་བོདསྐད་སྦྱོང་བྱེད་ཀྱི་ཡོད།
+
+=== CLEAN1: གནད་དོན་འདི་བཤད་པར་བྱའོ། འཇིག་རྟེན་གསོན་པོའི་དཔེ་དེབ་ཤེས་རིག་བཟང་པོ་འདི་ཡིས་ནུས་པ་གཏན་ཏན་ཐོན་ནོ།
+  [teea.diagnostics] SPELLING low    score=1.00 span=(0,0) -> <advisory>
+      msg: sentence_count=2; token_count=26; entity_count=0; term_count=0; unresolved_dependency_count=1; unresolved_rati
+  [teea.spelling] CONTEXT low    score=0.50 span=(30,34) -> <advisory>
+      msg: [SPELL-CTX-002] Known word 'རྟེན' appears in an implausible context.
+  [teea.spelling] CONTEXT low    score=0.50 span=(40,42) -> <advisory>
+      msg: [SPELL-CTX-002] Known word 'པོ' appears in an implausible context.
+  [teea.spelling] CONTEXT low    score=0.50 span=(53,56) -> <advisory>
+      msg: [SPELL-CTX-002] Known word 'ཤེས' appears in an implausible context.
+  [teea.spelling] CONTEXT low    score=0.50 span=(65,67) -> <advisory>
+      msg: [SPELL-CTX-002] Known word 'པོ' appears in an implausible context.
+  [teea.spelling] CONTEXT low    score=0.50 span=(86,88) -> <advisory>
+      msg: [SPELL-CTX-002] Known word 'ཏན' appears in an implausible context.
+  [teea.spelling] CONTEXT low    score=0.50 span=(93,95) -> <advisory>
+      msg: [SPELL-CTX-002] Known word 'ནོ' appears in an implausible context.
+  corrected: གནད་དོན་འདི་བཤད་པར་བྱའོ། འཇིག་རྟེན་གསོན་པོའི་དཔེ་དེབ་ཤེས་རིག་བཟང་པོ་འདི་ཡིས་ནུས་པ་གཏན་ཏན་ཐོན་ནོ།

@@ -1,0 +1,32 @@
+{
+  "database": {
+    "db_path": "Corpus\\Plagiarism\\fingerprints.db",
+    "db_size_mb": 0.0,
+    "indexed_documents": 1
+  },
+  "scenarios_count": 12,
+  "confusion_matrix": {
+    "tp": 11,
+    "fp": 0,
+    "fn": 0,
+    "tn": 1
+  },
+  "metrics": {
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "specificity": 1.0,
+    "top1_source_accuracy": 100.0,
+    "top3_source_accuracy": 100.0,
+    "top5_source_accuracy": 100.0,
+    "exact_source_attribution_accuracy": 100.0
+  },
+  "latency": {
+    "mean_ms": 0.08604166699418177,
+    "std_ms": 0.023467795011884094,
+    "median_ms": 0.0822000001790002,
+    "p95_ms": 0.12726999884762333,
+    "p99_ms": 0.13721400093345437
+  }
+}

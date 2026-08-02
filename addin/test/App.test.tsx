@@ -2,12 +2,10 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { App } from '../src/taskpane/App';
-import { unavailableTransport } from '../src/taskpane/hooks/useDaemonTransport';
 
 const baseProps = {
   suggestions: [],
   sourceText: '',
-  transport: unavailableTransport,
 };
 
 describe('App', () => {

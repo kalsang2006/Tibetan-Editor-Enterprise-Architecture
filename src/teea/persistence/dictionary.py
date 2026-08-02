@@ -23,7 +23,7 @@ and inspected.
 from __future__ import annotations
 
 import json
-from collections.abc import Mapping
+from collections.abc import Iterable, Mapping
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, Final
@@ -52,6 +52,7 @@ HIGH_FREQUENCY_SAFE_WORDS: Final[frozenset[str]] = frozenset({
     "ཅིགཡིན", "འདྲའ་སྟེ", "ཕྱེ་ཞིང", "འབྱེད་པར", "རྩིས་དེ", "འབད་དགོས", "ལེག་པར",
     "བསྐྲུན་ཐུབ", "སྒྲུབ་པའི", "ཐོན་གྱིས", "ཆོག་རུ", "གྱུར་པ", "ཡིན་པའི", "མནམ་ཡང",
     "མརྒྱུན་འཆད", "མེ་པའི", "བད་རྩོན", "བྱེས་གོས", "བླང", "དོར", "བསྐྲུན",
+    "བརླན", "གཞས", "འཁོར", "ཕ", "མ", "གཤིས",
 })
 
 
@@ -73,15 +74,20 @@ class InMemoryDictionaryRepository:
             worthless analyses.
     """
 
-    def __init__(self, path: Path | None = None) -> None:
+    def __init__(self, path: Path | None = None, extra_vocabulary: Iterable[str] | None = None) -> None:
         source = path or DEFAULT_DATA_PATH
         payload = self._load(source)
 
         self._provenance: Mapping[str, Any] = dict(payload.get("provenance", {}))
         self._tag_counts: Mapping[str, int] = dict(payload["tag_counts"])
-        self._emissions: Mapping[str, Mapping[str, int]] = {
+        self._emissions: dict[str, dict[str, int]] = {
             surface: dict(counts) for surface, counts in payload["emissions"].items()
         }
+        if extra_vocabulary:
+            for w in extra_vocabulary:
+                w_clean = w.strip("་ །\u0f0b\u0f0d ")
+                if w_clean and w_clean not in self._emissions:
+                    self._emissions[w_clean] = {"n.count": 1}
         self._transitions: Mapping[str, Mapping[str, int]] = {
             tag: dict(counts) for tag, counts in payload["transitions"].items()
         }

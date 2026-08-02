@@ -1,0 +1,34 @@
+{
+  "sample_size": 500,
+  "evaluated_chunks": 100,
+  "total_sentences": 200,
+  "total_tokens": 100,
+  "throughput_sent_sec": 7.094218345262759,
+  "throughput_tokens_sec": 3.5471091726313797,
+  "confusion_matrix": {
+    "tp": 10,
+    "fp": 6,
+    "fn": 0,
+    "tn": 484
+  },
+  "metrics": {
+    "accuracy": 0.988,
+    "precision": 0.625,
+    "recall": 1.0,
+    "f1": 0.7692307692307693,
+    "specificity": 0.9877551020408163,
+    "fpr": 0.012244897959183673,
+    "fnr": 0.0
+  },
+  "latency": {
+    "mean": 281.913372999843,
+    "std": 29.633039005258944,
+    "median": 278.34094999889203,
+    "p95": 330.019379998339,
+    "p99": 351.0972250000124,
+    "ci95": [
+      276.10529735481225,
+      287.7214486448737
+    ]
+  }
+}

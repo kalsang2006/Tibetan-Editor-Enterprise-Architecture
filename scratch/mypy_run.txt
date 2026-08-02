@@ -1,0 +1,200 @@
+tests\ipc\test_transport_np.py:34: error: The return type of a generator function should be "Generator" or one of its supertypes  [misc]
+tests\ipc\test_transport_np.py:49: error: Function is missing a type annotation for one or more parameters  [no-untyped-def]
+tests\ipc\test_transport_np.py:56: error: Function is missing a type annotation for one or more parameters  [no-untyped-def]
+tests\ipc\test_transport_np.py:68: error: Function is missing a type annotation for one or more parameters  [no-untyped-def]
+tests\ipc\test_transport_np.py:78: error: Function is missing a type annotation for one or more parameters  [no-untyped-def]
+tests\ipc\test_transport_np.py:93: error: Function is missing a type annotation for one or more parameters  [no-untyped-def]
+tests\ipc\test_transport_np.py:105: error: Function is missing a type annotation for one or more parameters  [no-untyped-def]
+tests\ipc\test_transport_np.py:116: error: Function is missing a type annotation for one or more parameters  [no-untyped-def]
+tests\ipc\test_transport_np.py:126: error: Function is missing a type annotation for one or more parameters  [no-untyped-def]
+tests\ipc\test_transport_np.py:139: error: Function is missing a type annotation for one or more parameters  [no-untyped-def]
+tests\ipc\test_transport_np.py:153: error: Function is missing a type annotation for one or more parameters  [no-untyped-def]
+tests\ipc\test_transport_np.py:163: error: Function is missing a type annotation for one or more parameters  [no-untyped-def]
+tests\ipc\test_transport_np.py:184: error: Function is missing a type annotation for one or more parameters  [no-untyped-def]
+tests\ipc\test_transport_np.py:192: error: Function is missing a type annotation for one or more parameters  [no-untyped-def]
+tests\ipc\test_transport_np.py:203: error: Function is missing a type annotation for one or more parameters  [no-untyped-def]
+tests\ipc\test_transport_np.py:224: error: Function is missing a type annotation for one or more parameters  [no-untyped-def]
+tests\ipc\test_transport_np.py:242: error: Function is missing a type annotation for one or more parameters  [no-untyped-def]
+tests\ipc\test_transport_np.py:287: error: Missing type arguments for generic type "list"  [type-arg]
+tests\ipc\test_transport_np.py:301: error: Unused "type: ignore" comment  [unused-ignore]
+tests\ipc\test_transport_np.py:301: error: Returning Any from function declared to return "float"  [no-any-return]
+tests\ipc\test_transport_np.py:301: note: Error code "no-any-return" not covered by "type: ignore" comment
+src\teea\nlp\morphology\stemmer.py:32: error: Missing type arguments for generic type "dict"  [type-arg]
+src\teea\nlp\morphology\stemmer.py:32: error: Missing type arguments for generic type "list"  [type-arg]
+src\teea\nlp\morphology\stemmer.py:37: error: Returning Any from function declared to return "dict[Any, Any] | list[Any]"  [no-any-return]
+src\teea\persistence\dictionary.py:77: error: Name "Iterable" is not defined  [name-defined]
+src\teea\persistence\dictionary.py:77: note: Did you forget to import it from "typing"? (Suggestion: "from typing import Iterable")
+tests\ipc\test_pipeline_np.py:34: error: The return type of a generator function should be "Generator" or one of its supertypes  [misc]
+tests\ipc\test_pipeline_np.py:47: error: The return type of a generator function should be "Generator" or one of its supertypes  [misc]
+tests\ipc\test_pipeline_np.py:54: error: The return type of a generator function should be "Generator" or one of its supertypes  [misc]
+tests\ipc\test_pipeline_np.py:64: error: Function is missing a type annotation for one or more parameters  [no-untyped-def]
+tests\ipc\test_pipeline_np.py:72: error: Function is missing a type annotation for one or more parameters  [no-untyped-def]
+tests\ipc\test_pipeline_np.py:82: error: Function is missing a type annotation for one or more parameters  [no-untyped-def]
+tests\ipc\test_pipeline_np.py:84: error: Missing type arguments for generic type "list"  [type-arg]
+tests\ipc\test_pipeline_np.py:94: error: Function is missing a type annotation for one or more parameters  [no-untyped-def]
+tests\ipc\test_pipeline_np.py:107: error: Function is missing a type annotation for one or more parameters  [no-untyped-def]
+tests\ipc\test_pipeline_np.py:117: error: Function is missing a type annotation for one or more parameters  [no-untyped-def]
+tests\ipc\test_pipeline_np.py:130: error: Function is missing a type annotation for one or more parameters  [no-untyped-def]
+tests\ipc\test_pipeline_np.py:145: error: Function is missing a type annotation for one or more parameters  [no-untyped-def]
+tests\ipc\test_pipeline_np.py:156: error: Function is missing a type annotation for one or more parameters  [no-untyped-def]
+tests\ipc\test_pipeline_np.py:175: error: Function is missing a type annotation  [no-untyped-def]
+tests\ipc\test_pipeline_np.py:180: error: Function is missing a type annotation  [no-untyped-def]
+tests\ipc\test_pipeline_np.py:185: error: Missing type arguments for generic type "list"  [type-arg]
+tests\ipc\test_pipeline_np.py:188: error: Function is missing a type annotation  [no-untyped-def]
+tests\ipc\test_pipeline_np.py:197: error: Function is missing a type annotation  [no-untyped-def]
+tests\ipc\test_pipeline_np.py:203: error: Function is missing a type annotation  [no-untyped-def]
+tests\ipc\test_pipeline_np.py:210: error: Missing type arguments for generic type "list"  [type-arg]
+src\teea\grammar\contextual_engine.py:134: error: Argument 1 to "float" has incompatible type "Any | None"; expected "str | Buffer | SupportsFloat | SupportsIndex"  [arg-type]
+src\teea\ai\grammar_correction_engine.py:39: error: Argument 1 to "set_num_threads" has incompatible type "int | None"; expected "int"  [arg-type]
+src\teea\ai\grammar_correction_engine.py:63: error: Call to untyped function "BitsAndBytesConfig" in typed context  [no-untyped-call]
+src\teea\ai\grammar_correction_engine.py:89: error: Cannot find implementation or library stub for module named "peft"  [import-not-found]
+src\teea\ai\grammar_correction_engine.py:89: note: See https://mypy.readthedocs.io/en/stable/running_mypy.html#missing-imports
+src\teea\ai\grammar_correction_engine.py:105: error: Incompatible types in assignment (expression has type "EncoderDecoderModel", variable has type "_BaseModelWithGenerate | None")  [assignment]
+src\teea\ai\grammar_correction_engine.py:107: error: Item "None" of "_BaseModelWithGenerate | None" has no attribute "to"  [union-attr]
+src\teea\ai\grammar_correction_engine.py:107: error: Argument 1 to "__call__" of "_Wrapped" has incompatible type "device"; expected "PreTrainedModel"  [arg-type]
+src\teea\ai\grammar_correction_engine.py:145: error: Invalid self argument "_BaseModelWithGenerate" to attribute function "generate" with type "def generate(self, self: GenerativePreTrainedModel, inputs: Tensor | None = ..., generation_config: GenerationConfig | None = ..., logits_processor: LogitsProcessorList | None = ..., stopping_criteria: StoppingCriteriaList | None = ..., prefix_allowed_tokens_fn: Callable[[int, Tensor], list[int]] | None = ..., synced_gpus: bool | None = ..., assistant_model: PreTrainedModel | None = ..., streamer: BaseStreamer | None = ..., negative_prompt_ids: Tensor | None = ..., negative_prompt_attention_mask: Tensor | None = ..., custom_generate: str | Callable[..., Any] | None = ..., **kwargs: Any) -> GenerateDecoderOnlyOutput | GenerateEncoderDecoderOutput | GenerateBeamDecoderOnlyOutput | GenerateBeamEncoderDecoderOutput | LongTensor"  [misc]
+src\teea\ai\grammar_correction_engine.py:158: error: Item "list[str]" of "str | list[str]" has no attribute "split"  [union-attr]
+src\teea\ai\grammar_correction_engine.py:176: error: Invalid self argument "_BaseModelWithGenerate" to attribute function "generate" with type "def generate(self, self: GenerativePreTrainedModel, inputs: Tensor | None = ..., generation_config: GenerationConfig | None = ..., logits_processor: LogitsProcessorList | None = ..., stopping_criteria: StoppingCriteriaList | None = ..., prefix_allowed_tokens_fn: Callable[[int, Tensor], list[int]] | None = ..., synced_gpus: bool | None = ..., assistant_model: PreTrainedModel | None = ..., streamer: BaseStreamer | None = ..., negative_prompt_ids: Tensor | None = ..., negative_prompt_attention_mask: Tensor | None = ..., custom_generate: str | Callable[..., Any] | None = ..., **kwargs: Any) -> GenerateDecoderOnlyOutput | GenerateEncoderDecoderOutput | GenerateBeamDecoderOnlyOutput | GenerateBeamEncoderDecoderOutput | LongTensor"  [misc]
+src\teea\ai\grammar_correction_engine.py:186: error: Incompatible return value type (got "str | list[str]", expected "str")  [return-value]
+tests\ai\test_tibert_engine.py:64: error: Cannot assign to a method  [method-assign]
+tests\ai\test_tibert_engine.py:98: error: Cannot assign to a method  [method-assign]
+tests\plugins\builtin\test_correction_providers.py:29: error: Argument 1 to "DictionaryOnlyCorrectionProvider" has incompatible type "FakeDictionary"; expected "DictionaryRepository"  [arg-type]
+tests\plugins\builtin\test_correction_providers.py:35: error: Argument 1 to "DictionaryOnlyCorrectionProvider" has incompatible type "FakeDictionary"; expected "DictionaryRepository"  [arg-type]
+tests\plugins\builtin\test_correction_providers.py:42: error: Argument 1 to "DictionaryOnlyCorrectionProvider" has incompatible type "FakeDictionary"; expected "DictionaryRepository"  [arg-type]
+tests\plugins\builtin\test_correction_providers.py:48: error: Argument 1 to "DictionaryOnlyCorrectionProvider" has incompatible type "FakeDictionary"; expected "DictionaryRepository"  [arg-type]
+tests\plugins\builtin\test_correction_providers.py:54: error: Argument 1 to "DictionaryOnlyCorrectionProvider" has incompatible type "FakeDictionary"; expected "DictionaryRepository"  [arg-type]
+tests\plugins\builtin\test_correction_providers.py:62: error: Argument 1 to "DictionaryOnlyCorrectionProvider" has incompatible type "FakeDictionary"; expected "DictionaryRepository"  [arg-type]
+tests\plugins\builtin\test_correction_providers.py:70: error: Argument 1 to "DictionaryOnlyCorrectionProvider" has incompatible type "FakeDictionary"; expected "DictionaryRepository"  [arg-type]
+tests\plugins\builtin\test_correction_providers.py:78: error: Argument 1 to "DictionaryOnlyCorrectionProvider" has incompatible type "FakeDictionary"; expected "DictionaryRepository"  [arg-type]
+tests\plugins\builtin\test_correction_providers.py:90: error: Argument 1 to "DictionaryOnlyCorrectionProvider" has incompatible type "FakeDictionary"; expected "DictionaryRepository"  [arg-type]
+tests\plugins\builtin\test_correction_providers.py:102: error: Argument 1 to "DictionaryOnlyCorrectionProvider" has incompatible type "FakeDictionary"; expected "DictionaryRepository"  [arg-type]
+tests\plugins\builtin\test_correction_providers.py:111: error: Argument 1 to "DictionaryOnlyCorrectionProvider" has incompatible type "FakeDictionary"; expected "DictionaryRepository"  [arg-type]
+tests\plugins\builtin\test_correction_providers.py:122: error: Argument 1 to "DictionaryOnlyCorrectionProvider" has incompatible type "FakeDictionary"; expected "DictionaryRepository"  [arg-type]
+tests\plugins\builtin\test_correction_providers.py:134: error: Argument 1 to "DictionaryOnlyCorrectionProvider" has incompatible type "FakeDictionary"; expected "DictionaryRepository"  [arg-type]
+tests\plugins\builtin\test_correction_providers.py:142: error: Argument 1 to "DictionaryOnlyCorrectionProvider" has incompatible type "FakeDictionary"; expected "DictionaryRepository"  [arg-type]
+tests\plugins\builtin\test_correction_providers.py:146: error: Argument 1 to "DictionaryOnlyCorrectionProvider" has incompatible type "FakeDictionary"; expected "DictionaryRepository"  [arg-type]
+tests\nlp\tokenization\test_tibert_alignment.py:83: error: Argument "loader" to "TiBERTTokenizer" has incompatible type "Callable[[TokenizationSettings], _MisalignedBackend]"; expected "Callable[[TokenizationSettings], BackendTokenizer]"  [arg-type]
+tests\nlp\tokenization\test_tibert_alignment.py:83: error: Incompatible return value type (got "_MisalignedBackend", expected "BackendTokenizer")  [return-value]
+tests\nlp\tokenization\test_tibert_alignment.py:83: note: Protocol member BackendTokenizer.all_special_ids expected instance variable, got class variable
+tests\nlp\tokenization\test_tibert_alignment.py:93: error: Argument "loader" to "TiBERTTokenizer" has incompatible type "Callable[[TokenizationSettings], _MisalignedBackend]"; expected "Callable[[TokenizationSettings], BackendTokenizer]"  [arg-type]
+tests\nlp\tokenization\test_tibert_alignment.py:93: error: Incompatible return value type (got "_MisalignedBackend", expected "BackendTokenizer")  [return-value]
+tests\nlp\tokenization\test_tibert_alignment.py:93: note: Protocol member BackendTokenizer.all_special_ids expected instance variable, got class variable
+tests\nlp\postagging\test_tagger.py:296: error: Argument "dictionary" to "HmmPosTagger" has incompatible type "StubDictionary"; expected "DictionaryRepository | None"  [arg-type]
+tests\nlp\postagging\test_tagger.py:296: note: "StubDictionary" is missing following "DictionaryRepository" protocol members:
+tests\nlp\postagging\test_tagger.py:296: note:     vocabulary, vocabulary_size
+tests\nlp\postagging\test_tagger.py:428: error: Argument "dictionary" to "HmmPosTagger" has incompatible type "StubDictionary"; expected "DictionaryRepository | None"  [arg-type]
+tests\nlp\postagging\test_tagger.py:428: note: "StubDictionary" is missing following "DictionaryRepository" protocol members:
+tests\nlp\postagging\test_tagger.py:428: note:     vocabulary, vocabulary_size
+tests\nlp\postagging\test_tagger.py:542: error: Argument "dictionary" to "HmmPosTagger" has incompatible type "StubDictionary"; expected "DictionaryRepository | None"  [arg-type]
+tests\nlp\postagging\test_tagger.py:542: note: "StubDictionary" is missing following "DictionaryRepository" protocol members:
+tests\nlp\postagging\test_tagger.py:542: note:     vocabulary, vocabulary_size
+src\teea\plugins\builtin\grammar_correction.py:33: error: Function is missing a return type annotation  [no-untyped-def]
+src\teea\plugins\builtin\grammar_correction.py:53: error: Incompatible types in assignment (expression has type "GrammarCorrectionEngine", variable has type "None")  [assignment]
+src\teea\plugins\builtin\grammar_correction.py:75: error: Call to untyped function "_get_engine" in typed context  [no-untyped-call]
+src\teea\plugins\builtin\grammar.py:459: error: Incompatible types in assignment (expression has type "str | None", variable has type "str")  [assignment]
+src\teea\plugins\builtin\grammar.py:512: error: Incompatible types in assignment (expression has type "str | None", variable has type "str")  [assignment]
+tests\plugins\builtin\test_e2e_spelling_correction.py:197: error: Argument "dictionary" to "SpellCheckerPlugin" has incompatible type "SelectiveDictionary"; expected "DictionaryRepository | None"  [arg-type]
+tests\plugins\builtin\test_e2e_spelling_correction.py:197: note: "SelectiveDictionary" is missing following "DictionaryRepository" protocol members:
+tests\plugins\builtin\test_e2e_spelling_correction.py:197: note:     vocabulary, vocabulary_size
+tests\plugins\builtin\test_e2e_spelling_correction.py:198: error: Argument "correction_provider" to "SpellCheckerPlugin" has incompatible type "teea.plugins.builtin.correction.CorrectionProvider"; expected "teea.plugins.builtin.correction_providers.CorrectionProvider | None"  [arg-type]
+tests\plugins\builtin\test_e2e_spelling_correction.py:216: error: Argument "dictionary" to "SpellCheckerPlugin" has incompatible type "SelectiveDictionary"; expected "DictionaryRepository | None"  [arg-type]
+tests\plugins\builtin\test_e2e_spelling_correction.py:216: note: "SelectiveDictionary" is missing following "DictionaryRepository" protocol members:
+tests\plugins\builtin\test_e2e_spelling_correction.py:216: note:     vocabulary, vocabulary_size
+tests\plugins\builtin\test_e2e_spelling_correction.py:241: error: Argument "dictionary" to "SpellCheckerPlugin" has incompatible type "SelectiveDictionary"; expected "DictionaryRepository | None"  [arg-type]
+tests\plugins\builtin\test_e2e_spelling_correction.py:241: note: "SelectiveDictionary" is missing following "DictionaryRepository" protocol members:
+tests\plugins\builtin\test_e2e_spelling_correction.py:241: note:     vocabulary, vocabulary_size
+tests\plugins\builtin\test_e2e_spelling_correction.py:242: error: Argument "correction_provider" to "SpellCheckerPlugin" has incompatible type "teea.plugins.builtin.correction.CorrectionProvider"; expected "teea.plugins.builtin.correction_providers.CorrectionProvider | None"  [arg-type]
+tests\plugins\builtin\test_e2e_spelling_correction.py:270: error: Argument "dictionary" to "SpellCheckerPlugin" has incompatible type "SelectiveDictionary"; expected "DictionaryRepository | None"  [arg-type]
+tests\plugins\builtin\test_e2e_spelling_correction.py:270: note: "SelectiveDictionary" is missing following "DictionaryRepository" protocol members:
+tests\plugins\builtin\test_e2e_spelling_correction.py:270: note:     vocabulary, vocabulary_size
+tests\plugins\builtin\test_e2e_spelling_correction.py:271: error: Argument "correction_provider" to "SpellCheckerPlugin" has incompatible type "teea.plugins.builtin.correction.CorrectionProvider"; expected "teea.plugins.builtin.correction_providers.CorrectionProvider | None"  [arg-type]
+tests\plugins\builtin\test_e2e_spelling_correction.py:319: error: Argument "dictionary" to "SpellCheckerPlugin" has incompatible type "SelectiveDictionary"; expected "DictionaryRepository | None"  [arg-type]
+tests\plugins\builtin\test_e2e_spelling_correction.py:319: note: "SelectiveDictionary" is missing following "DictionaryRepository" protocol members:
+tests\plugins\builtin\test_e2e_spelling_correction.py:319: note:     vocabulary, vocabulary_size
+tests\plugins\builtin\test_e2e_spelling_correction.py:351: error: Argument "dictionary" to "SpellCheckerPlugin" has incompatible type "SelectiveDictionary"; expected "DictionaryRepository | None"  [arg-type]
+tests\plugins\builtin\test_e2e_spelling_correction.py:351: note: "SelectiveDictionary" is missing following "DictionaryRepository" protocol members:
+tests\plugins\builtin\test_e2e_spelling_correction.py:351: note:     vocabulary, vocabulary_size
+tests\plugins\builtin\test_e2e_spelling_correction.py:352: error: Argument "correction_provider" to "SpellCheckerPlugin" has incompatible type "teea.plugins.builtin.correction.CorrectionProvider"; expected "teea.plugins.builtin.correction_providers.CorrectionProvider | None"  [arg-type]
+tests\plugins\builtin\test_e2e_spelling_correction.py:387: error: Need type annotation for "known" (hint: "known: set[<type>] = ...")  [var-annotated]
+tests\plugins\builtin\test_e2e_spelling_correction.py:393: error: Argument "dictionary" to "SpellCheckerPlugin" has incompatible type "SelectiveDictionary"; expected "DictionaryRepository | None"  [arg-type]
+tests\plugins\builtin\test_e2e_spelling_correction.py:393: note: "SelectiveDictionary" is missing following "DictionaryRepository" protocol members:
+tests\plugins\builtin\test_e2e_spelling_correction.py:393: note:     vocabulary, vocabulary_size
+tests\plugins\builtin\test_e2e_spelling_correction.py:394: error: Argument "correction_provider" to "SpellCheckerPlugin" has incompatible type "teea.plugins.builtin.correction.CorrectionProvider"; expected "teea.plugins.builtin.correction_providers.CorrectionProvider | None"  [arg-type]
+src\teea\engine.py:141: error: Argument "correction_provider" to "SpellCheckerPlugin" has incompatible type "teea.plugins.builtin.correction.CorrectionProvider"; expected "teea.plugins.builtin.correction_providers.CorrectionProvider | None"  [arg-type]
+src\teea\daemon.py:168: error: Argument "correction_provider" to "SpellCheckerPlugin" has incompatible type "teea.plugins.builtin.correction.CorrectionProvider"; expected "teea.plugins.builtin.correction_providers.CorrectionProvider | None"  [arg-type]
+tests\plugins\builtin\test_grammar_extended.py:50: error: Function is missing a return type annotation  [no-untyped-def]
+tests\plugins\builtin\test_grammar_extended.py:50: note: Use "-> None" if function does not return a value
+tests\plugins\builtin\test_grammar_extended.py:60: error: Function is missing a return type annotation  [no-untyped-def]
+tests\plugins\builtin\test_grammar_extended.py:60: note: Use "-> None" if function does not return a value
+tests\plugins\builtin\test_grammar_extended.py:70: error: Function is missing a return type annotation  [no-untyped-def]
+tests\plugins\builtin\test_grammar_extended.py:70: note: Use "-> None" if function does not return a value
+tests\plugins\builtin\test_grammar_extended.py:80: error: Function is missing a return type annotation  [no-untyped-def]
+tests\plugins\builtin\test_grammar_extended.py:80: note: Use "-> None" if function does not return a value
+tests\plugins\builtin\test_grammar_extended.py:90: error: Function is missing a return type annotation  [no-untyped-def]
+tests\plugins\builtin\test_grammar_extended.py:90: note: Use "-> None" if function does not return a value
+tests\plugins\builtin\test_grammar_extended.py:100: error: Function is missing a return type annotation  [no-untyped-def]
+tests\plugins\builtin\test_grammar_extended.py:100: note: Use "-> None" if function does not return a value
+tests\plugins\builtin\test_grammar_extended.py:110: error: Function is missing a return type annotation  [no-untyped-def]
+tests\plugins\builtin\test_grammar_extended.py:110: note: Use "-> None" if function does not return a value
+src\teea\service\endpoints.py:249: error: Item "None" of "Any | dict[str, Any] | None" has no attribute "get"  [union-attr]
+src\teea\service\endpoints.py:250: error: Item "None" of "Any | dict[str, Any] | None" has no attribute "get"  [union-attr]
+src\teea\service\endpoints.py:258: error: "None" not callable  [misc]
+tests\plugins\builtin\test_spelling.py:261: error: Argument "dictionary" to "SpellCheckerPlugin" has incompatible type "EverythingKnownDictionary"; expected "DictionaryRepository | None"  [arg-type]
+tests\plugins\builtin\test_spelling.py:261: note: "EverythingKnownDictionary" is missing following "DictionaryRepository" protocol members:
+tests\plugins\builtin\test_spelling.py:261: note:     vocabulary, vocabulary_size
+tests\plugins\builtin\test_spelling.py:268: error: Argument "dictionary" to "SpellCheckerPlugin" has incompatible type "AlwaysEmptyDictionary"; expected "DictionaryRepository | None"  [arg-type]
+tests\plugins\builtin\test_spelling.py:268: note: "AlwaysEmptyDictionary" is missing following "DictionaryRepository" protocol members:
+tests\plugins\builtin\test_spelling.py:268: note:     vocabulary, vocabulary_size
+tests\plugins\builtin\test_spelling.py:283: error: Argument "dictionary" to "SpellCheckerPlugin" has incompatible type "SelectivelyEmptyDictionary"; expected "DictionaryRepository | None"  [arg-type]
+tests\plugins\builtin\test_spelling.py:283: note: "SelectivelyEmptyDictionary" is missing following "DictionaryRepository" protocol members:
+tests\plugins\builtin\test_spelling.py:283: note:     vocabulary, vocabulary_size
+tests\plugins\builtin\test_spelling.py:306: error: Argument "dictionary" to "SpellCheckerPlugin" has incompatible type "SelectivelyEmptyDictionary"; expected "DictionaryRepository | None"  [arg-type]
+tests\plugins\builtin\test_spelling.py:306: note: "SelectivelyEmptyDictionary" is missing following "DictionaryRepository" protocol members:
+tests\plugins\builtin\test_spelling.py:306: note:     vocabulary, vocabulary_size
+tests\plugins\builtin\test_spelling.py:316: error: Argument "dictionary" to "SpellCheckerPlugin" has incompatible type "AlwaysEmptyDictionary"; expected "DictionaryRepository | None"  [arg-type]
+tests\plugins\builtin\test_spelling.py:316: note: "AlwaysEmptyDictionary" is missing following "DictionaryRepository" protocol members:
+tests\plugins\builtin\test_spelling.py:316: note:     vocabulary, vocabulary_size
+tests\plugins\builtin\test_spelling.py:362: error: Argument "dictionary" to "SpellCheckerPlugin" has incompatible type "SelectivelyEmptyDictionary"; expected "DictionaryRepository | None"  [arg-type]
+tests\plugins\builtin\test_spelling.py:362: note: "SelectivelyEmptyDictionary" is missing following "DictionaryRepository" protocol members:
+tests\plugins\builtin\test_spelling.py:362: note:     vocabulary, vocabulary_size
+tests\plugins\builtin\test_spelling.py:377: error: Argument "dictionary" to "SpellCheckerPlugin" has incompatible type "AlwaysEmptyDictionary"; expected "DictionaryRepository | None"  [arg-type]
+tests\plugins\builtin\test_spelling.py:377: note: "AlwaysEmptyDictionary" is missing following "DictionaryRepository" protocol members:
+tests\plugins\builtin\test_spelling.py:377: note:     vocabulary, vocabulary_size
+tests\plugins\builtin\test_spelling.py:393: error: Argument "dictionary" to "SpellCheckerPlugin" has incompatible type "AlwaysEmptyDictionary"; expected "DictionaryRepository | None"  [arg-type]
+tests\plugins\builtin\test_spelling.py:393: note: "AlwaysEmptyDictionary" is missing following "DictionaryRepository" protocol members:
+tests\plugins\builtin\test_spelling.py:393: note:     vocabulary, vocabulary_size
+tests\plugins\builtin\test_spelling.py:463: error: Argument "dictionary" to "SpellCheckerPlugin" has incompatible type "SelectivelyEmptyDictionary"; expected "DictionaryRepository | None"  [arg-type]
+tests\plugins\builtin\test_spelling.py:463: note: "SelectivelyEmptyDictionary" is missing following "DictionaryRepository" protocol members:
+tests\plugins\builtin\test_spelling.py:463: note:     vocabulary, vocabulary_size
+tests\plugins\builtin\test_spelling.py:474: error: Argument "dictionary" to "SpellCheckerPlugin" has incompatible type "AlwaysEmptyDictionary"; expected "DictionaryRepository | None"  [arg-type]
+tests\plugins\builtin\test_spelling.py:474: note: "AlwaysEmptyDictionary" is missing following "DictionaryRepository" protocol members:
+tests\plugins\builtin\test_spelling.py:474: note:     vocabulary, vocabulary_size
+tests\plugins\builtin\test_spelling.py:514: error: Argument "dictionary" to "SpellCheckerPlugin" has incompatible type "AlwaysEmptyDictionary"; expected "DictionaryRepository | None"  [arg-type]
+tests\plugins\builtin\test_spelling.py:514: note: "AlwaysEmptyDictionary" is missing following "DictionaryRepository" protocol members:
+tests\plugins\builtin\test_spelling.py:514: note:     vocabulary, vocabulary_size
+tests\plugins\builtin\test_spelling.py:529: error: Argument "dictionary" to "SpellCheckerPlugin" has incompatible type "AlwaysEmptyDictionary"; expected "DictionaryRepository | None"  [arg-type]
+tests\plugins\builtin\test_spelling.py:529: note: "AlwaysEmptyDictionary" is missing following "DictionaryRepository" protocol members:
+tests\plugins\builtin\test_spelling.py:529: note:     vocabulary, vocabulary_size
+tests\plugins\builtin\test_spelling.py:567: error: Argument "dictionary" to "SpellCheckerPlugin" has incompatible type "AlwaysEmptyDictionary"; expected "DictionaryRepository | None"  [arg-type]
+tests\plugins\builtin\test_spelling.py:567: note: "AlwaysEmptyDictionary" is missing following "DictionaryRepository" protocol members:
+tests\plugins\builtin\test_spelling.py:567: note:     vocabulary, vocabulary_size
+tests\plugins\builtin\test_spelling_guardrails.py:39: error: Argument "dictionary" to "SpellCheckerPlugin" has incompatible type "VocabularyDictionary"; expected "DictionaryRepository | None"  [arg-type]
+tests\plugins\builtin\test_spelling_guardrails.py:152: error: Function is missing a return type annotation  [no-untyped-def]
+tests\plugins\builtin\test_spelling_guardrails.py:170: error: Function is missing a return type annotation  [no-untyped-def]
+tests\plugins\builtin\test_spelling_context.py:52: error: Argument "dictionary" to "SpellCheckerPlugin" has incompatible type "SelectivelyEmptyDictionary"; expected "DictionaryRepository | None"  [arg-type]
+tests\plugins\builtin\test_spelling_context.py:52: note: "SelectivelyEmptyDictionary" is missing following "DictionaryRepository" protocol members:
+tests\plugins\builtin\test_spelling_context.py:52: note:     vocabulary, vocabulary_size
+tests\plugins\builtin\test_spelling_context.py:67: error: Argument "dictionary" to "SpellCheckerPlugin" has incompatible type "SelectivelyEmptyDictionary"; expected "DictionaryRepository | None"  [arg-type]
+tests\plugins\builtin\test_spelling_context.py:67: note: "SelectivelyEmptyDictionary" is missing following "DictionaryRepository" protocol members:
+tests\plugins\builtin\test_spelling_context.py:67: note:     vocabulary, vocabulary_size
+tests\plugins\builtin\test_spelling_context.py:78: error: Argument "dictionary" to "SpellCheckerPlugin" has incompatible type "SelectivelyEmptyDictionary"; expected "DictionaryRepository | None"  [arg-type]
+tests\plugins\builtin\test_spelling_context.py:78: note: "SelectivelyEmptyDictionary" is missing following "DictionaryRepository" protocol members:
+tests\plugins\builtin\test_spelling_context.py:78: note:     vocabulary, vocabulary_size
+tests\plugins\builtin\test_spelling_context.py:89: error: Argument "dictionary" to "SpellCheckerPlugin" has incompatible type "SelectivelyEmptyDictionary"; expected "DictionaryRepository | None"  [arg-type]
+tests\plugins\builtin\test_spelling_context.py:89: note: "SelectivelyEmptyDictionary" is missing following "DictionaryRepository" protocol members:
+tests\plugins\builtin\test_spelling_context.py:89: note:     vocabulary, vocabulary_size
+tests\plugins\builtin\test_spelling_context.py:103: error: Argument "dictionary" to "SpellCheckerPlugin" has incompatible type "SelectivelyEmptyDictionary"; expected "DictionaryRepository | None"  [arg-type]
+tests\plugins\builtin\test_spelling_context.py:103: note: "SelectivelyEmptyDictionary" is missing following "DictionaryRepository" protocol members:
+tests\plugins\builtin\test_spelling_context.py:103: note:     vocabulary, vocabulary_size
+Found 130 errors in 20 files (checked 256 source files)
+EXIT:1

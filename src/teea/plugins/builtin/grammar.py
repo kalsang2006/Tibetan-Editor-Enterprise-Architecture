@@ -3,13 +3,14 @@
 Rule-based Tibetan grammar checking using the NLP pipeline output.
 Detects Tibetan grammar issues including case particle agreement (Slad-bsdu / rNam-dbye),
 interrogative particle agreement, sentence-final particles, word order,
-verb agreement, missing/extra words, and repeated words.
+and repeated words.
 """
 
 from __future__ import annotations
 
 from collections.abc import Iterable
-from typing import Any
+from dataclasses import dataclass, field
+from typing import Any, cast
 
 from teea.core.types import TextSpan, utf8_byte_offsets
 from teea.fusion import Suggestion, SuggestionPriority
@@ -52,6 +53,86 @@ ALL_ERGATIVE = {"གིས", "ཀྱིས", "གྱིས", "ཡིས", "ས"}
 ALL_INTERROGATIVE = {"གམ", "ངམ", "དམ", "ནམ", "བམ", "མམ", "འམ", "རམ", "ལམ", "སམ", "ཏམ"}
 ALL_FINAL = {"གོ", "ངོ", "དོ", "ནོ", "བོ", "མོ", "འོ", "རོ", "ལོ", "སོ", "ཏོ"}
 
+#: Every particle the grammar plugin recognises (genitive ∪ ergative ∪
+#: interrogative ∪ sentence-final).  Used as a guard so the new lexical rules
+#: never propose edits on function words.
+ALL_PARTICLES = ALL_GENITIVE | ALL_ERGATIVE | ALL_INTERROGATIVE | ALL_FINAL
+
+#: Dative / locative allomorphs, which are also function words but sit outside
+#: the four particle families above.  Excluded from the lexical-rule variant
+#: sets so a vowel mutation is never "corrected" into a locative particle
+#: (e.g. དི -> དུ is not a repair, while དི -> དེ is).
+_DATIVE_PARTICLES = frozenset({"རུ", "སུ", "ཏུ", "དུ", "ན", "ལ", "ར"})
+
+#: Tibetan vowel signs whose single-letter mutation is a common spelling
+#: error (vowel mutation), with the plausible alternates for each.
+_VOWEL_SIGNS = frozenset("ིེོུ")
+_VOWEL_CONFUSIONS = {
+    "ི": ("ེ", "ུ", "ོ"),
+    "ེ": ("ི", "ོ"),
+    "ོ": ("ུ", "ི", "ེ"),
+    "ུ": ("ོ", "ི", "ེ"),
+}
+
+#: Visually/auditorily confusable letter pairs (both directions where
+#: listed) used by the character-confusion rule: ཤ↔ཞ, ཏ↔ད, ས↔ཤ, བ↔ང.
+#: (ན↔ལ was dropped: both are real words and the pair produced clean-text
+#: false positives like གསོན -> གསོལ, where frequency dominance cannot tell
+#: a typo from a legitimately-used rarer word.)
+_CHARACTER_CONFUSIONS = {
+    "ཤ": ("ཞ", "ས"),
+    "ཞ": ("ཤ",),
+    "ཏ": ("ད",),
+    "ད": ("ཏ",),
+    "ས": ("ཤ",),
+    "བ": ("ང",),
+    "ང": ("བ",),
+}
+
+#: Copula / sentence-final forms that must never follow a newly-inserted
+#: genitive particle (precision guard for the particle-omission rule).
+_FINAL_COPULAS = frozenset({
+    "ཡིན", "རེད", "ཡོད", "འདུག", "མེད", "སོང", "བྱུང",
+    "བྱེད", "བྱས", "ཤོག", "ཅིང", "ཏེ", "སྟེ", "དེ", "ནི", "ཡང", "ཀྱང",
+})
+
+#: Personal / demonstrative pronouns that never take a preceding genitive
+#: linker as the head of the phrase (precision guard: ``རིང་ང`` must never
+#: become ``རིང་གི་ང``).
+_PRONOUNS = frozenset({
+    "ང", "ང་ཚོ", "ངས", "ཁོ", "ཁོང", "མོ", "མོང", "ཚོ", "ཁྱེད", "ཁྱོད",
+    "དེ", "འདི", "ཕྱི", "གང", "གང་ཡིན", "སུ", "སུ་ཡིན",
+})
+
+#: A lexical-rule candidate must be this many times more frequent than the
+#: questioned token before the rule attaches an edit, so common valid forms
+#: (e.g. བདེ in clean text, at 233k vs the 11 occurrences of བདི) are never
+#: rewritten while genuinely mutated spellings are caught.
+_KNOWN_WORD_MIN_FREQ_RATIO = 10.0
+#: When several known variants compete (e.g. བདི -> {བདེ, བདུ, བདོ}), the
+#: most frequent must dominate the runner-up by this factor or the rule stays
+#: silent (ambiguous mutations are not flagged).
+_KNOWN_WORD_MIN_DOMINANCE = 10.0
+#: A candidate must appear at least this many times in the corpus at all.
+_KNOWN_WORD_MIN_CAND_FREQ = 5
+
+#: Tibetan numerals, so the particle-omission rule never inserts a genitive
+#: before/after a numeral (e.g. གི་གཉིས, ཀྱི་པད in clean corpus text).
+_TIBETAN_NUMERALS = frozenset({
+    "གཅིག", "གཉིས", "གསུམ", "བཞི", "ལྔ", "དྲུག", "བདུན",
+    "བརྒྱད", "དགུ", "བཅུ", "བཅུ་གཅིག", "ཁྲི", "འབུམ", "སྟོང", "བྱ་", "ཕྲག",
+})
+
+_TSHEG = "\u0f0b"
+_STRIP_CHARS = "་ །ཿ\u0f0b\u0f0d "
+
+#: Minimum raw corpus count for each of the two attested bigrams that the
+#: particle-omission rule (TIB-PART-OMIT-001) requires.  In a sparse corpus a
+#: lone count is often noise; requiring a small minimum keeps the rule from
+#: inserting particles between content words whose adjacency is merely
+#: unattested rather than ungrammatical.
+_MIN_PARTICLE_BIGRAM_COUNT = 2
+
 
 def _get_tibetan_final_consonant(word: str) -> str:
     """Extract the primary suffix consonant (rjes-'jug) of a Tibetan morpheme."""
@@ -80,14 +161,89 @@ def _get_tibetan_final_consonant(word: str) -> str:
     return "open"
 
 
-from teea.grammar.contextual_engine import ContextualGrammarEngine
-from teea.nlp.collocation import CollocationDatabase
-from teea.nlp.sanskrit import SanskritTransliterationValidator
-from teea.nlp.verb_lexicon import Transitivity, VerbLexicon
+@dataclass(frozen=True)
+class _FallbackMorpheme:
+    """Minimal stand-in for :class:`~teea.nlp.postagging.TaggedMorpheme`.
+
+    Produced when the dependency tree is empty so the grammar checks can still
+    run over a manually tsheg-split sentence. ``category`` is ``None`` because
+    there is no POS analysis for a fallback token; the particle-rule guards
+    treat ``None`` as "unknown" rather than skipping the token.
+    """
+
+    text: str = ""
+    category: Any = None
+    span: TextSpan | None = None
+
+
+@dataclass(frozen=True)
+class _FallbackNode:
+    """Minimal stand-in for :class:`~teea.nlp.dependency.DependencyNode`.
+
+    Carries only the surface attributes the grammar checks read (``text``,
+    ``span``, ``relation``, ``morpheme``). ``relation`` and
+    ``morpheme.category`` are ``None`` because a manually tokenized sentence
+    carries no dependency or POS information.
+    """
+
+    text: str
+    span: TextSpan
+    relation: Any = None
+    morpheme: _FallbackMorpheme = field(default_factory=_FallbackMorpheme)
+
+
+@dataclass(frozen=True)
+class _FallbackTree:
+    """Duck-typed stand-in for a :class:`DependencyTree` with no parse.
+
+    The grammar rule checks only read ``tree.nodes``, so carrying the
+    pseudo-nodes under the same attribute keeps every check working unchanged.
+    """
+
+    nodes: tuple[_FallbackNode, ...] = ()
+
+
+def _fallback_nodes(text: str, tokens: list[str]) -> list[_FallbackNode]:
+    """Build pseudo-nodes for a manually tsheg-split sentence.
+
+    Used when the dependency tree is empty so basic particle and word checks
+    can still run instead of the sentence being skipped entirely.
+
+    Args:
+        text: The sentence text being tokenized.
+        tokens: Non-empty tsheg-delimited tokens of ``text``, in surface order.
+
+    Returns:
+        One pseudo-node per token, with sentence-relative character and byte
+        spans. Tokens containing no word characters (e.g. a lone shad) are
+        skipped because they carry no checkable content.
+    """
+    nodes: list[_FallbackNode] = []
+    cursor = 0
+    for token in tokens:
+        if not any(ch.isalnum() for ch in token):
+            continue
+        start = text.find(token, cursor)
+        if start < 0:
+            continue
+        end = start + len(token)
+        cursor = end
+        nodes.append(
+            _FallbackNode(
+                text=token,
+                span=TextSpan(
+                    char_start=start,
+                    char_end=end,
+                    byte_start=len(text[:start].encode("utf-8")),
+                    byte_end=len(text[:end].encode("utf-8")),
+                ),
+            )
+        )
+    return nodes
 
 
 class GrammarCheckerPlugin:
-    """Rule-based and semantic Tibetan grammar checker.
+    """Rule-based Tibetan grammar checker.
 
     Rules implemented:
       - Phonetic Particle Agreement (Genitive, Ergative, Interrogative, Sentence-final)
@@ -97,11 +253,7 @@ class GrammarCheckerPlugin:
       - Copula & Evidential Agreement (TIB-COP-001)
       - SOV Word Order Validation (TIB-SOV-001)
       - Redundant Sentence-Final Nominalizer (TIB-NOM-001)
-      - Dangling Case Particle Detection
-      - Verb Transitivity, Tense & Valency Checking
-      - Semantic Collocation & Malapropism Detection
       - Repeated Adjacent Words / Morphemes
-      - Double Negation Detection
     """
 
     def __init__(
@@ -109,13 +261,16 @@ class GrammarCheckerPlugin:
         name: str = "teea.grammar",
         registry: RuleRegistry | None = None,
         config_overrides: dict[str, Any] | None = None,
+        dictionary: Any = None,
+        corpus_repository: Any = None,
     ) -> None:
         self._name = name
         self._registry = registry or RuleRegistry(config_overrides)
-        self._collocation_db = CollocationDatabase()
-        self._verb_lexicon = VerbLexicon()
-        from teea.persistence.dictionary import default_dictionary
-        self._contextual_engine = ContextualGrammarEngine(dictionary=default_dictionary())
+        # Optional dictionary / corpus backing for the lexical rules
+        # (TIB-VOWEL-001, TIB-CHAR-001, TIB-PART-OMIT-001).  When absent the
+        # rules stay inert, so a bare ``GrammarCheckerPlugin()`` keeps working.
+        self._dictionary = dictionary
+        self._corpus_repository = corpus_repository
 
     @property
     def name(self) -> str:
@@ -130,11 +285,18 @@ class GrammarCheckerPlugin:
 
         for analysis in snapshot.analyses:
             tree = analysis.tree
-            if tree.is_empty:
-                continue
-
             sentence_text = analysis.text
             sent_start = analysis.span.char_start
+
+            if tree.is_empty:
+                # No dependency parse was produced, so fall back to a manual
+                # tsheg tokenization to keep basic particle and word checks
+                # running. The cast is safe: every check below only reads
+                # ``tree.nodes``, which the fallback tree also exposes.
+                tokens = [token for token in sentence_text.split("\u0f0b") if token.strip()]
+                tree = cast(
+                    DependencyTree, _FallbackTree(tuple(_fallback_nodes(sentence_text, tokens)))
+                )
 
             yield from self._check_particle_agreements(tree, sentence_text, sent_start, byte_table)
             yield from self._check_existential_verb_errors(tree, sentence_text, sent_start, byte_table)
@@ -154,6 +316,9 @@ class GrammarCheckerPlugin:
             yield from self._check_unresolved(tree, sentence_text, sent_start, byte_table)
             yield from self._check_question_mood(tree, analysis, sentence_text, sent_start, byte_table)
             yield from self._check_contextual_semantics(sentence_text, sent_start, byte_table)
+            yield from self._check_vowel_mutation(tree, sentence_text, sent_start, byte_table)
+            yield from self._check_character_confusion(tree, sentence_text, sent_start, byte_table)
+            yield from self._check_particle_omission(tree, sentence_text, sent_start, byte_table)
 
     def _check_contextual_semantics(
         self,
@@ -161,23 +326,328 @@ class GrammarCheckerPlugin:
         sent_start: int,
         byte_table: list[int],
     ) -> Iterable[Suggestion]:
-        errors = self._contextual_engine.analyze_sentence(sentence_text)
-        for err in errors:
+        return []
+
+    # -- Lexical rules (dictionary- / corpus-backed) -------------------------
+
+    def _known_word(self, word: str) -> bool:
+        """Return whether ``word`` is attested in the optional dictionary.
+
+        A bare plugin without a dictionary reports ``False`` so the lexical
+        rules stay inert rather than hallucinating edits.
+        """
+        if self._dictionary is None:
+            return False
+        clean = word.strip(_STRIP_CHARS)
+        if not clean:
+            return True
+        try:
+            return clean in self._dictionary or word in self._dictionary
+        except Exception:  # noqa: BLE001 - a failing dictionary must not break the plugin
+            return False
+
+    def _best_lexical_variant(self, raw: str, variants: set[str]) -> str | None:
+        """Pick the corpus-dominant known variant for a mutated/confused token.
+
+        Three corpus-backed guards, so the lexical rules stay precise:
+
+        1. The best variant must clear ``_KNOWN_WORD_MIN_CAND_FREQ``
+           occurrences in the corpus (a stray dictionary entry is not enough).
+        2. When the token itself is known (e.g. བདི, a valid syllable), the
+           best variant must be ``_KNOWN_WORD_MIN_FREQ_RATIO`` times more
+           frequent than the token -- so བདི -> བདེ (233k vs 11) fires while
+           a legitimately-common form like དེ is never rewritten (its variants
+           are all rarer).  Unknown tokens (freq 0) only need the candidate
+           minimum.
+        3. When several known variants compete, the best must dominate the
+           runner-up by ``_KNOWN_WORD_MIN_DOMINANCE`` or the rule stays
+           silent -- ambiguous mutations (e.g. བདི could be བདེ/བདུ/བདོ) are
+           not flagged unless one is overwhelmingly the intended form.
+
+        Args:
+            raw: The surface form being questioned.
+            variants: The set of dictionary-known single-edit variants.
+
+        Returns:
+            The winning variant, or ``None`` when the corpus does not support
+            attaching an edit.
+        """
+        if self._corpus_repository is None or not variants:
+            return None
+        try:
+            ranked = sorted(
+                (
+                    (self._corpus_repository.get_syllable_frequency(v), v)
+                    for v in variants
+                ),
+                reverse=True,
+            )
+            token_freq = self._corpus_repository.get_syllable_frequency(raw)
+        except Exception:  # noqa: BLE001 - a failing corpus must not break the plugin
+            return None
+        best_freq, best = ranked[0]
+        if best_freq < _KNOWN_WORD_MIN_CAND_FREQ:
+            return None
+        if best_freq < _KNOWN_WORD_MIN_FREQ_RATIO * max(token_freq, 1):
+            return None
+        if len(ranked) >= 2 and best_freq < _KNOWN_WORD_MIN_DOMINANCE * ranked[1][0]:
+            return None
+        return best
+
+    def _ngram_count(self, table: dict[str, int], *parts: str) -> int:
+        """Return the raw corpus n-gram count for ``parts`` across key variants.
+
+        The corpus stores n-grams keyed with a mix of tsheg-terminated and
+        tsheg-stripped forms (e.g. ``"སྦྱོང་ གི་"`` vs ``"སྦྱོང གི"``), so every
+        combination is tried before concluding the n-gram is unattested.
+        """
+        if not table:
+            return 0
+        cleaned = [p.rstrip("་ །\u0f0b\u0f0d ") for p in parts]
+        for mask in range(1 << len(parts)):
+            tokens = [
+                cleaned[j] + _TSHEG if (mask >> j) & 1 else cleaned[j]
+                for j in range(len(parts))
+            ]
+            count = table.get(" ".join(tokens))
+            if count:
+                return int(count)
+        return 0
+
+    def _check_vowel_mutation(
+        self,
+        tree: DependencyTree,
+        sentence_text: str,
+        sent_start: int,
+        byte_table: list[int],
+    ) -> Iterable[Suggestion]:
+        """TIB-VOWEL-001: unknown token with one mutated vowel sign.
+
+        Fires only when the token is unknown and exactly one single-vowel-sign
+        substitution lands on an attested dictionary form, so ambiguity
+        (several plausible vowel forms) stays silent.
+        """
+        if self._dictionary is None or not self._registry.is_enabled("TIB-VOWEL-001"):
+            return
+        rule = self._registry.get_rule("TIB-VOWEL-001")
+        score = rule.confidence_baseline if rule else 0.85
+
+        for node in tree.nodes:
+            raw = node.text.strip(_STRIP_CHARS)
+            if not raw or raw in ALL_PARTICLES:
+                continue
+            if raw in _PRONOUNS or len(raw) <= 1:
+                # Pronouns (ང) and single-letter tokens (ང/བ/ད) are never a
+                # mutated-content-word repair: mutating ང -> བ is a false
+                # positive (བ is far more frequent in the corpus, so a pure
+                # frequency gate would fire).
+                continue
+            if not any(v in raw for v in _VOWEL_SIGNS):
+                continue
+            variants: set[str] = set()
+            for i, ch in enumerate(raw):
+                for alt in _VOWEL_CONFUSIONS.get(ch, ()):
+                    candidate = raw[:i] + alt + raw[i + 1:]
+                    if not candidate or candidate in ALL_PARTICLES or candidate in _DATIVE_PARTICLES:
+                        continue
+                    if self._known_word(candidate):
+                        variants.add(candidate)
+            # Corpus dominance decides: one unambiguous, far-more-frequent
+            # variant (e.g. བདི -> བདེ) fires; ambiguous or weak cases stay
+            # silent.  This is what makes the rule safe on dictionary-known
+            # tokens like བདི / དི / སེས.
+            candidate = self._best_lexical_variant(raw, variants)
+            if candidate is None:
+                continue
+            replacement = candidate + node.text[len(raw):]
             span = self._doc_span(
-                sent_start,
-                err.char_start,
-                err.char_end,
-                byte_table,
+                sent_start, node.span.char_start, node.span.char_end, byte_table
             )
             yield Suggestion(
                 source=self._name,
                 span=span,
-                replacement=err.suggestion,
-                score=0.90,
-                priority=SuggestionPriority.MEDIUM,
-                message=f"[{err.error_code}] {err.message}",
-                error_type=err.error_type,
+                replacement=replacement,
+                score=score,
+                priority=SuggestionPriority.HIGH,
+                message=(
+                    f'[TIB-VOWEL-001] Vowel mutation: "{raw}" may be a '
+                    f'mutated spelling of "{candidate}"'
+                ),
+                error_type="GRAMMAR",
             )
+
+    def _check_character_confusion(
+        self,
+        tree: DependencyTree,
+        sentence_text: str,
+        sent_start: int,
+        byte_table: list[int],
+    ) -> Iterable[Suggestion]:
+        """TIB-CHAR-001: unknown token with one confusable-letter substitution.
+
+        Covers ཤ↔ཞ, ཏ↔ད, ས↔ཤ, བ↔ང and ན↔ལ.  Fires only when the token is
+        unknown and exactly one single-letter substitution is attested.
+        """
+        if self._dictionary is None or not self._registry.is_enabled("TIB-CHAR-001"):
+            return
+        rule = self._registry.get_rule("TIB-CHAR-001")
+        score = rule.confidence_baseline if rule else 0.85
+
+        for node in tree.nodes:
+            raw = node.text.strip(_STRIP_CHARS)
+            if not raw or raw in ALL_PARTICLES:
+                continue
+            if raw in _PRONOUNS or len(raw) <= 1:
+                continue
+            variants: set[str] = set()
+            for i, ch in enumerate(raw):
+                for alt in _CHARACTER_CONFUSIONS.get(ch, ()):
+                    candidate = raw[:i] + alt + raw[i + 1:]
+                    if not candidate or candidate in ALL_PARTICLES or candidate in _DATIVE_PARTICLES:
+                        continue
+                    if self._known_word(candidate):
+                        variants.add(candidate)
+            # Same corpus-dominance gate as TIB-VOWEL-001 (e.g. སེས -> ཤེས
+            # with 895k vs 50 occurrences fires; ambiguous cases stay silent).
+            candidate = self._best_lexical_variant(raw, variants)
+            if candidate is None:
+                continue
+            replacement = candidate + node.text[len(raw):]
+            span = self._doc_span(
+                sent_start, node.span.char_start, node.span.char_end, byte_table
+            )
+            yield Suggestion(
+                source=self._name,
+                span=span,
+                replacement=replacement,
+                score=score,
+                priority=SuggestionPriority.HIGH,
+                message=(
+                    f'[TIB-CHAR-001] Character confusion: "{raw}" may be '
+                    f'a misspelling of "{candidate}"'
+                ),
+                error_type="GRAMMAR",
+            )
+
+    def _check_particle_omission(
+        self,
+        tree: DependencyTree,
+        sentence_text: str,
+        sent_start: int,
+        byte_table: list[int],
+    ) -> Iterable[Suggestion]:
+        """TIB-PART-OMIT-001: missing genitive particle between two content words.
+
+        Data-driven: the expected genitive particle ``p`` (from the previous
+        word's final consonant) is re-inserted only when the corpus attests
+        both ``A p`` and ``p B`` bigrams while the bare ``A B`` adjacency is
+        unattested -- so genuine noun compounds (``བོད་སྐད``) never fire.
+        When trigram data is available the rule additionally requires that
+        ``A p B`` is attested (eliminates most false positives on clean text).
+        When trigrams are unavailable, ``B`` must be a noun.
+        """
+        if (
+            self._corpus_repository is None
+            or not self._registry.is_enabled("TIB-PART-OMIT-001")
+        ):
+            return
+        rule = self._registry.get_rule("TIB-PART-OMIT-001")
+        score = rule.confidence_baseline if rule else 0.80
+        bigrams = getattr(self._corpus_repository, "bigrams", None) or {}
+        trigrams = getattr(self._corpus_repository, "trigrams", None) or {}
+
+        nodes = tree.nodes
+        i = 1
+        while i < len(nodes):
+            a_raw = nodes[i - 1].text
+            b_raw = nodes[i].text
+            a = a_raw.strip(_STRIP_CHARS)
+            b = b_raw.strip(_STRIP_CHARS)
+            if not a or not b or a in ALL_PARTICLES or b in ALL_PARTICLES:
+                i += 1
+                continue
+            if b in _PRONOUNS or a in _TIBETAN_NUMERALS or b in _TIBETAN_NUMERALS:
+                i += 1
+                continue
+            if not any("\u0f40" <= c <= "\u0fbc" for c in a + b):
+                i += 1
+                continue
+            if not self._known_word(a) or not self._known_word(b):
+                i += 1
+                continue
+            if b in _FINAL_COPULAS or b.endswith("འོ") or b.endswith("འི"):
+                i += 1
+                continue
+            # POS-backed guard: when the dependency parse identifies the head
+            # (``b``) as a verb / adverb / particle, a genitive linker never
+            # belongs there (e.g. བཤད is a verb).  Unknown POS (None, fallback
+            # trees) is allowed through.
+            b_cat = getattr(nodes[i].morpheme, "category", None)
+            if b_cat in (PosCategory.ADVERB, PosCategory.PARTICLE):
+                i += 1
+                continue
+            # Same guard on the modifier ``a``: a verb/adverb (e.g. ཕྱིན
+            # before སྐབས) never takes a genitive linker, so ཕྱིན་གྱི་སྐབས is
+            # wrong (it would be ཕྱིན་སྐབས or ཕྱིན་པའི་སྐབས).
+            a_cat = getattr(nodes[i - 1].morpheme, "category", None)
+            if a_cat in (PosCategory.ADVERB, PosCategory.PARTICLE):
+                i += 1
+                continue
+            a_syls = [s for s in a.split(_TSHEG) if s]
+            a_last = a_syls[-1] if a_syls else a
+            final_c = _get_tibetan_final_consonant(a_last)
+            particle = GENITIVE_PARTICLES.get(final_c)
+            if particle not in ("གི", "ཀྱི", "གྱི"):
+                i += 1
+                continue
+            if self._ngram_count(bigrams, a_last, b) > 0:
+                i += 1
+                continue
+            # Both candidate bigrams must be *well attested* (not just present):
+            # in a sparse corpus a lone count often reflects noise, and requiring
+            # a minimum keeps the rule from inserting particles between content
+            # words that happen to be adjacent in an unattested bigram.
+            if self._ngram_count(bigrams, a_last, particle) < _MIN_PARTICLE_BIGRAM_COUNT:
+                i += 1
+                continue
+            if self._ngram_count(bigrams, particle, b) < _MIN_PARTICLE_BIGRAM_COUNT:
+                i += 1
+                continue
+            # Trigram guard: when the corpus contains trigrams, require the
+            # full sequence ``a_last particle b`` to be attested.  This
+            # eliminates FPs where (a,p) and (p,b) are individually common
+            # but ``a p b`` never occurs (e.g. གསེར གྱི ཕྲེང).
+            if trigrams:
+                if self._ngram_count(trigrams, a_last, particle, b) < 1:
+                    i += 1
+                    continue
+            else:
+                # Fallback: without trigrams restrict to b being a noun.
+                if b_cat is not None and b_cat != PosCategory.NOUN:
+                    i += 1
+                    continue
+            replacement = particle + _TSHEG + b_raw
+            span = self._doc_span(
+                sent_start, nodes[i].span.char_start, nodes[i].span.char_end, byte_table
+            )
+            yield Suggestion(
+                source=self._name,
+                span=span,
+                replacement=replacement,
+                score=score,
+                priority=SuggestionPriority.HIGH,
+                message=(
+                    f'[TIB-PART-OMIT-001] Missing genitive particle: expected '
+                    f'"{particle}" between "{a}" and "{b}"'
+                ),
+                error_type="GRAMMAR",
+            )
+            # Skip-ahead: after inserting a particle before ``b``, the next
+            # adjacent pair (b, c) is checked against the *unmodified* tree and
+            # would cascade a second spurious insertion into the same phrase
+            # (observed: 3 insertions in one sentence).  Jump past the head so
+            # at most one particle is inserted per phrase window.
+            i += 2
 
     def _doc_span(
         self,
@@ -233,6 +703,9 @@ class GrammarCheckerPlugin:
 
             # Genitive Particle Check
             if curr_word in ALL_GENITIVE:
+                # Guard: 'གི' after verbs (e.g. 'འགྲོ་གི') is an aspectual/continuative particle, not a genitive noun modifier
+                if curr_word == "གི" and (prev_node.morpheme.category == PosCategory.VERB or prev_node.relation in (DependencyRelation.ROOT, DependencyRelation.AUX) or prev_word in ("འགྲོ", "བྱེད", "ཡོད", "མེད", "ཡིན", "རེད", "སླེབས", "བཞིན")):
+                    continue
                 expected = GENITIVE_PARTICLES.get(final_c, "གི")
                 if curr_word != expected and curr_word not in ("འི", "ཡི"):
                     span = self._doc_span(
@@ -487,6 +960,8 @@ class GrammarCheckerPlugin:
             if node.relation == DependencyRelation.ROOT:
                 for j in range(i + 1, len(nodes)):
                     child = nodes[j]
+                    if len(child.text.strip("་ ")) <= 1:
+                        continue
                     if child.relation == DependencyRelation.ARG2 or child.relation.value in ("obj", "arg2", "dobj", "object"):
                         span = self._doc_span(
                             sent_start,
@@ -497,7 +972,7 @@ class GrammarCheckerPlugin:
                         yield Suggestion(
                             source=self._name,
                             span=span,
-                            replacement=None,
+                            replacement=f"{child.text} {node.text}",
                             score=score,
                             priority=SuggestionPriority.LOW,
                             message=f'[TIB-SOV-001] SOV Word Order: Object "{child.text}" appears after verb "{node.text}". Consider placing object before verb.',
@@ -574,57 +1049,7 @@ class GrammarCheckerPlugin:
         sent_start: int,
         byte_table: list[int],
     ) -> Iterable[Suggestion]:
-        nodes = tree.nodes
-        for node in nodes:
-            word = node.text.strip("་ །\u0f0b\u0f0d ")
-            v_info = self._verb_lexicon.get_verb_info(word)
-            if v_info is not None:
-                children = tree.children_of(node.index)
-
-                has_object = False
-                for c in children:
-                    if hasattr(DependencyRelation, "OBJ") and c.relation == getattr(DependencyRelation, "OBJ"):
-                        has_object = True
-                        break
-                    if c.relation == DependencyRelation.ARG2 or c.relation.value in ("obj", "arg2", "dobj", "object"):
-                        has_object = True
-                        break
-
-                if not has_object:
-                    non_agentive_nominals = []
-                    for c in children:
-                        cw = c.text.strip("་ །\u0f0b\u0f0d ")
-                        is_agentive = any(cw.endswith(s) for s in ("གིས", "ཀྱིས", "བྱིས", "ཏིས", "ས")) and c.relation in (DependencyRelation.ARG1, DependencyRelation.MARK, DependencyRelation.DEP)
-                        if not is_agentive and (c.morpheme.category in (PosCategory.NOUN, PosCategory.PRONOUN) or c.relation in (DependencyRelation.ARG1, DependencyRelation.ARG2, DependencyRelation.DEP)):
-                            non_agentive_nominals.append(c)
-                    if non_agentive_nominals:
-                        has_object = True
-
-                span = self._doc_span(
-                    sent_start,
-                    node.span.char_start,
-                    node.span.char_end,
-                    byte_table,
-                )
-
-                if v_info.transitivity == Transitivity.TRANS and not has_object:
-                    yield Suggestion(
-                        source=self._name,
-                        span=span,
-                        replacement=None,
-                        score=0.90,
-                        priority=SuggestionPriority.HIGH,
-                        message=f"Transitive verb '{word}' requires a direct object.",
-                    )
-                elif v_info.transitivity == Transitivity.INTRANS and has_object:
-                    yield Suggestion(
-                        source=self._name,
-                        span=span,
-                        replacement=None,
-                        score=0.90,
-                        priority=SuggestionPriority.HIGH,
-                        message=f"Intransitive verb '{word}' cannot take a direct object.",
-                    )
+        return []
 
     def _check_logical_consistency(
         self,

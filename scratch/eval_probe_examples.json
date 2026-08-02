@@ -1,0 +1,685 @@
+{
+  "false_positives": [
+    {
+      "text": "དེ་ལྟར་གོ་ཆ་བགོས་ནས་ཡེ་ཤེས་པ་སྤྱན་དྲང་བ་ནི།",
+      "gold": "དེ་ལྟར་གོ་ཆ་བགོས་ནས་ཡེ་ཤེས་པ་སྤྱན་དྲང་བ་ནི།",
+      "kind": "clean",
+      "emitted": true,
+      "corrected": "དེ་ལྟར་གོ་ཆ་བགོས་ནས་ཡེ་ཤེ་པ༴་སྤྱན་དྲང་བ་ནི།",
+      "suggestions": [
+        {
+          "span": [
+            23,
+            26
+          ],
+          "replacement": "ཤེ",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'ཤེས' appears in an implausible context — did you mean 'ཤེ'?"
+        },
+        {
+          "span": [
+            27,
+            28
+          ],
+          "replacement": "པ༴",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'པ' appears in an implausible context — did you mean 'པ༴'?"
+        }
+      ],
+      "fault": null
+    },
+    {
+      "text": "མཚན་མོའི་མུན་ནག་སྤྲིན་རུམ་ནས།",
+      "gold": "མཚན་མོའི་མུན་ནག་སྤྲིན་རུམ་ནས།",
+      "kind": "clean",
+      "emitted": true,
+      "corrected": "མཚན་མའི་མུན་ནག་སྤྲིང་རུམ་ནས།",
+      "suggestions": [
+        {
+          "span": [
+            4,
+            6
+          ],
+          "replacement": "མ",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'མོ' appears in an implausible context — did you mean 'མ'?"
+        },
+        {
+          "span": [
+            16,
+            21
+          ],
+          "replacement": "སྤྲིང",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'སྤྲིན' appears in an implausible context — did you mean 'སྤྲིང'?"
+        }
+      ],
+      "fault": null
+    },
+    {
+      "text": "ཞེས་སྦྱིན་པ་བཏང་བར་མཛད་དོ།",
+      "gold": "ཞེས་སྦྱིན་པ་བཏང་བར་མཛད་དོ།",
+      "kind": "clean",
+      "emitted": true,
+      "corrected": "ཞེ་སྦྱིན་པ༴་བཏང་བར་མཛད་དོ།",
+      "suggestions": [
+        {
+          "span": [
+            0,
+            3
+          ],
+          "replacement": "ཞེ",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'ཞེས' appears in an implausible context — did you mean 'ཞེ'?"
+        },
+        {
+          "span": [
+            10,
+            11
+          ],
+          "replacement": "པ༴",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'པ' appears in an implausible context — did you mean 'པ༴'?"
+        }
+      ],
+      "fault": null
+    },
+    {
+      "text": "བུ་རེ་ཞིག་སྡོད་ལ་དགེ་བའི་ཕྱོགས་སུ་བརྩོན་པར་གྱིས་ཤིག་ཅེས་གསུངས་ཤིང༌།",
+      "gold": "བུ་རེ་ཞིག་སྡོད་ལ་དགེ་བའི་ཕྱོགས་སུ་བརྩོན་པར་གྱིས་ཤིག་ཅེས་གསུངས་ཤིང༌།",
+      "kind": "clean",
+      "emitted": true,
+      "corrected": "བུ་རེ་ཞི་སྡོང་ལ་དགེ་བ༽འི་ཕྱོགས་སུ་བརྩོན་པ་གྱིས་ཤིག་ཅེས་གསུངས་ཤིག༌།",
+      "suggestions": [
+        {
+          "span": [
+            6,
+            9
+          ],
+          "replacement": "ཞི",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'ཞིག' appears in an implausible context — did you mean 'ཞི'?"
+        },
+        {
+          "span": [
+            10,
+            14
+          ],
+          "replacement": "སྡོང",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'སྡོད' appears in an implausible context — did you mean 'སྡོང'?"
+        },
+        {
+          "span": [
+            21,
+            22
+          ],
+          "replacement": "བ༽",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'བ' appears in an implausible context — did you mean 'བ༽'?"
+        },
+        {
+          "span": [
+            40,
+            42
+          ],
+          "replacement": "པ",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'པར' appears in an implausible context — did you mean 'པ'?"
+        },
+        {
+          "span": [
+            62,
+            65
+          ],
+          "replacement": "ཤིག",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'ཤིང' appears in an implausible context — did you mean 'ཤིག'?"
+        }
+      ],
+      "fault": null
+    },
+    {
+      "text": "མ་བརྐོས་པ་དང་།",
+      "gold": "མ་བརྐོས་པ་དང་།",
+      "kind": "clean",
+      "emitted": true,
+      "corrected": "མང་བརྐུས་པ༴་དང་།",
+      "suggestions": [
+        {
+          "span": [
+            0,
+            1
+          ],
+          "replacement": "མང",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'མ' appears in an implausible context — did you mean 'མང'?"
+        },
+        {
+          "span": [
+            2,
+            7
+          ],
+          "replacement": "བརྐུས",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'བརྐོས' appears in an implausible context — did you mean 'བརྐུས'?"
+        },
+        {
+          "span": [
+            8,
+            9
+          ],
+          "replacement": "པ༴",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'པ' appears in an implausible context — did you mean 'པ༴'?"
+        }
+      ],
+      "fault": null
+    },
+    {
+      "text": "སྤྱི་རུ་རྒྱུད་ཀྱི་རྣམ་གྲངས་དང་།",
+      "gold": "སྤྱི་རུ་རྒྱུད་ཀྱི་རྣམ་གྲངས་དང་།",
+      "kind": "clean",
+      "emitted": true,
+      "corrected": "སྤྱི་རུ་རྒྱ་ུད་ཀྱི་རྣམ་གྲངས་དང་།",
+      "suggestions": [
+        {
+          "span": [
+            8,
+            13
+          ],
+          "replacement": "རྒྱ་ུད",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'རྒྱུད' appears in an implausible context — did you mean 'རྒྱ་ུད'?"
+        }
+      ],
+      "fault": null
+    },
+    {
+      "text": "ཡེ་ཤེས་ལྔ་ལ་མཉམ་པའི་ཚུལ་གྱིས་དེ་འཇུག་གོ།",
+      "gold": "ཡེ་ཤེས་ལྔ་ལ་མཉམ་པའི་ཚུལ་གྱིས་དེ་འཇུག་གོ།",
+      "kind": "clean",
+      "emitted": true,
+      "corrected": "ཡེ་ཤིས་ལྔ་ལ་མཉམ་པ)འི་ཚུལ་གྱིས་དག་འཇུག་ག།",
+      "suggestions": [
+        {
+          "span": [
+            3,
+            6
+          ],
+          "replacement": "ཤིས",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'ཤེས' appears in an implausible context — did you mean 'ཤིས'?"
+        },
+        {
+          "span": [
+            16,
+            17
+          ],
+          "replacement": "པ)",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'པ' appears in an implausible context — did you mean 'པ)'?"
+        },
+        {
+          "span": [
+            29,
+            31
+          ],
+          "replacement": "དག",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'དེ' appears in an implausible context — did you mean 'དག'?"
+        },
+        {
+          "span": [
+            37,
+            39
+          ],
+          "replacement": "ག",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'གོ' appears in an implausible context — did you mean 'ག'?"
+        }
+      ],
+      "fault": null
+    },
+    {
+      "text": "ཞེས་སོགས་མཐའ་ཡས་པར་གསུངས་པས་འདིར་མཚོན་ཙམ་མོ།",
+      "gold": "ཞེས་སོགས་མཐའ་ཡས་པར་གསུངས་པས་འདིར་མཚོན་ཙམ་མོ།",
+      "kind": "clean",
+      "emitted": true,
+      "corrected": "ཞེས་སོ་གས་མཐའ་ཡ་པ་གསུངས་པ་འདི་མཚན་ཙག་མོ།",
+      "suggestions": [
+        {
+          "span": [
+            4,
+            8
+          ],
+          "replacement": "སོ་གས",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'སོགས' appears in an implausible context — did you mean 'སོ་གས'?"
+        },
+        {
+          "span": [
+            13,
+            15
+          ],
+          "replacement": "ཡ",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'ཡས' appears in an implausible context — did you mean 'ཡ'?"
+        },
+        {
+          "span": [
+            16,
+            18
+          ],
+          "replacement": "པ",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'པར' appears in an implausible context — did you mean 'པ'?"
+        },
+        {
+          "span": [
+            25,
+            27
+          ],
+          "replacement": "པ",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'པས' appears in an implausible context — did you mean 'པ'?"
+        },
+        {
+          "span": [
+            28,
+            32
+          ],
+          "replacement": "འདི",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'འདིར' appears in an implausible context — did you mean 'འདི'?"
+        },
+        {
+          "span": [
+            33,
+            37
+          ],
+          "replacement": "མཚན",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'མཚོན' appears in an implausible context — did you mean 'མཚན'?"
+        },
+        {
+          "span": [
+            38,
+            40
+          ],
+          "replacement": "ཙག",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'ཙམ' appears in an implausible context — did you mean 'ཙག'?"
+        }
+      ],
+      "fault": null
+    }
+  ],
+  "false_negatives": [
+    {
+      "text": "བདེན་པར་ཉོན་ལ་རང་རང་གནས་སུ་དོངས།",
+      "gold": "བདེན་པར་ཉོན་ལ་རང་རང་གནས་སུ་དེངས།",
+      "kind": "syn:VOWEL_MUTATION",
+      "emitted": false,
+      "corrected": "བདེན་པར་ཉོན་ལ་རང་རང་གནས་སུ་དོངས།",
+      "suggestions": [],
+      "fault": null
+    }
+  ],
+  "detected_positives": [
+    {
+      "text": "གསུང་རབ་མཛོདསྒོ་རིན་པོ་ཆེའི་གླེགས་བམ།",
+      "gold": "གསུང་རབ་སྒོ་མཛོད་རིན་པོ་ཆེའི་གླེགས་བམ།",
+      "kind": "syn:SYLLABLE_SWAP",
+      "emitted": true,
+      "corrected": "གསུང་ར་མཛོདསྒ་་རིན་པོ་ཆེའི་གླེགས་སམ།",
+      "suggestions": [
+        {
+          "span": [
+            34,
+            36
+          ],
+          "replacement": "སམ",
+          "score": 0.98,
+          "source": "teea.grammar",
+          "error_type": "GRAMMAR",
+          "message": "Interrogative particle agreement error: \"གླེགས\" should take \"སམ\" instead of \"བམ\""
+        },
+        {
+          "span": [
+            8,
+            15
+          ],
+          "replacement": "མཛོདསྒ་",
+          "score": 0.95,
+          "source": "teea.spelling",
+          "error_type": "STRUCTURAL",
+          "message": "[SPELL-STRUCT-001] Structural Error [DOUBLE_VOWEL]: Syllable 'མཛོདསྒོ' violates Tibetan orthography rules"
+        },
+        {
+          "span": [
+            5,
+            7
+          ],
+          "replacement": "ར",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'རབ' appears in an implausible context — did you mean 'ར'?"
+        }
+      ],
+      "fault": null
+    },
+    {
+      "text": "གསུང་སྒོརབ་མཛོད་རིན་པོ་ཆེའི་གླེགས་བམ།",
+      "gold": "གསུང་རབ་སྒོ་མཛོད་རིན་པོ་ཆེའི་གླེགས་བམ།",
+      "kind": "syn:SYLLABLE_SWAP",
+      "emitted": true,
+      "corrected": "གསང་སོར་་མཛོད་རིན་པོ་ཆེའི་གླེགས་སམ།",
+      "suggestions": [
+        {
+          "span": [
+            34,
+            36
+          ],
+          "replacement": "སམ",
+          "score": 0.98,
+          "source": "teea.grammar",
+          "error_type": "GRAMMAR",
+          "message": "Interrogative particle agreement error: \"གླེགས\" should take \"སམ\" instead of \"བམ\""
+        },
+        {
+          "span": [
+            5,
+            10
+          ],
+          "replacement": "སོར་",
+          "score": 0.95,
+          "source": "teea.spelling",
+          "error_type": "STRUCTURAL",
+          "message": "[SPELL-STRUCT-001] Structural Error [INVALID_POST_SUFFIX]: Syllable 'སྒོརབ' violates Tibetan orthography rules"
+        },
+        {
+          "span": [
+            0,
+            4
+          ],
+          "replacement": "གསང",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'གསུང' appears in an implausible context — did you mean 'གསང'?"
+        }
+      ],
+      "fault": null
+    },
+    {
+      "text": "༼ ཀ 002 འདུལ་བ་རྒྱུད་དྲུག 042 མདོ་ཀ་གླིངབ་དགུ།",
+      "gold": "༼ ཀ 002 འདུལ་བ་རྒྱུད་དྲུག 042 མདོ་ཀ་བ་གླིང་དགུ།",
+      "kind": "syn:SYLLABLE_SWAP",
+      "emitted": true,
+      "corrected": "༼ ཀ༽ 002 འདུལ་བཀ་རྒྱུད་དྲག 042 མདོ་ཀ)་གླིངབ་དག།",
+      "suggestions": [
+        {
+          "span": [
+            2,
+            3
+          ],
+          "replacement": "ཀ༽",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'ཀ' appears in an implausible context — did you mean 'ཀ༽'?"
+        },
+        {
+          "span": [
+            13,
+            14
+          ],
+          "replacement": "བཀ",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'བ' appears in an implausible context — did you mean 'བཀ'?"
+        },
+        {
+          "span": [
+            21,
+            25
+          ],
+          "replacement": "དྲག",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'དྲུག' appears in an implausible context — did you mean 'དྲག'?"
+        },
+        {
+          "span": [
+            34,
+            35
+          ],
+          "replacement": "ཀ)",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'ཀ' appears in an implausible context — did you mean 'ཀ)'?"
+        },
+        {
+          "span": [
+            42,
+            45
+          ],
+          "replacement": "དག",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'དགུ' appears in an implausible context — did you mean 'དག'?"
+        }
+      ],
+      "fault": null
+    },
+    {
+      "text": "ཕྱྭ050་གཤེན་དཔྱད་དོན་སྒྱུ་མ་གསེར་འབུམ།",
+      "gold": "050 ཕྱྭ་གཤེན་དཔྱད་དོན་སྒྱུ་མ་གསེར་འབུམ།",
+      "kind": "syn:SYLLABLE_SWAP",
+      "emitted": true,
+      "corrected": "ཕྱྭ་050་གཉེན་དཔྱིད་དབོན་སྒྱུ་མང་གཏེར་འབུད།",
+      "suggestions": [
+        {
+          "span": [
+            0,
+            6
+          ],
+          "replacement": "ཕྱྭ་050",
+          "score": 0.92,
+          "source": "teea.spelling",
+          "error_type": "SPELLING",
+          "message": "[SPELL-DICT-001] Correction available: Unknown word 'ཕྱྭ050' — Did you mean 'ཕྱྭ་050'? (confidence: 0.92)"
+        },
+        {
+          "span": [
+            7,
+            11
+          ],
+          "replacement": "གཉེན",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'གཤེན' appears in an implausible context — did you mean 'གཉེན'?"
+        },
+        {
+          "span": [
+            12,
+            16
+          ],
+          "replacement": "དཔྱིད",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'དཔྱད' appears in an implausible context — did you mean 'དཔྱིད'?"
+        },
+        {
+          "span": [
+            17,
+            20
+          ],
+          "replacement": "དབོན",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'དོན' appears in an implausible context — did you mean 'དབོན'?"
+        },
+        {
+          "span": [
+            26,
+            27
+          ],
+          "replacement": "མང",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'མ' appears in an implausible context — did you mean 'མང'?"
+        },
+        {
+          "span": [
+            28,
+            32
+          ],
+          "replacement": "གཏེར",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'གསེར' appears in an implausible context — did you mean 'གཏེར'?"
+        },
+        {
+          "span": [
+            33,
+            37
+          ],
+          "replacement": "འབུད",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'འབུམ' appears in an implausible context — did you mean 'འབུད'?"
+        }
+      ],
+      "fault": null
+    },
+    {
+      "text": "༼ཁ 025 དྲི་མེད་བའིརྩ་མདོ།",
+      "gold": "༼ཁ 025 དྲི་མེད་རྩ་བའི་མདོ།",
+      "kind": "syn:SYLLABLE_SWAP",
+      "emitted": true,
+      "corrected": "༼ཁ 025 དྲི་མེད་བའི་རྩ་མགོ།",
+      "suggestions": [
+        {
+          "span": [
+            15,
+            20
+          ],
+          "replacement": "བའི་རྩ",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'བའིརྩ' appears in an implausible context — did you mean 'བའི་རྩ'?"
+        },
+        {
+          "span": [
+            21,
+            24
+          ],
+          "replacement": "མགོ",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'མདོ' appears in an implausible context — did you mean 'མགོ'?"
+        }
+      ],
+      "fault": null
+    },
+    {
+      "text": "093 མངོན་རྟོགས་རིག་པ་འབུམརྩེ།",
+      "gold": "093 མངོན་རྟོགས་རིག་པ་རྩེ་འབུམ།",
+      "kind": "syn:SYLLABLE_SWAP",
+      "emitted": true,
+      "corrected": "093 མངོན་རྟོགས་རིག་པ༴་འབུམརྩ་།",
+      "suggestions": [
+        {
+          "span": [
+            21,
+            28
+          ],
+          "replacement": "འབུམརྩ་",
+          "score": 0.95,
+          "source": "teea.spelling",
+          "error_type": "STRUCTURAL",
+          "message": "[SPELL-STRUCT-001] Structural Error [DOUBLE_VOWEL]: Syllable 'འབུམརྩེ' violates Tibetan orthography rules"
+        },
+        {
+          "span": [
+            19,
+            20
+          ],
+          "replacement": "པ༴",
+          "score": 0.736,
+          "source": "teea.spelling",
+          "error_type": "CONTEXT",
+          "message": "[SPELL-CTX-001] Known word 'པ' appears in an implausible context — did you mean 'པ༴'?"
+        }
+      ],
+      "fault": null
+    }
+  ]
+}

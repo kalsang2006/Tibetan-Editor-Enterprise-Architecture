@@ -30,7 +30,7 @@
 
 ### Objective 1: Launch Complete HTTP Server (`TEEAHttpServer`)
 - Modified `start_daemon.py` to invoke `serve_http` from `teea.transport` rather than `serve_analysis_http`.
-- `TEEAHttpServer` serves the full endpoint surface: `/health`, `/api/analysis/run`, `/api/plagiarism/check`, `/api/ai/rewrite`, `/api/ai/explain`, `/api/ai/summarize`, and `/api/ai/cancel`.
+- `TEEAHttpServer` serves the full endpoint surface: `/health`, `/api/analysis/run`, `/api/plagiarism/check`, `/api/ai/explain`, `/api/ai/summarize`, and `/api/ai/cancel`.
 
 ### Objective 2: Vendor Office.js Locally
 - Created `addin/src/taskpane/office.js` containing a self-contained, offline-first implementation of the global `Office` object and `Office.onReady()` callback.

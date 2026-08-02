@@ -1,0 +1,27 @@
+npm notice run teea-word-addin@1.0.0 start
+npm notice run webpack serve --mode development
+<i> [webpack-dev-server] Project is running at:
+<i> [webpack-dev-server] Loopback: [36mhttps://localhost:3000/[39m, [36mhttps://[::1]:3000/[39m
+<i> [webpack-dev-server] Content not from webpack is served from '[36mC:\Users\kalsa\Desktop\Tibetan Editor Enterprise Architecture\addin\dist[39m' directory
+assets by path [1m[32massets/*.png[39m[22m 1.59 KiB
+  asset [1m[32massets/icon-80.png[39m[22m 1 KiB [1m[32m[emitted][39m[22m
+  asset [1m[32massets/icon-32.png[39m[22m 400 bytes [1m[32m[emitted][39m[22m
+  asset [1m[32massets/icon-16.png[39m[22m 196 bytes [1m[32m[emitted][39m[22m
+assets by path [1m[32m*.js[39m[22m 13 MiB
+  asset [1m[33mtaskpane.js[39m[22m [1m[33m13 MiB[39m[22m [1m[32m[emitted][39m[22m [1m[33m[big][39m[22m (name: taskpane)
+  asset [1m[32moffice.js[39m[22m 4.18 KiB [1m[32m[emitted][39m[22m
+asset [1m[32mtaskpane.html[39m[22m 2.31 KiB [1m[32m[emitted][39m[22m
+orphan modules 14.6 MiB [1m[33m[orphan][39m[22m 423 modules
+runtime modules 2.88 KiB 8 modules
+modules by path [1m./node_modules/[39m[22m 4.44 MiB 472 modules
+modules by path [1m./src/taskpane/[39m[22m 198 KiB
+  modules by path [1m./src/taskpane/hooks/*.ts[39m[22m 48.1 KiB 12 modules
+  modules by path [1m./src/taskpane/components/*.tsx[39m[22m 57.9 KiB 11 modules
+  modules by path [1m./src/taskpane/services/*.ts[39m[22m 62.6 KiB
+    [1m./src/taskpane/services/IpcBridge.ts[39m[22m 12.9 KiB [1m[33m[built][39m[22m [1m[33m[code generated][39m[22m
+    + 5 modules
+  modules by path [1m./src/taskpane/*.tsx[39m[22m 26.4 KiB
+    [1m./src/taskpane/index.tsx[39m[22m 5.3 KiB [1m[33m[built][39m[22m [1m[33m[code generated][39m[22m
+    [1m./src/taskpane/App.tsx[39m[22m 21.1 KiB [1m[33m[built][39m[22m [1m[33m[code generated][39m[22m
+  [1m./src/taskpane/types/ipc.ts[39m[22m 3.34 KiB [1m[33m[built][39m[22m [1m[33m[code generated][39m[22m
+webpack 5.109.1 compiled [1m[32msuccessfully[39m[22m in 4284 ms

@@ -241,7 +241,7 @@ The plugin degrades *gracefully* (returns early on no matches, `plagiarism.py:62
 
 `launch_all.bat:9` runs `start_daemon.py`, which calls `serve_analysis_http` (`start_daemon.py:14`). That is `AnalysisHttpServer`, which routes `/health` (`analysis_server.py:213-215`) and `/api/analysis/run` only, returning `IPC_METHOD_NOT_FOUND` for anything else (`analysis_server.py:238-241`).
 
-`App.tsx` mounts `<AIPanel>` (line 391) and `<PlagiarismPanel>` (line 398), driven by `useAIAssistant` (line 172) and `usePlagiarism` (line 173). `PlagiarismBridge` posts to `PLAGIARISM_PATH` = `/api/plagiarism/check` (`ipc.ts:59`). The Assistant posts to `/api/ai/*` (`ipc.ts:32-40`). Neither is routed.
+`App.tsx` mounts `<AIPanel>` (line 391) and `<PlagiarismPanel>` (line 398), driven by `useCloudAI` (Monlam Cloud AI chat endpoint, `https://api-v1.monlamai.studio/api/v1/ai/chat`) and `usePlagiarism` (line 173). `PlagiarismBridge` posts to `PLAGIARISM_PATH` = `/api/plagiarism/check` (`ipc.ts:59`).
 
 ### 🔴 B3 — The entire AI Assistant is a mock
 

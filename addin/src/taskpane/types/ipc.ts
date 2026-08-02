@@ -28,7 +28,6 @@ export const PROTOCOL_VERSION = '1.0';
  * `IpcRequest` it is about to send) and needs the path to send it to.
  */
 export const AI_METHOD_PATHS: Readonly<Record<string, string>> = {
-  'ai.rewrite': '/api/ai/rewrite',
   'ai.explain': '/api/ai/explain',
   'ai.summarize': '/api/ai/summarize',
   'ai.cancel': '/api/ai/cancel',

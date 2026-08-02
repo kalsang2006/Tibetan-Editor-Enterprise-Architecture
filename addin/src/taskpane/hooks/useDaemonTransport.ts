@@ -1,6 +1,6 @@
 /**
- * Deciding whether the local daemon is reachable, and which transport to hand
- * `useAIAssistant` as a result.
+ * Deciding whether the local daemon is reachable, and which stream transport
+ * to hand the daemon-backed bridges as a result.
  *
  * No daemon entry point exists yet in this repository -- composing one is a
  * separate decision (host, port and lifecycle conventions nobody has signed
@@ -25,7 +25,7 @@ export type DaemonConnectionStatus = 'checking' | 'connected' | 'unavailable';
 export const HEALTH_CHECK_TIMEOUT_MS = 1500;
 
 export interface DaemonConnection {
-  /** Pass straight to `useAIAssistant({ transport })`. */
+  /** Pass straight to a daemon-backed assistant transport. */
   transport: StreamTransport;
   status: DaemonConnectionStatus;
   /** The origin this hook checked, for display. */

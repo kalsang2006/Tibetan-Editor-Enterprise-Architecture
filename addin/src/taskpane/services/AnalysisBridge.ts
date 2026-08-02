@@ -7,7 +7,7 @@
  * for why this is one endpoint rather than three round trips.
  */
 
-import { assertLoopback, buildRequest, unwrap, DaemonFaultError } from './IpcBridge';
+import { assertLoopback, nextRequestId, unwrap, DaemonFaultError } from './IpcBridge';
 import {
   ANALYSIS_METHOD,
   ANALYSIS_PATH,
@@ -44,7 +44,11 @@ export async function fetchAnalysis(options: {
   const doFetch = options.fetchImpl ?? globalThis.fetch;
   const url = new URL(ANALYSIS_PATH, base);
 
-  const request = buildRequest(ANALYSIS_METHOD, { text: options.text });
+  const request = {
+    request_id: nextRequestId(),
+    method: ANALYSIS_METHOD,
+    params: { text: options.text },
+  };
 
   const init: RequestInit = {
     method: 'POST',

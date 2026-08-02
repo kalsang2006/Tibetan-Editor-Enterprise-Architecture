@@ -1,0 +1,17 @@
+Starting TEEA Daemon for Microsoft Word Add-in on http://127.0.0.1:50505...
+2026-08-02 03:46:45 [info     ] tibert_loading                 device=auto source=TiBERT
+Loading weights:   0%|          | 0/202 [00:00<?, ?it/s]Loading weights: 100%|##########| 202/202 [00:00<00:00, 9815.90it/s]
+2026-08-02 03:46:45 [info     ] tibert_loaded                  device=cpu key=tibert:1.0 vocab_size=29965
+Loaded active plugins: ['teea.diagnostics', 'teea.typography', 'teea.grammar', 'teea.grammar_correction', 'teea.spelling', 'teea.plagiarism']
+TEEA Daemon is active and serving complete HTTP+AI bridge at http://127.0.0.1:50505
+Press Ctrl+C to stop.
+2026-08-02 03:47:10 [debug    ] http_access                    client=127.0.0.1 line='"GET /health HTTP/1.1" 200 -'
+2026-08-02 03:47:10 [debug    ] http_access                    client=127.0.0.1 line='"POST /api/analysis/run HTTP/1.1" 400 -'
+2026-08-02 03:47:29 [debug    ] http_access                    client=127.0.0.1 line='"POST /api/analysis/run HTTP/1.1" 200 -'
+2026-08-02 03:47:52 [debug    ] http_access                    client=127.0.0.1 line='"POST /api/analysis/run HTTP/1.1" 200 -'
+2026-08-02 03:48:16 [debug    ] http_access                    client=127.0.0.1 line='"POST /api/analysis/run HTTP/1.1" 200 -'
+2026-08-02 03:53:20 [debug    ] http_access                    client=127.0.0.1 line='"GET /health HTTP/1.1" 200 -'
+2026-08-02 03:53:20 [debug    ] http_access                    client=127.0.0.1 line='"GET /health HTTP/1.1" 200 -'
+2026-08-02 03:53:20 [debug    ] http_access                    client=127.0.0.1 line='"OPTIONS /api/analysis/run HTTP/1.1" 204 -'
+2026-08-02 03:53:20 [debug    ] http_access                    client=127.0.0.1 line='"POST /api/analysis/run HTTP/1.1" 200 -'
+2026-08-02 03:54:03 [debug    ] http_access                    client=127.0.0.1 line='"GET /static/index.html HTTP/1.1" 404 -'

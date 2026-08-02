@@ -50,6 +50,11 @@ class MockRange {
   load(): MockRange {
     return this;
   }
+
+  /** Word's Range.select(): move the UI selection onto this range's text. */
+  select(): void {
+    this.host.state.selection = this.text;
+  }
 }
 
 class MockCollection<T> {
@@ -111,10 +116,20 @@ class MockParagraph {
 }
 
 class MockSelection {
-  constructor(private readonly host: MockHost) {}
+  /** The selection value at proxy creation, used by select() to restore it. */
+  private readonly captured: string;
+
+  constructor(private readonly host: MockHost) {
+    this.captured = host.state.selection;
+  }
 
   get text(): string {
     return this.host.state.selection;
+  }
+
+  /** Word's Range.select(): restore this selection's captured range. */
+  select(): void {
+    this.host.state.selection = this.captured;
   }
 
   insertText(text: string, location: string): MockSelection {
@@ -138,15 +153,23 @@ class MockSelection {
 }
 
 class MockBody {
-  constructor(private readonly host: MockHost) {}
+  constructor(protected readonly host: MockHost) {}
 
   get text(): string {
+    // With `emptyBody`, the host reports an empty body even though the
+    // document (host.text) has content -- exactly the cold-start/buggy-host
+    // situation readDocumentText's select-all fallback exists to recover from.
+    if (this.host.emptyBody) {
+      return '';
+    }
     return this.host.state.paragraphs.join(SEPARATOR);
   }
 
   get paragraphs(): MockCollection<MockParagraph> {
     const collection = new MockCollection<MockParagraph>(() =>
-      this.host.state.paragraphs.map((_text, index) => new MockParagraph(this.host, index)),
+      this.host.emptyBody
+        ? []
+        : this.host.state.paragraphs.map((_text, index) => new MockParagraph(this.host, index)),
     );
     this.host.pending.push(collection);
     return collection;
@@ -157,6 +180,33 @@ class MockBody {
   }
 }
 
+/**
+ * A body that also models Word's select-all capabilities (`Body.select()` and
+ * `Body.getRange()`), used only when a test opts in with
+ * `withSelectionFallback`. Kept out of the base `MockBody` so hosts without
+ * these APIs stay faithfully model-less -- `applyOperations` branches on
+ * `typeof body.getRange === 'function'`, so the default mock must not expose it.
+ *
+ * Note: because `applyOperations` would take its `getRange` path on this body,
+ * and only the 'Start' location is modelled (numeric `getRange(start, length)`
+ * calls throw, so operations would be skipped, not applied), do not combine
+ * `withSelectionFallback` with `applyOperations` in the same test.
+ */
+class MockSelectableBody extends MockBody {
+  /** Word's body.select(): select the whole body (its real text, not the reported one). */
+  select(): void {
+    this.host.state.selection = this.host.text;
+  }
+
+  /** Word's body.getRange(): only the 'Start' location is modelled (collapse to top). */
+  getRange(location?: string): MockRange {
+    if (location !== 'Start') {
+      throw new Error('MockSelectableBody.getRange only models the Start location');
+    }
+    return new MockRange(this.host, 0, 0, 0);
+  }
+}
+
 /** The scripted host. */
 export class MockHost {
   readonly state: MockHostState;
@@ -164,7 +214,17 @@ export class MockHost {
   /** Collections awaiting the next `sync()`. */
   readonly pending: Array<MockCollection<unknown>> = [];
 
-  constructor(paragraphs: string[], selection = '') {
+  /** Whether the body reports empty even though the document has text. */
+  readonly emptyBody: boolean;
+
+  /** The Body object Word.run batches see (selectable when configured). */
+  readonly body: MockBody;
+
+  constructor(
+    paragraphs: string[],
+    selection = '',
+    options: { emptyBody?: boolean; withSelectionFallback?: boolean } = {},
+  ) {
     this.state = {
       paragraphs: [...paragraphs],
       selection,
@@ -173,6 +233,8 @@ export class MockHost {
       settings: {},
       slicesRead: [],
     };
+    this.emptyBody = options.emptyBody ?? false;
+    this.body = options.withSelectionFallback ? new MockSelectableBody(this) : new MockBody(this);
   }
 
   /** The whole document as `body.text` would report it. */
@@ -200,10 +262,9 @@ export class MockHost {
     document: { body: MockBody; getSelection: () => MockSelection };
     sync: () => Promise<void>;
   } {
-    const body = new MockBody(this);
     return {
       document: {
-        body,
+        body: this.body,
         getSelection: () => new MockSelection(this),
       },
       sync: async () => {
@@ -223,6 +284,11 @@ export class MockHost {
  * @param options.selection What `getSelection()` reports.
  * @param options.withGetFileAsync Whether the host exposes the slicing read.
  * @param options.sliceSize How large each slice is, for exercising re-stitching.
+ * @param options.emptyBody Simulate a host whose body reports empty
+ *   (`body.text === ''`, no paragraphs) even though the document has text.
+ * @param options.withSelectionFallback Expose Word's select-all capabilities
+ *   (`body.select()`, `body.getRange('Start')`, selection restore) so
+ *   readDocumentText's tier-3 fallback can be exercised.
  * @returns The host, so a test can inspect what the add-in did to it.
  */
 export function installOfficeMock(
@@ -231,11 +297,20 @@ export function installOfficeMock(
     selection?: string;
     withGetFileAsync?: boolean;
     sliceSize?: number;
+    /** What `getFileAsync` places between paragraphs (defaults to `\r`).
+     *  Real hosts differ -- on Windows `getFileAsync` emits `\r\n`. */
+    fileSeparator?: string;
+    emptyBody?: boolean;
+    withSelectionFallback?: boolean;
   } = {},
 ): MockHost {
-  const host = new MockHost(paragraphs, options.selection ?? '');
+  const host = new MockHost(paragraphs, options.selection ?? '', {
+    emptyBody: options.emptyBody ?? false,
+    withSelectionFallback: options.withSelectionFallback ?? false,
+  });
   const withGetFileAsync = options.withGetFileAsync ?? false;
   const sliceSize = options.sliceSize ?? 65536;
+  const fileSeparator = options.fileSeparator ?? SEPARATOR;
 
   const office: Record<string, unknown> = {
     onReady: (callback: () => void) => {
@@ -246,6 +321,9 @@ export function installOfficeMock(
     FileType: { Text: 'text', Compressed: 'compressed', Pdf: 'pdf' },
     context: {
       document: {
+        getSelectedDataAsync: (_type: string, callback: (result: unknown) => void) => {
+          callback({ status: 'succeeded', value: host.state.selection });
+        },
         settings: {
           get: (key: string) => host.state.settings[key],
           set: (key: string, value: unknown) => {
@@ -262,7 +340,7 @@ export function installOfficeMock(
                 _opts: { sliceSize: number },
                 callback: (result: unknown) => void,
               ) => {
-                const text = host.text;
+                const text = host.state.paragraphs.join(fileSeparator);
                 const count = Math.max(1, Math.ceil(text.length / sliceSize));
                 callback({
                   status: 'succeeded',
